@@ -1,7 +1,5 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-// 배포중이 아닐땐 .env 파일에서 환경변수 불러옴
+require('dotenv').config();
+// .env 파일에서 환경변수 불러옴
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
