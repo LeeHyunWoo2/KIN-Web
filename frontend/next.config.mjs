@@ -13,6 +13,15 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // 클라이언트 사이드에서 'fs' 모듈을 빈 모듈로 대체
+      config.resolve.fallback = {
+        fs: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
