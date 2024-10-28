@@ -3,7 +3,7 @@ const fs = require('fs');
 const { taskSchema } = require('./schema');
 
 const tasks = Array.from({ length: 100 }, () => ({
-  id: faker.datatype.uuid(),
+  id: faker.datatype.toString(),
   title: faker.company.catchPhrase(),
   status: faker.helpers.arrayElement(['backlog', 'in progress', 'complete']),
   label: faker.helpers.arrayElement(['feature', 'bug', 'chore']),
