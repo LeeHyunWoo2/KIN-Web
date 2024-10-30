@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
 import {Checkbox} from "@/components/ui/checkbox"
@@ -27,9 +29,21 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {Input} from "@/components/ui/input";
-import {registerUser} from '@/pages/api/auth'
+import {registerUser} from '@/services/authService'
+import { z } from 'zod';
+import {useRouter} from "next/router";
+import {toast} from "@/hooks/use-toast";
+
+
+const schema = z.object({
+  email: z.string().email(),
+    password: z.string().min(6),
+})
+
+
 
 export default function AuthenticationPage() {
+  const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
   const [page, setPage] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const handleNext = () => setPage((prevPage) => prevPage + 1);
@@ -80,17 +94,16 @@ export default function AuthenticationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // 비밀번호 확인 유효성 검사
-    if (formData.password !== formData.passwordConfirm) {
-      setErrorMessage('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
+    console.log(formData);
     try {
       const response = await registerUser(formData);
       setSuccessMessage(response.message);
       setErrorMessage('');
+      toast({
+        title: '회원가입 성공',
+        description: '회원가입이 성공적으로 완료되었습니다.',
+      });
+      router.push('/login')
     } catch (error) {
       setErrorMessage(error.response?.data?.message || '회원가입 실패');
       setSuccessMessage('');
@@ -202,14 +215,14 @@ export default function AuthenticationPage() {
               <p className="px-8 text-center text-sm text-muted-foreground">
                 By clicking continue, you agree to our{" "}
                 <Link
-                    href="/terms"
+                    href="#"
                     className="underline underline-offset-4 hover:text-primary"
                 >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
-                    href="/privacy"
+                    href="#"
                     className="underline underline-offset-4 hover:text-primary"
                 >
                   Privacy Policy
@@ -271,7 +284,7 @@ export default function AuthenticationPage() {
                         <Input
                             id="passwordConfirm"
                             name="passwordConfirm"
-                            type="passwordConfirm"
+                            type="password"
                             value={formData.passwordConfirm}
                             onChange={handleChange}
                             placeholder="password"
@@ -370,7 +383,7 @@ export default function AuthenticationPage() {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>Continue</AlertDialogAction>
+                            <Button onClick={handleSubmit}>Continue</Button>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

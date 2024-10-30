@@ -84,6 +84,7 @@ import {
 import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
+import {logoutUser} from "@/services/authService";
 
 const data = {
   user: {
@@ -363,7 +364,7 @@ export default function Page({children}) {
                     <DropdownMenuSeparator/>
                     <Link href="/">
                       <DropdownMenuItem>
-                        <LogOut/>
+                        <LogOut onClick={logoutUser} />
                         Log out
                       </DropdownMenuItem>
                     </Link>
@@ -563,12 +564,12 @@ function NavActions({
 
   return (
       <div className="flex items-center gap-2 text-sm">
-        <Link href="#">
+        <Link href="/list">
           <Button variant="ghost">
             <ClipboardList/>
           </Button>
         </Link>
-        <Link href="#">
+        <Link href="/settings">
           <Button variant="ghost">
             <UserRoundCog/>
           </Button>

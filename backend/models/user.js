@@ -1,16 +1,5 @@
 const mongoose = require('mongoose');
 
-const SocialAccountSchema = new mongoose.Schema({
-  provider: {
-    type: String, // 'google', 'facebook', 'github' 등 소셜 로그인 제공자
-    required: true,
-  },
-  providerId: {
-    type: String, // 소셜 로그인 제공자의 고유 ID
-    required: true,
-  },
-});
-
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -31,18 +20,35 @@ const UserSchema = new mongoose.Schema({
   },
   termsAgreed: {
     type: Boolean,
-    required: true, // 이용 약관 동의는 필수
+    required: false, // 이용 약관 동의는 필수
   },
   marketingConsent: {
     type: Boolean,
     required: false,
     default: false,
   },
-  socialAccounts: [SocialAccountSchema], // 여러 소셜 계정을 연결할 수 있는 배열
+  socialAccounts: [
+    { // 없으면 둘다 local로 저장됨
+      provider: {
+        type: String, // 'google', 'facebook', 'github' 등 소셜 로그인 제공자
+        required: true,
+        default: 'local',
+      },
+      providerId: {
+        type: String, // 소셜 로그인 제공자의 고유 ID
+        required: true,
+        default: 'local',
+      },
+    }
+  ], // 여러 소셜 계정을 연결할 수 있는 배열
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
+  },
+  profileIcon: { // 프로필 아이콘 url 혹은 선택한 아이콘 정보
+    type: String,
+    default: ''
   },
   refreshToken: { // 발급된 Refresh Token을 저장
     type: String,  // 로그인 시 발급되므로 초기에는 없음

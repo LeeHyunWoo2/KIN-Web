@@ -1,3 +1,5 @@
+// passport 를 통해 여러 인증 전략을 통합적으로 관리하는 파일
+
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 // passport-jwt에서 제공하는 JwtStrategy와 ExtractJwt를 불러옴.
 // JwtStrategy는 JWT 토큰을 처리하는 전략.
@@ -19,7 +21,6 @@ module.exports = (passport) => {
   // JWT 토큰
   passport.use(
       new JwtStrategy(opts, async (jwt_payload, done) => {
-        // JWT 토큰 디코딩 결과
         try {
           // JWT 토큰에서 추출한 userId로 사용자를 데이터베이스에서 찾음.
           const user = await User.findById(jwt_payload.userId);
@@ -49,6 +50,7 @@ module.exports = (passport) => {
             try {
               // 구글 프로필에서 이메일을 추출
               const email = profile.emails[0].value;
+              const profileIcon = profile.photos[0].value; // 유저 구글 프사 가져오기
 
               // 기존 유저가 있는지 확인
               let user = await User.findOne({ email });
@@ -60,10 +62,11 @@ module.exports = (passport) => {
                   email,
                   provider: 'google',
                   providerId: profile.id,
+                  profileIcon,
                 });
                 await user.save();
               } else {
-                // 기존 유저에 소셜 계정 연동 (필요 시)
+                // 기존 유저에 소셜 계정 연동 (유저가 요청 할 경우)
                 const isLinked = user.socialAccounts.some(
                     (account) => account.provider === 'google' && account.providerId === profile.id
                 );
@@ -71,6 +74,7 @@ module.exports = (passport) => {
                   user.socialAccounts.push({
                     provider: 'google',
                     providerId: profile.id,
+                    profileIcon,
                   });
                   await user.save();
                 }
@@ -83,4 +87,18 @@ module.exports = (passport) => {
           }
       )
   );
+  // 직렬화 설정 (사용자 정보를 세션에 저장)
+  passport.serializeUser((user, done) => {
+    done(null, user.id); // 세션에 저장할 사용자 ID를 지정
+  });
+
+  // 역직렬화 설정 (세션에서 사용자 정보를 복원)
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findById(id); // 세션에 저장된 ID로 사용자 조회
+      done(null, user); // 사용자를 요청에 추가
+    } catch (error) {
+      done(error, null);
+    }
+  });
 };

@@ -3,7 +3,7 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {cn} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {useMail} from "@/utils/use-mail";
+import {useMail} from "@/lib/notes/use-mail";
 
 export function MailList({ items }) {
   const [mail, setMail] = useMail();
