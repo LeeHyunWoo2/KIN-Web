@@ -1,112 +1,85 @@
-const jwt = require('jsonwebtoken'); // JWT 라이브러리 불러오기
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+// 서비스 계층을 호출해 클라이언트 요청을 처리하는 파일
 
-// 회원가입 처리 함수
-const registerUser = async (req, res) => {
-  const {name, email, password, provider} = req.body;
+const {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUser,
+  updateUserProfileIcon
+} = require('../services/authService');
 
+// 회원가입
+const registerController = async (req, res) => {
   try {
-    // 소셜 로그인 사용자는 비밀번호가 없을 수 있음
-    let hashedPassword = null;
-    if (provider === 'local') {
-      const salt = await bcrypt.genSalt(10);
-      // 생성된 salt 값을 사용해 비밀번호를 해시화.
-      hashedPassword = await bcrypt.hash(password, salt);
-    }
-
-    // 이메일 중복 확인
-    const existingUser = await User.findOne({email});
-    if (existingUser) {
-      return res.status(400).json({message: '이미 존재하는 이메일입니다.'});
-    }
-
-    // 새로운 사용자 객체 생성
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      // 비밀번호는 해시화된 값으로 저장
-      provider
-    });
-
-    // DB에 저장
-    await newUser.save();
-
-    res.status(201).json({message: '회원가입 성공'});
+    const user = await registerUser(req.body);
+    res.status(201).json({ message: '회원가입 성공', user });
   } catch (error) {
-    res.status(500).json({message: '서버 오류', error});
+    res.status(500).json({ message: error.message });
   }
 };
 
-// 로그인 처리 함수
-const loginUser = async (req, res) => {
-  const {email, password, provider} = req.body;
-
+// 로그인
+const loginController = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    // 이메일로 사용자 찾기
-    const user = await User.findOne({email});
+    const tokens = await loginUser(email, password);
+    res.status(200).json(tokens);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// 회원 정보 조회
+const getUserProfileController = async (req, res) => {
+  try {
+    const user = await getUserProfile(req.user._id);
     if (!user) {
-      return res.status(400).json({message: '유효하지 않은 사용자 정보'});
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
-
-    // 소셜 로그인 처리
-    if (provider !== 'local') {
-      // 소셜 로그인 유저가 이미 존재하는지 확인 후 토큰 발급
-      const accessToken = jwt.sign(
-          {userId: user._id}, // ._id 인 이유는 Mongoose 고유 오브젝트id 가 _id 라서 .을 찍어 객체속성 접근을 한것 user_id 저장하려고 한거 아님
-          process.env.JWT_SECRET,
-          {expiresIn: '1h'}
-      );
-
-      const refreshToken = jwt.sign(
-          {userId: user._id},
-          process.env.REFRESH_TOKEN_SECRET,
-          {expiresIn: '7d'}
-      );
-
-      user.refreshToken = refreshToken;
-      await user.save();
-
-      return res.status(200).json({
-        message: '소셜 로그인 성공',
-        accessToken,
-        refreshToken
-      });
-    }
-
-    // 로컬 로그인 비밀번호 비교
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({message: '비밀번호가 틀립니다.'});
-    }
-
-    // Access Token (1시간 만료)
-    const accessToken = jwt.sign(
-        {userId: user._id},
-        process.env.JWT_SECRET,
-        {expiresIn: '1h'}
-    );
-
-    // Refresh Token (7일 만료)
-    const refreshToken = jwt.sign(
-        {userId: user._id},
-        process.env.REFRESH_TOKEN_SECRET,
-        {expiresIn: '7d'}
-    );
-
-    // Refresh Token을 DB에 저장
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    res.status(200).json({
-      message: '로그인 성공',
-      accessToken,
-      refreshToken
-    });
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({message: '서버 오류', error});
+    res.status(500).json({ message: error.message });
   }
 };
-// 컨트롤러 함수들을 내보내서 라우터에서 사용 가능하게 함
-module.exports = {registerUser, loginUser};
+
+// 정보 수정
+const updateUserProfileController = async (req, res) => {
+  try {
+    const updatedUser = await updateUserProfile(req.user._id, req.body);
+    res.status(200).json({ message: '회원 정보가 업데이트되었습니다.', updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 프로필 아이콘 업데이트 컨트롤러
+const updateUserProfileIconController = async (req, res) => {
+  const { profileIconUrl } = req.body;
+  try {
+    const updatedUser = await updateUserProfileIcon(req.user._id, profileIconUrl);
+    res.status(200).json({ message: '프로필 아이콘이 업데이트되었습니다.', updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 회원 탈퇴
+const deleteUserController = async (req, res) => {
+  try {
+    await deleteUser(req.user._id);
+    res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+module.exports = {
+  registerController,
+  loginController,
+  getUserProfileController,
+  updateUserProfileController,
+  deleteUserController,
+  updateUserProfileIconController,
+};

@@ -1,4 +1,4 @@
-import {mails} from "@/utils/data";
+import {mails} from "@/lib/notes/data";
 import Mail from "@/components/notes/mail";
 import Layout from "@/components/Layout"
 
