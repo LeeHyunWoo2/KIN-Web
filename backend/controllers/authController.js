@@ -4,6 +4,7 @@ const {
   registerUser,
   loginUser,
   getUserProfile,
+  getPublicUserProfile,
   updateUserProfile,
   deleteUser,
   updateUserProfileIcon
@@ -27,6 +28,18 @@ const loginController = async (req, res) => {
     res.status(200).json(tokens);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+const getPublicUserProfileController = async (req, res) => {
+  try {
+    const publicProfile = await getPublicUserProfile(req.params.id);
+    if (!publicProfile) {
+      return res.status(404).json({ message: '유저를 찾을 수 없습니다.' });
+    }
+    res.status(200).json(publicProfile);
+  } catch (error) {
+    res.status(500).json({ message: '프로필 정보를 가져오는 중 오류가 발생했습니다.' });
   }
 };
 
@@ -78,6 +91,7 @@ const deleteUserController = async (req, res) => {
 module.exports = {
   registerController,
   loginController,
+  getPublicUserProfileController,
   getUserProfileController,
   updateUserProfileController,
   deleteUserController,

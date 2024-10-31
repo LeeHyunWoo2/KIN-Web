@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { toast } from '@/hooks/use-toast'
-
 
 // 기본 axios 인스턴스 설정
 const apiClient = axios.create({
@@ -52,11 +50,26 @@ export const registerUser = async (userData) => {
 
 // 로그인 API
 export const loginUser = async (credentials) => {
+  try{
   const { data } = await apiClient.post('/auth/local/login', credentials);
   // 액세스 토큰과 리프레시 토큰 저장
   localStorage.setItem('accessToken', data.accessToken);
   localStorage.setItem('refreshToken', data.refreshToken);
   return data;
+  } catch (error){
+    console.error('로그인 실패' , error.message);
+    return null;
+  }
+};
+
+export const fetchPublicUserProfile = async (userId) => {
+  try {
+    const { data } = await axios.get(`/user/${userId}/public-profile`);
+    return data;
+  } catch (error) {
+    console.error("프로필 정보 불러오기 실패:", error.message);
+    return null;
+  }
 };
 
 // 회원 정보 조회 API

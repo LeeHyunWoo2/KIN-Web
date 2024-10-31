@@ -45,9 +45,14 @@ const loginUser = async (email, password) => {
   return { accessToken, refreshToken };
 };
 
+// 전체 공개용 회원 정보 조회
+const getPublicUserProfile = async (userId) => {
+  return User.findById(userId).select('name email profileIcon'); // 전체 공개 필드만 선택
+};
+
 // 회원 정보 조회
 const getUserProfile = async (userId) => {
-  return await User.findById(userId).select('-password -refreshToken');
+  return User.findById(userId).select('-password -refreshToken');
 };
 
 // 정보 수정
@@ -102,6 +107,7 @@ module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
+  getPublicUserProfile,
   updateUserProfile,
   deleteUser,
   updateUserProfileIcon,

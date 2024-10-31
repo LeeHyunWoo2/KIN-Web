@@ -6,13 +6,13 @@ const SocialLogin = () => {
 
     switch(provider) {
       case 'google':
-        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/social/google`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
         break;
       case 'kakao':
-        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/social/kakao`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao`;
         break;
       case 'naver':
-        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/social/naver`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/auth/naver`;
         break;
       default:
         break;

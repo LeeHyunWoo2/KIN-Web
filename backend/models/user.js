@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
   },
   profileIcon: { // 프로필 아이콘 url 혹은 선택한 아이콘 정보
     type: String,
-    default: ''
+    default: 'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg'
   },
   refreshToken: { // 발급된 Refresh Token을 저장
     type: String,  // 로그인 시 발급되므로 초기에는 없음
