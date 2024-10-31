@@ -1,18 +1,37 @@
 import Link from "next/link";
 import HeaderLayout from "@/components/HeaderLayout";
-
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import Image from "next/image";
 import SocialLogin from "@/components/SocialLogin";
+import {loginUser} from "@/services/authService";
+import {useState} from "react";
+import {router} from "next/client";
 
-export const description =
-    "A login page with two columns. The first column has the login form with email and password. There's a Forgot your passwork link and a link to sign up if you do not have an account. The second column has a cover image."
 
 export default function Dashboard() {
-  return (
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    const credentials = {
+      email,
+      password,
+    };
+
+    const tokens = await loginUser(credentials);
+    if (tokens) {
+      // 로그인 성공 시 리다이렉트
+      router.push("/notes");
+    } else {
+      console.error("로그인 실패");
+    }
+  };
+
+
+  return (
       <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols xl:min-h-[800px]">
         <div className="flex items-center justify-center py-12">
           <div className="mx-auto grid w-[350px] gap-6">
@@ -30,6 +49,8 @@ export default function Dashboard() {
                     type="email"
                     placeholder="m@example.com"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} // 상태 업데이트
                 />
               </div>
               <div className="grid gap-2">
@@ -42,17 +63,21 @@ export default function Dashboard() {
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" required/>
+                <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
+                />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" onClick={handleLogin}>
                 Login
               </Button>
               <Button variant="outline" className="w-full">
                 Login with Google
               </Button>
-
               <SocialLogin/>
-
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
@@ -62,15 +87,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/*        <div className="hidden bg-muted lg:block">
-          <Image
-              src="/placeholder.svg"
-              alt="Image"
-              width="1920"
-              height="1080"
-              className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          />
-        </div>*/}
       </div>
   )
 }

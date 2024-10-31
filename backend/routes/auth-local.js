@@ -5,6 +5,7 @@ const passport = require('passport');
 const {
   registerController,
   loginController,
+  getPublicUserProfileController,
   getUserProfileController,
   updateUserProfileController,
   deleteUserController,
@@ -21,9 +22,12 @@ router.post('/register', validateUserSignup, registerController);
 // 로그인 (POST)
 router.post('/login', validateUserLogin, loginController);
 
+// 유저 정보 조회 퍼블릭버전 (GET)
+router.get('/user/:id/public-profile', getPublicUserProfileController);
+
 // 회원 정보 조회 (GET)
 router.get('/profile',
-    passport.authenticate('jwt', {session: false}), // JWT 인증 필요. 회원 가입과 로그인은 애초에 미인증 유저가 하는 작업이라 제외
+    passport.authenticate('jwt', {session: false}), // 이 아래 작업은 보안상 JWT 인증 필요
     getUserProfileController
 );
 

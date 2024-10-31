@@ -85,6 +85,8 @@ import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
 import {logoutUser} from "@/services/authService";
+import {router} from "next/client";
+import { fetchPublicUserProfile } from "@/services/authService";
 
 const data = {
   user: {
@@ -276,8 +278,16 @@ const data = {
   ],
 }
 
+
+
+const handleLogout = () => {
+  logoutUser();
+  router.push('/login'); // 로그인 페이지로 리다이렉트
+};
+
 export default function Page({children}) {
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
+
   return (
       <SidebarProvider>
         <Sidebar collapsible="icon">
@@ -364,7 +374,7 @@ export default function Page({children}) {
                     <DropdownMenuSeparator/>
                     <Link href="/">
                       <DropdownMenuItem>
-                        <LogOut onClick={logoutUser} />
+                        <LogOut onClick={handleLogout} />
                         Log out
                       </DropdownMenuItem>
                     </Link>

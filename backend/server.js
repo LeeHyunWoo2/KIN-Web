@@ -12,7 +12,9 @@ const passport = require('passport');
 
 // 라우트 파일
 const localAuthRoutes = require('./routes/auth-local'); // 로컬 인증 라우트
-const socialAuthRoutes = require('./routes/auth-social'); // 소셜 인증 라우트
+const googleAuthRoutes = require('./routes/auth-google'); // 구글 소셜 인증 라우트
+const kakaoAuthRoutes = require('./routes/auth-kakao'); // 카카오 인증 라우트
+const naverAuthRoutes = require('./routes/auth-naver'); // 네이버 인증 라우트
 const tokenRoutes = require('./routes/auth-token'); // 토큰 관리 라우트
 const adminRoutes = require('./routes/admin'); // 관리자 라우트
 
@@ -38,15 +40,20 @@ app.use(cors({
   credentials: true,
 })); // CORS 설정 나중에 위의 도메인 범위 좁히는 설정 추가 필요
 app.use(passport.initialize()); // Passport 초기화
+app.use(passport.session());
 
 
 // Passport 설정 파일 로드 (JWT & 구글 OAuth 등)
 require('./config/passport')(passport);
-
+require('./config/passport-google')(passport);
+require('./config/passport-kakao')(passport);
+require('./config/passport-naver')(passport);
 
 //라우트 설정
 app.use('/auth/local', localAuthRoutes); // 로컬 인증 관련 라우트
-app.use('/auth/social', socialAuthRoutes); // 소셜 인증
+app.use('/auth/google', googleAuthRoutes); // 구글 소셜 인증
+app.use('/auth/kakao', kakaoAuthRoutes); // 카카오
+app.use('/auth/naver', naverAuthRoutes); // 네이버
 app.use('/auth/token', tokenRoutes); // 토큰 관리
 app.use('/admin', adminRoutes); // 관리자
 
