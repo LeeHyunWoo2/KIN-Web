@@ -91,6 +91,11 @@ const validateUserUpdate = [
   .matches(/[!@#$%^&*(),.?":{}|<>]/)
   .withMessage('비밀번호에는 특수 문자가 포함되어야 합니다.'),
 
+  body('phone')
+  .optional({ checkFalsy: true })
+  .matches(/^010-\d{4}-\d{4}$/)
+  .withMessage('전화번호는 "010-xxxx-xxxx" 형식으로 입력하세요.'),
+
   // 검증 결과 처리
   (req, res, next) => {
     const errors = validationResult(req);

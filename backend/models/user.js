@@ -32,12 +32,10 @@ const UserSchema = new mongoose.Schema({
       provider: {
         type: String, // 'google', 'facebook', 'github' 등 소셜 로그인 제공자
         required: true,
-        default: 'local',
       },
       providerId: {
         type: String, // 소셜 로그인 제공자의 고유 ID
         required: true,
-        default: 'local',
       },
     }
   ], // 여러 소셜 계정을 연결할 수 있는 배열

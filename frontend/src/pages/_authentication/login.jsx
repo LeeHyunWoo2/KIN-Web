@@ -30,6 +30,41 @@ export default function Dashboard() {
     }
   };
 
+  const testHandleLogin = async (event) => {
+    event.preventDefault();
+
+    const credentials = {
+      email: 'asd@asd.asd',
+      password: 'Asd123456!',
+    };
+
+    const tokens = await loginUser(credentials);
+    if (tokens) {
+      // 로그인 성공 시 리다이렉트
+      router.push("/notes");
+    } else {
+      console.error("로그인 실패");
+    }
+  };
+
+
+  const testAdminHandleLogin = async (event) => {
+    event.preventDefault();
+
+    const credentials = {
+      email: 'admin@admin.com',
+      password: 'Admin123!@#',
+    };
+
+    const tokens = await loginUser(credentials);
+    if (tokens) {
+      // 로그인 성공 시 리다이렉트
+      router.push("/notes");
+    } else {
+      console.error("로그인 실패");
+    }
+  };
+
 
   return (
       <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols xl:min-h-[800px]">
@@ -57,7 +92,7 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
-                      href="#"
+                      href=""
                       className="ml-auto inline-block text-sm underline"
                   >
                     Forgot your password?
@@ -74,9 +109,14 @@ export default function Dashboard() {
               <Button type="submit" className="w-full" onClick={handleLogin}>
                 Login
               </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
+              <div>
+              <Button variant="outline" className="w-[47%] m-1" onClick={testHandleLogin}>
+                테스트 일반 로그인
               </Button>
+              <Button variant="outline" className="w-[47%] m-1" onClick={testAdminHandleLogin}>
+                테스트 관리자 로그인
+              </Button>
+              </div>
               <SocialLogin/>
             </div>
             <div className="mt-4 text-center text-sm">

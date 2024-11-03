@@ -375,7 +375,7 @@ export default function AuthenticationPage() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>회원가입을 진행하시겠습니까? (현재 가입 불가)</AlertDialogTitle>
+                            <AlertDialogTitle>회원가입을 진행하시겠습니까?</AlertDialogTitle>
                             <AlertDialogDescription>
                               입력된 정보로 회원가입을 완료합니다.<br/>
                               마이페이지에서 회원정보 수정이 가능합니다.
