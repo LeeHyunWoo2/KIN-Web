@@ -4,10 +4,8 @@ const {
   registerUser,
   loginUser,
   getUserProfile,
-  getPublicUserProfile,
   updateUserProfile,
   deleteUser,
-  updateUserProfileIcon
 } = require('../services/authService');
 
 // 회원가입
@@ -24,24 +22,30 @@ const registerController = async (req, res) => {
 const loginController = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const tokens = await loginUser(email, password);
-    res.status(200).json(tokens);
+    const { user, accessToken, refreshToken } = await loginUser(email, password);
+
+    // 토큰을 HTTP-Only 쿠키로 설정
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000, // 1시간
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+
+    // 사용자 정보를 반환 (토큰 정보는 포함하지 않음)
+    res.status(200).json({ message: '로그인 성공', user });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-const getPublicUserProfileController = async (req, res) => {
-  try {
-    const publicProfile = await getPublicUserProfile(req.params.id);
-    if (!publicProfile) {
-      return res.status(404).json({ message: '유저를 찾을 수 없습니다.' });
-    }
-    res.status(200).json(publicProfile);
-  } catch (error) {
-    res.status(500).json({ message: '프로필 정보를 가져오는 중 오류가 발생했습니다.' });
-  }
-};
 
 // 회원 정보 조회
 const getUserProfileController = async (req, res) => {
@@ -66,17 +70,6 @@ const updateUserProfileController = async (req, res) => {
   }
 };
 
-// 프로필 아이콘 업데이트 컨트롤러
-const updateUserProfileIconController = async (req, res) => {
-  const { profileIconUrl } = req.body;
-  try {
-    const updatedUser = await updateUserProfileIcon(req.user._id, profileIconUrl);
-    res.status(200).json({ message: '프로필 아이콘이 업데이트되었습니다.', updatedUser });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 // 회원 탈퇴
 const deleteUserController = async (req, res) => {
   try {
@@ -91,9 +84,7 @@ const deleteUserController = async (req, res) => {
 module.exports = {
   registerController,
   loginController,
-  getPublicUserProfileController,
   getUserProfileController,
   updateUserProfileController,
   deleteUserController,
-  updateUserProfileIconController,
 };
