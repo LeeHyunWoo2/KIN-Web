@@ -20,7 +20,7 @@ const NoteSchema = new mongoose.Schema({
   },
   tags: [
     {
-      name: String // 태그 이름 (최대 5개)
+      name: String // 태그 이름 (최대 5개로 제한 할 예정)
     }
   ],
   created_at: {
@@ -40,10 +40,5 @@ const NoteSchema = new mongoose.Schema({
     default: false,
   }
 });
-
-// 태그는 최대 5개까지만 허용
-NoteSchema.path('tags').validate(function (value) {
-  return value.length <= 5;
-}, '최대 5개의 태그만 허용됩니다.');
 
 module.exports = mongoose.model('Note', NoteSchema);

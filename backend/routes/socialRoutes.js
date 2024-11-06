@@ -20,6 +20,7 @@ router.get('/:provider', (req, res, next) => {
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(provider, {
       scope: providers[provider].scope,
+      accessType: 'offline',
       prompt: 'consent' // 매번 사용자 동의 요청
     })(req, res, next); // 해당 provider로 인증 시작
   } else {
@@ -62,7 +63,7 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(provider, {
       scope: providers[provider].scope,
-      accessType: 'offline', // refreshToken 요청 (구글때문에)
+      accessType: 'offline', // OAuth 2.0 refreshToken 요청 (구글때문에)
       prompt: 'consent' // 매번 사용자 동의 요청
     })(req, res, next); // 해당 provider로 인증 시작
   } else {

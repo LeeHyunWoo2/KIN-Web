@@ -22,9 +22,12 @@ const unlinkSocialAccount = async (req, res) => {
       return res.status(400).json({ message: `${provider} 계정이 연동되어 있지 않습니다.` });
     }
 
-    // 소셜 플랫폼 연동 해제 요청 (OAuth 토큰 발급 후 요청)
+    // OAuth 토큰 발급 (연동 해제용)
     const oAuthToken = await tokenService.generateOAuthToken(user, provider);
+
+    // 소셜 플랫폼 해제 요청
     const unlinkSuccess = await revokeSocialAccess(provider, oAuthToken);
+    console.log(oAuthToken)
 
     if (!unlinkSuccess) {
       return res.status(500).json({ message: `${provider} 계정 연동 해제에 실패했습니다.` });

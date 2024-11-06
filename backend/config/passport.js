@@ -47,7 +47,7 @@ passport.use(new GoogleStrategy({
         'socialAccounts.providerId': providerId,
       });
 
-      if (!user && (accountLink === true)) {
+      if (!user) {
         const newUser = new User({
           name: profile.displayName,
           email,
@@ -64,6 +64,7 @@ passport.use(new GoogleStrategy({
         return done(null, newUser);
       }
       console.log('너는 로그인이다')
+      console.log(user)
       return done(null, user)
     }
   } catch (error) {

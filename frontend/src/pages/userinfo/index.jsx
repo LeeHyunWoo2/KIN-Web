@@ -79,6 +79,7 @@ function UserInfoPage() {
         linkSocialAccount(provider);
       } else {
         const updatedUser = await unlinkSocialAccount(provider);
+        console.log(updatedUser)
         setUserInfo(updatedUser.user); // API 응답 구조에 따라 updatedUser.user 사용
       }
     } catch (error) {

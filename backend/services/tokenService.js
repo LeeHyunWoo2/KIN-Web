@@ -38,7 +38,7 @@ const invalidateTokens = async (refreshToken) => {
 const generateOAuthToken = async (user, provider) => {
   const socialAccount = user.socialAccounts.find(account => account.provider === provider);
   if (!socialAccount) {
-    throw new Error(`${provider} 계정이 연동되어 있지 않습니다.`);
+    throw new Error(`${provider} 계정 미연동 상태`);
   }
 
   // OAuth 토큰 발급 요청
@@ -51,12 +51,36 @@ const generateOAuthToken = async (user, provider) => {
         grant_type: 'refresh_token',
       });
       return response.data.access_token;
+
+    } else if (provider === 'kakao') {
+      const response = await axios.post('https://kauth.kakao.com/oauth/token', null, {
+        params: {
+          grant_type: 'refresh_token',
+          client_id: process.env.KAKAO_CLIENT_ID,
+          client_secret: process.env.KAKAO_CLIENT_SECRET,
+          refresh_token: socialAccount.socialRefreshToken,
+        },
+      });
+      return response.data.access_token;
+
+    } else if (provider === 'naver') {
+      const response = await axios.post('https://nid.naver.com/oauth2.0/token', null, {
+        params: {
+          grant_type: 'refresh_token',
+          client_id: process.env.NAVER_CLIENT_ID,
+          client_secret: process.env.NAVER_CLIENT_SECRET,
+          refresh_token: socialAccount.socialRefreshToken,
+        },
+      });
+      return response.data.access_token;
+
+    } else {
+      throw new Error('지원하지 않는 소셜 플랫폼');
     }
-    // 다른 provider (예: kakao, naver)에 대한 처리
-    // ...
+
   } catch (error) {
     console.error(`${provider} OAuth 토큰 발급 실패:`, error);
-    throw new Error('OAuth 토큰 발급에 실패했습니다.');
+    throw new Error('OAuth 토큰 발급 실패');
   }
 };
 
