@@ -30,7 +30,6 @@ import {
   PieChart,
   Plus,
   Settings2,
-  Sparkles,
   SquareTerminal,
   Star,
   Trash,

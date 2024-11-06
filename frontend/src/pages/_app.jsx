@@ -6,7 +6,6 @@ import {TooltipProvider} from "@/components/ui/tooltip";
 import {Toaster} from "@/components/ui/toaster";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import apiClient from '@/lib/errorHandler'; // 오류 핸들링 초기화
 import Head from 'next/head';
 
 NProgress.configure({showSpinner: false});

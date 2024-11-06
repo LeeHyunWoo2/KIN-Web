@@ -1,105 +1,87 @@
-// 실제 비즈니스 로직을 처리, DB와 상호작용하는 파일
-
-const User = require('../models/user');
+// services/authService.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const tokenService = require('./tokenService');
 
-// 회원가입
-const registerUser = async (userData) => {
-  const { name, email, password } = userData;
+// 1. 회원가입 (로컬 계정 생성)
+const registerUser = async ({ id, email, password, name, phone, marketingConsent }) => {
+  const existingUser = await User.findOne({ $or: [{ email }, { id }] });
+  if (existingUser) {
+    throw new Error('이미 가입된 이메일혹은 id입니다.');
+  }
 
-  // 비밀번호 해시 처리
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  // 새로운 사용자 생성
-  const newUser = new User({
-    name,
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = new User({
+    id,
     email,
     password: hashedPassword,
+    name,
     socialAccounts: [
       {
         provider: 'local',
-        providerId: email, // 로컬 로그인에서는 이메일을 고유 ID처럼 사용
+        providerId: id,
       },
     ],
+    termsAgreed: true,
+    phone,
+    marketingConsent
   });
-
-  return await newUser.save();
-};
-
-const loginUser = async (email, password) => {
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new Error('해당 유저 정보가 없습니다.');
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new Error('비밀번호를 틀렸습니다.');
-  }
-
-  // Access Token 및 Refresh Token 생성
-  const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-
-  // Refresh Token을 DB에 저장
-  user.refreshToken = refreshToken;
-  await user.save();
-
-  // 사용자 정보 및 토큰 반환
-  return {
-    user: {
-      name: user.name,
-      email: user.email,
-      profileIcon: user.profileIcon,
-    },
-    accessToken,
-    refreshToken
-  };
-};
-
-
-// 회원 정보 조회
-const getUserProfile = async (userId) => {
-  return User.findById(userId).select('-password -refreshToken');
-};
-
-// 정보 수정
-const updateUserProfile = async (userId, updateData) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('해당 유저 정보가 없습니다.');
-  }
-
-  // 비밀번호 처리
-  if (updateData.newPassword) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(updateData.newPassword, salt);
-    delete updateData.newPassword; // 비밀번호는 따로 처리했으므로 삭제 (혹시나 나중에 일괄수정 기능 만들게 될거 대비해서)
-  }
-
-  // 나머지 필드 업데이트 (동적 할당)
-  Object.assign(user, updateData);
-
   await user.save();
   return user;
 };
 
-// 탈퇴
-const deleteUser = async (userId) => {
-  const user = await User.findById(userId);
+// 2. 로그인 검증
+const loginUser = async (id, password) => {
+  const user = await User.findOne({ id });
   if (!user) {
-    throw new Error('해당 유저 정보가 없습니다.');
+    throw new Error('ID 또는 비밀번호가 잘못되었습니다.');
   }
-  await user.remove();
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error('ID 또는 비밀번호가 잘못되었습니다.');
+  }
+
+  // 로그인 성공 시 토큰 발급
+  const tokens = await tokenService.generateTokens(user);
+  return { user, tokens };
 };
 
 
 module.exports = {
   registerUser,
   loginUser,
-  getUserProfile,
-  updateUserProfile,
-  deleteUser,
 };
+
+/*authService.js 파일은 JWT 발급 및 로그인 관련 로직을 담당하며, 로컬 및 소셜 로그인 시 필요한 토큰 발급과 사용자 인증을 처리합니다. 이 서비스 파일에서는 사용자 로그인 검증, JWT 발급 및 반환을 주요 기능으로 구현합니다.
+
+ 13번 작업: authService.js 파일 구성
+
+ 구현할 주요 기능
+1. 회원가입: 새로운 로컬 계정을 생성하여 저장.
+2. 로그인 검증: 사용자의 이메일과 비밀번호를 확인하여 로그인 허용 여부 결정.
+3. JWT 발급: 로그인 성공 시 사용자에게 JWT와 리프레시 토큰을 발급하여 세션을 유지.
+
+
+ 기능 설명
+
+1. 회원가입 (registerUser)
+   - email을 기준으로 중복 계정을 확인하고, 중복된 경우 오류를 발생시킵니다.
+   - 비밀번호를 해시하여 새로운 User 객체로 생성 및 저장합니다.
+   - 저장된 사용자 객체를 반환합니다.
+
+2. 로그인 검증 (loginUser)
+   - 이메일로 사용자를 조회하고, 비밀번호를 비교하여 유효성을 검증합니다.
+   - 비밀번호가 일치하면 tokenService.generateTokens를 통해 JWT와 리프레시 토큰을 발급받아 반환합니다.
+
+3. 소셜 로그인 (socialLogin)
+   - 소셜 계정(provider와 providerId)을 기준으로 연동된 로컬 계정을 찾습니다.
+   - 해당 소셜 계정이 연동된 로컬 계정이 없는 경우 에러를 반환합니다.
+   - 로그인 성공 시 tokenService.generateTokens로 JWT와 리프레시 토큰을 발급받아 반환합니다.
+
+ 추가 설명
+- 토큰 발급: tokenService.generateTokens를 호출하여 로그인 성공 시 JWT와 리프레시 토큰을 발급받고 반환합니다.
+- 에러 처리: 회원가입 시 중복 계정 에러, 로그인 시 인증 실패 에러를 명확히 반환하여 사용자에게 알립니다.
+
+이제 authService.js에서 로컬 및 소셜 로그인 관련 인증 및 JWT 발급 로직을 간단하게 관리할 수 있습니다.*/
