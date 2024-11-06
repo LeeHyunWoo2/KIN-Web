@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
+  id:{
+    type: String,
+    required: false, // 소셜 유저가 로컬 등록을 안하면 id와 pw란이 비워져있어야함
+    unique: true,
+    sparse: true, // null 값은 무시함 (소셜 id 빈칸이 중복이라고 해서 추가)
+  },
   name: {
     type: String,
     required: true,
@@ -36,7 +42,12 @@ const UserSchema = new mongoose.Schema({
       providerId: {
         type: String, // 소셜 로그인 제공자의 고유 ID
         required: true,
+        unique: true,
       },
+      socialRefreshToken: {
+        type:String,
+        required: false,
+      }
     }
   ], // 여러 소셜 계정을 연결할 수 있는 배열
   role: {
@@ -48,10 +59,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg'
   },
-  refreshToken: { // 발급된 Refresh Token을 저장
+/*  refreshToken: { // 발급된 Refresh Token을 저장
     type: String,  // 로그인 시 발급되므로 초기에는 없음
     required: false,
-  },
+  },*/
   otpEnabled: {
     type: Boolean,
     default: false,

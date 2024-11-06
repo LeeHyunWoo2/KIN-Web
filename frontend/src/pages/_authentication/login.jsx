@@ -34,8 +34,8 @@ export default function Dashboard() {
     event.preventDefault();
 
     const credentials = {
-      email: 'asd@asd.asd',
-      password: 'Asd123456!',
+      id: 'test',
+      password: 'Test123456!',
     };
 
     const tokens = await loginUser(credentials);
@@ -52,8 +52,8 @@ export default function Dashboard() {
     event.preventDefault();
 
     const credentials = {
-      email: 'admin@admin.com',
-      password: 'Admin123!@#',
+      id: 'testadmin',
+      password: 'Admin123456!',
     };
 
     const tokens = await loginUser(credentials);

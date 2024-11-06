@@ -5,7 +5,7 @@ const SocialLoginSuccess = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // URL에서 필요한 사용자 정보를 추출 (액세스 토큰과 리프레시 토큰은 서버에서 쿠키로 설정됨)
+    // URL에서 필요한 사용자 정보를 추출
     const { name, email, profileIcon } = router.query;
 
     if (name && email) {
