@@ -9,7 +9,7 @@ const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true, // 사용자 별로 카테고리 이름은 고유해야 함
+    unique: true, // 사용자 별로 카테고리 이름은 고유해야 함. 타 사용자와는 중복 가능
   },
   description: {
     type: String,

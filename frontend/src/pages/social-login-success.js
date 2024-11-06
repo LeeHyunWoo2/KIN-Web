@@ -20,7 +20,7 @@ const SocialLoginSuccess = () => {
     }
   }, [router.query]);
 
-  return <div>로그인 성공! 리다이렉트 중...</div>;
+  return <div></div>;
 };
 
 export default SocialLoginSuccess;
