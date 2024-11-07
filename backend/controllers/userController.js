@@ -1,16 +1,13 @@
-const User = require('../models/user');
+const userService = require('../services/userService');
 const tokenService = require('../services/tokenService');
 
 // 1. 사용자 정보 조회
 const getUserInfo = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password'); // 비밀번호 제외
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
+    const user = await userService.getUserById(req.user.id);
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ message: '사용자 정보를 가져오는 중 오류가 발생했습니다.', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -18,50 +15,48 @@ const getUserInfo = async (req, res) => {
 const updateUserInfo = async (req, res) => {
   try {
     const { name, profileIcon } = req.body;
-    const user = await User.findById(req.user.id);
-
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-
-    // 사용자 정보 업데이트
-    user.name = name || user.name;
-    user.profileIcon = profileIcon || user.profileIcon;
-    await user.save();
-
-    res.status(200).json({ message: '사용자 정보가 성공적으로 수정되었습니다.', user });
+    const updatedUser = await userService.updateUser(req.user.id, { name, profileIcon });
+    res.status(200).json({ message: '사용자 정보가 성공적으로 수정되었습니다.', user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: '사용자 정보 수정 중 오류가 발생했습니다.', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// 3. 회원 탈퇴
+// 3. 로컬 계정 추가 (소셜 Only 계정용)
+const addLocalAccount = async (req, res) => {
+  try {
+    const { id, email, password } = req.body;
+    await userService.addLocalAccount(req.user.id, id, email, password);
+    res.status(200).json({ message: '로컬 계정이 성공적으로 추가되었습니다.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 4. 회원 탈퇴
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-
-    // 유저 삭제 및 토큰 폐기
-    await User.findByIdAndDelete(req.user.id);
-    await tokenService.invalidateTokens(req.cookies.refreshToken); // 리프레시 토큰 폐기
+    await userService.deleteUserById(req.user.id);
+    await tokenService.verifyRefreshToken(req.cookies.refreshToken);
 
     // 모든 쿠키 삭제
     res.clearCookie('accessToken', { httpOnly: true });
     res.clearCookie('refreshToken', { httpOnly: true });
 
-    res.status(200).json({ message: '회원 탈퇴가 성공적으로 처리되었습니다.' });
+    res.redirect('/login');
   } catch (error) {
-    res.status(500).json({ message: '회원 탈퇴 중 오류가 발생했습니다.', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
   getUserInfo,
   updateUserInfo,
+  addLocalAccount,
   deleteUser,
-}
+};
+
+
 
 /*userController.js는 사용자 정보 조회, 수정, 삭제와 같은 CRUD 작업을 처리하는 컨트롤러로, 사용자 정보에 접근할 때는 인증된 사용자만 접근할 수 있도록 JWT 인증을 확인합니다.
 

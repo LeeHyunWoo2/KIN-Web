@@ -1,4 +1,3 @@
-// routes/socialRoutes.js
 const express = require('express');
 const passport = require('passport');
 const { unlinkSocialAccount } = require('../controllers/socialController');
@@ -8,9 +7,9 @@ const router = express.Router();
 
 
 const providers = {
-  google: { scope: ['profile', 'email']},
-  kakao: { scope: ['profile_nickname', 'account_email', 'profile_image']},
-  naver: { scope: 'profile'},
+  google: { scope: ['profile', 'email'], strategy: 'google-link' },
+  kakao: { scope: ['profile_nickname', 'account_email', 'profile_image'], strategy: 'kakao-link' },
+  naver: { scope: 'profile', strategy: 'naver-link' },
 };
 
 // 소셜 로그인 진입
@@ -56,12 +55,12 @@ router.get('/:provider/callback', (req, res, next) => {
 
 // 추가 연동 라우트 설정
 router.get('/link/:provider', authenticateUser, (req, res, next) => {
-  req.session.isLink = true; // 추가연동이라는 시그널
   req.session.userId = String(req.user.id);
-
+  console.log('추가연동 라우트')
   const provider = req.params.provider;
+
   if (['google', 'kakao', 'naver'].includes(provider)) {
-    passport.authenticate(provider, {
+    passport.authenticate(providers[provider].strategy, {
       scope: providers[provider].scope,
       accessType: 'offline', // OAuth 2.0 refreshToken 요청 (구글때문에)
       prompt: 'consent' // 매번 사용자 동의 요청
@@ -74,27 +73,20 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
 // 추가 연동 콜백
 router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
   console.log(req.user)
+  console.log('추가연동 콜백')
   const provider = req.params.provider;
-  passport.authenticate(provider, { failureRedirect: '/userinfo' }, (err, user) => {
-    if (err) {
-      console.error(`${provider} 계정 연동 실패:`, err);
-      return res.status(401).json({ message: `${provider} 계정 연동 실패` });
-    }
 
-    // 중복된 연동 시 리다이렉트 처리
-    if (!user) {
+  passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (err) => {
+    if (err) {
       return res.redirect(`${process.env.FRONTEND_URL}/userinfo?error=duplicated`);
     }
-
     res.redirect(`${process.env.FRONTEND_URL}/userinfo`);
   })(req, res, next);
 });
 
 
-
 // 소셜 계정 연동 해제
 router.delete('/unlink/:provider', authenticateUser, unlinkSocialAccount);
-
 module.exports = router;
 
 /*socialRoutes.js 파일은 소셜 계정 연동 및 연동 해제 관련 경로를 정의하고, 각 경로에서 socialController의 함수들을 호출하여 실제 동작을 수행합니다. 이 파일에서도 authenticateUser 미들웨어를 통해 인증된 사용자만 접근할 수 있게 합니다.

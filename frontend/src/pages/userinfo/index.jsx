@@ -1,11 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import HeaderLayout from "@/components/HeaderLayout";
-import { getUserProfile, updateUserProfile, linkSocialAccount, unlinkSocialAccount } from "@/services/authService";
+import {
+  getUserProfile,
+  updateUserProfile,
+  linkSocialAccount,
+  unlinkSocialAccount, deleteUserProfile
+} from "@/services/authService";
 import withAuth from "@/lib/hoc/withAuth";
-import { useRouter } from "next/router";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+import {Button} from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader
+} from "@/components/ui/card";
+import Image from "next/image";
 
 function UserInfoPage() {
-  const router = useRouter();
   const [userInfo, setUserInfo] = useState({
     profileIcon: '',
     email: '',
@@ -19,42 +40,50 @@ function UserInfoPage() {
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 사용자 정보 불러오기
+  // 사용자 정보 불러오기 함수
+  const fetchUserInfo = async () => {
+    try {
+      const data = await getUserProfile();
+      setUserInfo(data.user);
+    } catch (error) {
+      console.error("사용자 정보를 불러오는 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false); // 마지막엔 무조건 로딩 완료
+    }
+  };
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const data = await getUserProfile();
-        setUserInfo(data.user); // API 응답 구조에 따라 data.user 사용
-      } catch (error) {
-        console.error('사용자 정보를 불러오는 중 오류 발생:', error);
-      }
-    };
     fetchUserInfo();
   }, []);
 
-  useEffect(() => {
-    if (router.query.error === 'duplicated') {
-      setErrorMessage('해당 소셜 계정은 이미 연동된 상태입니다.');
-    }
-  }, [router.query.error]);
-
   // 소셜 계정 연동 상태 확인 함수
   const getSocialAccountStatus = (provider) => {
-    const account = userInfo.socialAccounts.find((acc) => acc.provider === provider);
+    const account = userInfo.socialAccounts.find(
+        (acc) => acc.provider === provider);
     return account ? `연동됨: ${account.providerId}` : '미연동';
   };
 
+  const providerIconPath = (provider) => {
+    return `/images/loginlogo/${provider}-login.png`;
+  }
+
   const isLocalAccount = () => {
-    return userInfo.socialAccounts.some(account => account.provider === 'local');
+    return userInfo.socialAccounts.some(
+        account => account.provider === 'local');
+  };
+
+  // 연동된 소셜 계정 수 확인 함수
+  const getLinkedSocialAccountCount = () => {
+    return userInfo.socialAccounts.filter(
+        (account) => account.provider !== "local").length;
   };
 
   // 이름 업데이트 함수
   const handleNameUpdate = async () => {
     try {
-      await updateUserProfile({ name: newName });
-      setUserInfo((prev) => ({ ...prev, name: newName }));
+      await updateUserProfile({name: newName});
+      setUserInfo((prev) => ({...prev, name: newName}));
       setIsEditingName(false);
     } catch (error) {
       console.error('이름 업데이트 중 오류 발생:', error);
@@ -64,8 +93,8 @@ function UserInfoPage() {
   // 전화번호 업데이트 함수
   const handlePhoneUpdate = async () => {
     try {
-      await updateUserProfile({ phone: newPhone });
-      setUserInfo((prev) => ({ ...prev, phone: newPhone }));
+      await updateUserProfile({phone: newPhone});
+      setUserInfo((prev) => ({...prev, phone: newPhone}));
       setIsEditingPhone(false);
     } catch (error) {
       console.error('전화번호 업데이트 중 오류 발생:', error);
@@ -75,20 +104,28 @@ function UserInfoPage() {
   // 소셜 계정 연동 or 해제 함수
   const handleSocialAccountToggle = async (provider) => {
     try {
-      if (getSocialAccountStatus(provider) === '미연동') {
-        linkSocialAccount(provider);
+      if (getSocialAccountStatus(provider) === "미연동") {
+        // 연동하기 클릭 시 즉시 연동 로직 호출
+        await linkSocialAccount(provider);
       } else {
+        // 연동 해제일 때 모달 표시
         const updatedUser = await unlinkSocialAccount(provider);
-        console.log(updatedUser)
-        setUserInfo(updatedUser.user); // API 응답 구조에 따라 updatedUser.user 사용
+        setUserInfo(updatedUser.user);
+        setIsLoading(true); // 로딩 상태로 전환
+        await fetchUserInfo(); // 업데이트 후 데이터 새로 가져오기
       }
     } catch (error) {
       console.error(`${provider} 계정 연동 처리 중 오류 발생:`, error);
     }
-  };
+  }
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
-      <div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
+      <div
+          className="p-6 m-10 border bg-white rounded-lg shadow-md max-w-lg mx-auto">
         <h2 className="text-2xl font-semibold mb-4">내 정보</h2>
 
         <div className="mb-4">
@@ -112,204 +149,6 @@ function UserInfoPage() {
           <p className="text-gray-600">{userInfo.email}</p>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">이름:</label>
-          {isEditingName ? (
-              <div>
-                <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    className="border p-1 w-full"
-                />
-                <button onClick={handleNameUpdate} className="text-blue-500 mr-2">저장</button>
-                <button onClick={() => setIsEditingName(false)} className="text-gray-500">취소</button>
-              </div>
-          ) : (
-              <div>
-                <p className="text-gray-600">{userInfo.name}</p>
-                <button onClick={() => setIsEditingName(true)} className="text-blue-500">이름 변경</button>
-              </div>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">전화번호:</label>
-          {isEditingPhone ? (
-              <div>
-                <input
-                    type="text"
-                    value={newPhone}
-                    onChange={(e) => setNewPhone(e.target.value)}
-                    className="border p-1 w-full"
-                />
-                <button onClick={handlePhoneUpdate} className="text-blue-500 mr-2">저장</button>
-                <button onClick={() => setIsEditingPhone(false)} className="text-gray-500">취소</button>
-              </div>
-          ) : (
-              <div>
-                <p className="text-gray-600">{userInfo.phone}</p>
-                <button onClick={() => setIsEditingPhone(true)} className="text-blue-500">전화번호 변경</button>
-              </div>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">계정 생성일:</label>
-          <p className="text-gray-600">{new Date(userInfo.createdAt).toLocaleDateString()}</p>
-        </div>
-
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">소셜 계정 연동</h3>
-          {['google', 'kakao', 'naver'].map((platform) => (
-              <div key={platform} className="mb-2">
-                <label className="block text-gray-700 capitalize">{platform}:</label>
-                <p className="text-gray-600">{getSocialAccountStatus(platform)}</p>
-                <button className="text-blue-500" onClick={() => handleSocialAccountToggle(platform)}>
-                  {getSocialAccountStatus(platform) === '미연동' ? '연동하기' : '연동 해제'}
-                </button>
-              </div>
-          ))}
-        </div>
-      </div>
-  );
-}
-
-UserInfoPage.getLayout = function getLayout(page) {
-  return <HeaderLayout>{page}</HeaderLayout>;
-}
-
-export default withAuth(UserInfoPage);
-
-
-/*
-import React, {useState, useEffect} from 'react';
-import HeaderLayout from "@/components/HeaderLayout";
-import { getUserProfile, updateUserProfile, linkSocialAccount, unlinkSocialAccount } from "@/services/authService";
-import withAuth from "@/lib/hoc/withAuth";
-import { useRouter } from "next/router";
-
-function UserInfoPage() {
-   const router = useRouter();
-  const [userInfo, setUserInfo] = useState({
-    profileIcon: '',
-    email: '',
-    name: '',
-    phone: '',
-    createdAt: '',
-    socialAccounts: [],
-  });
-
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingPhone, setIsEditingPhone] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newPhone, setNewPhone] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-
-   // 사용자 정보 불러오기
-   useEffect(() => {
-     const fetchUserInfo = async () => {
-       try {
-         const data = await getUserProfile();
-         setUserInfo(data);
-         console.log(data);
-       } catch (error) {
-         console.error('사용자 정보를 불러오는 중 오류 발생:', error);
-       }
-     };
-     fetchUserInfo();
-   }, []);
-
-  useEffect(() => {
-    // URL의 쿼리 파라미터에서 'error' 값을 가져옴
-    if (router.query.error === 'duplicated') {
-      setErrorMessage('해당 소셜 계정은 이미 연동된 상태입니다.');
-    }
-  }, [router.query.error]);
-
-
-   // 소셜 계정 연동 상태 확인 함수
-   const getSocialAccountStatus = (provider) => {
-     const account = userInfo.socialAccounts.find((acc) => acc.provider === provider);
-     return account ? `연동됨: ${account.providerId}` : '미연동';
-   };
-
-   // 로컬 계정 여부 확인 함수
-   const isLocalAccount = () => {
-     return userInfo.socialAccounts.some(account => account.provider === 'local');
-   };
-
-   // 이름 업데이트 함수
-   const handleNameUpdate = async () => {
-     try {
-       await updateUserProfile({ name: newName });
-       setUserInfo((prev) => ({ ...prev, name: newName }));
-       setIsEditingName(false);
-       localStorage.setItem('name', newName);
-     } catch (error) {
-       console.error('이름 업데이트 중 오류 발생:', error);
-     }
-   };
-
-   // 전화번호 업데이트 함수
-   const handlePhoneUpdate = async () => {
-     try {
-       await updateUserProfile({ phone: newPhone });
-       setUserInfo((prev) => ({ ...prev, phone: newPhone }));
-       setIsEditingPhone(false);
-     } catch (error) {
-       console.error('전화번호 업데이트 중 오류 발생:', error);
-     }
-   };
-
-   // 소셜 계정 연동 or 해제 함수
-   const handleSocialAccountToggle = async (provider) => {
-     try {
-       if (getSocialAccountStatus(provider) === '미연동') {
-         // 소셜 계정 연동 페이지로 리다이렉트
-         linkSocialAccount(provider);
-       } else {
-         // 계정 연동 해제
-         const updatedUser = await unlinkSocialAccount(provider);
-         setUserInfo(updatedUser);
-       }
-     } catch (error) {
-       console.error(`${provider} 계정 연동 처리 중 오류 발생:`, error);
-     }
-   };
-
-
-   return (
-      <div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">내 정보</h2>
-
-        {/!* 계정 유형 표시 *!/}
-        <div className="mb-4">
-          <label className="block text-gray-700">계정 유형:</label>
-          <p className="text-gray-600">
-            {isLocalAccount() ? '이메일 계정' : '소셜 계정'}
-          </p>
-        </div>
-
-        {/!* 프사 *!/}
-        <div className="mb-4">
-          <img
-              src={userInfo.profileIcon}
-              alt="Profile Icon"
-              className="w-24 h-24 rounded-full mx-auto"
-          />
-          <button className="mt-2 text-blue-500">프로필 사진 변경</button>
-        </div>
-
-        {/!* 이메일 *!/}
-        <div className="mb-4">
-          <label className="block text-gray-700">이메일:</label>
-          <p className="text-gray-600">{userInfo.email}</p>
-        </div>
-
-        {/!* 이름/닉네임 *!/}
         <div className="mb-4">
           <label className="block text-gray-700">이름:</label>
           {isEditingName ? (
@@ -337,7 +176,6 @@ function UserInfoPage() {
           )}
         </div>
 
-        {/!* 폰번호 *!/}
         <div className="mb-4">
           <label className="block text-gray-700">전화번호:</label>
           {isEditingPhone ? (
@@ -365,40 +203,78 @@ function UserInfoPage() {
           )}
         </div>
 
-        {/!* 가입일 *!/}
         <div className="mb-4">
           <label className="block text-gray-700">계정 생성일:</label>
           <p className="text-gray-600">{new Date(
               userInfo.createdAt).toLocaleDateString()}</p>
         </div>
 
-        {/!* 소셜 연동 정보 *!/}
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">소셜 계정 연동</h3>
-          {['google', 'kakao', 'naver'].map((platform) => (
-              <div key={platform} className="mb-2">
-                <label
-                    className="block text-gray-700 capitalize">{platform}:</label>
-                <p className="text-gray-600">
-                  {getSocialAccountStatus(platform)}
-                </p>
-                <button
-                    className="text-blue-500"
-                    onClick={() => handleSocialAccountToggle(platform)}
-                >
-                  {getSocialAccountStatus(platform) === '미연동' ? '연동하기'
-                      : '연동 해제'}
-                </button>
-              </div>
-          ))}
+
+        <div className="flex flex-col items-center gap-4 mt-10">
+          {["google", "kakao", "naver"].map((provider) => {
+            const isLinked = getSocialAccountStatus(provider) !== "미연동";
+            const socialStatus = getSocialAccountStatus(provider);
+
+            return (
+                <Card key={provider} className="w-[350px]">
+                  <CardHeader>
+                    <div className="flex">
+                      <Image src={providerIconPath(provider)} priority={true}
+                             alt={`${provider} logo`} className="mr-3"
+                             width={36} height={36}/>
+
+                      <h3 className="font-semibold  flex items-center">
+                        {provider.charAt(0).toUpperCase()
+                            + provider.slice(1)}
+                      </h3>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{socialStatus === "미연동" ? "연동된 계정이 없습니다."
+                        : `연동됨: ${socialStatus}`}</p>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    {isLinked ? (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                                disabled={getLinkedSocialAccountCount() === 1}
+                                className={getLinkedSocialAccountCount() === 1
+                                    ? "opacity-50 cursor-not-allowed" : ""}>연동 해제
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{`${provider} 계정을 연동 해제하시겠습니까?`}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                이 계정을 연동 해제하면 더 이상 {provider}를 통해 로그인할 수 없습니다.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <Button onClick={() => handleSocialAccountToggle(
+                                  provider)}>연동 해제</Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                    ) : (
+                        <Button onClick={() => handleSocialAccountToggle(
+                            provider)}>연동하기</Button>
+                    )}
+                  </CardFooter>
+                </Card>
+            );
+          })}
+        </div>
+        <div className="flex justify-end mt-10">
+          <Button variant="destructive" onClick={deleteUserProfile}>회원탈퇴</Button>
         </div>
       </div>
   );
- };
-
-UserInfoPage.getLayout = function getLayout(page) {
-  return <HeaderLayout>{page}</HeaderLayout>
 }
 
-export default withAuth(UserInfoPage);*/
+UserInfoPage.getLayout = function getLayout(page) {
+  return <HeaderLayout>{page}</HeaderLayout>;
+}
+
+export default withAuth(UserInfoPage);

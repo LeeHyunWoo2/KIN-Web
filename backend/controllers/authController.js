@@ -7,7 +7,7 @@ const registerController = async (req, res) => {
   try {
     const { id, email, password, name, phone, marketingConsent  } = req.body;
     const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent  });
-    const tokens = await tokenService.generateTokens(user);
+    const tokens = tokenService.generateTokens(user);
 
     res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 }); // 1시간
     res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7일
@@ -36,7 +36,7 @@ const loginController = async (req, res) => {
 // 3. 로그아웃
 const logoutController = async (req, res) => {
   try {
-    await tokenService.invalidateTokens(req.cookies.refreshToken); // 리프레시 토큰 폐기
+    await tokenService.verifyRefreshToken(req.cookies.refreshToken);
 
     // 모든 로그인 관련 쿠키 삭제
     res.clearCookie('accessToken', { httpOnly: true });
@@ -48,10 +48,24 @@ const logoutController = async (req, res) => {
   }
 };
 
+// 4. 토큰 갱신
+const newTokenController = async (req, res) => {
+  try {
+    const { refreshToken } = req.cookies;
+    await tokenService.verifyRefreshToken(refreshToken);
+    let tokens;
+    res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+  } catch (error){
+
+  }
+}
+
 module.exports = {
   registerController,
   loginController,
   logoutController,
+  newTokenController,
 };
 
 /*authController.js는 로컬 및 소셜 공통 로그인, 로그아웃, 회원가입을 처리하는 컨트롤러로, 기본적인 JWT 발급 및 검증 로직을 담당합니다.
@@ -78,7 +92,7 @@ module.exports = {
    - 로그인 실패 시 에러 메시지를 반환합니다.
 
 3. 로그아웃 (logoutController):
-   - tokenService.invalidateTokens를 통해 리프레시 토큰을 폐기합니다.
+   - tokenService.verifyRefreshToken를 통해 리프레시 토큰을 확인 후 폐기합니다.
    - accessToken, refreshToken 쿠키를 삭제하여 사용자를 로그아웃 처리합니다.
 
  추가 설명

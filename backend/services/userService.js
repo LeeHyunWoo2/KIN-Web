@@ -1,56 +1,73 @@
-// services/userService.js
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const { revokeSocialAccess } = require('../controllers/socialController');
+const { generateOAuthToken } = require('./tokenService')
 
 // 1. 사용자 정보 조회
 const getUserById = async (userId) => {
-  try {
-    const user = await User.findById(userId).select('-password'); // 비밀번호 제외
-    if (!user) {
-      throw new Error('사용자를 찾을 수 없습니다.');
-    }
-    return user;
-  } catch (error) {
-    throw new Error(`사용자 정보 조회 실패: ${error.message}`);
+  const user = await User.findById(userId).select('-password'); // 비밀번호 제외
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
   }
+  return user;
 };
 
 // 2. 사용자 정보 수정
 const updateUser = async (userId, updateData) => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error('사용자를 찾을 수 없습니다.');
-    }
-
-    // 전달된 데이터로 사용자 정보 업데이트
-    if (updateData.name) user.name = updateData.name;
-    if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
-
-    await user.save();
-    return user;
-  } catch (error) {
-    throw new Error(`사용자 정보 수정 실패: ${error.message}`);
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
   }
+
+  if (updateData.name) user.name = updateData.name;
+  if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
+
+  await user.save();
+  return user;
 };
 
-// 3. 사용자 삭제
-const deleteUserById = async (userId) => {
-  try {
-    const user = await User.findByIdAndDelete(userId);
-    if (!user) {
-      throw new Error('사용자를 찾을 수 없습니다.');
-    }
-    return user;
-  } catch (error) {
-    throw new Error(`회원 탈퇴 실패: ${error.message}`);
+// 3. 로컬 계정 추가 (소셜 Only 계정용)
+const addLocalAccount = async (userId, id, email, password) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('소셜 사용자를 찾을 수 없습니다.');
   }
+  if (user.socialAccounts.some(account => account.provider === 'local')) {
+    throw new Error('이미 등록된 ID 혹은 이메일 입니다.');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  user.id = id;
+  user.email = email;
+  user.password = hashedPassword
+  user.socialAccounts.push({ provider: 'local' });
+  await user.save();
+};
+
+// 4. 회원 탈퇴
+const deleteUserById = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
+
+  for (const account of user.socialAccounts) {
+    if (account.provider !== 'local') {
+      const accessToken = await generateOAuthToken(user, account.provider);
+      await revokeSocialAccess(account.provider, accessToken);
+    }
+  }
+
+  await User.findByIdAndDelete(userId);
 };
 
 module.exports = {
   getUserById,
   updateUser,
+  addLocalAccount,
   deleteUserById,
 };
+
 
 /*userService.js 파일은 사용자 정보의 CRUD 작업을 수행하는 서비스로, userController에서 호출되어 데이터베이스와 상호작용합니다. 이 파일에서 사용자 정보 조회, 수정, 삭제 등의 로직을 정의합니다.
 
