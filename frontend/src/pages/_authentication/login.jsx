@@ -10,14 +10,14 @@ import {router} from "next/client";
 
 
 export default function Dashboard() {
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     const credentials = {
-      email,
+      id,
       password,
     };
 
@@ -78,14 +78,14 @@ export default function Dashboard() {
             </div>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="id">ID</Label>
                 <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
+                    id="id"
+                    type="text"
+                    placeholder="Enter your id"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)} // 상태 업데이트
+                    value={id}
+                    onChange={(e) => setId(e.target.value)} // 상태 업데이트
                 />
               </div>
               <div className="grid gap-2">

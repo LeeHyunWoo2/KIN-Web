@@ -8,7 +8,7 @@ const { JWT_SECRET, JWT_EXPIRATION, REFRESH_TOKEN_SECRET, REFRESH_EXPIRATION } =
 
 // 1. JWT와 리프레시 토큰 발급
 const generateTokens = (user) => {
-  const accessToken = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+  const accessToken = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
   const refreshToken = jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_EXPIRATION });
   return { accessToken, refreshToken };
 };
@@ -22,11 +22,12 @@ const verifyToken = (token, secret = JWT_SECRET) => {
   }
 };
 
+
 // 3. 리프레시 토큰 폐기
-const invalidateTokens = async (refreshToken) => {
+const verifyRefreshToken = async (refreshToken) => {
   try {
-    // 토큰 무효화 로직 (캐시, 블랙리스트 추가 등 필요 시 구현)
-    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET); // 유효성 확인 후 추가 로직 적용 가능
+    // 토큰 무효화 로직
+    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET); // 유효성 확인 후 추가 로직 가능
     return true;
   } catch (error) {
     console.error('리프레시 토큰 폐기 실패:', error);
@@ -87,7 +88,7 @@ const generateOAuthToken = async (user, provider) => {
 module.exports = {
   generateTokens,
   verifyToken,
-  invalidateTokens,
+  verifyRefreshToken,
   generateOAuthToken,
 };
 

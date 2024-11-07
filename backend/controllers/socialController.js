@@ -71,6 +71,7 @@ const revokeSocialAccess = async (provider, accessToken) => {
 
 module.exports = {
   unlinkSocialAccount,
+  revokeSocialAccess,
 };
 
 /*socialController.js 파일은 소셜 계정 연동 및 연동 해제 관련 기능을 담당합니다. 소셜 계정을 로컬 계정에 추가로 연동하거나, 기존 연동된 소셜 계정을 해제하는 역할을 합니다.

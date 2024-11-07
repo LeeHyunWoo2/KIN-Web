@@ -1,7 +1,6 @@
-// controllers/checkSessionController.js
 const tokenService = require('../services/tokenService');
 
-const checkSession = (req, res) => {
+const checkSession = async (req, res) => {
   const { accessToken } = req.cookies;
   if (!accessToken) {
     return res.status(401).json({ message: '인증 토큰이 없습니다.' });

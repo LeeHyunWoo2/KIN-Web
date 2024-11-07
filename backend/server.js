@@ -3,7 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const passport = require('passport');
-require('./config/passport');
+const initializePassport = require('./config/passport');
 const connectDB = require('./config/db');
 const morgan = require('morgan');
 
@@ -14,7 +14,7 @@ const socialRoutes = require('./routes/socialRoutes');
 const session = require("express-session");
 
 const app = express();
-
+initializePassport(passport);
 // 1. 데이터베이스 연결
 connectDB();
 

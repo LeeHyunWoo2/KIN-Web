@@ -3,10 +3,9 @@ import Mail from "@/components/notes/mail";
 import Layout from "@/components/Layout"
 import withAuth from "@/lib/hoc/withAuth";
 
-function MailPage() {
+export default function MailPage() {
   const defaultLayout = undefined;
   const defaultCollapsed = undefined;
-  console.log('노트 페이지 호출')
 
   return (
       <>
@@ -28,4 +27,3 @@ MailPage.getLayout = function getLayout(page) {
 }
 
 // HOC로 감싸서 내보내기
-export default withAuth(MailPage);
