@@ -1,5 +1,5 @@
-const authService = require('../services/authService');
-const tokenService = require('../services/tokenService');
+const authService = require('../../services/user/authService');
+const tokenService = require('../../services/user/tokenService');
 
 // 1. 회원가입
 const registerController = async (req, res) => {

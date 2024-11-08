@@ -1,7 +1,7 @@
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
 const { Strategy: KakaoStrategy } = require('passport-kakao');
 const { Strategy: NaverStrategy } = require('passport-naver');
-const User = require('../models/user');
+const User = require('../../models/user');
 
 const configureLinkingStrategies = (passport) => {
 // Google 연동 전략

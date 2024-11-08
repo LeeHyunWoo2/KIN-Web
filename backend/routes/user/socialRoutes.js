@@ -1,8 +1,8 @@
 const express = require('express');
 const passport = require('passport');
-const { unlinkSocialAccount } = require('../controllers/socialController');
-const tokenService = require('../services/tokenService');
-const authenticateUser = require('../middleware/authenticateUser');
+const { unlinkSocialAccount } = require('../../controllers/user/socialController');
+const tokenService = require('../../services/user/tokenService');
+const authenticateUser = require('../../middleware/user/authenticateUser');
 const router = express.Router();
 
 

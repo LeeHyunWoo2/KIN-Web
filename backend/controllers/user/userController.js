@@ -1,4 +1,4 @@
-const userService = require('../services/userService');
+const userService = require('../../services/user/userService');
 
 // 1. 사용자 정보 조회
 const getUserInfo = async (req, res) => {

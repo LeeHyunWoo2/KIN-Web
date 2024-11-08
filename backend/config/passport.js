@@ -1,6 +1,6 @@
 // passport 를 통해 여러 인증 전략을 통합적으로 관리하는 파일
-const configureSocialStrategies = require("../services/socialAuthService");
-const configureLinkingStrategies = require("../services/linkSocialService");
+const configureSocialStrategies = require("../services/user/socialAuthService");
+const configureLinkingStrategies = require("../services/user/linkSocialService");
 
 
 module.exports = (passport) => {

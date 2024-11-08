@@ -1,17 +1,16 @@
-import {mails} from "@/lib/notes/data";
-import Mail from "@/components/notes/mail";
+import {notes} from "@/lib/notes/data";
+import Note from "@/components/notes/note";
 import Layout from "@/components/Layout"
-import withAuth from "@/lib/hoc/withAuth";
 
-export default function MailPage() {
+export default function NotePage() {
   const defaultLayout = undefined;
   const defaultCollapsed = undefined;
 
   return (
       <>
         <div className="hidden flex-col md:flex">
-          <Mail
-              mails={mails}
+          <Note
+              notes={notes}
               defaultLayout={defaultLayout}
               defaultCollapsed={defaultCollapsed}
               navCollapsedSize={4}
@@ -22,6 +21,6 @@ export default function MailPage() {
 }
 
 // 이 페이지에 레이아웃 컴포넌트 적용
-MailPage.getLayout = function getLayout(page) {
+NotePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 }
