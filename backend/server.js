@@ -29,7 +29,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true })); // 필�
 
 // express-session 설정
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'GWLkL4Sqhdyo3Jk6bnRIQ24Kjs9yZOAC',  // 세션 암호화에 사용할 비밀키
+  secret: process.env.SESSION_SECRET,  // 세션 암호화에 사용할 비밀키
   resave: false,  // 세션을 강제로 다시 저장하지 않음
   saveUninitialized: false,  // 초기화되지 않은 세션을 저장하지 않음
   // 배포 시 쿠키가 HTTPS 연결에서만 전송되도록 설정, 같은 사이트에서만 쿠키가 전송되도록 설정하여 CSRF 방지
@@ -63,24 +63,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
 });
-
-/*server.js 파일은 전체 서버 설정 및 주요 미들웨어 초기화를 담당합니다.
-
- 1번 작업: server.js 파일 구성
-
- 1. 필요한 모듈 및 환경 변수 로드
-   - 필요한 패키지들(express, dotenv, cookie-parser, passport 등)을 불러오고, 환경 변수를 .env 파일에서 가져옵니다.
-
- 2. 미들웨어 설정
-   - 기본적인 미들웨어를 등록합니다.
-   - cookie-parser, express.json, cors(필요 시 설정), passport 초기화 등을 포함하여, 쿠키와 JSON 데이터를 원활하게 처리할 수 있도록 합니다.
-
- 3. 라우터 연결
-   - 각 라우터 파일(authRoutes, userRoutes, socialRoutes)을 불러와 연결합니다.
-   - 이후 authRoutes는 /auth, userRoutes는 /user, socialRoutes는 /social과 같은 경로로 설정하여 관리하기 쉽게 합니다.
-
- 4. 에러 처리
-   - 서버의 공통적인 에러 처리를 설정하여, 예외 발생 시 에러 응답을 일관되게 합니다.
-
- 5. 서버 실행
-   - app.listen을 사용하여 서버를 실행하고, 포트가 정상적으로 연결되었는지 콘솔에 출력합니다.*/

@@ -15,11 +15,10 @@ const providers = {
 // 소셜 로그인 진입
 router.get('/:provider', (req, res, next) => {
   const provider = req.params.provider;
-  console.log('프로바이더 검증', provider)
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(provider, {
       scope: providers[provider].scope,
-      accessType: 'offline',
+      accessType: 'offline', // 리프레시 토큰 발급 요청
       prompt: 'consent' // 매번 사용자 동의 요청
     })(req, res, next); // 해당 provider로 인증 시작
   } else {
@@ -37,7 +36,7 @@ router.get('/:provider/callback', (req, res, next) => {
 
     try {
       // 토큰 발급
-      const tokens = await tokenService.generateTokens(user);
+      const tokens = tokenService.generateTokens(user);
       // 토큰을 HTTP-Only 쿠키로 설정
       res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 }); // 1시간
       res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7일
@@ -88,24 +87,3 @@ router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
 // 소셜 계정 연동 해제
 router.delete('/unlink/:provider', authenticateUser, unlinkSocialAccount);
 module.exports = router;
-
-/*socialRoutes.js 파일은 소셜 계정 연동 및 연동 해제 관련 경로를 정의하고, 각 경로에서 socialController의 함수들을 호출하여 실제 동작을 수행합니다. 이 파일에서도 authenticateUser 미들웨어를 통해 인증된 사용자만 접근할 수 있게 합니다.
-
- 12번 작업: socialRoutes.js 파일 구성
-
- 구현할 주요 경로
-1. 소셜 계정 추가 연동: POST /social/link
-2. 소셜 계정 연동 해제: DELETE /social/unlink
-
-
- 기능 설명
-
-1. 소셜 계정 추가 연동 (POST /social/link)
-   - authenticateUser 미들웨어를 통해 사용자 인증을 확인한 후 linkSocialAccount를 호출하여 소셜 계정을 로컬 계정에 연동합니다.
-   - 클라이언트에서 소셜 로그인으로 인증된 accessToken, providerId, provider 정보를 전송받아 연동을 수행합니다.
-
-2. 소셜 계정 연동 해제 (DELETE /social/unlink)
-   - authenticateUser 미들웨어를 통해 사용자 인증을 확인한 후 unlinkSocialAccount를 호출하여 소셜 계정 연동 해제를 처리합니다.
-   - 각 소셜 플랫폼의 연동 해제 API를 호출하여 플랫폼과의 연동을 끊고, 사용자 데이터에서 해당 소셜 계정을 삭제합니다.
-
-이제 socialRoutes.js에서 소셜 계정 연동 및 해제 기능을 socialController와 연결하여 관리할 수 있습니다.*/

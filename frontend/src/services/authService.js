@@ -1,4 +1,3 @@
-import axios from "axios";
 import apiClient from "@/lib/apiClient";
 
 // 응답에서 에러가 발생한 경우 리프레시 토큰을 사용해 Access Token을 갱신
