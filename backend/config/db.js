@@ -13,4 +13,3 @@ const connectDB = async () => {
   }
 };
 module.exports = connectDB;
-// connectDB 함수를 모듈로 내보내 다른 파일(server.js)에서 사용할 수 있도록 함.

@@ -30,7 +30,6 @@ import {
   PieChart,
   Plus,
   Settings2,
-  Sparkles,
   SquareTerminal,
   Star,
   Trash,
@@ -84,13 +83,12 @@ import {
 import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
+import {logoutUser} from "@/services/authService";
+import {router} from "next/client";
+import {useEffect, useState} from "react";
+import withAuth from "@/lib/hoc/withAuth";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "./images/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -275,8 +273,28 @@ const data = {
   ],
 }
 
-export default function Page({children}) {
+const handleLogout = () => {
+  logoutUser();
+};
+
+function Page({children}) {
+
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: '',
+    profileIcon: '',
+  });
+
+  useEffect(() => {
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (storedUserInfo) {
+      setUserInfo(storedUserInfo);
+    } else {
+      setUserInfo({name: '', email: '', profileIcon: ''}); // 로그아웃 후 초기화
+    }
+  }, []);
+
   return (
       <SidebarProvider>
         <Sidebar collapsible="icon">
@@ -291,8 +309,8 @@ export default function Page({children}) {
                     >
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage
-                            src={data.user.avatar}
-                            alt={data.user.name}
+                            src={userInfo.profileIcon}
+                            alt={userInfo.name}
                         />
                         <AvatarFallback
                             className="rounded-lg">CN</AvatarFallback>
@@ -300,10 +318,10 @@ export default function Page({children}) {
                       <div
                           className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">
-                        {data.user.name}
+                        {userInfo.name}
                       </span>
                         <span className="truncate text-xs">
-                        {data.user.email}
+                        {userInfo.email}
                       </span>
                       </div>
                       <ChevronRight className="ml-auto size-4"/>
@@ -320,8 +338,8 @@ export default function Page({children}) {
                           className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                         <Avatar className="h-8 w-8 rounded-lg">
                           <AvatarImage
-                              src={data.user.avatar}
-                              alt={data.user.name}
+                              src={userInfo.profileIcon}
+                              alt={userInfo.name}
                           />
                           <AvatarFallback className="rounded-lg">
                             CN
@@ -330,20 +348,22 @@ export default function Page({children}) {
                         <div
                             className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">
-                          {data.user.name}
+                          {userInfo.name}
                         </span>
                           <span className="truncate text-xs">
-                          {data.user.email}
+                          {userInfo.email}
                         </span>
                         </div>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
+                      <Link href="/userinfo">
                       <DropdownMenuItem>
-                        <Sparkles/>
-                        Upgrade to Pro
+                        <UserRoundCog />
+                        Account Settings
                       </DropdownMenuItem>
+                      </Link>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
@@ -362,7 +382,7 @@ export default function Page({children}) {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <Link href="/">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem  onClick={handleLogout}>
                         <LogOut/>
                         Log out
                       </DropdownMenuItem>
@@ -617,3 +637,4 @@ function NavActions({
       </div>
   )
 }
+export default withAuth(Page);

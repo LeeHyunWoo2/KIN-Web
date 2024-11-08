@@ -1,6 +1,7 @@
-import {mails} from "./data";
-import Mail from "./components/mail";
+import {mails} from "@/lib/notes/data";
+import Mail from "@/components/notes/mail";
 import Layout from "@/components/Layout"
+import withAuth from "@/lib/hoc/withAuth";
 
 export default function MailPage() {
   const defaultLayout = undefined;

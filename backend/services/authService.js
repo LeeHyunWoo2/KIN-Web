@@ -1,44 +1,69 @@
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const tokenService = require('./tokenService');
 
-// 회원가입 로직
-const registerUser = async (userData) => {
-  const { name, email, password, provider } = userData;
+// 1. 회원가입 (로컬 계정 생성)
+const registerUser = async ({ id, email, password, name, phone, marketingConsent }) => {
+  // 기존 사용자 중복 확인
+  const existingUser = await User.findOne({ $or: [{ email }, { id }] });
+  if (existingUser) {
+    throw new Error('이미 가입된 이메일 혹은 ID입니다.');
+  }
 
-  // 비밀번호 해싱 처리
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  // 비밀번호 해싱
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = new User({
-    name,
+  // 사용자 생성
+  const user = new User({
+    id,
     email,
     password: hashedPassword,
-    provider,
+    name,
+    phone,
+    marketingConsent,
+    socialAccounts: [
+      {
+        provider: 'local',
+        providerId: id,
+      },
+    ],
+    termsAgreed: true,
   });
 
-  return await newUser.save();
-};
-
-// 로그인 로직
-const loginUser = async (email, password) => {
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new Error('Invalid credentials');
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new Error('Invalid credentials');
-  }
-
-  const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-
-  user.refreshToken = refreshToken;
   await user.save();
-
-  return { accessToken, refreshToken };
+  return user;
 };
 
-module.exports = { registerUser, loginUser };
+// 2. 로그인 검증
+const loginUser = async (id, password) => {
+  // 사용자 확인
+  const user = await User.findOne({ id });
+  if (!user) {
+    throw new Error('ID 또는 비밀번호가 잘못되었습니다.');
+  }
+
+  // 비밀번호 검증
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error('ID 또는 비밀번호가 잘못되었습니다.');
+  }
+
+  // 로그인 성공 시 토큰 발급
+  const tokens = tokenService.generateTokens(user);
+  return { user, tokens };
+};
+
+// 3. 사용자 정보 조회 (토큰 갱신용)
+const getUserById = async (userId) => {
+  const user = await User.findById(userId).select('-password');
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
+  return user;
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserById,
+};

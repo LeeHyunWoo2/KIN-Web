@@ -1,112 +1,88 @@
-const jwt = require('jsonwebtoken'); // JWT 라이브러리 불러오기
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+const authService = require('../services/authService');
+const tokenService = require('../services/tokenService');
 
-// 회원가입 처리 함수
-const registerUser = async (req, res) => {
-  const {name, email, password, provider} = req.body;
-
+// 1. 회원가입
+const registerController = async (req, res) => {
   try {
-    // 소셜 로그인 사용자는 비밀번호가 없을 수 있음
-    let hashedPassword = null;
-    if (provider === 'local') {
-      const salt = await bcrypt.genSalt(10);
-      // 생성된 salt 값을 사용해 비밀번호를 해시화.
-      hashedPassword = await bcrypt.hash(password, salt);
-    }
+    const { id, email, password, name, phone, marketingConsent } = req.body;
 
-    // 이메일 중복 확인
-    const existingUser = await User.findOne({email});
-    if (existingUser) {
-      return res.status(400).json({message: '이미 존재하는 이메일입니다.'});
-    }
+    // 회원가입 로직을 서비스에서 처리하고, 생성된 사용자와 토큰을 반환
+    const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent });
+    const tokens = tokenService.generateTokens(user);
 
-    // 새로운 사용자 객체 생성
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      // 비밀번호는 해시화된 값으로 저장
-      provider
-    });
+    // 쿠키에 JWT와 리프레시 토큰 설정
+    res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 }); // 1시간
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7일
 
-    // DB에 저장
-    await newUser.save();
-
-    res.status(201).json({message: '회원가입 성공'});
+    res.status(201).json({ message: '회원가입 성공', user });
   } catch (error) {
-    res.status(500).json({message: '서버 오류', error});
+    res.status(500).json({ message: error.message });
   }
 };
 
-// 로그인 처리 함수
-const loginUser = async (req, res) => {
-  const {email, password, provider} = req.body;
-
+// 2. 로그인 (로컬)
+const loginController = async (req, res) => {
   try {
-    // 이메일로 사용자 찾기
-    const user = await User.findOne({email});
-    if (!user) {
-      return res.status(400).json({message: '유효하지 않은 사용자 정보'});
-    }
+    const { id, password } = req.body;
 
-    // 소셜 로그인 처리
-    if (provider !== 'local') {
-      // 소셜 로그인 유저가 이미 존재하는지 확인 후 토큰 발급
-      const accessToken = jwt.sign(
-          {userId: user._id}, // ._id 인 이유는 Mongoose 고유 오브젝트id 가 _id 라서 .을 찍어 객체속성 접근을 한것 user_id 저장하려고 한거 아님
-          process.env.JWT_SECRET,
-          {expiresIn: '1h'}
-      );
+    // 로그인 로직을 서비스에서 처리하고, 사용자와 토큰 반환
+    const { user, tokens } = await authService.loginUser(id, password);
 
-      const refreshToken = jwt.sign(
-          {userId: user._id},
-          process.env.REFRESH_TOKEN_SECRET,
-          {expiresIn: '7d'}
-      );
+    // 쿠키에 JWT와 리프레시 토큰 설정
+    res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-      user.refreshToken = refreshToken;
-      await user.save();
-
-      return res.status(200).json({
-        message: '소셜 로그인 성공',
-        accessToken,
-        refreshToken
-      });
-    }
-
-    // 로컬 로그인 비밀번호 비교
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({message: '비밀번호가 틀립니다.'});
-    }
-
-    // Access Token (1시간 만료)
-    const accessToken = jwt.sign(
-        {userId: user._id},
-        process.env.JWT_SECRET,
-        {expiresIn: '1h'}
-    );
-
-    // Refresh Token (7일 만료)
-    const refreshToken = jwt.sign(
-        {userId: user._id},
-        process.env.REFRESH_TOKEN_SECRET,
-        {expiresIn: '7d'}
-    );
-
-    // Refresh Token을 DB에 저장
-    user.refreshToken = refreshToken;
-    await user.save();
-
-    res.status(200).json({
-      message: '로그인 성공',
-      accessToken,
-      refreshToken
-    });
+    res.status(200).json({ message: '로그인 성공', user });
   } catch (error) {
-    res.status(500).json({message: '서버 오류', error});
+    res.status(400).json({ message: '로그인 실패: ' + error.message });
   }
 };
-// 컨트롤러 함수들을 내보내서 라우터에서 사용 가능하게 함
-module.exports = {registerUser, loginUser};
+
+// 3. 로그아웃
+const logoutController = async (req, res) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    // 리프레시 토큰 검증 및 폐기를 서비스에서 처리
+    await tokenService.verifyRefreshToken(refreshToken);
+
+    // 모든 로그인 관련 쿠키 삭제
+    res.clearCookie('accessToken', { httpOnly: true });
+    res.clearCookie('refreshToken', { httpOnly: true });
+
+    res.status(200).json({ message: '로그아웃 완료' });
+  } catch (error) {
+    res.status(500).json({ message: '로그아웃 실패: ' + error.message });
+  }
+};
+
+// 4. 토큰 갱신
+const newTokenController = async (req, res) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    // 리프레시 토큰 검증하고 새 토큰 발급
+    const decoded = await tokenService.verifyRefreshToken(refreshToken);
+    if (!decoded) {
+      return res.status(401).json({ message: '유효하지 않은 리프레시 토큰입니다.' });
+    }
+
+    const user = await authService.getUserById(decoded.id);
+    const tokens = tokenService.generateTokens(user);
+
+    // 새롭게 발급된 토큰을 쿠키에 설정
+    res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+    res.status(200).json({ message: '토큰 갱신 성공', tokens });
+  } catch (error) {
+    res.status(500).json({ message: '토큰 갱신 실패: ' + error.message });
+  }
+};
+
+module.exports = {
+  registerController,
+  loginController,
+  logoutController,
+  newTokenController,
+};
