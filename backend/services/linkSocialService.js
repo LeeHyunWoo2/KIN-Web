@@ -4,7 +4,6 @@ const { Strategy: NaverStrategy } = require('passport-naver');
 const User = require('../models/user');
 
 const configureLinkingStrategies = (passport) => {
-  console.log('추가연동 전략')
 // Google 연동 전략
   passport.use('google-link', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,

@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/card";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -34,18 +33,24 @@ import {z} from 'zod';
 import {useRouter} from "next/router";
 import {toast} from "@/hooks/use-toast";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {motion} from "framer-motion";
 
-const schema = z.object({
+z.object({
   email: z.string().email(),
   password: z.string().min(6),
-})
+});
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
   const [page, setPage] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const handleNext = () => setPage((prevPage) => prevPage + 1);
-  const handlePrev = () => setPage((prevPage) => prevPage - 1);
+
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handlePrev = () => {
+    setPage((prev) => prev - 1);
+  };
 
   const [formData, setFormData] = useState({
     id: '',
@@ -82,7 +87,7 @@ export default function AuthenticationPage() {
   // formData가 변경될 때마다 유효성 검사를 수행하고 버튼 상태 업데이트
   useEffect(() => {
     setIsButtonDisabled(!isFormValid());
-  }, [formData]);
+  }, [formData, page]);
 
   // 모든 필드를 처리하는 handleChange 함수
   const handleChange = (e) => {
@@ -95,7 +100,6 @@ export default function AuthenticationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       const response = await registerUser(formData);
       setSuccessMessage(response.message);
@@ -175,6 +179,7 @@ export default function AuthenticationPage() {
 
             {/*회원가입 첫 페이지*/}
 
+
             {page === 0 && (
                 <div
                     className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
@@ -233,241 +238,253 @@ export default function AuthenticationPage() {
                 </div>
             )}
 
+            <motion.div
+                key={page}
+                initial={{ y: 7, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -7, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+            >
 
-            {page === 1 && (
-                <Card className="max-w-sm mx-auto">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Sign Up</CardTitle>
-                    <CardDescription>
-                      Enter your information to create an account
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 mb-4">
-                      <div
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
-                        <ScrollArea className="h-48 w-full text-sm">
-                          Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며 어쩌고 저쩌고.....<br/><br/>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip
-                          ex ea commodo consequat. Duis aute irure dolor in
-                          reprehenderit in voluptate velit esse cillum dolore eu
-                          fugiat nulla pariatur. Excepteur sint occaecat
-                          cupidatat non proident, sunt in culpa qui officia
-                          deserunt mollit anim id est laborum.<br/><br/>
-                          김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라 구름이
-                          허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
-                        </ScrollArea>
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4">
-                      <div
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
-                        <Checkbox
-                            name="termsAgreed"
-                            checked={formData.termsAgreed}
-                            onCheckedChange={(value) =>
-                                setFormData({...formData, termsAgreed: value})
-                            }
-                        />
-                        <div className="space-y-1 leading-none">
-                          <Label>필수 약관 동의</Label><br/>
-                          <Label
-                              className="text-[0.8rem] text-muted-foreground">
-                            필수 약관을 동의하셔야 가입이 가능합니다.
-                          </Label>
+              {page === 1 && (
+                  <Card className="max-w-sm mx-auto">
+                    <CardHeader>
+                      <CardTitle className="text-xl">Sign Up</CardTitle>
+                      <CardDescription>
+                        Enter your information to create an account
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 mb-4">
+                        <div
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
+                          <ScrollArea className="h-48 w-full text-sm">
+                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며 어쩌고
+                            저쩌고.....<br/><br/>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua. Ut enim ad minim veniam, quis
+                            nostrud exercitation ullamco laboris nisi ut aliquip
+                            ex ea commodo consequat. Duis aute irure dolor in
+                            reprehenderit in voluptate velit esse cillum dolore
+                            eu
+                            fugiat nulla pariatur. Excepteur sint occaecat
+                            cupidatat non proident, sunt in culpa qui officia
+                            deserunt mollit anim id est laborum.<br/><br/>
+                            김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
+                            구름이
+                            허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
+                          </ScrollArea>
                         </div>
                       </div>
-                      <Button
-                          type="button"
-                          className="w-full"
-                          disabled={isButtonDisabled}
-                          onClick={handleNext}
-                      >
-                        다음 단계
-                      </Button>
-                      <Button variant="outline" className="w-full"
-                              onClick={handlePrev}>
-                        이전으로
-                      </Button>
-                    </div>
-                    <div className="mt-4 text-sm text-center">
-                      Already have an account?{" "}
-                      <Link href="/login" className="underline">
-                        Login
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-            )}
 
-
-            {page === 2 && (
-                <Card className="max-w-sm mx-auto">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Sign Up</CardTitle>
-                    <CardDescription>
-                      Enter your information to create an account
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="id">ID</Label>
-                        <Input
-                            type="text"
-                            name="id"
-                            value={formData.id}
-                            onChange={handleChange}
-                            placeholder="kln123"
-                            required
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="Nickname">Name or Nickname</Label>
-                        <Input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="John Doe"
-                            required
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="email@example.com"
-                            required
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="password">비밀번호</Label>
-                        <Input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="8자 이상 영어 대소문자, 숫자, 특수문자"
-                            required
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
-                        <Input
-                            id="passwordConfirm"
-                            name="passwordConfirm"
-                            type="password"
-                            value={formData.passwordConfirm}
-                            onChange={handleChange}
-                            placeholder="password"
-                            required
-                        />
-                      </div>
-
-                      <Button
-                          type="button"
-                          className="w-full"
-                          disabled={isButtonDisabled}
-                          onClick={handleNext}
-                      >
-                        다음 단계
-                      </Button>
-                      <Button variant="outline" className="w-full"
-                              onClick={handlePrev}>
-                        이전으로
-                      </Button>
-                    </div>
-                    <div className="mt-4 text-sm text-center">
-                      Already have an account?{" "}
-                      <Link href="/login" className="underline">
-                        Login
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-            )}
-
-            {page === 3 && (
-                <Card className="max-w-sm mx-auto">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Sign Up</CardTitle>
-                    <CardDescription>
-                      Enter your information to create an account
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="phone">전화번호 (선택)</Label>
-                        <Input
-                            type="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="010-1234-5678"
-                            required
-                        />
-                      </div>
-                      <div
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
-                        <Checkbox
-                            name="marketingConsent"
-                            checked={formData.marketingConsent}
-                            onCheckedChange={(value) =>
-                                setFormData(
-                                    {...formData, marketingConsent: value})
-                            }
-                        />
-                        <div className="space-y-1 leading-none">
-                          <Label>마케팅 동의 (선택)</Label><br/>
-                          <Label
-                              className="text-[0.8rem] text-muted-foreground">
-                            마케팅같은거안하는데그냥선택체크하나만들고싶었음
-                          </Label>
+                      <div className="grid gap-4">
+                        <div
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                          <Checkbox
+                              name="termsAgreed"
+                              checked={formData.termsAgreed}
+                              onCheckedChange={(value) =>
+                                  setFormData({...formData, termsAgreed: value})
+                              }
+                          />
+                          <div className="space-y-1 leading-none">
+                            <Label>필수 약관 동의</Label><br/>
+                            <Label
+                                className="text-[0.8rem] text-muted-foreground">
+                              필수 약관을 동의하셔야 가입이 가능합니다.
+                            </Label>
+                          </div>
                         </div>
+                        <Button
+                            type="button"
+                            className="w-full"
+                            disabled={isButtonDisabled}
+                            onClick={handleNext}
+                        >
+                          다음 단계
+                        </Button>
+                        <Button variant="outline" className="w-full"
+                                onClick={handlePrev}>
+                          이전으로
+                        </Button>
                       </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button className="w-full">가입하기</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>회원가입을 진행하시겠습니까?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              입력된 정보로 회원가입을 완료합니다.<br/>
-                              마이페이지에서 회원정보 수정이 가능합니다.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <Button onClick={handleSubmit}>Continue</Button>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                      <Button variant="outline" className="w-full"
-                              onClick={handlePrev}>
-                        이전으로
-                      </Button>
-                    </div>
-                    <div className="mt-4 text-sm text-center">
-                      Already have an account?{" "}
-                      <Link href="/login" className="underline">
-                        Login
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-            )}
+                      <div className="mt-4 text-sm text-center">
+                        Already have an account?{" "}
+                        <Link href="/login" className="underline">
+                          Login
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+              )}
+
+
+              {page === 2 && (
+                  <Card className="max-w-sm mx-auto">
+                    <CardHeader>
+                      <CardTitle className="text-xl">Sign Up</CardTitle>
+                      <CardDescription>
+                        Enter your information to create an account
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="id">ID</Label>
+                          <Input
+                              type="text"
+                              name="id"
+                              value={formData.id}
+                              onChange={handleChange}
+                              placeholder="kln123"
+                              required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="Nickname">Name or Nickname</Label>
+                          <Input
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="John Doe"
+                              required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="email">Email</Label>
+                          <Input
+                              id="email"
+                              name="email"
+                              type="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              placeholder="email@example.com"
+                              required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="password">비밀번호</Label>
+                          <Input
+                              id="password"
+                              name="password"
+                              type="password"
+                              value={formData.password}
+                              onChange={handleChange}
+                              placeholder="8자 이상 영어 대소문자, 숫자, 특수문자"
+                              required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
+                          <Input
+                              id="passwordConfirm"
+                              name="passwordConfirm"
+                              type="password"
+                              value={formData.passwordConfirm}
+                              onChange={handleChange}
+                              placeholder="password"
+                              required
+                          />
+                        </div>
+
+                        <Button
+                            type="button"
+                            className="w-full"
+                            disabled={isButtonDisabled}
+                            onClick={handleNext}
+                        >
+                          다음 단계
+                        </Button>
+                        <Button variant="outline" className="w-full"
+                                onClick={handlePrev}>
+                          이전으로
+                        </Button>
+                      </div>
+                      <div className="mt-4 text-sm text-center">
+                        Already have an account?{" "}
+                        <Link href="/login" className="underline">
+                          Login
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+              )}
+
+              {page === 3 && (
+                  <Card className="max-w-sm mx-auto">
+                    <CardHeader>
+                      <CardTitle className="text-xl">Sign Up</CardTitle>
+                      <CardDescription>
+                        Enter your information to create an account
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="phone">전화번호 (선택)</Label>
+                          <Input
+                              type="phone"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              placeholder="010-1234-5678"
+                              required
+                          />
+                        </div>
+                        <div
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                          <Checkbox
+                              name="marketingConsent"
+                              checked={formData.marketingConsent}
+                              onCheckedChange={(value) =>
+                                  setFormData(
+                                      {...formData, marketingConsent: value})
+                              }
+                          />
+                          <div className="space-y-1 leading-none">
+                            <Label>마케팅 동의 (선택)</Label><br/>
+                            <Label
+                                className="text-[0.8rem] text-muted-foreground">
+                              마케팅같은거안하는데그냥선택체크하나만들고싶었음
+                            </Label>
+                          </div>
+                        </div>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button className="w-full">가입하기</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>회원가입을
+                                진행하시겠습니까?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                입력된 정보로 회원가입을 완료합니다.<br/>
+                                마이페이지에서 회원정보 수정이 가능합니다.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <Button onClick={handleSubmit}>Continue</Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                        <Button variant="outline" className="w-full"
+                                onClick={handlePrev}>
+                          이전으로
+                        </Button>
+                      </div>
+                      <div className="mt-4 text-sm text-center">
+                        Already have an account?{" "}
+                        <Link href="/login" className="underline">
+                          Login
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+              )}
+            </motion.div>
           </div>
         </div>
       </>

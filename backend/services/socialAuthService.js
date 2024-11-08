@@ -4,7 +4,6 @@ const { Strategy: NaverStrategy } = require('passport-naver');
 const User = require('../models/user');
 
 const configureSocialStrategies = (passport) => {
-  console.log('로그인 전략')
 // Google 로그인/가입 전략
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
