@@ -25,7 +25,7 @@ morgan.token('body', (req) => JSON.stringify(req.body)); // 요청 본문
 // 2. 기본 미들웨어 설정
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true })); // 필요에 따라 CORS 설정
+app.use(cors({origin: process.env.FRONTEND_URL, credentials: true})); // 필요에 따라 CORS 설정
 
 // express-session 설정
 app.use(session({
@@ -36,8 +36,8 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'lax'
-  }, // strict 보단 덜 엄격한
+    sameSite: 'none'
+  },
 }));
 
 app.use(passport.initialize());
@@ -55,7 +55,7 @@ app.use('/social', socialRoutes);
 // 4. 에러 처리 미들웨어
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: '서버 오류가 발생했습니다.', error: err.message });
+  res.status(500).json({message: '서버 오류가 발생했습니다.', error: err.message});
 });
 
 // 5. 서버 실행
