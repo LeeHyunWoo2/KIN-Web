@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const tokenService = require('./tokenService');
 const { revokeSocialAccess } = require('./socialService'); // 연동 해제를 위한 서비스 호출

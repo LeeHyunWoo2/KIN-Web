@@ -1,24 +1,27 @@
-import * as React from "react";
-import {Search,} from "lucide-react";
-import {MailDisplay} from "./mail-display";
-import {MailList} from "./mail-list";
-import {mails as mailData} from "@/lib/notes/data";
-import {useMail} from "@/lib/notes/use-mail";
-import {Separator} from "@/components/ui/separator";
-import {Input} from "@/components/ui/input";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {TooltipProvider} from "@/components/ui/tooltip";
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+import { NoteDisplay } from "./note-display";
+import { NoteList } from "./note-list";
+import { notes as initialNotes } from "@/lib/notes/data";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-export default function Mail({
-  mails = mailData,
+export default function Note({
+  notes = initialNotes,
   defaultLayout = [265, 440, 655],
 }) {
-  const [mail] = useMail();
+  const [noteList, setNoteList] = useState(notes); // 노트 리스트 상태
+  const [selectedNoteId, setSelectedNoteId] = useState(null); // 선택된 노트 ID 상태
+
+  // 선택된 노트 정보 가져오기
+  const selectedNote = noteList.find((item) => item.id === selectedNoteId);
 
   return (
       <TooltipProvider delayDuration={0}>
@@ -26,7 +29,7 @@ export default function Mail({
             direction="horizontal"
             className="h-full max-h-[800px] items-stretch"
         >
-          <ResizablePanel defaultSize={defaultLayout[27]} minSize={27}>
+          <ResizablePanel defaultSize={defaultLayout[0]} minSize={27}>
             <Tabs defaultValue="all">
               <div className="flex items-center px-4 py-2">
                 <h1 className="text-xl font-bold">Inbox</h1>
@@ -35,7 +38,7 @@ export default function Mail({
                       value="all"
                       className="text-zinc-600 dark:text-zinc-200"
                   >
-                    All mail
+                    All Notes
                   </TabsTrigger>
                   <TabsTrigger
                       value="unread"
@@ -55,18 +58,16 @@ export default function Mail({
                 </form>
               </div>
               <TabsContent value="all" className="m-0">
-                <MailList items={mails} />
+                <NoteList items={noteList} onSelect={(id) => setSelectedNoteId(id)} />
               </TabsContent>
               <TabsContent value="unread" className="m-0">
-                <MailList items={mails.filter((item) => !item.read)} />
+                <NoteList items={noteList.filter((item) => !item.read)} onSelect={(id) => setSelectedNoteId(id)} />
               </TabsContent>
             </Tabs>
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={defaultLayout[2]}>
-            <MailDisplay
-                mail={mails.find((item) => item.id === mail.selected) || null}
-            />
+            <NoteDisplay note={selectedNote} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </TooltipProvider>

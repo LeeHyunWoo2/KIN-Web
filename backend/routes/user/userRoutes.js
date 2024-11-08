@@ -1,6 +1,6 @@
 const express = require('express');
-const { getUserInfo, updateUserInfo, addLocalAccount, deleteUser } = require('../controllers/userController');
-const authenticateUser = require('../middleware/authenticateUser');
+const { getUserInfo, updateUserInfo, addLocalAccount, deleteUser } = require('../../controllers/user/userController');
+const authenticateUser = require('../../middleware/user/authenticateUser');
 const router = express.Router();
 
 // 사용자 정보 조회

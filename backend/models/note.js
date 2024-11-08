@@ -38,6 +38,14 @@ const NoteSchema = new mongoose.Schema({
   is_pinned: {
     type: Boolean,
     default: false,
+  },
+  isTrashed: {
+    type: Boolean,
+    default:false,
+  },
+  trashedAt: {
+    type:Date,
+    default: null,
   }
 });
 

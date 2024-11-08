@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 const axios = require('axios');
 const tokenService = require('./tokenService');
 

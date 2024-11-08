@@ -1,4 +1,4 @@
-const tokenService = require('../services/tokenService');
+const tokenService = require('../../services/user/tokenService');
 
 // 세션이 유효한지 검증용
 const checkSession = async (req, res) => {

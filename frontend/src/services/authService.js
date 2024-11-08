@@ -73,7 +73,7 @@ export const deleteUserProfile = async () => {
   try {
   await apiClient.delete('/user/profile');
   } catch (error){
-    console.log('악')
+    console.error('탈퇴 실패', error.message);
   }
   localStorage.removeItem('userInfo');
   window.location.href = '/login';

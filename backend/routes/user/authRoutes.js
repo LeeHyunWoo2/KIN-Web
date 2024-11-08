@@ -1,8 +1,8 @@
 const express = require('express');
 const { registerController, loginController, logoutController,
   newTokenController
-} = require('../controllers/authController');
-const { checkSession } = require('../controllers/checkSessionController');
+} = require('../../controllers/user/authController');
+const { checkSession } = require('../../controllers/user/checkSessionController');
 const router = express.Router();
 
 // 회원가입 라우트

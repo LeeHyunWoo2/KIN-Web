@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const User = require('../../models/user');
 const tokenService = require('./tokenService');
 
 // 1. 회원가입 (로컬 계정 생성)
