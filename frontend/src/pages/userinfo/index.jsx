@@ -238,8 +238,8 @@ function UserInfoPage() {
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                                disabled={getLinkedSocialAccountCount() === 1}
-                                className={getLinkedSocialAccountCount() === 1
+                                disabled={getLinkedSocialAccountCount() === 1 && isLocalAccount() === false }
+                                className={getLinkedSocialAccountCount() === 1 && isLocalAccount() === false
                                     ? "opacity-50 cursor-not-allowed" : ""}>연동 해제
                             </Button>
                           </AlertDialogTrigger>

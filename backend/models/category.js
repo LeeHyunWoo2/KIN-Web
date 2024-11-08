@@ -9,7 +9,6 @@ const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true, // 사용자 별로 카테고리 이름은 고유해야 함. 타 사용자와는 중복 가능
   },
   description: {
     type: String,
@@ -21,5 +20,8 @@ const CategorySchema = new mongoose.Schema({
     required: false,
   }
 });
+
+// 복합 인덱스 설정 각 사용자마다 카테고리 이름이 고유하도록 설정 (타 사용자간의 중복은 허용)
+CategorySchema.index({ user_id: 1, name: 1 }, { unique: true });
 
 module.exports = mongoose.model('Category', CategorySchema);

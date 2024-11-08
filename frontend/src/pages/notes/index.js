@@ -25,5 +25,3 @@ export default function MailPage() {
 MailPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 }
-
-// HOC로 감싸서 내보내기
