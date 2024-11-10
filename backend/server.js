@@ -13,6 +13,7 @@ const userRoutes = require('./routes/user/userRoutes');
 const socialRoutes = require('./routes/user/socialRoutes');
 const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
+const tagRoutes = require('./routes/notes/tagRoutes');
 const session = require("express-session");
 
 const app = express();
@@ -55,6 +56,7 @@ app.use('/user', userRoutes);
 app.use('/social', socialRoutes);
 app.use('/notes', noteRoutes);
 app.use('/category', categoryRoutes);
+app.use('/tags', tagRoutes);
 
 // 서버 타임
 app.get("/api/server-time", (req, res) => {

@@ -1,16 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import { openDB } from "idb";
-
-// IndexedDB 초기화
-async function initDB() {
-  return await openDB("notes_app", 1, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains("notes")) {
-        db.createObjectStore("notes", { keyPath: "id" });
-      }
-    },
-  });
-}
+import initDB from "@//lib/notes/initDB";
 
 // 서버 시간 가져오기
 async function getServerTime() {
@@ -18,15 +7,13 @@ async function getServerTime() {
   return new Date(response.data.serverTime);
 }
 
-// 노트 리스트 (휴지통 제외)
+// 노트 리스트
 export const getNotes = async () => {
   const db = await initDB();
   const tx = db.transaction("notes", "readonly");
   const store = tx.objectStore("notes");
 
-  // 휴지통에 있는 노트는 제외하고 가져오기
-  const allNotes = await store.getAll();
-  const notes = allNotes.filter(note => !note.isTrashed);
+  const notes = await store.getAll();
 
   if (notes.length === 0) {
     const response = await apiClient.get("/notes");
@@ -39,12 +26,11 @@ export const getNotes = async () => {
       store.put(note);
     }
     await tx.done;
-
     return fetchedNotes;
   }
-
   return notes;
 };
+
 
 // ID로 특정 노트 출력
 export const getNoteById = async (id) => {

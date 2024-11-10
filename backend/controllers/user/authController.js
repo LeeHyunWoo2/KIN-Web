@@ -8,11 +8,6 @@ const registerController = async (req, res) => {
 
     // 회원가입 로직을 서비스에서 처리하고, 생성된 사용자와 토큰을 반환
     const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent });
-    const tokens = tokenService.generateTokens(user);
-
-    // 쿠키에 JWT와 리프레시 토큰 설정
-    res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 }); // 1시간
-    res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7일
 
     res.status(201).json({ message: '회원가입 성공', user });
   } catch (error) {

@@ -9,11 +9,11 @@ apiClient.interceptors.response.use(
     async (error) => {
       const originalRequest = error.config;
       console.log("응답 에러:", error.response ? error.response.status : error);
-      originalRequest._retry = true;
 
       // 401 오류 발생 시 토큰 갱신 로직
       if (error.response && error.response.status === 401
           && !originalRequest._retry) {
+        originalRequest._retry = true;
         console.log("401 에러 발생, 토큰 만료로 간주하고 리프레시 토큰으로 갱신 중...");
 
         try {

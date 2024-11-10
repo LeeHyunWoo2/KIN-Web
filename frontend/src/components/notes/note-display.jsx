@@ -16,7 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -26,9 +25,10 @@ import {
 } from "@/components/ui/tooltip";
 
 export function NoteDisplay({ note }) {
+
   return (
       <div className="flex h-full flex-col">
-        <div className="flex items-center p-2">
+        <div className="flex items-center p-1">
           <div className="flex items-center gap-2">
             {/* Archive Button */}
             <Tooltip>
@@ -127,29 +127,16 @@ export function NoteDisplay({ note }) {
             <div className="flex flex-1 flex-col">
               <div className="flex items-start p-4">
                 <div className="flex items-start gap-4 text-sm">
-                  {/* Note Author Avatar */}
-                  <Avatar>
-                    <AvatarImage alt={note.title} />
-                    <AvatarFallback>
-                      {note.title
-                      .split(" ")
-                      .map((chunk) => chunk[0])
-                      .join("")}
-                    </AvatarFallback>
-                  </Avatar>
+
                   <div className="grid gap-1">
                     <div className="font-semibold">{note.title}</div>
-                    <div className="line-clamp-1 text-xs">{note.subject}</div>
-                    <div className="line-clamp-1 text-xs">
-                      <span className="font-medium">Reply-To:</span> {note.email}
-                    </div>
                   </div>
                 </div>
 
                 {/* Note Date */}
-                {note.date && (
+                {note.created_at && (
                     <div className="ml-auto text-xs text-muted-foreground">
-                      {format(new Date(note.date), "PPpp")}
+                      {format(new Date(note.created_at), "PPpp")}
                     </div>
                 )}
               </div>
@@ -157,28 +144,10 @@ export function NoteDisplay({ note }) {
               <Separator />
 
               {/* Note Content */}
-              <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
+              <div className="flex-1 whitespace-pre-wrap p-8 text-sm">
                 {note.content}
               </div>
-
               <Separator className="mt-auto" />
-
-              {/* Reply Form */}
-              <div className="p-4">
-                <form>
-                  <div className="grid gap-4">
-                    <div className="flex items-center">
-                      <Button
-                          onClick={(e) => e.preventDefault()}
-                          size="sm"
-                          className="ml-auto"
-                      >
-                        Send
-                      </Button>
-                    </div>
-                  </div>
-                </form>
-              </div>
             </div>
         ) : (
             <div className="p-8 text-center text-muted-foreground">

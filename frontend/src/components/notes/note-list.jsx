@@ -28,7 +28,7 @@ export function NoteList({ items }) {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div className="font-semibold">{item.title}</div>
-                      {!item.read && (
+                      {!item.is_pinned && (
                           <span className="flex h-2 w-2 rounded-full bg-blue-600" />
                       )}
                     </div>
@@ -40,12 +40,11 @@ export function NoteList({ items }) {
                                 : "text-muted-foreground"
                         )}
                     >
-                      {formatDistanceToNow(new Date(item.date), {
+                      {formatDistanceToNow(new Date(item.created_at), {
                         addSuffix: true,
                       })}
                     </div>
                   </div>
-                  <div className="text-xs font-medium">{item.subject}</div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
                   {item.content.substring(0, 300)}

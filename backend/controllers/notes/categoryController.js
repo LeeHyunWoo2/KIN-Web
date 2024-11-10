@@ -3,8 +3,7 @@ const categoryService = require('../../services/notes/categoryService');
 // 카테고리 리스트 조회
 exports.getCategories = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const categories = await categoryService.getCategories(userId);
+    const categories = await categoryService.getCategories(req.user.id);
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ message: '카테고리 리스트를 불러오는 중 오류가 발생했습니다.' });
@@ -14,9 +13,8 @@ exports.getCategories = async (req, res) => {
 // 카테고리 생성
 exports.createCategory = async (req, res) => {
   try {
-    const userId = req.user._id;
     const { name, description, parent_id } = req.body;
-    const category = await categoryService.createCategory(userId, name, description, parent_id);
+    const category = await categoryService.createCategory(req.user.id, name, description, parent_id);
     res.status(201).json(category);
   } catch (error) {
     res.status(500).json({ message: '카테고리 생성 중 오류가 발생했습니다.' });

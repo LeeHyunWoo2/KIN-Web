@@ -5,6 +5,7 @@ import {DataTable} from "@/components/list//data-table"
 import {UserNav} from "@/components/list//user-nav"
 import HeaderLayout from "@/components/HeaderLayout";
 import {validTasks} from "@/lib/list/seed";
+import {FancyMultiSelect} from "@/components/fancy-multi-select";
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
@@ -15,26 +16,35 @@ export default function TaskPage() {
 
   return (
 
-      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+      <div>
         <div
-            className="overflow-hidden rounded-[0.5rem] border bg-background shadow">
-          <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex min-w-[1100px]">
-            <div className="flex items-center justify-between space-y-2">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">Welcome
-                  back!</h2>
-                <p className="text-muted-foreground">
-                  Here&apos;s a list of your tasks for this month!
-                </p>
+            className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+          <div
+              className="overflow-hidden rounded-[0.5rem] border bg-background shadow">
+            <div
+                className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex min-w-[1100px]">
+              <div className="flex items-center justify-between space-y-2">
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">Welcome
+                    back!</h2>
+                  <p className="text-muted-foreground">
+                    Here&apos;s a list of your tasks for this month!
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <UserNav/>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <UserNav/>
-              </div>
+              <DataTable data={tasks} columns={columns}/>
             </div>
-            <DataTable data={tasks} columns={columns}/>
           </div>
         </div>
-      </div>
+        <div className="flex items-center justify-center mb-72 max-w-[1100px]">
+          <div className="flex items-center justify-between space-y-2">
+            <FancyMultiSelect/>
+          </div>
+          </div>
+        </div>
         );
         }
 

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Layout from "@/components/HeaderLayout"
+import HeaderLayout from "@/components/HeaderLayout"
 
 export default function Home() {
   return (
@@ -104,5 +104,5 @@ export default function Home() {
 }
 
 Home.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <HeaderLayout>{page}</HeaderLayout>;
 }

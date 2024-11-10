@@ -20,7 +20,7 @@ import {
   Folder,
   Forward,
   Frame,
-  GalleryVerticalEnd,
+  GalleryVerticalEnd, Home, Inbox,
   LineChart,
   Link as LinkIcon,
   LogOut,
@@ -28,6 +28,7 @@ import {
   Menu,
   MoreHorizontal,
   PieChart,
+  SquarePen,
   Plus,
   Settings2,
   SquareTerminal,
@@ -84,9 +85,12 @@ import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
 import {logoutUser} from "@/services/authService";
-import {router} from "next/client";
 import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
+import CategorySidebar from "@/components/notes/CategorySidebar";
+import {useAtom, useSetAtom} from "jotai";
+import {testAtom} from "@/atoms/testAtom";
+import { newNoteAtom } from '@/atoms/newNoteAtom';
 
 const data = {
   teams: [
@@ -104,6 +108,22 @@ const data = {
       name: "Evil Corp.",
       logo: Command,
       plan: "Free",
+    },
+  ],
+  navHeader: [
+    {
+      title: "새 노트",
+      icon: SquarePen,
+    },
+    {
+      title: "홈",
+      url: "/notes",
+      icon: Home,
+    },
+    {
+      title: "전체 보기",
+      url: "#",
+      icon: Inbox,
     },
   ],
   navMain: [
@@ -279,12 +299,18 @@ const handleLogout = () => {
 
 function Page({children}) {
 
+  const setNewNote = useSetAtom(newNoteAtom);
+  const [ mode, setMode ] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
     profileIcon: '',
   });
+
+  const handleNewNote = () => {
+    setNewNote(true); // 새 노트 작성 신호 전송
+  };
 
   useEffect(() => {
     const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -294,6 +320,14 @@ function Page({children}) {
       setUserInfo({name: '', email: '', profileIcon: ''}); // 로그아웃 후 초기화
     }
   }, []);
+
+  const changeMode = () => {
+    if (mode === "modeA"){
+      setMode("modeB");
+    } else if (mode === "modeB"){
+      setMode("modeA");
+    }
+  }
 
   return (
       <SidebarProvider>
@@ -391,7 +425,10 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
+            <NavMain items={data.navHeader} onNewNote={handleNewNote} />
           </SidebarHeader>
+          <Separator/>
+          <CategorySidebar/>
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -470,18 +507,13 @@ function Page({children}) {
                       </DropdownMenu>
                     </SidebarMenuItem>
                 ))}
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="text-sidebar-foreground/70">
-                    <MoreHorizontal className="text-sidebar-foreground/70"/>
-                    <span>More</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
+                <Button variant="ghost" className="min-w-full" onClick={changeMode}/>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
@@ -548,7 +580,7 @@ function Page({children}) {
         </Sidebar>
         <SidebarInset>
           <header
-              className="flex sticky top-0 bg-background h-16 shrink-0 items-center gap-2 border-b px-4">
+              className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-4">
             <div className="flex flex-1 items-center gap-2 px-3">
               <SidebarTrigger/>
               <Separator orientation="vertical" className="mr-2 h-4"/>
@@ -569,6 +601,28 @@ function Page({children}) {
           {children}
         </SidebarInset>
       </SidebarProvider>
+  )
+}
+
+function NavMain({
+  items, onNewNote
+}) {
+  return (
+      <SidebarMenu>
+        {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                  asChild
+                  onClick={item.title === "새 노트" ? onNewNote : undefined} // "새 노트"일 때만 신호 전달
+              >
+                <a href={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+        ))}
+      </SidebarMenu>
   )
 }
 
