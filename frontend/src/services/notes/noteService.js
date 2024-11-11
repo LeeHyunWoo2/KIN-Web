@@ -143,7 +143,7 @@ export const deleteExpiredNotes = async () => {
 
   for (const note of allNotes) {
     if (note.isTrashed && note.trashedAt && now - new Date(note.trashedAt) > 30 * 24 * 60 * 60 * 1000) {
-      store.delete(note.id); // 30일 이상 지난 노트 삭제
+      store.delete(note._id); // 30일 이상 지난 노트 삭제
     }
   }
   await tx.done;

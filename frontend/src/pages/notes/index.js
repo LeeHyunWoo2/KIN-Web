@@ -4,8 +4,21 @@ import WorkspaceLayout from "@/components/WorkspaceLayout"
 import NoteContainer from "@/components/notes/NoteContainer";
 import {useAtom} from "jotai";
 import {testAtom} from "@/atoms/testAtom";
+import {noteEventHandlerAtom} from "@/lib/notes/noteState";
+import {useEffect} from "react";
+import {noteEventAtom} from "@/atoms/noteStateAtom";
 
 export default function NotePage() {
+  const [event] = useAtom(noteEventAtom); // 변경 감지
+  const [, handleEvent] = useAtom(noteEventHandlerAtom); // 직접 부름
+
+  useEffect(() => {
+    if (event) {
+      handleEvent(event);
+      console.log("이벤트 트리거 작동 :", event);
+    }
+  }, [event, handleEvent]);
+
   const defaultLayout = undefined;
   const defaultCollapsed = undefined;
   const [ mode, setMode ] = useAtom(testAtom);

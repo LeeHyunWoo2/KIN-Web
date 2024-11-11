@@ -90,7 +90,7 @@ import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom, useSetAtom} from "jotai";
 import {testAtom} from "@/atoms/testAtom";
-import { newNoteAtom } from '@/atoms/newNoteAtom';
+import { newNoteSignalAtom } from '@/atoms/noteStateAtom';
 
 const data = {
   teams: [
@@ -298,8 +298,7 @@ const handleLogout = () => {
 };
 
 function Page({children}) {
-
-  const setNewNote = useSetAtom(newNoteAtom);
+  const setNewNote = useSetAtom(newNoteSignalAtom);
   const [ mode, setMode ] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
@@ -608,7 +607,7 @@ function NavMain({
   items, onNewNote
 }) {
   return (
-      <SidebarMenu>
+      <SidebarMenu className="cursor-pointer">
         {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton

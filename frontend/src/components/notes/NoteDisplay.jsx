@@ -1,91 +1,101 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { createNote, updateNote } from '@/services/notes/noteService';
-import { useAtom } from 'jotai';
-import { newNoteAtom } from '@/atoms/newNoteAtom';
-import { useRouter } from 'next/router';
+import {Input} from '@/components/ui/input';
+import {Textarea} from '@/components/ui/textarea';
+import {useAtom} from 'jotai';
+import {
+  noteTitleAtom,
+  noteContentAtom,
+  noteCategoryAtom,
+  noteTagsAtom,
+  newNoteSignalAtom,
+  noteEventAtom
+} from '@/atoms/noteStateAtom';
+import {useRouter} from 'next/router';
 import debounce from 'lodash/debounce';
 
-
-export default function NoteDisplay({ note }) {
+export default function NoteDisplay({note}) {
   const router = useRouter();
-  const [newNote, setNewNote] = useAtom(newNoteAtom); // 새 노트 신호 감지
+  const [newNoteSignal, setNewNoteSignal] = useAtom(newNoteSignalAtom); // 새 노트 신호 감지
+  const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
 
-  const [title, setTitle] = useState(note?.title || '');
-  const [content, setContent] = useState(note?.content || '');
-  const [category, setCategory] = useState(note?.category || ''); // 기본 카테고리 값
-  const [tags, setTags] = useState(note?.tags || []); // 기본 태그 값
+  const [title, setTitle] = useAtom(noteTitleAtom);
+  const [content, setContent] = useAtom(noteContentAtom);
+  const [category, setCategory] = useAtom(noteCategoryAtom);
+  const [tags, setTags] = useAtom(noteTagsAtom);
 
-  // 변경 사항 저장 함수 (디바운스로 설정)
-  const saveChanges = async () => {
+  // 노트의 초기 로딩 여부 확인
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    // 선택된 노트가 변경될 때 필드 값도 업데이트
     if (note) {
-      await updateNote(note._id, { title, content, category, tags });
+      setTitle(note.title);
+      setContent(note.content);
+      setCategory(note.category);
+      setTags(note.tags);
+      setIsInitialLoad(true); // 처음 로딩 시에는 true
     }
+  }, [note, setTitle, setContent, setCategory, setTags]);
+
+  //  자동 저장 함수 (디바운스 1초)
+  const saveChanges = useCallback(debounce(() => {
+    if (note && !isInitialLoad) {  // 초기 로딩이 아닐 때만 저장
+      setNoteEvent({
+        type: 'UPDATE', // UPDATE 이벤트 발생
+        targetId: note._id,
+        payload: {title, content},
+      });
+    }
+  }, 1000), [title, content, setNoteEvent, isInitialLoad]);
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+    setIsInitialLoad(false);  // 변경사항이 발생하면 false
   };
 
-  //  자동 저장 함수 (3초 디바운스)
-  const debouncedSave = useCallback(debounce(saveChanges, 2000), [title, content, category, tags, note]);
-
-  // 변경될 때마다 저장 함수 호출
-  useEffect(() => {
-    debouncedSave();
-    // 나갈경우 호출 취소
-    return () => debouncedSave.cancel();
-  }, [title, content, debouncedSave]);
-
-  // 포커스를 벗어나면 즉시 저장
-  const handleBlur = () => {
-    debouncedSave();
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+    setIsInitialLoad(false);
   };
 
-
-  // 새 노트 작성 신호가 들어오면 빈 노트를 생성
   useEffect(() => {
-    const createNewNote = async () => {
-      if (newNote) {
-        const newNoteResponse = await createNote({
-          title: '',
-          content: '',
-          category: '',
-          tags: []
-        });
-        setTitle(newNoteResponse.title);
-        setContent(newNoteResponse.content);
-        setCategory(newNoteResponse.category);
-        setTags(newNoteResponse.tags);
+    saveChanges();
+    return () => saveChanges.cancel();
+  }, [title, content, saveChanges]);
 
-        router.push(`/notes?id=${newNoteResponse._id}`);
-        setNewNote(false); // 신호 초기화
-      } else if (note) {
-        setTitle(note.title);
-        setContent(note.content);
-        setCategory(note.category);
-        setTags(note.tags);
-      }
-    };
-    createNewNote();
-  }, [newNote, note, router, setNewNote]);
-
+  // 새 노트 생성 신호를 받으면 빈 노트를 생성
+  useEffect(() => {
+    if (newNoteSignal) {
+      setNoteEvent({
+        type: 'ADD', // ADD 이벤트 발생
+        payload: {title: '', content: ''},
+      });
+      router.push(`/notes?id=${note._id}`);
+      setNewNoteSignal(false); // 신호 초기화
+    } else if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+      setCategory(note.category);
+      setTags(note.tags);
+    }
+  }, [newNoteSignal, setNoteEvent, setNewNoteSignal]);
 
   // 기본적으로 노트가 없고 새 노트 신호도 없으면 안내 문구 표시
-  if (!note && !newNote) {
-    return <div className="p-8 text-center text-muted-foreground">선택된 노트가 없습니다.</div>;
+  if (!note && !newNoteSignal) {
+    return <div className="p-8 text-center text-muted-foreground">선택된 노트가
+      없습니다.</div>;
   }
-
 
   return (
       <div className="flex flex-col h-full p-4">
         <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)} // 뭔가 바뀌면 호출
-            onBlur={handleBlur} // 포커스 벗어날 때 즉시 저장
+            onChange={handleTitleChange} // 뭔가 바뀌면 호출
             className="mb-4 text-xl font-semibold"
         />
         <Textarea
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onBlur={handleBlur}
+            onChange={handleContentChange}
             className="flex-1"
         />
         {/*추후 카테고리와 태그 설정 추가할것*/}
