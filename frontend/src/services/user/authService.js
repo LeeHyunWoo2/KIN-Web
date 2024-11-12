@@ -5,7 +5,7 @@ let completedSetDB = false;
 
 // 응답에서 에러가 발생한 경우 리프레시 토큰을 사용해 Access Token을 갱신
 apiClient.interceptors.response.use(
-    async (response) => {
+    (response) => {
       console.log("응답 성공:", response);
 
       if (!completedSetDB) {
