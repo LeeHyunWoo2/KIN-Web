@@ -40,8 +40,8 @@ app.use(session({
   cookie: {
     secure: true,
     httpOnly: true,
-    sameSite: 'lax'
-  }, // strict 보단 덜 엄격한
+    sameSite: 'none'
+  },
 }));
 
 app.use(passport.initialize());
