@@ -1,4 +1,4 @@
-const User = require('../../models/User'); // User 모델 가져오기
+const User = require('../../models/user'); // User 모델 가져오기
 
 // 유저 활동 시간 갱신
 async function updateUserActivityTime(userId, activityTime) {
