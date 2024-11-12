@@ -15,7 +15,12 @@ function App({Component, pageProps}) {
   const router = useRouter();
 
   useEffect(() => {
-    const handleStart = () => NProgress.start();
+    const handleStart = () => {
+      const excludedPaths = ['/notes'];
+      if (!excludedPaths.includes(router.pathname)) {
+        NProgress.start();
+      }
+    };
     const handleStop = () => NProgress.done();
 
     router.events.on('routeChangeStart', handleStart);

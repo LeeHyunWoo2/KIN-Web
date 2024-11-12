@@ -8,9 +8,13 @@ const connectDB = require('./config/db');
 const morgan = require('morgan');
 
 // 라우터 불러오기
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const socialRoutes = require('./routes/socialRoutes');
+const authRoutes = require('./routes/user/authRoutes');
+const userRoutes = require('./routes/user/userRoutes');
+const socialRoutes = require('./routes/user/socialRoutes');
+const syncRoutes = require('./routes/user/syncRoutes');
+const noteRoutes = require('./routes/notes/noteRoutes');
+const categoryRoutes = require('./routes/notes/categoryRoutes');
+const tagRoutes = require('./routes/notes/tagRoutes');
 const session = require("express-session");
 
 const app = express();
@@ -25,7 +29,7 @@ morgan.token('body', (req) => JSON.stringify(req.body)); // 요청 본문
 // 2. 기본 미들웨어 설정
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin: process.env.FRONTEND_URL, credentials: true})); // 필요에 따라 CORS 설정
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true })); // 필요에 따라 CORS 설정
 
 // express-session 설정
 app.use(session({
@@ -36,8 +40,8 @@ app.use(session({
   cookie: {
     secure: true,
     httpOnly: true,
-    sameSite: 'None'
-  },
+    sameSite: 'lax'
+  }, // strict 보단 덜 엄격한
 }));
 
 app.use(passport.initialize());
@@ -51,11 +55,20 @@ app.use(morgan(
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/social', socialRoutes);
+app.use('/notes', noteRoutes);
+app.use('/category', categoryRoutes);
+app.use('/tags', tagRoutes);
+app.use('/sync', syncRoutes);
+
+// 서버 타임
+app.get("/api/server-time", (req, res) => {
+  res.json({ serverTime: new Date().toISOString() });
+});
 
 // 4. 에러 처리 미들웨어
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({message: '서버 오류가 발생했습니다.', error: err.message});
+  res.status(500).json({ message: '서버 오류가 발생했습니다.', error: err.message });
 });
 
 // 5. 서버 실행

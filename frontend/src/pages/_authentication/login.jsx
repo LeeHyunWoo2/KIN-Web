@@ -4,57 +4,20 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import SocialLogin from "@/components/SocialLogin";
-import {loginUser} from "@/services/authService";
+import {loginUser} from "@/services/user/authService";
 import {useState} from "react";
 import {router} from "next/client";
+import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
 
 
 export default function Dashboard() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (event) => {
+  const handleLogin = async (event, id, password) => {
     event.preventDefault();
 
-    const credentials = {
-      id,
-      password,
-    };
-
-    const tokens = await loginUser(credentials);
-    if (tokens) {
-      // 로그인 성공 시 리다이렉트
-      router.push("/notes");
-    } else {
-      console.error("로그인 실패");
-    }
-  };
-
-  const testHandleLogin = async (event) => {
-    event.preventDefault();
-
-    const credentials = {
-      id: 'test',
-      password: 'Test123456!',
-    };
-
-    const tokens = await loginUser(credentials);
-    if (tokens) {
-      // 로그인 성공 시 리다이렉트
-      router.push("/notes");
-    } else {
-      console.error("로그인 실패");
-    }
-  };
-
-
-  const testAdminHandleLogin = async (event) => {
-    event.preventDefault();
-
-    const credentials = {
-      id: 'testadmin',
-      password: 'Admin123456!',
-    };
+    const credentials = { id, password };
 
     const tokens = await loginUser(credentials);
     if (tokens) {
@@ -106,16 +69,24 @@ export default function Dashboard() {
                     onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
                 />
               </div>
-              <Button type="submit" className="w-full" onClick={handleLogin}>
+              <Button type="submit" className="w-full" onClick={(e) => handleLogin(e, id, password)}>
                 Login
               </Button>
               <div>
-              <Button variant="outline" className="w-[47%] m-1" onClick={testHandleLogin}>
-                테스트 일반 로그인
-              </Button>
-              <Button variant="outline" className="w-[47%] m-1" onClick={testAdminHandleLogin}>
-                테스트 관리자 로그인
-              </Button>
+                <Button
+                    variant="outline"
+                    className="w-[47%] m-1"
+                    onClick={(e) => handleLogin(e, 'test', 'Test123456!')}
+                >
+                  테스트 일반 로그인
+                </Button>
+                <Button
+                    variant="outline"
+                    className="w-[47%] m-1"
+                    onClick={(e) => handleLogin(e, 'testadmin', 'Admin123456!')}
+                >
+                  테스트 관리자 로그인
+                </Button>
               </div>
               <SocialLogin/>
             </div>

@@ -1,3 +1,4 @@
+// db 연결 설정을 처리하는 파일
 const mongoose = require('mongoose');
 
 const connectDB = async () => {

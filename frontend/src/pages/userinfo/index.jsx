@@ -5,7 +5,7 @@ import {
   updateUserProfile,
   linkSocialAccount,
   unlinkSocialAccount, deleteUserProfile
-} from "@/services/authService";
+} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import {
   AlertDialog,
@@ -25,6 +25,7 @@ import {
   CardHeader
 } from "@/components/ui/card";
 import Image from "next/image";
+import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
 
 function UserInfoPage() {
   const [userInfo, setUserInfo] = useState({
@@ -71,12 +72,6 @@ function UserInfoPage() {
   const isLocalAccount = () => {
     return userInfo.socialAccounts.some(
         account => account.provider === 'local');
-  };
-
-  // 연동된 소셜 계정 수 확인 함수
-  const getLinkedSocialAccountCount = () => {
-    return userInfo.socialAccounts.filter(
-        (account) => account.provider !== "local").length;
   };
 
   // 이름 업데이트 함수
@@ -133,6 +128,7 @@ function UserInfoPage() {
           <p className="text-gray-600">
             {isLocalAccount() ? '이메일 계정' : '소셜 계정'}
           </p>
+          {isLocalAccount() ? ''  : <ChangeToLocalAccount/>}
         </div>
 
         <div className="mb-4">
@@ -238,9 +234,8 @@ function UserInfoPage() {
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                                disabled={getLinkedSocialAccountCount() === 1 && isLocalAccount() === false }
-                                className={getLinkedSocialAccountCount() === 1 && isLocalAccount() === false
-                                    ? "opacity-50 cursor-not-allowed" : ""}>연동 해제
+                                disabled={ isLocalAccount() === false }
+                                className= "opacity-50 cursor-not-allowed">연동 해제
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -258,9 +253,9 @@ function UserInfoPage() {
                           </AlertDialogContent>
                         </AlertDialog>
                     ) : (
-                        <Button onClick={() => handleSocialAccountToggle(
-                            provider)}>연동하기</Button>
+                        <Button disabled={ isLocalAccount() === false } onClick={() => handleSocialAccountToggle(provider)}>연동하기</Button>
                     )}
+                     <p className="text-sm">{!isLocalAccount() && socialStatus === "미연동" ? "추가 연동은 일반계정에서 가능합니다." : ""}</p>
                   </CardFooter>
                 </Card>
             );

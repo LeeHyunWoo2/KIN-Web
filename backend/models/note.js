@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const NoteSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    default: '새 노트',
   },
   content: {
     type: String,
-    required: true,
+    required: false,
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,11 +16,12 @@ const NoteSchema = new mongoose.Schema({
   },
   category: {
     _id: mongoose.Schema.Types.ObjectId, // 카테고리 ID
-    name: String, // 카테고리 이름
+    name: String,
   },
   tags: [
     {
-      name: String // 태그 이름 (최대 5개로 제한 할 예정)
+      type: mongoose.Schema.Types.ObjectId,  // 전역 태그 ID
+      ref: 'Tag',
     }
   ],
   created_at: {
@@ -31,13 +32,21 @@ const NoteSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  is_archived: {
+  is_locked: {
     type: Boolean,
     default: false,
   },
   is_pinned: {
     type: Boolean,
     default: false,
+  },
+  isTrashed: {
+    type: Boolean,
+    default:false,
+  },
+  trashedAt: {
+    type:Date,
+    default: null,
   }
 });
 
