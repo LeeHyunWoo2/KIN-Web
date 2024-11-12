@@ -84,7 +84,7 @@ import {
 import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
-import {logoutUser} from "@/services/authService";
+import {logoutUser} from "@/services/user/authService";
 import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";

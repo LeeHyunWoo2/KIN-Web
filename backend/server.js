@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const authRoutes = require('./routes/user/authRoutes');
 const userRoutes = require('./routes/user/userRoutes');
 const socialRoutes = require('./routes/user/socialRoutes');
+const syncRoutes = require('./routes/user/syncRoutes');
 const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
@@ -57,6 +58,7 @@ app.use('/social', socialRoutes);
 app.use('/notes', noteRoutes);
 app.use('/category', categoryRoutes);
 app.use('/tags', tagRoutes);
+app.use('/sync', syncRoutes);
 
 // 서버 타임
 app.get("/api/server-time", (req, res) => {

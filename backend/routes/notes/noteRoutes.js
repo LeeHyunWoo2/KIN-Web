@@ -6,9 +6,6 @@ const authenticateUser = require('../../middleware/user/authenticateUser');
 // 노트 리스트
 router.get('/', authenticateUser, noteController.getNotes);
 
-// 노트 상세보기
-router.get('/:noteId', authenticateUser, noteController.getNoteById);
-
 // 노트 생성
 router.post('/', authenticateUser, noteController.createNote);
 

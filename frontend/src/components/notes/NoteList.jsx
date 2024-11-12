@@ -1,19 +1,24 @@
-import { useRouter } from "next/router";
-import { useAtom } from 'jotai';
-import {selectedNoteAtom} from "@/atoms/noteStateAtom";
+import {useRouter} from "next/router";
+import {useAtom} from 'jotai';
+import {
+  selectedNoteAtom,
+  noteTitleAtom,
+  noteContentAtom
+} from "@/atoms/noteStateAtom";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {cn} from "@/lib/utils";
+import {Badge} from "@/components/ui/badge";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
-export default function NoteList({ notes }) {
+export default function NoteList({notes}) {
   const router = useRouter();
-  const [, setSelectedNote] = useAtom(selectedNoteAtom); // 선택된 노트 설정
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom); // 선택된 노트 설정
+  const [title] = useAtom(noteTitleAtom); // 실시간 리스트 반영을 위한 atom 구독
+  const [content] = useAtom(noteContentAtom);
 
   const handleNoteClick = (id) => {
-    setSelectedNote(id);
     // URL에 선택한 노트 ID를 추가
-    router.push(`/notes?id=${id}`, undefined, { shallow: true });
+    router.push(`/notes?id=${id}`, undefined, {shallow: true});
   };
 
   return (
@@ -31,8 +36,9 @@ export default function NoteList({ notes }) {
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
-                      <div className="font-semibold">{note.title}</div>
-                      {note.is_pinned && (<span className="flex h-2 w-2 rounded-full bg-blue-600" />)}
+                      <div className="font-semibold">{note._id === selectedNote ? title : note.title}</div> {/*선택된 노트는 제목 실시간 반영*/}
+                      {note.is_pinned && (<span
+                          className="flex h-2 w-2 rounded-full bg-blue-600"/>)}
                     </div>
                     <div
                         className={cn(
@@ -49,12 +55,13 @@ export default function NoteList({ notes }) {
                   </div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
-                  {note.content.substring(0, 300)}
+                  {note._id === selectedNote ? content.substring(0, 300) : note.content.substring(0, 300)}
                 </div>
                 {note.tags.length ? (
                     <div className="flex items-center gap-2">
                       {note.tags.map((label) => (
-                          <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
+                          <Badge key={label}
+                                 variant={getBadgeVariantFromLabel(label)}>
                             {label}
                           </Badge>
                       ))}

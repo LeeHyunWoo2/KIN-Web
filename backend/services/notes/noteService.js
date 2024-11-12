@@ -6,11 +6,6 @@ exports.getNotes = async (userId) => {
       {created_at: -1});
 };
 
-// 노트 상세보기
-exports.getNoteById = async (noteId, userId) => {
-  return Note.findOne({_id: noteId, user_id: userId});
-};
-
 // 노트 생성
 exports.createNote = async (userId, title, content, category, tags) => {
   const note = new Note({

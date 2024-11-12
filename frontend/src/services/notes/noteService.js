@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import initDB from "@//lib/notes/initDB";
+import {initDB} from "@//lib/notes/initDB";
 
 // 서버 시간 가져오기
 async function getServerTime() {
@@ -29,30 +29,6 @@ export const getNotes = async () => {
     return fetchedNotes;
   }
   return notes;
-};
-
-
-// ID로 특정 노트 출력
-export const getNoteById = async (id) => {
-  const db = await initDB();
-  const tx = db.transaction("notes", "readonly");
-  const store = tx.objectStore("notes");
-
-  const note = await store.get(id);
-
-  if (!note) {
-    const response = await apiClient.get(`/notes/${id}`);
-    const fetchedNote = response.data;
-
-    const tx = db.transaction("notes", "readwrite");
-    const store = tx.objectStore("notes");
-    store.put(fetchedNote);
-    await tx.done;
-
-    return fetchedNote;
-  }
-
-  return note;
 };
 
 // 새 노트 생성

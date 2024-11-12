@@ -25,6 +25,8 @@ export default function NoteDisplay({note}) {
 
   // 노트의 초기 로딩 여부 확인
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  // 변경사항 플래그 (서로 반대시점을 체크하는건데 하나로 두 로직 작동시켜보니까 안되서 만듦)
+  const [isNotSaved, setIsNotSaved] = useState(false);
 
   useEffect(() => {
     // 선택된 노트가 변경될 때 필드 값도 업데이트
@@ -34,28 +36,32 @@ export default function NoteDisplay({note}) {
       setCategory(note.category);
       setTags(note.tags);
       setIsInitialLoad(true); // 처음 로딩 시에는 true
+      setIsNotSaved(false);
     }
   }, [note, setTitle, setContent, setCategory, setTags]);
 
   //  자동 저장 함수 (디바운스 1초)
   const saveChanges = useCallback(debounce(() => {
-    if (note && !isInitialLoad) {  // 초기 로딩이 아닐 때만 저장
+    if (note && !isInitialLoad && isNotSaved) {  // 초기 로딩이 아닐 때만 저장
       setNoteEvent({
         type: 'UPDATE', // UPDATE 이벤트 발생
         targetId: note._id,
         payload: {title, content},
       });
+      setIsNotSaved(false);
     }
-  }, 1000), [title, content, setNoteEvent, isInitialLoad]);
+  }, 1000), [title, content, setNoteEvent, isInitialLoad, isNotSaved]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
     setIsInitialLoad(false);  // 변경사항이 발생하면 false
+    setIsNotSaved(true);
   };
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
     setIsInitialLoad(false);
+    setIsNotSaved(true);
   };
 
   useEffect(() => {
@@ -79,6 +85,20 @@ export default function NoteDisplay({note}) {
       setTags(note.tags);
     }
   }, [newNoteSignal, setNoteEvent, setNewNoteSignal]);
+
+
+  // 페이지 이탈 방지용 경고 설정
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isNotSaved) { // 변경 사항이 저장되지 않은 경우 경고
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isNotSaved]);
+
 
   // 기본적으로 노트가 없고 새 노트 신호도 없으면 안내 문구 표시
   if (!note && !newNoteSignal) {

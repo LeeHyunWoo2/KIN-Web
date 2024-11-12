@@ -75,6 +75,11 @@ const UserSchema = new mongoose.Schema({
     type: Date, // 유저 생성 시 자동으로 현재 시간 저장
     default: Date.now,
   },
+  lastActivity: {
+    type: Date,
+    default: Date.now,
+    required: false,
+  }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

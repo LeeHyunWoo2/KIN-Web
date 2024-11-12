@@ -1,9 +1,24 @@
 import apiClient from "@/lib/apiClient";
+import {setUserDBInstance} from "@/lib/notes/initDB";
+
+let completedSetDB = false;
 
 // 응답에서 에러가 발생한 경우 리프레시 토큰을 사용해 Access Token을 갱신
 apiClient.interceptors.response.use(
-    (response) => {
+    async (response) => {
       console.log("응답 성공:", response);
+
+      if (!completedSetDB) {
+        // ?? 연산자는 왼쪽이 null이나 undefined 일 경우 오른쪽을 반환한다.
+        const userId = response.data?.user?._id ?? response.data?.user?.id;
+        if (userId) { // 유저 ID가 있고, 아직 DB 인스턴스를 생성하지 않은 경우
+          console.log("DB 인스턴스 초기화 중...");
+          console.log('유저 ID : ', userId);
+          setUserDBInstance(userId);
+          completedSetDB = true; // 플래그를 설정하여 재생성 방지
+        }
+      }
+
       return response;
     },
     async (error) => {
@@ -71,8 +86,8 @@ export const updateUserProfile = async (profileData) => {
 // 회원 탈퇴 API
 export const deleteUserProfile = async () => {
   try {
-  await apiClient.delete('/user/profile');
-  } catch (error){
+    await apiClient.delete('/user/profile');
+  } catch (error) {
     console.error('탈퇴 실패', error.message);
   }
   localStorage.removeItem('userInfo');
@@ -86,7 +101,8 @@ export const linkSocialAccount = async (provider) => {
 
 // 소셜 계정 연동 해제
 export const unlinkSocialAccount = async (provider) => {
-  const {data} = await apiClient.delete(`/social/unlink/${provider}`, {data: {provider}});
+  const {data} = await apiClient.delete(`/social/unlink/${provider}`,
+      {data: {provider}});
   return data;
 };
 

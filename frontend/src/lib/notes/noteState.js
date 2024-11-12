@@ -1,6 +1,14 @@
 import { atom } from 'jotai';
 import {  noteListAtom, selectedNoteAtom, newNoteSignalAtom, noteEventAtom } from '@/atoms/noteStateAtom';
 import { createNote, getNotes, updateNote, moveToTrash, deleteNotePermanently } from '@/services/notes/noteService';
+import debounce from "lodash/debounce";
+import {SynchronizeWithServer} from "@/services/user/syncService";
+
+
+const debouncedSynchronize = debounce(async () => {
+  const currentTime = Date.now(); // 활동 시각 전달
+  await SynchronizeWithServer(currentTime);
+}, 60 * 3000);
 
 // 리스트 초기화
 export const initializeNotesAtom = atom(null, async (get, set) => {
@@ -43,7 +51,7 @@ export const noteEventHandlerAtom = atom((get) => get(noteEventAtom),
           set(noteListAtom, noteList.filter(note => note._id !== targetId));
           break;
       }
-
-      set(selectedNoteAtom, targetId);
+      debouncedSynchronize();
+      /*set(selectedNoteAtom, targetId);*/
     }
 );

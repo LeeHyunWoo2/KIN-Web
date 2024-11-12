@@ -28,7 +28,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {Input} from "@/components/ui/input";
-import {registerUser} from '@/services/authService'
+import {registerUser} from '@/services/user/authService'
 import {z} from 'zod';
 import {useRouter} from "next/router";
 import {toast} from "@/hooks/use-toast";

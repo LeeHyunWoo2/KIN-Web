@@ -13,19 +13,6 @@ exports.getNotes = async (req, res) => {
   }
 };
 
-// 노트 상세보기
-exports.getNoteById = async (req, res) => {
-  try {
-    const { noteId } = req.params;
-    const userId = req.user.id;
-    const note = await noteService.getNoteById(noteId, userId);
-    if (!note) return res.status(404).json({ message: '노트를 찾을 수 없습니다.' });
-    res.status(200).json(note);
-  } catch (error) {
-    res.status(500).json({ message: '노트 상세보기를 불러오는 중 오류가 발생했습니다.' });
-  }
-};
-
 // 노트 생성
 exports.createNote = async (req, res) => {
   try {

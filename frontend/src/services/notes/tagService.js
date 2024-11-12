@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import initDB from "@//lib/notes/initDB";
+import {initDB} from "@//lib/notes/initDB";
 
 // 태그 목록 조회
 export const fetchTags = async () => {
