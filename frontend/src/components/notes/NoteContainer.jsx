@@ -8,7 +8,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable";
-import {Tabs, TabsContent} from "@/components/ui/tabs";
 import {Separator} from "@/components/ui/separator";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {Input} from "@/components/ui/input";
@@ -16,11 +15,10 @@ import { useAtom } from 'jotai';
 import {noteListAtom, selectedNoteAtom} from "@/atoms/noteStateAtom";
 import {initializeNotesAtom} from "@/lib/notes/noteState";
 
-export default function NoteContainer({
-  defaultLayout = [240, 440, 655]
-}) {
+
+export default function NoteContainer({ defaultLayout = [240, 440, 655] }) {
   const router = useRouter();
-  const { id } = router.query; // URL에서 id 가져옴
+  const { id, view } = router.query; // URL에서 id와 view 가져옴
   const [notes] = useAtom(noteListAtom);
   const [, setSelectedNote] = useAtom(selectedNoteAtom);
   const [, initializeNotes] = useAtom(initializeNotesAtom);
@@ -37,46 +35,38 @@ export default function NoteContainer({
 
   const selectedNote = notes.find((note) => note._id === id);
 
+  // view가 trash일 경우 휴지통 필터 적용
+  const filteredNotes = view === 'trash'
+      ? notes.filter((note) => note.is_trashed) // 휴지통 필터
+      : notes.filter((note) => !note.is_trashed); // 일반 필터
+
   return (
+      <TooltipProvider delayDuration={0}>
+        <ResizablePanelGroup direction="horizontal" className="h-full max-h-[800px] items-stretch">
+          <ResizablePanel defaultSize={defaultLayout[0]} minSize={27}>
+            <div className="flex items-center px-4 py-2">
+              <h1 className="text-xl font-bold">Notes</h1>
+            </div>
 
+            <Separator />
 
-  <TooltipProvider delayDuration={0}>
-    <ResizablePanelGroup
-        direction="horizontal"
-        className="h-full max-h-[800px] items-stretch"
-    >
-      <ResizablePanel defaultSize={defaultLayout[0]} minSize={27}>
-        <Tabs defaultValue="all">
-
-          <div className="flex items-center px-4 py-2">
-            <h1 className="text-xl font-bold">Inbox</h1>
-          </div>
-
-          <Separator />
-
-          <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search" className="pl-8" />
-              </div>
-            </form>
-          </div>
-
-          <TabsContent value="all" className="m-0">
-            <NoteList notes={notes}/>
-          </TabsContent>
-{/*          <TabsContent value="is_pinned" className="m-0">
-            <NoteList items={noteList.filter((item) => !item.is_pinned)}/>
-          </TabsContent> 이 부분은 언젠가 리스트 전환이나 여러가지로 응용 가능할거같아서 지우지 않고 주석처리함*/}
-
-        </Tabs>
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={defaultLayout[2]}>
-        <NoteDisplay note={selectedNote} />
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  </TooltipProvider>
+            <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <form>
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search" className="pl-8" />
+                </div>
+              </form>
+            </div>
+            
+            <NoteList notes={filteredNotes} />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={defaultLayout[2]}>
+            <NoteDisplay note={selectedNote} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+        <Separator/>
+      </TooltipProvider>
   );
 }

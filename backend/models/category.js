@@ -10,10 +10,6 @@ const CategorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-    required: false,
-  },
   parent_id: {
     type: mongoose.Schema.Types.ObjectId, // 상위 카테고리
     ref: 'Category',

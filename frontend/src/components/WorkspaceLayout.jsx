@@ -88,9 +88,13 @@ import {logoutUser} from "@/services/user/authService";
 import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
-import {useAtom, useSetAtom} from "jotai";
+import {useAtom} from "jotai";
 import {testAtom} from "@/atoms/testAtom";
-import { newNoteSignalAtom } from '@/atoms/noteStateAtom';
+import {
+  selectedNoteAtom,
+  noteEventAtom,
+  saveNoteChanges
+} from '@/atoms/noteStateAtom';
 
 const data = {
   teams: [
@@ -298,8 +302,8 @@ const handleLogout = () => {
 };
 
 function Page({children}) {
-  const setNewNote = useSetAtom(newNoteSignalAtom);
-  const [ mode, setMode ] = useAtom(testAtom);
+  const [, setNoteEvent] = useAtom(noteEventAtom);
+  const [mode, setMode] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -308,7 +312,10 @@ function Page({children}) {
   });
 
   const handleNewNote = () => {
-    setNewNote(true); // 새 노트 작성 신호 전송
+    setNoteEvent({
+      type: 'ADD',
+      payload: {title: '', content: ''}
+    })
   };
 
   useEffect(() => {
@@ -321,9 +328,9 @@ function Page({children}) {
   }, []);
 
   const changeMode = () => {
-    if (mode === "modeA"){
+    if (mode === "modeA") {
       setMode("modeB");
-    } else if (mode === "modeB"){
+    } else if (mode === "modeB") {
       setMode("modeA");
     }
   }
@@ -392,10 +399,10 @@ function Page({children}) {
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
                       <Link href="/userinfo">
-                      <DropdownMenuItem>
-                        <UserRoundCog />
-                        Account Settings
-                      </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <UserRoundCog/>
+                          Account Settings
+                        </DropdownMenuItem>
                       </Link>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
@@ -415,7 +422,7 @@ function Page({children}) {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <Link href="/">
-                      <DropdownMenuItem  onClick={handleLogout}>
+                      <DropdownMenuItem onClick={handleLogout}>
                         <LogOut/>
                         Log out
                       </DropdownMenuItem>
@@ -424,7 +431,7 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote} />
+            <NavMain items={data.navHeader} onNewNote={handleNewNote}/>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
@@ -510,9 +517,18 @@ function Page({children}) {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
+            <SidebarMenu className="cursor-pointer">
+              <SidebarMenuItem>
+                <Button variant="ghost" className="min-w-full"
+                        onClick={changeMode}/>
+                <SidebarMenuButton>
+                  <Trash2 />
+                  <span>휴지통</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
             <SidebarMenu>
               <SidebarMenuItem>
-                <Button variant="ghost" className="min-w-full" onClick={changeMode}/>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
@@ -612,10 +628,11 @@ function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                   asChild
-                  onClick={item.title === "새 노트" ? onNewNote : undefined} // "새 노트"일 때만 신호 전달
+                  onClick={item.title === "새 노트" ? onNewNote
+                      : undefined} // "새 노트"일 때만 신호 전달
               >
                 <a href={item.url}>
-                  <item.icon />
+                  <item.icon/>
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
@@ -690,4 +707,5 @@ function NavActions({
       </div>
   )
 }
+
 export default withAuth(Page);
