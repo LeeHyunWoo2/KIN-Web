@@ -37,8 +37,6 @@ export default function NoteList({notes}) {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div className="font-semibold">{note._id === selectedNote ? title : note.title}</div> {/*선택된 노트는 제목 실시간 반영*/}
-                      {note.is_pinned && (<span
-                          className="flex h-2 w-2 rounded-full bg-blue-600"/>)}
                     </div>
                     <div
                         className={cn(

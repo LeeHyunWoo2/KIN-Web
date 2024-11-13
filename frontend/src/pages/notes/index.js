@@ -26,7 +26,7 @@ export default function NotePage() {
 
   return (
       <>
-        {mode === "modeA" ? (
+        {mode === "modeB" ? (
         <div className="hidden flex-col md:flex">
           <Note
               notes={notes}

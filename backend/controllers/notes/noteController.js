@@ -31,17 +31,13 @@ exports.createNote = async (req, res) => {
 // 노트 수정
 exports.updateNote = async (req, res) => {
   try {
-    const  id  = req.params.noteId;
-    console.log(id)
-    console.log(req.body)
-    const { title, content, category, tags } = req.body;
+    const id = req.params.noteId;
     const user_id = req.user.id;
-    console.log(title)
+    const updates = req.body; // 변경이 생긴 필드만
 
     const updatedNote = await noteService.updateNote(
         { _id: id, user_id },
-        title, content, category, tags,
-        { new: true }
+        updates
     );
 
     if (!updatedNote) return res.status(404).json({ error: "노트를 찾을 수 없습니다." });
@@ -50,6 +46,7 @@ exports.updateNote = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 // 노트 삭제
 exports.deleteNote = async (req, res) => {

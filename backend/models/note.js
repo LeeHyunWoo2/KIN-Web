@@ -40,7 +40,7 @@ const NoteSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  isTrashed: {
+  is_trashed: {
     type: Boolean,
     default:false,
   },

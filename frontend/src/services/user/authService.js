@@ -8,6 +8,7 @@ apiClient.interceptors.response.use(
     (response) => {
       console.log("응답 성공:", response);
 
+      // 첫 접속 시 (첫 리스폰스) 유저ID와 매치된 DB셋팅
       if (!completedSetDB) {
         // ?? 연산자는 왼쪽이 null이나 undefined 일 경우 오른쪽을 반환한다.
         const userId = response.data?.user?._id ?? response.data?.user?.id;
@@ -29,7 +30,7 @@ apiClient.interceptors.response.use(
       if (error.response && error.response.status === 401
           && !originalRequest._retry) {
         originalRequest._retry = true;
-        console.log("401 에러 발생, 토큰 만료로 간주하고 리프레시 토큰으로 갱신 중...");
+        console.log("액세스 토큰 갱신 중...");
 
         try {
           // 리프레시 토큰으로 새로운 액세스 토큰 요청
