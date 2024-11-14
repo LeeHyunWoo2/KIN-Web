@@ -36,7 +36,6 @@ export default function CategorySidebar() {
         const categoryTree = buildCategoryTree(categoryData);
         setCategories(categoryTree);
       } catch (error) {
-        console.error('카테고리 불러오기 실패', error);
       }
     };
     loadCategories();

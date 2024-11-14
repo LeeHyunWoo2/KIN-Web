@@ -91,10 +91,10 @@ import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
 import {testAtom} from "@/atoms/testAtom";
 import {
-  selectedNoteAtom,
-  noteEventAtom,
-  saveNoteChanges
+  noteCountAtom,
+  noteEventAtom
 } from '@/atoms/noteStateAtom';
+import {router} from "next/client";
 
 const data = {
   teams: [
@@ -121,12 +121,10 @@ const data = {
     },
     {
       title: "홈",
-      url: "/notes",
       icon: Home,
     },
     {
-      title: "전체 보기",
-      url: "#",
+      title: "전체 보기" ,
       icon: Inbox,
     },
   ],
@@ -310,6 +308,7 @@ function Page({children}) {
     email: '',
     profileIcon: '',
   });
+  const [noteCount] = useAtom(noteCountAtom);
 
   const handleNewNote = () => {
     setNoteEvent({
@@ -333,7 +332,15 @@ function Page({children}) {
     } else if (mode === "modeB") {
       setMode("modeA");
     }
+  };
+
+  const moveToHome = () => {
+    router.push('/notes', undefined, {shallow: true});
   }
+
+  const moveToTrash = () => {
+      router.push('/notes?view=trash', undefined, {shallow: true});
+  };
 
   return (
       <SidebarProvider>
@@ -431,7 +438,7 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote}/>
+            <NavMain items={data.navHeader} onNewNote={handleNewNote} goHome={moveToHome}/>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
@@ -521,9 +528,9 @@ function Page({children}) {
               <SidebarMenuItem>
                 <Button variant="ghost" className="min-w-full"
                         onClick={changeMode}/>
-                <SidebarMenuButton>
+                <SidebarMenuButton onClick={moveToTrash}>
                   <Trash2 />
-                  <span>휴지통</span>
+                  <span>휴지통 ( {noteCount.trashed} )</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -620,7 +627,7 @@ function Page({children}) {
 }
 
 function NavMain({
-  items, onNewNote
+  items, onNewNote, goHome
 }) {
   return (
       <SidebarMenu className="cursor-pointer">
@@ -629,7 +636,9 @@ function NavMain({
               <SidebarMenuButton
                   asChild
                   onClick={item.title === "새 노트" ? onNewNote
-                      : undefined} // "새 노트"일 때만 신호 전달
+                      : "홈" ? goHome
+                      : "전체 보기" ? goHome
+                      : undefined}
               >
                 <a href={item.url}>
                   <item.icon/>

@@ -15,7 +15,6 @@ export default function NotePage() {
   useEffect(() => {
     if (event) {
       handleEvent(event);
-      console.log("이벤트 트리거 작동 :", event);
     }
   }, [event, handleEvent]);
 

@@ -9,7 +9,6 @@ import {
   AlertDialogHeader, AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import {cn} from "@/lib/utils";
 
 export default function ChangeToLocalAccount() {
   const [page, setPage] = useState(0);

@@ -3,23 +3,35 @@ import {useAtom} from 'jotai';
 import {
   selectedNoteAtom,
   noteTitleAtom,
-  noteContentAtom
+  noteContentAtom, noteCountAtom
 } from "@/atoms/noteStateAtom";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {cn} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {useEffect} from "react";
 
 export default function NoteList({notes}) {
   const router = useRouter();
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom); // 선택된 노트 설정
   const [title] = useAtom(noteTitleAtom); // 실시간 리스트 반영을 위한 atom 구독
   const [content] = useAtom(noteContentAtom);
+  const [, setNoteCount] = useAtom(noteCountAtom);
 
-  const handleNoteClick = (id) => {
+  const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
-    router.push(`/notes?id=${id}`, undefined, {shallow: true});
+    if (!note.is_trashed) {
+      router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
+    } else {
+      router.push(`/notes?id=${note._id}&view=trash`, undefined, {shallow: true});
+    }
   };
+
+  useEffect(() => {
+    const activeCount = notes.filter(note => !note.is_trashed).length;
+    const trashedCount = notes.filter(note => note.is_trashed).length;
+    setNoteCount({ active: activeCount, trashed: trashedCount });
+  }, [notes]);
 
   return (
       <ScrollArea className="h-screen">
@@ -31,7 +43,7 @@ export default function NoteList({notes}) {
                       "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px]",
                       router.query.id === note._id && "bg-muted" // URL의 ID와 매칭되면 스타일 적용
                   )}
-                  onClick={() => handleNoteClick(note._id)} // 노트 클릭 시 URL에 ID 추가
+                  onClick={() => handleNoteClick(note)} // 노트 클릭 시 URL에 ID 추가
               >
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">

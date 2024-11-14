@@ -7,7 +7,7 @@ const { revokeSocialAccess } = require('./socialService'); // 연동 해제를 �
 const getUserById = async (userId) => {
   const user = await User.findById(userId).select('-password');
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    throw new Error;
   }
   return user;
 };
@@ -16,7 +16,7 @@ const getUserById = async (userId) => {
 const updateUser = async (userId, updateData) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    throw new Error;
   }
   if (updateData.name) user.name = updateData.name;
   if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
@@ -28,10 +28,12 @@ const updateUser = async (userId, updateData) => {
 const addLocalAccount = async (userId, id, email, password) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    throw new Error;
   }
   if (user.socialAccounts.some(account => account.provider === 'local')) {
-    throw new Error('이미 로컬 계정이 등록되어 있습니다.');
+    const error = new Error("이미 로컬 계정이 등록되어 있습니다.");
+    error.status = 400;
+    throw error;
   }
 
   user.id = id;
@@ -45,7 +47,7 @@ const addLocalAccount = async (userId, id, email, password) => {
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    throw new Error;
   }
 
   for (const account of user.socialAccounts) {

@@ -22,7 +22,7 @@ router.get('/:provider', (req, res, next) => {
       prompt: 'consent' // 매번 사용자 동의 요청
     })(req, res, next); // 해당 provider로 인증 시작
   } else {
-    res.status(400).send('지원하지 않는 소셜 플랫폼입니다..');
+    res.status(400).send();
   }
 });
 
@@ -45,7 +45,6 @@ router.get('/:provider/callback', (req, res, next) => {
       const redirectUrl = `${process.env.FRONTEND_URL}/social-login-success?name=${user.name}&email=${user.email}&profileIcon=${user.profileIcon}`;
       return res.redirect(redirectUrl);
     } catch (error) {
-      console.error('토큰 발급 오류:', error);
       res.redirect(`${process.env.FRONTEND_URL}/login`);
     }
   })(req, res, next);
@@ -55,7 +54,6 @@ router.get('/:provider/callback', (req, res, next) => {
 // 추가 연동 라우트 설정
 router.get('/link/:provider', authenticateUser, (req, res, next) => {
   req.session.userId = String(req.user.id);
-  console.log('추가연동 라우트')
   const provider = req.params.provider;
 
   if (['google', 'kakao', 'naver'].includes(provider)) {
@@ -65,19 +63,18 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
       prompt: 'consent' // 매번 사용자 동의 요청
     })(req, res, next); // 해당 provider로 인증 시작
   } else {
-    res.status(400).send('지원하지 않는 소셜 플랫폼입니다.');
+    res.status(400).send();
   }
 });
 
 // 추가 연동 콜백
 router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
-  console.log(req.user)
-  console.log('추가연동 콜백')
   const provider = req.params.provider;
 
   passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (err) => {
     if (err) {
-      return res.redirect(`${process.env.FRONTEND_URL}/userinfo?error=duplicated`);
+      // 에러 발생 시 메시지 포함
+      return res.redirect(`${process.env.FRONTEND_URL}/userinfo?error=${encodeURIComponent("이미 연동된 계정입니다.")}`);
     }
     res.redirect(`${process.env.FRONTEND_URL}/userinfo`);
   })(req, res, next);
@@ -86,4 +83,5 @@ router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
 
 // 소셜 계정 연동 해제
 router.delete('/unlink/:provider', authenticateUser, unlinkSocialAccount);
+
 module.exports = router;

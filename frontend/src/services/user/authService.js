@@ -1,55 +1,16 @@
 import apiClient from "@/lib/apiClient";
-import {setUserDBInstance} from "@/lib/notes/initDB";
 
-let completedSetDB = false;
+// 토큰 갱신 함수
+export const refreshToken = async () => {
+  try {
+    const { data } = await apiClient.post('/auth/refresh-token');
+  } catch (error) {
+    // 토큰 갱신 실패 시 로그아웃 처리
+    await logoutUser();
+    throw error;
+  }
+};
 
-// 응답에서 에러가 발생한 경우 리프레시 토큰을 사용해 Access Token을 갱신
-apiClient.interceptors.response.use(
-    (response) => {
-      console.log("응답 성공:", response);
-
-      // 첫 접속 시 (첫 리스폰스) 유저ID와 매치된 DB셋팅
-      if (!completedSetDB) {
-        // ?? 연산자는 왼쪽이 null이나 undefined 일 경우 오른쪽을 반환한다.
-        const userId = response.data?.user?._id ?? response.data?.user?.id;
-        if (userId) { // 유저 ID가 있고, 아직 DB 인스턴스를 생성하지 않은 경우
-          console.log("DB 인스턴스 초기화 중...");
-          console.log('유저 ID : ', userId);
-          setUserDBInstance(userId);
-          completedSetDB = true; // 플래그를 설정하여 재생성 방지
-        }
-      }
-
-      return response;
-    },
-    async (error) => {
-      const originalRequest = error.config;
-      console.log("응답 에러:", error.response ? error.response.status : error);
-
-      // 401 오류 발생 시 토큰 갱신 로직
-      if (error.response && error.response.status === 401
-          && !originalRequest._retry) {
-        originalRequest._retry = true;
-        console.log("액세스 토큰 갱신 중...");
-
-        try {
-          // 리프레시 토큰으로 새로운 액세스 토큰 요청
-          const {data} = await apiClient.post('/auth/refresh-token');
-          console.log("새로운 토큰 발급 성공:", data);
-
-          // 새로운 토큰으로 원래 요청 다시 수행
-          return apiClient(originalRequest);
-        } catch (err) {
-          console.error("토큰 갱신 실패:", err);
-          // 로그아웃 처리
-          logoutUser();
-        }
-      }
-
-      console.log("토큰 만료와 관련 없는 오류 또는 재요청 실패:", error);
-      return Promise.reject(error);
-    }
-);
 // 회원가입 API
 export const registerUser = async (userData) => {
   const {data} = await apiClient.post('/auth/register', userData);
@@ -61,13 +22,12 @@ export const loginUser = async (credentials) => {
   try {
     const {data} = await apiClient.post('/auth/login', credentials);
     localStorage.setItem('userInfo', JSON.stringify({
-      name: data.user.name,
-      email: data.user.email,
-      profileIcon: data.user.profileIcon,
+      name: data.name,
+      email: data.email,
+      profileIcon: data.profileIcon,
     }));
     return data;
   } catch (error) {
-    console.error('로그인 실패', error.message);
     return null;
   }
 };
@@ -89,7 +49,6 @@ export const deleteUserProfile = async () => {
   try {
     await apiClient.delete('/user/profile');
   } catch (error) {
-    console.error('탈퇴 실패', error.message);
   }
   localStorage.removeItem('userInfo');
   window.location.href = '/login';
@@ -111,11 +70,8 @@ export const unlinkSocialAccount = async (provider) => {
 export const logoutUser = async () => {
   try {
     await apiClient.post('/auth/logout', {});
-    console.log("로그아웃 요청 성공");
   } catch (error) {
-    console.error("로그아웃 요청 중 오류:", error);
   }
-
   localStorage.removeItem('userInfo');
   window.location.href = '/login';
 };

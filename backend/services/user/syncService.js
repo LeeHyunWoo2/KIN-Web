@@ -9,7 +9,7 @@ async function updateUserActivityTime(userId, activityTime) {
         {new: true} // 업데이트된 데이터 반환
     );
   } catch (error) {
-    throw new Error('유저 활동 시간 갱신 실패');
+    throw new Error;
   }
 }
 
@@ -19,7 +19,7 @@ async function getUserLastActivity(userId) {
     const user = await User.findById(userId).select('lastActivity');
     return user.lastActivity;
   } catch (error) {
-    throw new Error('유저 활동 시간 조회 실패');
+    throw new Error;
   }
 }
 
