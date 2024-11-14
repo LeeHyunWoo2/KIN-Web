@@ -83,8 +83,6 @@ export function FancyMultiSelect() {
       (framework) => !selected.includes(framework)
   );
 
-  console.log(selectables, selected, inputValue);
-
   return (
       <Command
           onKeyDown={handleKeyDown}

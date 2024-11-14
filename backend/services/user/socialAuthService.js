@@ -12,7 +12,6 @@ const configureSocialStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('구글 로그인 전략');
       const providerId = profile.id;
       let user = await User.findOne({
         'socialAccounts.provider': 'google',
@@ -32,13 +31,10 @@ const configureSocialStrategies = (passport) => {
           termsAgreed: true,
         });
         await user.save();
-        console.log('너는 가입이다');
         return done(null, user);
       }
-      console.log('너는 로그인이다');
       return done(null, user);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));
@@ -51,7 +47,6 @@ const configureSocialStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('카카오 로그인 전략');
       const providerId = profile.id;
       let user = await User.findOne({
         'socialAccounts.provider': 'kakao',
@@ -71,13 +66,10 @@ const configureSocialStrategies = (passport) => {
           termsAgreed: true,
         });
         await user.save();
-        console.log('너는 가입이다');
         return done(null, user);
       }
-      console.log('너는 로그인이다');
       return done(null, user);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));
@@ -90,7 +82,6 @@ const configureSocialStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('네이버 로그인 전략');
       const providerId = profile.id;
       let user = await User.findOne({
         'socialAccounts.provider': 'naver',
@@ -110,13 +101,10 @@ const configureSocialStrategies = (passport) => {
           termsAgreed: true,
         });
         await user.save();
-        console.log('너는 가입이다');
         return done(null, user);
       }
-      console.log('너는 로그인이다');
       return done(null, user);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));

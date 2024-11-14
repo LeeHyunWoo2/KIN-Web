@@ -1,4 +1,5 @@
 const userService = require('../../services/user/userService');
+const {createErrorResponse} = require("../../middleware/errorHandler");
 
 // 1. 사용자 정보 조회
 const getUserInfo = async (req, res) => {
@@ -6,7 +7,8 @@ const getUserInfo = async (req, res) => {
     const user = await userService.getUserById(req.user.id);
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "사용자 정보 조회 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -15,9 +17,10 @@ const updateUserInfo = async (req, res) => {
   try {
     const { name, profileIcon } = req.body;
     const updatedUser = await userService.updateUser(req.user.id, { name, profileIcon });
-    res.status(200).json({ message: '사용자 정보가 성공적으로 수정되었습니다.', user: updatedUser });
+    res.status(200).json({user: updatedUser});
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "사용자 정보 수정 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -26,9 +29,10 @@ const addLocalAccount = async (req, res) => {
   try {
     const { id, email, password } = req.body;
     await userService.addLocalAccount(req.user.id, id, email, password);
-    res.status(200).json({ message: '로컬 계정이 성공적으로 추가되었습니다.' });
+    res.status(200).json();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로컬 계정 추가 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -38,9 +42,10 @@ const deleteUser = async (req, res) => {
     await userService.deleteUserById(req.user.id);
     res.clearCookie('accessToken', { httpOnly: true });
     res.clearCookie('refreshToken', { httpOnly: true });
-    res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });
+    res.status(200).json();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "회원 탈퇴 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 

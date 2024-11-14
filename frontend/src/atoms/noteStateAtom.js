@@ -16,6 +16,9 @@ export const saveNoteChangesAtom = atom(
     }
 );
 
+// 노트 갯수 상태
+export const noteCountAtom = atom({ active: 0, trashed: 0 });
+
 // 노트 리스트 상태 관리
 export const noteListAtom = atom([]);
 
