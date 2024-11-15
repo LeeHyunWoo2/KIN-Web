@@ -44,7 +44,7 @@ app.use(session({
   cookie: {
     secure: true,
     httpOnly: true,
-    sameSite: 'None'
+    sameSite: 'lax'
   },
 }));
 

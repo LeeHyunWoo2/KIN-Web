@@ -27,11 +27,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {useRouter} from "next/router";
 
+const produce = require("immer").produce;
+
 export default function NoteDisplay() {
   const router = useRouter();
   const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
-  const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
-
+  const [selectedNoteState, setSelectedNoteState] = useAtom(
+      selectedNoteStateAtom);
 
   // 노트의 초기 로딩 여부 확인 (노트 누르자마자 자동저장 시작하는거 방지)
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -41,7 +43,6 @@ export default function NoteDisplay() {
   const [localPayload, setLocalPayload] = useState({});
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
-
 
   //  자동 저장 함수 (디바운스)
   const saveChanges = useCallback(debounce(() => {
@@ -58,37 +59,59 @@ export default function NoteDisplay() {
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
-    setSelectedNoteState(prev => ({...prev, title: newTitle}))
-    setLocalPayload(prevPayload => ({ ...prevPayload, title: newTitle }));
-    setIsInitialLoad(false); // 변경사항이 생기면 false
+    setSelectedNoteState((prev) => produce(prev, (draft) => {
+      draft.title = newTitle;
+    }));
+    setLocalPayload((prevPayload) =>
+        produce(prevPayload, (draft) => {
+          draft.title = newTitle;
+        })
+    );
+    setIsInitialLoad(false);
     setIsNotSaved(true);
   };
 
   const handleContentChange = (e) => {
     const newContent = e.target.value;
-    setSelectedNoteState(prev => ({...prev, content: newContent}))
-    setLocalPayload(prevPayload => ({ ...prevPayload, content: newContent }));
+    setSelectedNoteState((prev) => produce(prev, (draft) => {
+      draft.content = newContent;
+    }));
+    setLocalPayload((prevPayload) =>
+        produce(prevPayload, (draft) => {
+          draft.content = newContent;
+        })
+    );
     setIsInitialLoad(false);
     setIsNotSaved(true);
   };
 
   const moveToTrash = () => {
     if (!selectedNoteState.is_trashed) {
-      setSelectedNoteState(prev => ({...prev, is_trashed: true}));
-      saveNoteChanges({noteId: selectedNoteState._id, updatedFields:{is_trashed:true}});
+      saveNoteChanges(
+          {noteId: selectedNoteState._id, updatedFields: {is_trashed: true}});
       router.push(`/notes`, undefined, {shallow: true});
-    }else {
-      setSelectedNoteState(prev => ({...prev, is_trashed: false}));
-      saveNoteChanges({noteId: selectedNoteState._id, updatedFields:{is_trashed:false}});
+    } else {
+      saveNoteChanges(
+          {noteId: selectedNoteState._id, updatedFields: {is_trashed: false}});
       router.push(`/notes?view=trash`, undefined, {shallow: true});
     }
   };
 
+  const handlePermanentDelete = () => {
+    console.log('삭제')
+    if (selectedNoteState.is_trashed) {
+      setNoteEvent({
+        type: 'DELETE',
+        targetId: selectedNoteState._id
+      })
+      router.push('/notes?view=trash', undefined, {shallow: true});
+    }
+  }
+
   useEffect(() => {
     saveChanges();
     return () => saveChanges.cancel();
-  }, [ saveChanges]);
-
+  }, [saveChanges]);
 
   // 페이지 이탈 방지용 경고 설정
   useEffect(() => {
@@ -98,11 +121,10 @@ export default function NoteDisplay() {
         e.returnValue = '';
       };
       window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload',
+          handleBeforeUnload);
     }
   }, [isNotSaved]);
-
-
 
   if (!selectedNoteState) {
     return <div className="p-8 text-center text-muted-foreground">선택된 노트가
@@ -114,36 +136,38 @@ export default function NoteDisplay() {
         <div className="flex items-center p-1">
           <div className="flex items-center gap-2">
             {/* Archive Button */}
-            <Tooltip>
+{/*            <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+                <Button variant="ghost" size="icon"
+                        disabled={!selectedNoteState}>
                   <Archive className="h-4 w-4"/>
                   <span className="sr-only">Archive</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Archive</TooltipContent>
-            </Tooltip>
+            </Tooltip>*/}
 
             {/* Move to Junk Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState} onClick={handlePermanentDelete}>
                   <ArchiveX className="h-4 w-4"/>
                   <span className="sr-only">Move to junk</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Move to junk</TooltipContent>
+              <TooltipContent>영구삭제</TooltipContent>
             </Tooltip>
 
             {/* Trash Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}  onClick={moveToTrash}>
+                <Button variant="ghost" size="icon"
+                        disabled={!selectedNoteState} onClick={moveToTrash}>
                   <Trash2 className="h-4 w-4"/>
                   <span className="sr-only">Move to trash</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Move to trash</TooltipContent>
+              <TooltipContent>휴지통으로 이동</TooltipContent>
             </Tooltip>
 
             <Separator orientation="vertical" className="mx-1 h-6"/>
@@ -153,7 +177,8 @@ export default function NoteDisplay() {
             {/* Reply Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+                <Button variant="ghost" size="icon"
+                        disabled={!selectedNoteState}>
                   <Reply className="h-4 w-4"/>
                   <span className="sr-only">Reply</span>
                 </Button>
@@ -164,7 +189,8 @@ export default function NoteDisplay() {
             {/* Reply All Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+                <Button variant="ghost" size="icon"
+                        disabled={!selectedNoteState}>
                   <ReplyAll className="h-4 w-4"/>
                   <span className="sr-only">Reply all</span>
                 </Button>
@@ -175,7 +201,8 @@ export default function NoteDisplay() {
             {/* Forward Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+                <Button variant="ghost" size="icon"
+                        disabled={!selectedNoteState}>
                   <Forward className="h-4 w-4"/>
                   <span className="sr-only">Forward</span>
                 </Button>

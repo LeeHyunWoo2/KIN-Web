@@ -124,7 +124,7 @@ const data = {
       icon: Home,
     },
     {
-      title: "전체 보기" ,
+      title: "전체 보기",
       icon: Inbox,
     },
   ],
@@ -309,6 +309,7 @@ function Page({children}) {
     profileIcon: '',
   });
   const [noteCount] = useAtom(noteCountAtom);
+  const {view} = router.query;
 
   const handleNewNote = () => {
     setNoteEvent({
@@ -339,7 +340,11 @@ function Page({children}) {
   }
 
   const moveToTrash = () => {
+    if (view !== 'trash') {
       router.push('/notes?view=trash', undefined, {shallow: true});
+    } else {
+      router.push('/notes', undefined, {shallow: true});
+    }
   };
 
   return (
@@ -438,7 +443,8 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote} goHome={moveToHome}/>
+            <NavMain items={data.navHeader} onNewNote={handleNewNote}
+                     goHome={moveToHome}/>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
@@ -529,7 +535,7 @@ function Page({children}) {
                 <Button variant="ghost" className="min-w-full"
                         onClick={changeMode}/>
                 <SidebarMenuButton onClick={moveToTrash}>
-                  <Trash2 />
+                  <Trash2/>
                   <span>휴지통 ( {noteCount.trashed} )</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -637,8 +643,8 @@ function NavMain({
                   asChild
                   onClick={item.title === "새 노트" ? onNewNote
                       : "홈" ? goHome
-                      : "전체 보기" ? goHome
-                      : undefined}
+                          : "전체 보기" ? goHome
+                              : undefined}
               >
                 <a href={item.url}>
                   <item.icon/>
