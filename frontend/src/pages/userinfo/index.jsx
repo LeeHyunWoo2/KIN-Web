@@ -26,8 +26,12 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
+import { useRouter } from "next/router";
+import { toast } from "sonner";
+
 
 function UserInfoPage() {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState({
     profileIcon: '',
     email: '',
@@ -49,14 +53,23 @@ function UserInfoPage() {
       const data = await getUserProfile();
       setUserInfo(data.user);
     } catch (error) {
-      console.error("사용자 정보를 불러오는 중 오류 발생:", error);
     } finally {
       setIsLoading(false); // 마지막엔 무조건 로딩 완료
     }
   };
+
   useEffect(() => {
     fetchUserInfo();
   }, []);
+
+  useEffect(() => {
+    const { error } = router.query;
+    if (error) {
+      toast.error(decodeURIComponent(error));
+      // 토스트 보여주고나서 URL에서 쿼리 제거
+      router.replace("/userinfo", undefined, { shallow: true });
+    }
+  }, [router.query]);
 
   // 소셜 계정 연동 상태 확인 함수
   const getSocialAccountStatus = (provider) => {
@@ -81,7 +94,6 @@ function UserInfoPage() {
       setUserInfo((prev) => ({...prev, name: newName}));
       setIsEditingName(false);
     } catch (error) {
-      console.error('이름 업데이트 중 오류 발생:', error);
     }
   };
 
@@ -92,7 +104,6 @@ function UserInfoPage() {
       setUserInfo((prev) => ({...prev, phone: newPhone}));
       setIsEditingPhone(false);
     } catch (error) {
-      console.error('전화번호 업데이트 중 오류 발생:', error);
     }
   };
 
@@ -110,7 +121,6 @@ function UserInfoPage() {
         await fetchUserInfo(); // 업데이트 후 데이터 새로 가져오기
       }
     } catch (error) {
-      console.error(`${provider} 계정 연동 처리 중 오류 발생:`, error);
     }
   }
 

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Search } from "lucide-react";
-import { NoteDisplay } from "./note-display";
-import { NoteList } from "./note-list";
-import { notes as initialNotes } from "@/lib/notes/data";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import React, {useState} from "react";
+import {Search} from "lucide-react";
+import {NoteDisplay} from "./note-display";
+import {NoteList} from "./note-list";
+import {notes as initialNotes} from "@/lib/notes/data";
+import {Separator} from "@/components/ui/separator";
+import {Input} from "@/components/ui/input";
+import {Tabs, TabsContent} from "@/components/ui/tabs";
+import {TooltipProvider} from "@/components/ui/tooltip";
 import {
   ResizableHandle,
   ResizablePanel,

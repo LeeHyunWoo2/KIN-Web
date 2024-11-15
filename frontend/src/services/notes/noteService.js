@@ -59,44 +59,8 @@ export const updateNote = async (id, updatedData) => {
   return updatedNote;
 };
 
-// 휴지통에 노트 이동
-export const moveToTrash = async (id) => {
-  const db = await initDB();
-  const serverTime = await getServerTime(); // 서버 시간 가져오기
-
-  const tx = db.transaction("notes", "readwrite");
-  const store = tx.objectStore("notes");
-
-  const note = await store.get(id);
-  if (note) {
-    note.isTrashed = true;
-    note.trashedAt = serverTime; // 서버 시간으로 삭제 날짜 설정
-    store.put(note);
-  }
-  await tx.done;
-
-  return note;
-};
-
-// 노트 복구
-export const restoreNote = async (id) => {
-  const db = await initDB();
-  const tx = db.transaction("notes", "readwrite");
-  const store = tx.objectStore("notes");
-
-  const note = await store.get(id);
-  if (note) {
-    note.isTrashed = false;
-    note.trashedAt = null; // 삭제 날짜 초기화
-    store.put(note);
-  }
-  await tx.done;
-
-  return note;
-};
-
 // 완전 삭제 (휴지통에서 영구 삭제)
-export const deleteNotePermanently = async (id) => {
+export const deleteNote = async (id) => {
   await apiClient.delete(`/notes/${id}`);
 
   const db = await initDB();
@@ -118,7 +82,7 @@ export const deleteExpiredNotes = async () => {
   const now = await getServerTime(); // 서버 시간으로 현재 시간 가져오기
 
   for (const note of allNotes) {
-    if (note.isTrashed && note.trashedAt && now - new Date(note.trashedAt) > 30 * 24 * 60 * 60 * 1000) {
+    if (note.is_trashed && note.trashedAt && now - new Date(note.trashedAt) > 30 * 24 * 60 * 60 * 1000) {
       store.delete(note._id); // 30일 이상 지난 노트 삭제
     }
   }

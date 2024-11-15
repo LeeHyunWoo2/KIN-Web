@@ -1,19 +1,42 @@
 import { atom } from 'jotai';
 
-// 노트 편집 상태 (제목, 내용, 카테고리, 태그)
-export const noteTitleAtom = atom('');
-export const noteContentAtom = atom('');
-export const noteCategoryAtom = atom('');
-export const noteTagsAtom = atom([]);
+// 제목 내용 제외하고 디바운스 없이 바로바로 변경할 필드용 함수
+export const saveNoteChangesAtom = atom(
+    null, // 읽기 값은 없으므로 null
+    (get, set, { noteId, updatedFields }) => {
+      set(noteEventAtom, {
+        type: 'UPDATE',
+        targetId: noteId,
+        payload: updatedFields,
+      });
+    }
+);
+
+// 통합된 노트 상태
+export const selectedNoteStateAtom = atom({
+  _id: null,                 // 노트 ID
+  title: '',                   // 노트 제목
+  content: '',              // 노트 내용
+  category: {               // 카테고리 정보
+    _id: null,
+    name: ''
+  },
+  tags: [],                 // 태그 배열
+  updated_at: new Date(),   // 수정 시각
+  is_locked: false,         // 잠금 여부
+  is_pinned: false,         // 상단 고정 여부
+  is_trashed: false,        // 휴지통 여부
+  trashedAt: null           // 휴지통에 들어간 시각
+});
+
+// 노트 갯수 상태
+export const noteCountAtom = atom({ active: 0, trashed: 0 });
 
 // 노트 리스트 상태 관리
 export const noteListAtom = atom([]);
 
 // 선택된 노트 ID
 export const selectedNoteAtom = atom(null);
-
-// 새 노트 작성 신호
-export const newNoteSignalAtom = atom(false);
 
 // 노트 이벤트 전송
 export const noteEventAtom = atom(null);  // 이벤트 객체를 담음

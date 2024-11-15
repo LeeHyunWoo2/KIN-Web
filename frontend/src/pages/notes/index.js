@@ -15,7 +15,6 @@ export default function NotePage() {
   useEffect(() => {
     if (event) {
       handleEvent(event);
-      console.log("이벤트 트리거 작동 :", event);
     }
   }, [event, handleEvent]);
 
@@ -26,7 +25,7 @@ export default function NotePage() {
 
   return (
       <>
-        {mode === "modeA" ? (
+        {mode === "modeB" ? (
         <div className="hidden flex-col md:flex">
           <Note
               notes={notes}

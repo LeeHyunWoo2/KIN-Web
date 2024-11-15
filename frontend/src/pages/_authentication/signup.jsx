@@ -31,7 +31,6 @@ import {Input} from "@/components/ui/input";
 import {registerUser} from '@/services/user/authService'
 import {z} from 'zod';
 import {useRouter} from "next/router";
-import {toast} from "@/hooks/use-toast";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
 
@@ -104,10 +103,6 @@ export default function AuthenticationPage() {
       const response = await registerUser(formData);
       setSuccessMessage(response.message);
       setErrorMessage('');
-      toast({
-        title: '회원가입 성공',
-        description: '회원가입이 성공적으로 완료되었습니다.',
-      });
       router.push('/login')
     } catch (error) {
       setErrorMessage(error.response?.data?.message || '회원가입 실패');

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { buildCategoryTree } from '@/lib/notes/categoryUtils';
-import { fetchCategories } from "@/services/notes/categoryService";
-import { useAtom } from 'jotai';
-import { noteEventAtom } from '@/atoms/noteStateAtom';
+import React, {useEffect, useState} from 'react';
+import {buildCategoryTree} from '@/lib/notes/categoryUtils';
+import {fetchCategories} from "@/services/notes/categoryService";
+import {useAtom} from 'jotai';
+import {noteEventAtom} from '@/atoms/noteStateAtom';
 
 function CategoryItem({ category, onSelect }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,6 @@ export default function CategorySidebar() {
         const categoryTree = buildCategoryTree(categoryData);
         setCategories(categoryTree);
       } catch (error) {
-        console.error('카테고리 불러오기 실패', error);
       }
     };
     loadCategories();

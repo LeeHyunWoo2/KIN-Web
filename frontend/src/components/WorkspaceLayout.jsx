@@ -88,9 +88,13 @@ import {logoutUser} from "@/services/user/authService";
 import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
-import {useAtom, useSetAtom} from "jotai";
+import {useAtom} from "jotai";
 import {testAtom} from "@/atoms/testAtom";
-import { newNoteSignalAtom } from '@/atoms/noteStateAtom';
+import {
+  noteCountAtom,
+  noteEventAtom
+} from '@/atoms/noteStateAtom';
+import {router} from "next/client";
 
 const data = {
   teams: [
@@ -117,12 +121,10 @@ const data = {
     },
     {
       title: "홈",
-      url: "/notes",
       icon: Home,
     },
     {
-      title: "전체 보기",
-      url: "#",
+      title: "전체 보기" ,
       icon: Inbox,
     },
   ],
@@ -298,17 +300,21 @@ const handleLogout = () => {
 };
 
 function Page({children}) {
-  const setNewNote = useSetAtom(newNoteSignalAtom);
-  const [ mode, setMode ] = useAtom(testAtom);
+  const [, setNoteEvent] = useAtom(noteEventAtom);
+  const [mode, setMode] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
     profileIcon: '',
   });
+  const [noteCount] = useAtom(noteCountAtom);
 
   const handleNewNote = () => {
-    setNewNote(true); // 새 노트 작성 신호 전송
+    setNoteEvent({
+      type: 'ADD',
+      payload: {title: '', content: ''}
+    })
   };
 
   useEffect(() => {
@@ -321,12 +327,20 @@ function Page({children}) {
   }, []);
 
   const changeMode = () => {
-    if (mode === "modeA"){
+    if (mode === "modeA") {
       setMode("modeB");
-    } else if (mode === "modeB"){
+    } else if (mode === "modeB") {
       setMode("modeA");
     }
+  };
+
+  const moveToHome = () => {
+    router.push('/notes', undefined, {shallow: true});
   }
+
+  const moveToTrash = () => {
+      router.push('/notes?view=trash', undefined, {shallow: true});
+  };
 
   return (
       <SidebarProvider>
@@ -392,10 +406,10 @@ function Page({children}) {
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
                       <Link href="/userinfo">
-                      <DropdownMenuItem>
-                        <UserRoundCog />
-                        Account Settings
-                      </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <UserRoundCog/>
+                          Account Settings
+                        </DropdownMenuItem>
                       </Link>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
@@ -415,7 +429,7 @@ function Page({children}) {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <Link href="/">
-                      <DropdownMenuItem  onClick={handleLogout}>
+                      <DropdownMenuItem onClick={handleLogout}>
                         <LogOut/>
                         Log out
                       </DropdownMenuItem>
@@ -424,7 +438,7 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote} />
+            <NavMain items={data.navHeader} onNewNote={handleNewNote} goHome={moveToHome}/>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
@@ -510,9 +524,18 @@ function Page({children}) {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
+            <SidebarMenu className="cursor-pointer">
+              <SidebarMenuItem>
+                <Button variant="ghost" className="min-w-full"
+                        onClick={changeMode}/>
+                <SidebarMenuButton onClick={moveToTrash}>
+                  <Trash2 />
+                  <span>휴지통 ( {noteCount.trashed} )</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
             <SidebarMenu>
               <SidebarMenuItem>
-                <Button variant="ghost" className="min-w-full" onClick={changeMode}/>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
@@ -604,7 +627,7 @@ function Page({children}) {
 }
 
 function NavMain({
-  items, onNewNote
+  items, onNewNote, goHome
 }) {
   return (
       <SidebarMenu className="cursor-pointer">
@@ -612,10 +635,13 @@ function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                   asChild
-                  onClick={item.title === "새 노트" ? onNewNote : undefined} // "새 노트"일 때만 신호 전달
+                  onClick={item.title === "새 노트" ? onNewNote
+                      : "홈" ? goHome
+                      : "전체 보기" ? goHome
+                      : undefined}
               >
                 <a href={item.url}>
-                  <item.icon />
+                  <item.icon/>
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
@@ -690,4 +716,5 @@ function NavActions({
       </div>
   )
 }
+
 export default withAuth(Page);

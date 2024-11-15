@@ -19,11 +19,11 @@ exports.createNote = async (userId, title, content, category, tags) => {
 };
 
 // 노트 업데이트
-exports.updateNote = async (noteId, title, content, category, tags) => {
-  return Note.findByIdAndUpdate(
-      noteId,
-      {title, content, category, tags, updated_at: Date.now()},
-      {new: true}
+exports.updateNote = async (filter, updates) => {
+  return Note.findOneAndUpdate(
+      filter,
+      { ...updates, updated_at: Date.now() },
+      { new: true }
   );
 };
 

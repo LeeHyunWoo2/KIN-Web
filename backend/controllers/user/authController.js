@@ -1,5 +1,6 @@
 const authService = require('../../services/user/authService');
 const tokenService = require('../../services/user/tokenService');
+const {createErrorResponse} = require("../../middleware/errorHandler");
 
 // 1. 회원가입
 const registerController = async (req, res) => {
@@ -9,9 +10,10 @@ const registerController = async (req, res) => {
     // 회원가입 로직을 서비스에서 처리하고, 생성된 사용자와 토큰을 반환
     const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent });
 
-    res.status(201).json({ message: '회원가입 성공', user });
+    res.status(201).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "회원가입 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -27,9 +29,10 @@ const loginController = async (req, res) => {
     res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
     res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    res.status(200).json({ message: '로그인 성공', user });
+    res.status(200).json(user);
   } catch (error) {
-    res.status(400).json({ message: '로그인 실패: ' + error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로그인 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -45,9 +48,10 @@ const logoutController = async (req, res) => {
     res.clearCookie('accessToken', { httpOnly: true });
     res.clearCookie('refreshToken', { httpOnly: true });
 
-    res.status(200).json({ message: '로그아웃 완료' });
+    res.status(200).json();
   } catch (error) {
-    res.status(500).json({ message: '로그아웃 실패: ' + error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로그아웃 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -59,7 +63,7 @@ const newTokenController = async (req, res) => {
     // 리프레시 토큰 검증하고 새 토큰 발급
     const decoded = await tokenService.verifyRefreshToken(refreshToken);
     if (!decoded) {
-      return res.status(401).json({ message: '유효하지 않은 리프레시 토큰입니다.' });
+      return res.status(401).json();
     }
 
     const user = await authService.getUserById(decoded.id);
@@ -69,9 +73,10 @@ const newTokenController = async (req, res) => {
     res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
     res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    res.status(200).json({ message: '토큰 갱신 성공', tokens });
+    res.status(200).json(tokens);
   } catch (error) {
-    res.status(500).json({ message: '토큰 갱신 실패: ' + error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "토큰 갱신 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 

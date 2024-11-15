@@ -7,8 +7,6 @@ import SocialLogin from "@/components/SocialLogin";
 import {loginUser} from "@/services/user/authService";
 import {useState} from "react";
 import {router} from "next/client";
-import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
-
 
 export default function Dashboard() {
   const [id, setId] = useState("");
@@ -23,8 +21,6 @@ export default function Dashboard() {
     if (tokens) {
       // 로그인 성공 시 리다이렉트
       router.push("/notes");
-    } else {
-      console.error("로그인 실패");
     }
   };
 
@@ -34,14 +30,14 @@ export default function Dashboard() {
         <div className="flex items-center justify-center py-12">
           <div className="mx-auto grid w-[350px] gap-6">
             <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold">Login</h1>
+              <h1 className="text-3xl font-bold">로그인</h1>
               <p className="text-balance text-muted-foreground">
-                Enter your email below to login to your account
+
               </p>
             </div>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="id">ID</Label>
+                <Label htmlFor="id">아이디</Label>
                 <Input
                     id="id"
                     type="text"
@@ -53,24 +49,25 @@ export default function Dashboard() {
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">비밀번호</Label>
                   <Link
                       href=""
                       className="ml-auto inline-block text-sm underline"
                   >
-                    Forgot your password?
+                    비밀번호 찾기
                   </Link>
                 </div>
                 <Input
                     id="password"
                     type="password"
+                    placeholder="Enter your Password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
                 />
               </div>
               <Button type="submit" className="w-full" onClick={(e) => handleLogin(e, id, password)}>
-                Login
+                로그인
               </Button>
               <div>
                 <Button
@@ -91,9 +88,9 @@ export default function Dashboard() {
               <SocialLogin/>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              아직 계정이 없으시다면 {" "}
               <Link href="/signup" className="underline">
-                Sign up
+                회원 가입
               </Link>
             </div>
           </div>

@@ -1,4 +1,5 @@
 const tagService = require('../../services/notes/tagService');
+const {createErrorResponse} = require("../../middleware/errorHandler");
 
 // 태그 생성
 exports.createTag = async (req, res) => {
@@ -8,7 +9,8 @@ exports.createTag = async (req, res) => {
     const tag = await tagService.createTag(req.user.id, name);
     res.status(201).json(tag);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "태그 생성 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -18,7 +20,8 @@ exports.getTags = async (req, res) => {
     const tags = await tagService.getTags(req.user.id);
     res.status(200).json(tags);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "태그 조회 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -29,10 +32,11 @@ exports.updateTag = async (req, res) => {
     const { name } = req.body;
 
     const updatedTag = await tagService.updateTag(req.user.id, tagId, name);
-    if (!updatedTag) return res.status(404).json({ error: "태그를 찾을 수 없습니다." });
+    if (!updatedTag) return res.status(404).json({ message: "해당 태그를 찾을 수 없습니다." });
     res.status(200).json(updatedTag);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "태그 수정 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -42,9 +46,10 @@ exports.deleteTag = async (req, res) => {
     const { tagId } = req.params;
 
     const deletedTag = await tagService.deleteTag(req.user.id, tagId);
-    if (!deletedTag) return res.status(404).json({ error: "태그를 찾을 수 없습니다." });
-    res.status(200).json({ message: "태그 삭제 완료" });
+    if (!deletedTag) return res.status(404).json({ message: "해당 태그를 찾을 수 없습니다." });
+    res.status(200).json();
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "태그 삭제 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };

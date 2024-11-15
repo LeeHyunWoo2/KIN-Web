@@ -12,7 +12,6 @@ const configureLinkingStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('구글 연동 전략');
       const providerId = profile.id;
       const user = await User.findById(req.session.userId);
 
@@ -23,12 +22,10 @@ const configureLinkingStrategies = (passport) => {
           socialRefreshToken: refreshToken,
         });
         await user.save();
-        console.log('연동됨');
         return done(null, user);
       }
-      return done(new Error('사용자를 찾을 수 없습니다.'));
+      return done(new Error);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));
@@ -41,7 +38,6 @@ const configureLinkingStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('카카오 연동 전략');
       const providerId = profile.id;
       const user = await User.findById(req.session.userId);
 
@@ -52,12 +48,10 @@ const configureLinkingStrategies = (passport) => {
           socialRefreshToken: refreshToken,
         });
         await user.save();
-        console.log('연동됨');
         return done(null, user);
       }
-      return done(new Error('사용자를 찾을 수 없습니다.'));
+      return done(new Error);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));
@@ -70,7 +64,6 @@ const configureLinkingStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('네이버 연동 전략');
       const providerId = profile.id;
       const user = await User.findById(req.session.userId);
 
@@ -81,12 +74,10 @@ const configureLinkingStrategies = (passport) => {
           socialRefreshToken: refreshToken,
         });
         await user.save();
-        console.log('연동됨');
         return done(null, user);
       }
-      return done(new Error('사용자를 찾을 수 없습니다.'));
+      return done(new Error);
     } catch (error) {
-      console.error(error);
       return done(error, false);
     }
   }));

@@ -34,8 +34,7 @@ const verifyRefreshToken = async (refreshToken) => {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
     return decoded;
   } catch (error) {
-    console.error('리프레시 토큰 검증 실패:', error);
-    throw new Error('유효하지 않은 리프레시 토큰입니다.');
+    throw new Error;
   }
 };
 
@@ -43,7 +42,7 @@ const verifyRefreshToken = async (refreshToken) => {
 const generateOAuthToken = async (user, provider) => {
   const socialAccount = user.socialAccounts.find(account => account.provider === provider);
   if (!socialAccount) {
-    throw new Error(`${provider} 계정 미연동 상태`);
+    throw new Error;
   }
 
   try {
@@ -80,12 +79,11 @@ const generateOAuthToken = async (user, provider) => {
       return response.data.access_token;
 
     } else {
-      throw new Error('지원하지 않는 소셜 플랫폼');
+      throw new Error();
     }
 
   } catch (error) {
-    console.error(`${provider} OAuth 토큰 발급 실패:`, error);
-    throw new Error('OAuth 토큰 발급 실패');
+    throw new Error;
   }
 };
 

@@ -11,7 +11,6 @@ export async function SynchronizeWithServer(currentTime) {
     const store = tx.objectStore("user");
     await store.put({ _id: "lastActivity", currentTime });
   } catch (error) {
-    console.error(error);
   }
 }
 
@@ -37,10 +36,8 @@ export async function checkAndSyncOnFirstLoad() {
 
     // 활동 시간 비교 후 차이가 있으면 동기화 진행 (데이터 동기화 로직은 추후 업데이트하기)
     if (convertedServerLastActivity > clientLastActivity) {
-      console.log('동기화 실행');
       await SynchronizeWithServer(Date.now());
     }
   } catch (error) {
-    console.error(error);
   }
 }

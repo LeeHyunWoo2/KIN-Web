@@ -6,14 +6,32 @@ exports.getCategories = async (userId) => {
 };
 
 // 카테고리 생성
-exports.createCategory = async (userId, name, description, parent_id) => {
-  const category = new Category({
-    user_id: userId,
-    name,
-    description,
-    parent_id
-  });
-  return await category.save();
+exports.createCategory = async (userId, name, description, parentId) => {
+  try {
+    // 상위 카테고리 존재 여부 확인
+    if (parentId) {
+      const parentCategory = await Category.findOne({ 
+        _id: parentId,
+        user_id: userId 
+      });
+      if (!parentCategory) {
+        const error = new Error("상위 카테고리를 찾을 수 없습니다.");
+        error.status = 400;
+        throw error;
+      }
+    }
+
+    const category = new Category({
+      user_id: userId,
+      name,
+      description,
+      parent_id: parentId
+    });
+
+    return await category.save();
+  } catch (error) {
+    throw error;
+  }
 };
 
 // 카테고리 업데이트

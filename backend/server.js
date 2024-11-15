@@ -6,6 +6,7 @@ const passport = require('passport');
 const initializePassport = require('./config/passport');
 const connectDB = require('./config/db');
 const morgan = require('morgan');
+const { createErrorResponse } = require('./middleware/errorHandler');
 
 // 라우터 불러오기
 const authRoutes = require('./routes/user/authRoutes');
@@ -25,6 +26,9 @@ connectDB();
 // 커스텀 토큰 설정: 요청 쿼리, 본문
 morgan.token('query', (req) => JSON.stringify(req.query)); // 쿼리 파라미터
 morgan.token('body', (req) => JSON.stringify(req.body)); // 요청 본문
+morgan.token('errorMessage', (req, res) => {
+  return res.statusCode >= 400 ? `Error: ${res.statusMessage || 'Unknown error'}` : '';
+}); // 오류 메시지
 
 // 2. 기본 미들웨어 설정
 app.use(express.json());
@@ -47,9 +51,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 로그 형식 설정: 기본 형식 + 쿼리 + 본문
+
+// 로그 형식 설정: 기본 형식 + 쿼리 + 본문 + 오류 메시지
 app.use(morgan(
-    ':method :url :status :response-time ms - query: :query - body: :body'));
+    ':method :url :status :response-time ms - query: :query - body: :body - :errorMessage',
+    /*{
+      skip: (req, res) => res.statusCode < 400, // 400 이상일 때만 로깅
+    }*/
+));
 
 // 3. 라우터 설정
 app.use('/auth', authRoutes);
@@ -65,10 +74,10 @@ app.get("/api/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
 });
 
-// 4. 에러 처리 미들웨어
+// 4. 전역 에러 처리
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: '서버 오류가 발생했습니다.', error: err.message });
+  const { statusCode, message } = createErrorResponse(err.status || 500, err.message || "서버에서 오류가 발생했습니다.");
+  res.status(statusCode).json({ message, code: statusCode });
 });
 
 // 5. 서버 실행
