@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import HeaderLayout from "@/components/HeaderLayout"
 import {useEffect} from "react";
 import {useAtom} from "jotai";
