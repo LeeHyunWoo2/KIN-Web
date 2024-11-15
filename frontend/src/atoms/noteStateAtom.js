@@ -1,10 +1,6 @@
 import { atom } from 'jotai';
 
-// 제목, 내용 변경사항
-export const noteTitleAtom = atom('');
-export const noteContentAtom = atom('');
-
-// 이외 변경사항
+// 제목 내용 제외하고 디바운스 없이 바로바로 변경할 필드용 함수
 export const saveNoteChangesAtom = atom(
     null, // 읽기 값은 없으므로 null
     (get, set, { noteId, updatedFields }) => {
@@ -15,6 +11,23 @@ export const saveNoteChangesAtom = atom(
       });
     }
 );
+
+// 통합된 노트 상태
+export const selectedNoteStateAtom = atom({
+  _id: null,                 // 노트 ID
+  title: '',                   // 노트 제목
+  content: '',              // 노트 내용
+  category: {               // 카테고리 정보
+    _id: null,
+    name: ''
+  },
+  tags: [],                 // 태그 배열
+  updated_at: new Date(),   // 수정 시각
+  is_locked: false,         // 잠금 여부
+  is_pinned: false,         // 상단 고정 여부
+  is_trashed: false,        // 휴지통 여부
+  trashedAt: null           // 휴지통에 들어간 시각
+});
 
 // 노트 갯수 상태
 export const noteCountAtom = atom({ active: 0, trashed: 0 });

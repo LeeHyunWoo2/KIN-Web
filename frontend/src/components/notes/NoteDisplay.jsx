@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
 import {
-  noteTitleAtom,
-  noteContentAtom,
-  noteEventAtom, saveNoteChangesAtom
+  noteEventAtom, saveNoteChangesAtom,
+  selectedNoteStateAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
@@ -13,7 +12,8 @@ import {Button} from "@/components/ui/button";
 import {
   Archive,
   ArchiveX,
-  Forward, MoreVertical,
+  Forward,
+  MoreVertical,
   Reply,
   ReplyAll,
   Trash2
@@ -21,51 +21,44 @@ import {
 import {Separator} from "@/components/ui/separator";
 import {
   DropdownMenu,
-  DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import {useRouter} from "next/router";
 
-export default function NoteDisplay({note}) {
+export default function NoteDisplay() {
+  const router = useRouter();
   const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
+  const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
 
-  const [title, setTitle] = useAtom(noteTitleAtom);
-  const [content, setContent] = useAtom(noteContentAtom);
 
-  // 노트의 초기 로딩 여부 확인
+  // 노트의 초기 로딩 여부 확인 (노트 누르자마자 자동저장 시작하는거 방지)
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  // 변경사항 플래그 (서로 반대시점을 체크하는건데 하나로 두 로직 작동시켜보니까 안되서 만듦)
+  // 변경사항을 체크하는 플래그 (자동저장 및 탈주방지 작동 여부)
   const [isNotSaved, setIsNotSaved] = useState(false);
-  // 서버 저장 호출용 임시 페이로드 (최신상태 반영이 잘 안되어 추가)
+  // 서버 저장 호출용 페이로드 (변경사항만 따로 저장하는 용도, 디바운스 O)
   const [localPayload, setLocalPayload] = useState({});
-  // 제목, 내용 이외 변경사항 저장용
+  // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
 
-  useEffect(() => {
-    // 선택된 노트가 변경될 때 필드 값도 업데이트
-    if (note) {
-      setTitle(note.title);
-      setContent(note.content);
-      setIsInitialLoad(true); // 처음 로딩 시에는 true
-      setIsNotSaved(false);
-    }
-  }, [note, setTitle, setContent]);
 
   //  자동 저장 함수 (디바운스)
   const saveChanges = useCallback(debounce(() => {
-    if (note && !isInitialLoad && isNotSaved) {  // 초기 로딩이 아닐 때만 저장
+    if (selectedNoteState && !isInitialLoad && isNotSaved) {  // 초기 로딩이 아닐 때만 저장
       setNoteEvent({
         type: 'UPDATE', // UPDATE 이벤트 발생
-        targetId: note._id,
+        targetId: selectedNoteState._id,
         payload: localPayload,
       });
       setIsNotSaved(false);
       setLocalPayload({}); // 저장 후 로컬 상태 초기화
     }
-  }, 2000), [localPayload, setNoteEvent, isInitialLoad, isNotSaved]);
+  }, 1500), [localPayload, setNoteEvent, isInitialLoad, isNotSaved]);
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
-    setTitle(newTitle);
+    setSelectedNoteState(prev => ({...prev, title: newTitle}))
     setLocalPayload(prevPayload => ({ ...prevPayload, title: newTitle }));
     setIsInitialLoad(false); // 변경사항이 생기면 false
     setIsNotSaved(true);
@@ -73,38 +66,45 @@ export default function NoteDisplay({note}) {
 
   const handleContentChange = (e) => {
     const newContent = e.target.value;
-    setContent(newContent);
+    setSelectedNoteState(prev => ({...prev, content: newContent}))
     setLocalPayload(prevPayload => ({ ...prevPayload, content: newContent }));
     setIsInitialLoad(false);
     setIsNotSaved(true);
   };
 
   const moveToTrash = () => {
-    if (note._id) {
-      saveNoteChanges({noteId: note._id, updatedFields:{is_trashed: true}});
+    if (!selectedNoteState.is_trashed) {
+      setSelectedNoteState(prev => ({...prev, is_trashed: true}));
+      saveNoteChanges({noteId: selectedNoteState._id, updatedFields:{is_trashed:true}});
+      router.push(`/notes`, undefined, {shallow: true});
+    }else {
+      setSelectedNoteState(prev => ({...prev, is_trashed: false}));
+      saveNoteChanges({noteId: selectedNoteState._id, updatedFields:{is_trashed:false}});
+      router.push(`/notes?view=trash`, undefined, {shallow: true});
     }
   };
 
   useEffect(() => {
     saveChanges();
     return () => saveChanges.cancel();
-  }, [localPayload, saveChanges]);
+  }, [ saveChanges]);
 
 
   // 페이지 이탈 방지용 경고 설정
   useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (isNotSaved) { // 변경 사항이 저장되지 않은 경우 경고
+    if (isNotSaved) {  // 변경 사항이 저장되지 않은 경우 경고
+      const handleBeforeUnload = (e) => {
         e.preventDefault();
         e.returnValue = '';
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
   }, [isNotSaved]);
 
 
-  if (!note) {
+
+  if (!selectedNoteState) {
     return <div className="p-8 text-center text-muted-foreground">선택된 노트가
       없습니다.</div>;
   }
@@ -116,7 +116,7 @@ export default function NoteDisplay({note}) {
             {/* Archive Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                   <Archive className="h-4 w-4"/>
                   <span className="sr-only">Archive</span>
                 </Button>
@@ -127,7 +127,7 @@ export default function NoteDisplay({note}) {
             {/* Move to Junk Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                   <ArchiveX className="h-4 w-4"/>
                   <span className="sr-only">Move to junk</span>
                 </Button>
@@ -138,7 +138,7 @@ export default function NoteDisplay({note}) {
             {/* Trash Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}  onClick={moveToTrash}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}  onClick={moveToTrash}>
                   <Trash2 className="h-4 w-4"/>
                   <span className="sr-only">Move to trash</span>
                 </Button>
@@ -153,7 +153,7 @@ export default function NoteDisplay({note}) {
             {/* Reply Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                   <Reply className="h-4 w-4"/>
                   <span className="sr-only">Reply</span>
                 </Button>
@@ -164,7 +164,7 @@ export default function NoteDisplay({note}) {
             {/* Reply All Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                   <ReplyAll className="h-4 w-4"/>
                   <span className="sr-only">Reply all</span>
                 </Button>
@@ -175,7 +175,7 @@ export default function NoteDisplay({note}) {
             {/* Forward Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!note}>
+                <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                   <Forward className="h-4 w-4"/>
                   <span className="sr-only">Forward</span>
                 </Button>
@@ -189,7 +189,7 @@ export default function NoteDisplay({note}) {
           {/* More Options Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!note}>
+              <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
                 <MoreVertical className="h-4 w-4"/>
                 <span className="sr-only">More</span>
               </Button>
@@ -205,12 +205,12 @@ export default function NoteDisplay({note}) {
 
         <Separator/>
         <Input
-            value={title}
+            value={selectedNoteState.title}
             onChange={handleTitleChange} // 뭔가 바뀌면 호출
             className="mb-4 text-xl font-semibold"
         />
         <Textarea
-            value={content}
+            value={selectedNoteState.content}
             onChange={handleContentChange}
             className="flex-1"
         />
