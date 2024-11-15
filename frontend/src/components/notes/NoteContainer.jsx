@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Search} from "lucide-react";
 import {useRouter} from 'next/router';
 import NoteDisplay from './NoteDisplay';
@@ -25,19 +25,29 @@ export default function NoteContainer({ defaultLayout = [240, 440, 655] }) {
   const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
 
+  // 로딩 상태 관리
+  const [currentNote, setCurrentNote] = useState(null); // 현재 표시 중인 노트
+
   useEffect(() => {
     initializeNotes(); // 노트 데이터 초기화
   }, [initializeNotes]);
 
   useEffect(() => {
     if (id) {
-      // 선택된 노트의 통합 상태를 설정 (노트 id를 기준)
       const selectedNote = notes.find((note) => note._id === id);
+
+      // 새 데이터를 로드한 경우에만 상태 업데이트
       if (selectedNote) {
-        setSelectedNoteState(prev => ({ prev, ...selectedNote }));
+        setCurrentNote((prevNote) => {
+          if (prevNote?._id !== selectedNote._id) {
+            setSelectedNoteState((prev) => ({ ...prev, ...selectedNote }));
+            return selectedNote;
+          }
+          return prevNote; // 동일한 노트인 경우 상태 유지
+        });
       }
     }
-  }, [id, setSelectedNoteState]);
+  }, [id, notes, setSelectedNoteState]);
 
   // view가 trash일 경우 휴지통 필터 적용
   const filteredNotes = view === 'trash'
@@ -64,8 +74,9 @@ export default function NoteContainer({ defaultLayout = [240, 440, 655] }) {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={defaultLayout[2]}>
-            { id && (
-            <NoteDisplay  />
+            {/* 로딩 중에도 기존 상태 유지 */}
+            {currentNote && (
+                <NoteDisplay note={currentNote} />
             )}
           </ResizablePanel>
         </ResizablePanelGroup>
