@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {cn} from "@/lib/utils";
+import {Badge} from "@/components/ui/badge";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 export function NoteList({ items }) {
   const router = useRouter();
