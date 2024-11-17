@@ -89,10 +89,12 @@ export default function NoteDisplay() {
     if (!selectedNoteState.is_trashed) {
       saveNoteChanges(
           {noteId: selectedNoteState._id, updatedFields: {is_trashed: true}});
+      setSelectedNoteState(null);
       router.push(`/notes`, undefined, {shallow: true});
     } else {
       saveNoteChanges(
           {noteId: selectedNoteState._id, updatedFields: {is_trashed: false}});
+      setSelectedNoteState(null);
       router.push(`/notes?view=trash`, undefined, {shallow: true});
     }
   };

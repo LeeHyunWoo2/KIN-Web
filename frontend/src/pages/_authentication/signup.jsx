@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import Image from "next/image";
 import {Checkbox} from "@/components/ui/checkbox"
 import {cn} from "@/lib/utils";
 import {Button, buttonVariants} from "@/components/ui/button";
@@ -33,6 +32,9 @@ import {z} from 'zod';
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
+import Recaptcha from "@/components/Recaptcha";
+import apiClient from "@/lib/apiClient";
+import { MailOpen } from "lucide-react"
 
 z.object({
   email: z.string().email(),
@@ -43,6 +45,9 @@ export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
   const [page, setPage] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [email, setEmail] = useState("");
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -80,8 +85,22 @@ export default function AuthenticationPage() {
     }
   };
 
+  const [recaptchaToken, setRecaptchaToken] = useState("");
+  const handleCaptchaChange = (token) => {
+    setRecaptchaToken(token);
+  };
+
+  const handleSendVerificationEmail = async () => {
+    try {
+      const response = await apiClient.post("/email/send-verification-email", {email});
+      setIsEmailSent(true);
+      setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "이메일 전송에 실패했습니다.");
+    }
+  };
+
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   // formData가 변경될 때마다 유효성 검사를 수행하고 버튼 상태 업데이트
   useEffect(() => {
@@ -97,40 +116,28 @@ export default function AuthenticationPage() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
-      const response = await registerUser(formData);
-      setSuccessMessage(response.message);
-      setErrorMessage('');
-      router.push('/login')
+      const response = await apiClient.post('/auth/verify-recaptcha', {
+        token: recaptchaToken,
+      });
+      console.log(response.data.message);
+      if (response.status === 200) {
+        // 리캡차 성공 시 회원가입 요청
+        await registerUser(formData);
+        router.push('/login');
+      } else {
+        setErrorMessage('리캡차 인증 실패');
+      }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || '회원가입 실패');
-      setSuccessMessage('');
+      setErrorMessage('회원가입 실패');
     }
   };
 
   return (
       <>
-        <div className="md:hidden">
-          <Image
-              src="/examples/authentication-light.png"
-              width={1280}
-              height={843}
-              alt="Authentication"
-              className="block dark:hidden"
-          />
-          <Image
-              src="/examples/authentication-dark.png"
-              width={1280}
-              height={843}
-              alt="Authentication"
-              className="hidden dark:block"
-          />
-        </div>
         <div
             className="container relative hidden h-[calc(100vh-64px)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-
           <Link
               href="/login"
               className={cn(
@@ -216,14 +223,14 @@ export default function AuthenticationPage() {
                   <p className="px-8 text-center text-sm text-muted-foreground">
                     By clicking continue, you agree to our{" "}
                     <Link
-                        href="#"
+                        href=""
                         className="underline underline-offset-4 hover:text-primary"
                     >
                       Terms of Service
                     </Link>{" "}
                     and{" "}
                     <Link
-                        href="#"
+                        href=""
                         className="underline underline-offset-4 hover:text-primary"
                     >
                       Privacy Policy
@@ -254,8 +261,11 @@ export default function AuthenticationPage() {
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
                           <ScrollArea className="h-48 w-full text-sm">
-                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며 어쩌고
-                            저쩌고.....<br/><br/>
+                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며 기타등등.....<br/><br/>
+                            김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
+                            구름이
+                            허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
+                        <br/><br/>
                             Lorem ipsum dolor sit amet, consectetur adipiscing
                             elit, sed do eiusmod tempor incididunt ut labore et
                             dolore magna aliqua. Ut enim ad minim veniam, quis
@@ -265,10 +275,7 @@ export default function AuthenticationPage() {
                             eu
                             fugiat nulla pariatur. Excepteur sint occaecat
                             cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.<br/><br/>
-                            김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
-                            구름이
-                            허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
+                            deserunt mollit anim id est laborum.
                           </ScrollArea>
                         </div>
                       </div>
@@ -291,10 +298,11 @@ export default function AuthenticationPage() {
                             </Label>
                           </div>
                         </div>
+                        <Recaptcha onVerify={handleCaptchaChange} />
                         <Button
                             type="button"
                             className="w-full"
-                            disabled={isButtonDisabled}
+                            disabled={!recaptchaToken || isButtonDisabled}
                             onClick={handleNext}
                         >
                           다음 단계
@@ -349,15 +357,26 @@ export default function AuthenticationPage() {
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="email">Email</Label>
-                          <Input
+                          <input
+                              type="email"
                               id="email"
                               name="email"
-                              type="email"
-                              value={formData.email}
-                              onChange={handleChange}
-                              placeholder="email@example.com"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="example@example.com"
                               required
+                              className="border p-2 rounded"
                           />
+                          <Button
+                              variant="outline"
+                              onClick={handleSendVerificationEmail}
+                              className="w-full"
+                              disabled={!email}
+                          >
+                            <MailOpen /> 이메일 인증하기
+                          </Button>
+                          {isEmailSent && <p className="text-green-500">{message}</p>}
+                          {!isEmailSent && message && <p className="text-red-500">{message}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="password">비밀번호</Label>

@@ -32,7 +32,7 @@ export const selectedNoteStateAtom = atom({
 // 노트 갯수 상태
 export const noteCountAtom = atom({ active: 0, trashed: 0 });
 
-// 노트 리스트 상태 관리
+// 노트 리스트 상태 관리 (업데이트, add 등등 event 발생 시 호출됨)
 export const noteListAtom = atom([]);
 
 // 선택된 노트 ID

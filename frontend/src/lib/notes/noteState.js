@@ -8,6 +8,8 @@ import { createNote, getNotes, updateNote, deleteNote } from '@/services/notes/n
 import debounce from "lodash/debounce";
 import {SynchronizeWithServer} from "@/services/user/syncService";
 import {router} from "next/client";
+import {categoryListAtom} from "@/atoms/filterAtoms";
+import {fetchCategories} from "@/services/notes/categoryService";
 
 
 const debouncedSynchronize = debounce(async () => {
@@ -19,6 +21,12 @@ const debouncedSynchronize = debounce(async () => {
 export const initializeNotesAtom = atom(null, async (get, set) => {
   const notes = await getNotes();
   set(noteListAtom, notes);
+});
+
+// 카테고리 초기화
+export const initializeCategoriesAtom = atom(null, async (get, set) => {
+  const categories = await fetchCategories();
+  set(categoryListAtom, categories); // 배열로 상태 저장
 });
 
 // 이벤트 핸들러

@@ -89,7 +89,6 @@ import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import {testAtom} from "@/atoms/testAtom";
 import {
   noteCountAtom,
   noteEventAtom
@@ -112,20 +111,6 @@ const data = {
       name: "Evil Corp.",
       logo: Command,
       plan: "Free",
-    },
-  ],
-  navHeader: [
-    {
-      title: "새 노트",
-      icon: SquarePen,
-    },
-    {
-      title: "홈",
-      icon: Home,
-    },
-    {
-      title: "전체 보기",
-      icon: Inbox,
     },
   ],
   navMain: [
@@ -301,7 +286,6 @@ const handleLogout = () => {
 
 function Page({children}) {
   const [, setNoteEvent] = useAtom(noteEventAtom);
-  const [mode, setMode] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -327,13 +311,6 @@ function Page({children}) {
     }
   }, []);
 
-  const changeMode = () => {
-    if (mode === "modeA") {
-      setMode("modeB");
-    } else if (mode === "modeB") {
-      setMode("modeA");
-    }
-  };
 
   const moveToHome = () => {
     router.push('/notes', undefined, {shallow: true});
@@ -443,8 +420,23 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote}
-                     goHome={moveToHome}/>
+            <SidebarMenu className="cursor-pointer">
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={handleNewNote}>
+                      <SquarePen/> 새 노트
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+              <SidebarMenuItem>
+                    <SidebarMenuButton onClick={moveToHome}>
+                      <Home/> 홈
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+              <SidebarMenuItem>
+                    <SidebarMenuButton onClick={moveToHome}>
+                      <Inbox/> 전체 보기 ( {noteCount.active} )
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
@@ -532,8 +524,6 @@ function Page({children}) {
           <SidebarFooter>
             <SidebarMenu className="cursor-pointer">
               <SidebarMenuItem>
-                <Button variant="ghost" className="min-w-full"
-                        onClick={changeMode}/>
                 <SidebarMenuButton onClick={moveToTrash}>
                   <Trash2/>
                   <span>휴지통 ( {noteCount.trashed} )</span>
@@ -632,30 +622,6 @@ function Page({children}) {
   )
 }
 
-function NavMain({
-  items, onNewNote, goHome
-}) {
-  return (
-      <SidebarMenu className="cursor-pointer">
-        {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                  asChild
-                  onClick={item.title === "새 노트" ? onNewNote
-                      : "홈" ? goHome
-                          : "전체 보기" ? goHome
-                              : undefined}
-              >
-                <a href={item.url}>
-                  <item.icon/>
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
-  )
-}
 
 function NavActions({
   actions,
