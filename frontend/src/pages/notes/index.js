@@ -1,9 +1,6 @@
-import {notes} from "@/lib/notes/data";
-import Note from "@/components/notes/note";
 import WorkspaceLayout from "@/components/WorkspaceLayout"
 import NoteContainer from "@/components/notes/NoteContainer";
 import {useAtom} from "jotai";
-import {testAtom} from "@/atoms/testAtom";
 import {noteEventHandlerAtom} from "@/lib/notes/noteState";
 import {useEffect} from "react";
 import {noteEventAtom} from "@/atoms/noteStateAtom";
@@ -18,25 +15,10 @@ export default function NotePage() {
     }
   }, [event, handleEvent]);
 
-  const defaultLayout = undefined;
-  const defaultCollapsed = undefined;
-  const [ mode, setMode ] = useAtom(testAtom);
-
 
   return (
       <>
-        {mode === "modeB" ? (
-        <div className="hidden flex-col md:flex">
-          <Note
-              notes={notes}
-              defaultLayout={defaultLayout}
-              defaultCollapsed={defaultCollapsed}
-              navCollapsedSize={4}
-          />
-        </div>
-            ) : (
             <NoteContainer />
-        )}
       </>
   );
 }

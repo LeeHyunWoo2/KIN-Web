@@ -63,6 +63,7 @@ const getUserById = async (userId) => {
   return user;
 };
 
+
 module.exports = {
   registerUser,
   loginUser,

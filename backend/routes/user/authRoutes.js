@@ -1,6 +1,6 @@
 const express = require('express');
 const { registerController, loginController, logoutController,
-  newTokenController
+  newTokenController, recaptchaController
 } = require('../../controllers/user/authController');
 const { checkSession } = require('../../controllers/user/checkSessionController');
 const router = express.Router();
@@ -19,5 +19,10 @@ router.get('/check-session', checkSession);
 
 // 액세스 토큰 갱신 라우트
 router.post('/refresh-token', newTokenController)
+
+// reCAPTCHA 라우트
+router.post('/verify-recaptcha', recaptchaController);
+
+
 
 module.exports = router;

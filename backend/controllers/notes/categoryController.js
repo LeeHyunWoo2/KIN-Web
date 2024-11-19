@@ -15,8 +15,8 @@ exports.getCategories = async (req, res) => {
 // 카테고리 생성
 exports.createCategory = async (req, res) => {
   try {
-    const { name, description, parent_id } = req.body;
-    const category = await categoryService.createCategory(req.user.id, name, description, parent_id);
+    const { name, parent_id } = req.body;
+    const category = await categoryService.createCategory(req.user.id, name, parent_id);
     res.status(201).json(category);
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "카테고리 생성 중 오류가 발생했습니다.");
@@ -28,8 +28,8 @@ exports.createCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { name, description, parent_id } = req.body;
-    const updatedCategory = await categoryService.updateCategory(categoryId, name, description, parent_id);
+    const { name, parent_id } = req.body;
+    const updatedCategory = await categoryService.updateCategory(categoryId, name, parent_id);
     res.status(200).json(updatedCategory);
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "카테고리 업데이트 중 오류가 발생했습니다.");

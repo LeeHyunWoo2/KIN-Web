@@ -9,6 +9,7 @@ export default function Home() {
   const router = useRouter();
   const [auth] = useAtom(authAtom);
 
+
   useEffect(() => {
       router.push(auth ? '/notes' : '/login');
   }, []);

@@ -13,7 +13,7 @@ export function setUserDBInstance(userId) {
 // initDB를 호출 대신 사용할 핸들러 (유저 단위로 DB를 나누고 사용하기 위해서 + initDB 부를때 userId 넣기 귀찮아서 만듦)
 export async function initDB() {
   if (!setDB) {
-    throw new Error("initDB가 설정되지 않음");
+    throw new Error("죄송합니다. 새로고침 부탁드립니다.");
   }
   return await setDB();
 }

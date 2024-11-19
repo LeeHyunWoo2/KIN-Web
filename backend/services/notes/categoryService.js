@@ -6,7 +6,7 @@ exports.getCategories = async (userId) => {
 };
 
 // 카테고리 생성
-exports.createCategory = async (userId, name, description, parentId) => {
+exports.createCategory = async (userId, name, parentId) => {
   try {
     // 상위 카테고리 존재 여부 확인
     if (parentId) {
@@ -24,7 +24,6 @@ exports.createCategory = async (userId, name, description, parentId) => {
     const category = new Category({
       user_id: userId,
       name,
-      description,
       parent_id: parentId
     });
 
@@ -35,10 +34,10 @@ exports.createCategory = async (userId, name, description, parentId) => {
 };
 
 // 카테고리 업데이트
-exports.updateCategory = async (categoryId, name, description, parent_id) => {
+exports.updateCategory = async (categoryId, name, parent_id) => {
   return Category.findByIdAndUpdate(
       categoryId,
-      {name, description, parent_id},
+      {name, parent_id},
       {new: true}
   );
 };
