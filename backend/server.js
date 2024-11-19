@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
 const initializePassport = require('./config/passport');
@@ -16,6 +17,7 @@ const syncRoutes = require('./routes/user/syncRoutes');
 const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
+const emailRoutes = require('./routes/user/emailRoutes');
 const session = require("express-session");
 
 const app = express();
@@ -33,6 +35,7 @@ morgan.token('errorMessage', (req, res) => {
 // 2. 기본 미들웨어 설정
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true })); // 필요에 따라 CORS 설정
 
 // express-session 설정
@@ -68,6 +71,7 @@ app.use('/notes', noteRoutes);
 app.use('/category', categoryRoutes);
 app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
+app.use('/email', emailRoutes);
 
 // 서버 타임
 app.get("/api/server-time", (req, res) => {

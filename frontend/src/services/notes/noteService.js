@@ -8,25 +8,30 @@ async function getServerTime() {
 }
 
 // 노트 리스트
-export const getNotes = async () => {
+export const getNotes = async (forceReload = false) => { // 기본적으로 false로 선언
   const db = await initDB();
   const tx = db.transaction("notes", "readonly");
   const store = tx.objectStore("notes");
 
   const notes = await store.getAll();
 
-  if (notes.length === 0) {
-    const response = await apiClient.get("/notes");
-    const fetchedNotes = response.data;
+// 데이터가 없거나 강제 동기화 플래그가 활성화된 경우 서버에서 가져옴
+  if (notes.length === 0 || forceReload) {
+    const response = await apiClient.get("/notes", {
+      headers: {
+        'cache-control': 'no-cache',
+      },
+    }); // 그냥 리로드 버튼 누르면 캐싱해버려서 추가
+    const loadedNotes = response.data;
 
     // IndexedDB에 저장
     const tx = db.transaction("notes", "readwrite");
     const store = tx.objectStore("notes");
-    for (const note of fetchedNotes) {
+    for (const note of loadedNotes) {
       store.put(note);
     }
     await tx.done;
-    return fetchedNotes;
+    return loadedNotes;
   }
   return notes;
 };

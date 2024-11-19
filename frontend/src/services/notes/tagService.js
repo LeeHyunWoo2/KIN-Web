@@ -2,24 +2,28 @@ import apiClient from "@/lib/apiClient";
 import {initDB} from "@//lib/notes/initDB";
 
 // 태그 목록 조회
-export const fetchTags = async () => {
+export const getTags = async (forceReload = false) => {
   const db = await initDB();
   const tx = db.transaction("tags", "readonly");
   const store = tx.objectStore("tags");
 
   const tags = await store.getAll();
-  if (tags.length === 0) {
-    const response = await apiClient.get('/tags');
-    const fetchedTags = response.data;
+  if (tags.length === 0 || forceReload) {
+    const response = await apiClient.get('/tags', {
+      headers: {
+        'cache-control': 'no-cache',
+      },
+    });
+    const loadedTags = response.data;
 
     const tx = db.transaction("tags", "readwrite");
     const store = tx.objectStore("tags");
-    for (const tag of fetchedTags) {
+    for (const tag of loadedTags) {
       store.put(tag);
     }
     await tx.done;
 
-    return fetchedTags;
+    return loadedTags;
   }
 
   return tags;

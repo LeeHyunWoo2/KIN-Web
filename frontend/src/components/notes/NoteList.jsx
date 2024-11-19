@@ -1,17 +1,11 @@
 import {useRouter} from "next/router";
-import {useAtom} from 'jotai';
-import {
-  noteCountAtom,
-} from "@/atoms/noteStateAtom";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {cn} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {useEffect} from "react";
 
 export default function NoteList({notes}) {
   const router = useRouter();
-  const [, setNoteCount] = useAtom(noteCountAtom);
 
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
@@ -21,12 +15,6 @@ export default function NoteList({notes}) {
       router.push(`/notes?id=${note._id}&view=trash`, undefined, {shallow: true});
     }
   };
-
-  useEffect(() => {
-    const activeCount = notes.filter(note => !note.is_trashed).length;
-    const trashedCount = notes.filter(note => note.is_trashed).length;
-    setNoteCount({ active: activeCount, trashed: trashedCount });
-  }, [notes]);
 
   return (
       <ScrollArea className="h-screen">

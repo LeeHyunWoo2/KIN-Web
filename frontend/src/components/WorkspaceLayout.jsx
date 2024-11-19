@@ -35,7 +35,7 @@ import {
   Star,
   Trash,
   Trash2,
-  UserRoundCog,
+  UserRoundCog, ListPlus,
 } from "lucide-react"
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
@@ -89,12 +89,13 @@ import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import {testAtom} from "@/atoms/testAtom";
 import {
   noteCountAtom,
   noteEventAtom
 } from '@/atoms/noteStateAtom';
 import {router} from "next/client";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
 
 const data = {
   teams: [
@@ -112,20 +113,6 @@ const data = {
       name: "Evil Corp.",
       logo: Command,
       plan: "Free",
-    },
-  ],
-  navHeader: [
-    {
-      title: "새 노트",
-      icon: SquarePen,
-    },
-    {
-      title: "홈",
-      icon: Home,
-    },
-    {
-      title: "전체 보기",
-      icon: Inbox,
     },
   ],
   navMain: [
@@ -301,7 +288,6 @@ const handleLogout = () => {
 
 function Page({children}) {
   const [, setNoteEvent] = useAtom(noteEventAtom);
-  const [mode, setMode] = useAtom(testAtom);
   const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -327,13 +313,6 @@ function Page({children}) {
     }
   }, []);
 
-  const changeMode = () => {
-    if (mode === "modeA") {
-      setMode("modeB");
-    } else if (mode === "modeB") {
-      setMode("modeA");
-    }
-  };
 
   const moveToHome = () => {
     router.push('/notes', undefined, {shallow: true});
@@ -443,97 +422,29 @@ function Page({children}) {
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-            <NavMain items={data.navHeader} onNewNote={handleNewNote}
-                     goHome={moveToHome}/>
+            <SidebarMenu className="cursor-pointer">
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={handleNewNote}>
+                      <SquarePen/> 새 노트
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+              <SidebarMenuItem>
+                    <SidebarMenuButton onClick={moveToHome}>
+                      <Home/> 홈
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+              <SidebarMenuItem>
+                    <SidebarMenuButton onClick={moveToHome}>
+                      <Inbox/> 전체 보기 ( {noteCount.active} )
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Platform</SidebarGroupLabel>
-              <SidebarMenu>
-                {data.navMain.map((item) => (
-                    <Collapsible
-                        key={item.title}
-                        asChild
-                        defaultOpen={item.isActive}
-                        className="group/collapsible"
-                    >
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton tooltip={item.title}>
-                            {item.icon && <item.icon/>}
-                            <span>{item.title}</span>
-                            <ChevronRight
-                                className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items?.map((subItem) => (
-                                <SidebarMenuSubItem key={subItem.title}>
-                                  <SidebarMenuSubButton asChild>
-                                    <a href={subItem.url}>
-                                      <span>{subItem.title}</span>
-                                    </a>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-              <SidebarGroupLabel>Projects</SidebarGroupLabel>
-              <SidebarMenu>
-                {data.projects.map((item) => (
-                    <SidebarMenuItem key={item.name}>
-                      <SidebarMenuButton asChild>
-                        <a href={item.url}>
-                          <item.icon/>
-                          <span>{item.name}</span>
-                        </a>
-                      </SidebarMenuButton>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <SidebarMenuAction showOnHover>
-                            <MoreHorizontal/>
-                            <span className="sr-only">More</span>
-                          </SidebarMenuAction>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            className="w-48 rounded-lg"
-                            side="bottom"
-                            align="end"
-                        >
-                          <DropdownMenuItem>
-                            <Folder className="text-muted-foreground"/>
-                            <span>View Project</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Forward className="text-muted-foreground"/>
-                            <span>Share Project</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator/>
-                          <DropdownMenuItem>
-                            <Trash2 className="text-muted-foreground"/>
-                            <span>Delete Project</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-          </SidebarContent>
           <SidebarFooter>
             <SidebarMenu className="cursor-pointer">
               <SidebarMenuItem>
-                <Button variant="ghost" className="min-w-full"
-                        onClick={changeMode}/>
                 <SidebarMenuButton onClick={moveToTrash}>
                   <Trash2/>
                   <span>휴지통 ( {noteCount.trashed} )</span>
@@ -632,30 +543,6 @@ function Page({children}) {
   )
 }
 
-function NavMain({
-  items, onNewNote, goHome
-}) {
-  return (
-      <SidebarMenu className="cursor-pointer">
-        {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                  asChild
-                  onClick={item.title === "새 노트" ? onNewNote
-                      : "홈" ? goHome
-                          : "전체 보기" ? goHome
-                              : undefined}
-              >
-                <a href={item.url}>
-                  <item.icon/>
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
-  )
-}
 
 function NavActions({
   actions,

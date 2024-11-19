@@ -3,14 +3,14 @@ import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
 import {
-  noteEventAtom, saveNoteChangesAtom,
+  noteEventAtom,
+  saveNoteChangesAtom,
   selectedNoteStateAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
 import {
-  Archive,
   ArchiveX,
   Forward,
   MoreVertical,
@@ -89,10 +89,12 @@ export default function NoteDisplay() {
     if (!selectedNoteState.is_trashed) {
       saveNoteChanges(
           {noteId: selectedNoteState._id, updatedFields: {is_trashed: true}});
+      setSelectedNoteState(null);
       router.push(`/notes`, undefined, {shallow: true});
     } else {
       saveNoteChanges(
           {noteId: selectedNoteState._id, updatedFields: {is_trashed: false}});
+      setSelectedNoteState(null);
       router.push(`/notes?view=trash`, undefined, {shallow: true});
     }
   };

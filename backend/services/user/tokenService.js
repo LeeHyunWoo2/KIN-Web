@@ -87,10 +87,25 @@ const generateOAuthToken = async (user, provider) => {
   }
 };
 
+// 5. 메일인증용 토큰
+const generateEmailVerificationToken = (email) => {
+  return jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
+};
+
+const verifyEmailVerificationToken = (token) => {
+  try {
+    return jwt.verify(token, JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
+};
+
 
 module.exports = {
   generateTokens,
   verifyToken,
   verifyRefreshToken,
   generateOAuthToken,
+  generateEmailVerificationToken,
+  verifyEmailVerificationToken
 };
