@@ -53,7 +53,7 @@ export function getChildCategoryIds(parentId, categories) {
 export function calculateCategoryDepth(parentId, categories) {
   if (!parentId) return 1; // 1차 카테고리
 
-  const parentCategory = categories.find((cat) => cat._id === parentId);
+  const parentCategory = categories.find((c) => c._id === parentId);
   if (!parentCategory) throw new Error("잘못된 상위 카테고리입니다.");
 
   return parentCategory.depth + 1;

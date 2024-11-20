@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Search} from "lucide-react";
+import {Loader2, Search} from "lucide-react";
 import {useRouter} from 'next/router';
 import NoteDisplay from './NoteDisplay';
 import NoteList from "@/components/notes/NoteList";
@@ -21,6 +21,8 @@ import {
   initializeCategoriesAtom,
   initializeNotesAtom
 } from "@/lib/notes/noteState";
+import {Button} from "@/components/ui/button";
+import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
 
 export default function NoteContainer({ defaultLayout }) {
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function NoteContainer({ defaultLayout }) {
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
   const [, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
   const [, setNoteCount] = useAtom(noteCountAtom);
+  const [onReload, setOnReload] = useState(false);
 
   // 로딩 상태 관리
   const [currentNote, setCurrentNote] = useState(null); // 현재 표시 중인 노트
@@ -46,6 +49,14 @@ export default function NoteContainer({ defaultLayout }) {
       setLayout(JSON.parse(savedLayout));
     }
   }, []);
+
+  const handleOnReload = async () => {
+    setOnReload(true);
+    await checkAndSyncOnFirstLoad(true); // 동기화 로직 호출
+    setTimeout(() => {
+      setOnReload(false);
+    }, 1500);
+  }
 
   // 레이아웃 변경 시 저장
   const handleLayoutChange = (sizes) => {
@@ -86,8 +97,15 @@ export default function NoteContainer({ defaultLayout }) {
       <TooltipProvider delayDuration={0}>
         <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
-            <div className="flex items-center px-4 py-2">
+            <div className="flex items-center px-4 py-2  justify-between">
               <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([20, 80])}>Notes</h1>
+              { !onReload ? (
+              <Button variant="outline"  className="flex flex-1 min-w-[77px] max-w-fit" onClick={handleOnReload}>Reload</Button>
+            ) : (
+              <Button variant="outline"  className="flex flex-1 min-w-[77px] max-w-fit" disabled>
+                <Loader2 className="animate-spin" />
+              </Button>
+              )}
             </div>
             <Separator />
             <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">

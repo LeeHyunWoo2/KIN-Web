@@ -3,14 +3,14 @@ import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
 import {
-  noteEventAtom, saveNoteChangesAtom,
+  noteEventAtom,
+  saveNoteChangesAtom,
   selectedNoteStateAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
 import {
-  Archive,
   ArchiveX,
   Forward,
   MoreVertical,

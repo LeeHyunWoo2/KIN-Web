@@ -1,66 +1,115 @@
-import React from 'react';
-import { useSetAtom, useAtomValue } from 'jotai';
-import { categoryListAtom, selectedCategoryAtom } from '@/atoms/filterAtoms';
+import React, {useState} from 'react';
+import {useAtomValue, useSetAtom} from 'jotai';
+import {categoryListAtom, selectedCategoryAtom} from '@/atoms/filterAtoms';
+import {
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub
+} from "@/components/ui/sidebar";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {
+  ChevronRight,
+  CopyPlus,
+  ListPlus,
+  MoreHorizontal,
+  SquarePen,
+  Trash2
+} from "lucide-react";
+import {Input} from "@/components/ui/input";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from "@/components/ui/collapsible";
+import {
+  buildCategoryTree,
+  calculateCategoryDepth
+} from "@/lib/notes/categoryUtils";
+import {createCategory} from "@/services/notes/categoryService";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import {DropdownMenuTrigger} from "@radix-ui/react-dropdown-menu";
 
-function CategoryItem({ category, onSelect }) {
+function CategoryItem ({category})  {
+
+  const setSelectedCategory = useSetAtom(selectedCategoryAtom);
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId); // 선택된 카테고리를 전역 상태에 저장
+  };
+
+  const hasChildren = category.children && category.children.length > 0;
+  // className={hasChildren ? "main-style" : "sub-style"} 이런식으로 사용 예정
+
   return (
-      <div style={{ marginLeft: category.parent_id ? '20px' : '0px' }}>
-        <div onClick={() => onSelect(category._id)} style={{ cursor: 'pointer' }}>
-          <h3>{category.name}</h3>
-        </div>
-      </div>
+      <Collapsible
+          asChild
+          key={category._id}
+          defaultOpen={false}
+          className="group/collapsible"
+          onClick={() => handleCategorySelect(category._id)}
+      >
+        <SidebarMenuItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton tooltip={category.name}>
+              <ChevronRight
+                  className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+              />
+              <span>{category.name}</span>
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          {hasChildren && (
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {category.children.map((subCategory) => (
+                      <CategoryItem key={subCategory._id} category={subCategory} />
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuAction showOnHover>
+                <MoreHorizontal/>
+                <span className="sr-only">More</span>
+              </SidebarMenuAction>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+                className="w-48 rounded-lg"
+                side="bottom"
+                align="end"
+            >
+              <DropdownMenuItem>
+                <CopyPlus className="text-muted-foreground"/>
+                <span>하위 카테고리 추가</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <SquarePen  className="text-muted-foreground"/>
+                <span>이름 변경</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator/>
+              <DropdownMenuItem>
+                <Trash2 className="text-muted-foreground"/>
+                <span className="text-red-500">카테고리 삭제</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </Collapsible>
   );
 }
 
 export default function CategorySidebar() {
   const categories = useAtomValue(categoryListAtom); // 카테고리 구조 상태
-  const setSelectedCategory = useSetAtom(selectedCategoryAtom);
-
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId); // 선택된 카테고리를 전역 상태에 저장
-  };
-
-  return (
-      <div>
-        {categories.map((category) => (
-            <CategoryItem key={category._id} category={category} onSelect={handleCategorySelect} />
-        ))}
-      </div>
-  );
-}
-
-/*
-
-import React, { useState } from 'react';
-import { useSetAtom, useAtomValue } from 'jotai';
-import { categoryListAtom, selectedCategoryAtom } from '@/atoms/filterAtoms';
-import { createCategory } from '@/services/notes/categoryService';
-import { calculateCategoryDepth } from '@/lib/notes/categoryUtils';
-
-function CategoryItem({ category, onSelect, isSelected }) {
-  return (
-      <div style={{ marginLeft: category.parent_id ? '20px' : '0px' }}>
-        <div
-            onClick={() => onSelect(category._id)}
-            style={{
-              cursor: 'pointer',
-              fontWeight: isSelected ? 'bold' : 'normal', // 선택된 카테고리는 볼드체로
-            }}
-        >
-          <h3>{category.name}</h3>
-        </div>
-      </div>
-  );
-}
-
-export default function CategorySidebar() {
-  const categories = useAtomValue(categoryListAtom); // 카테고리 구조 상태
-  const setSelectedCategory = useSetAtom(selectedCategoryAtom);
-  const [newCategoryName, setNewCategoryName] = useState('');
-
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId); // 선택된 카테고리를 전역 상태에 저장
-  };
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   const handleAddCategory = async (parentId) => {
     try {
@@ -76,7 +125,7 @@ export default function CategorySidebar() {
         name: newCategoryName,
         parent_id: parentId || null, // 상위 카테고리가 없으면 null
       };
-      const newCategory = await createCategory(newCategoryData);
+      await createCategory(newCategoryData);
 
       // 3. 상태 업데이트
       setNewCategoryName(''); // 입력 필드 초기화
@@ -85,32 +134,60 @@ export default function CategorySidebar() {
     }
   };
 
-  return (
-      <div>
-        {/!* 카테고리 리스트 *!/}
-        {categories.map((category) => (
-            <CategoryItem
-                key={category._id}
-                category={category}
-                onSelect={handleCategorySelect}
-                isSelected={useAtomValue(selectedCategoryAtom) === category._id}
-            />
-        ))}
+  const categoryTree = buildCategoryTree(categories);
 
-        {/!* 새 카테고리 추가 *!/}
-        <div>
-          <input
-              type="text"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder="새 카테고리 이름"
-          />
-          <button onClick={() => handleAddCategory(null)}>최상위 추가</button>
-          <button onClick={() => handleAddCategory(useAtomValue(selectedCategoryAtom))}>
-            하위 추가
-          </button>
-        </div>
-      </div>
+  return (
+      <>
+        <SidebarContent>
+          <SidebarGroup>
+            <div className="flex justify-between">
+              <SidebarGroupLabel>카테고리</SidebarGroupLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <SidebarGroupLabel>
+                    <button
+                        className="rounded-md p-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                      <ListPlus className="max-w-5"/>
+                    </button>
+                  </SidebarGroupLabel>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="grid gap-1">
+                    <div className="space-y-2">
+                      <h5 className="font-medium leading-none">최상위 카테고리 추가</h5>
+                    </div>
+                    <div className="grid gap-2">
+                      <div className="grid grid-cols-1 items-center gap-2">
+                        <p className="text-sm text-muted-foreground">
+                          엔터(Enter)키로 적용
+                        </p>
+                        <Input
+                            type="text"
+                            value={newCategoryName}
+                            onChange={(e) => setNewCategoryName(e.target.value)}
+                            placeholder="카테고리 이름"
+                            className="col-span-2 h-8"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleAddCategory()
+                              }
+                            }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            {categories.length !== 0 ? (
+                <SidebarMenu>
+                  {categoryTree.map((category) => (
+                      <CategoryItem key={category._id} category={category}/>
+                  ))}
+                </SidebarMenu>
+            ) : (<span></span>)}
+          </SidebarGroup>
+        </SidebarContent>
+      </>
   );
 }
-*/

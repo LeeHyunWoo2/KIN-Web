@@ -9,13 +9,13 @@ import debounce from "lodash/debounce";
 import {SynchronizeWithServer} from "@/services/user/syncService";
 import {router} from "next/client";
 import {categoryListAtom} from "@/atoms/filterAtoms";
-import {fetchCategories} from "@/services/notes/categoryService";
+import {getCategories} from "@/services/notes/categoryService";
 
 
 const debouncedSynchronize = debounce(async () => {
   const currentTime = Date.now(); // 활동 시각 전달
   await SynchronizeWithServer(currentTime);
-}, 60 * 3000);
+}, 2000);
 
 // 리스트 초기화
 export const initializeNotesAtom = atom(null, async (get, set) => {
@@ -25,7 +25,7 @@ export const initializeNotesAtom = atom(null, async (get, set) => {
 
 // 카테고리 초기화
 export const initializeCategoriesAtom = atom(null, async (get, set) => {
-  const categories = await fetchCategories();
+  const categories = await getCategories();
   set(categoryListAtom, categories); // 배열로 상태 저장
 });
 

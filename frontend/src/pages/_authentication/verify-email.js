@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import {useEffect, useState} from "react";
 import apiClient from "@/lib/apiClient";
+import {Button} from "@/components/ui/button";
 
 export default function VerifyEmailPage() {
   const router = useRouter();
@@ -30,12 +31,7 @@ export default function VerifyEmailPage() {
       <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="text-2xl font-bold mb-4">이메일 인증</h1>
         <p>{message}</p>
-        <button
-            onClick={handleClose}
-            className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
-        >
-          이 창 닫기
-        </button>
+        <Button onClick={handleClose}>창 닫기</Button>
       </div>
   );
 }

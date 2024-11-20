@@ -1,4 +1,5 @@
 import * as React from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
 import {
   ArrowDown,
@@ -17,20 +18,19 @@ import {
   CornerUpRight,
   CreditCard,
   FileText,
-  Folder,
-  Forward,
   Frame,
-  GalleryVerticalEnd, Home, Inbox,
+  GalleryVerticalEnd,
+  Home,
+  Inbox,
   LineChart,
   Link as LinkIcon,
   LogOut,
   Map,
   Menu,
-  MoreHorizontal,
   PieChart,
-  SquarePen,
   Plus,
   Settings2,
+  SquarePen,
   SquareTerminal,
   Star,
   Trash,
@@ -45,11 +45,6 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,16 +62,11 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
@@ -85,14 +75,10 @@ import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
 import {logoutUser} from "@/services/user/authService";
-import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import {
-  noteCountAtom,
-  noteEventAtom
-} from '@/atoms/noteStateAtom';
+import {noteCountAtom, noteEventAtom} from '@/atoms/noteStateAtom';
 import {router} from "next/client";
 
 const data = {
@@ -440,87 +426,6 @@ function Page({children}) {
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Platform</SidebarGroupLabel>
-              <SidebarMenu>
-                {data.navMain.map((item) => (
-                    <Collapsible
-                        key={item.title}
-                        asChild
-                        defaultOpen={item.isActive}
-                        className="group/collapsible"
-                    >
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton tooltip={item.title}>
-                            {item.icon && <item.icon/>}
-                            <span>{item.title}</span>
-                            <ChevronRight
-                                className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items?.map((subItem) => (
-                                <SidebarMenuSubItem key={subItem.title}>
-                                  <SidebarMenuSubButton asChild>
-                                    <a href={subItem.url}>
-                                      <span>{subItem.title}</span>
-                                    </a>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-              <SidebarGroupLabel>Projects</SidebarGroupLabel>
-              <SidebarMenu>
-                {data.projects.map((item) => (
-                    <SidebarMenuItem key={item.name}>
-                      <SidebarMenuButton asChild>
-                        <a href={item.url}>
-                          <item.icon/>
-                          <span>{item.name}</span>
-                        </a>
-                      </SidebarMenuButton>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <SidebarMenuAction showOnHover>
-                            <MoreHorizontal/>
-                            <span className="sr-only">More</span>
-                          </SidebarMenuAction>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            className="w-48 rounded-lg"
-                            side="bottom"
-                            align="end"
-                        >
-                          <DropdownMenuItem>
-                            <Folder className="text-muted-foreground"/>
-                            <span>View Project</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Forward className="text-muted-foreground"/>
-                            <span>Share Project</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator/>
-                          <DropdownMenuItem>
-                            <Trash2 className="text-muted-foreground"/>
-                            <span>Delete Project</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-          </SidebarContent>
           <SidebarFooter>
             <SidebarMenu className="cursor-pointer">
               <SidebarMenuItem>

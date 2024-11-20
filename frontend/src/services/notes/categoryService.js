@@ -2,24 +2,28 @@ import apiClient from "@/lib/apiClient";
 import {initDB} from "@//lib/notes/initDB";
 
 // 카테고리 목록 조회
-export const fetchCategories = async () => {
+export const getCategories = async (forceReload = false) => {
   const db = await initDB();
   const tx = db.transaction("categories", "readonly");
   const store = tx.objectStore("categories");
 
   const categories = await store.getAll();
-  if (categories.length === 0) {
-    const response = await apiClient.get('/category');
-    const fetchedCategories = response.data;
+  if (categories.length === 0 || forceReload) {
+    const response = await apiClient.get('/category', {
+      headers: {
+        'cache-control': 'no-cache',
+      },
+    });
+    const loadedCategories = response.data;
 
     const tx = db.transaction("categories", "readwrite");
     const store = tx.objectStore("categories");
-    for (const category of fetchedCategories) {
+    for (const category of loadedCategories) {
       store.put(category);
     }
     await tx.done;
 
-    return fetchedCategories;
+    return loadedCategories;
   }
 
   return categories;
