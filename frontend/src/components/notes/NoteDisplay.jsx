@@ -5,7 +5,8 @@ import {useAtom, useSetAtom} from 'jotai';
 import {
   noteEventAtom,
   saveNoteChangesAtom,
-  selectedNoteStateAtom
+  selectedNoteStateAtom,
+  defaultNoteStateAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
@@ -26,6 +27,14 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {useRouter} from "next/router";
+import {categoryTreeAtom} from "@/atoms/filterAtoms";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem, MenubarMenu,
+  MenubarSub,
+  MenubarSubContent, MenubarSubTrigger, MenubarTrigger
+} from "@/components/ui/menubar";
 
 const produce = require("immer").produce;
 
@@ -34,6 +43,7 @@ export default function NoteDisplay() {
   const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
   const [selectedNoteState, setSelectedNoteState] = useAtom(
       selectedNoteStateAtom);
+  const [categoryTree] = useAtom(categoryTreeAtom);
 
   // 노트의 초기 로딩 여부 확인 (노트 누르자마자 자동저장 시작하는거 방지)
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -45,17 +55,22 @@ export default function NoteDisplay() {
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
 
   //  자동 저장 함수 (디바운스)
-  const saveChanges = useCallback(debounce(() => {
-    if (selectedNoteState && !isInitialLoad && isNotSaved) {  // 초기 로딩이 아닐 때만 저장
-      setNoteEvent({
-        type: 'UPDATE', // UPDATE 이벤트 발생
-        targetId: selectedNoteState._id,
-        payload: localPayload,
-      });
-      setIsNotSaved(false);
-      setLocalPayload({}); // 저장 후 로컬 상태 초기화
-    }
-  }, 1500), [localPayload, setNoteEvent, isInitialLoad, isNotSaved]);
+  const saveChanges = useCallback(
+      debounce(() => {
+        if (selectedNoteState && !isInitialLoad && isNotSaved) { // 초기 로딩이 아닐 때만 저장
+          setNoteEvent({
+            type: 'UPDATE', // UPDATE 이벤트 발생
+            payload: [{ // 배열 형태로 전달
+              id: selectedNoteState._id,
+              ...localPayload,
+            }],
+          });
+          setIsNotSaved(false);
+          setLocalPayload({}); // 저장 후 로컬 상태 초기화
+        }
+      }, 1500),
+      [localPayload, setNoteEvent, isInitialLoad, isNotSaved]
+  );
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -85,30 +100,59 @@ export default function NoteDisplay() {
     setIsNotSaved(true);
   };
 
+  const handleCategorySelect = (category) => {
+    const setCategory = {category: { _id: category._id, name:category.name }};
+    saveNoteChanges({
+      updatedFieldsList: [{ id: selectedNoteState._id, ...setCategory}],
+    })
+  };
+
+  const CategoryMenuItems = ({ categories }) => {
+    return categories.map((category) => {
+      if (category.children && category.children.length > 0) {
+        // 하위 카테고리가 있을 경우
+        return (
+            <MenubarSub key={category._id} onClick={() => handleCategorySelect(category._id)}>
+              <MenubarSubTrigger>{category.name}</MenubarSubTrigger>
+              <MenubarSubContent>
+                <CategoryMenuItems categories={category.children} />
+              </MenubarSubContent>
+            </MenubarSub>
+        );
+      }
+      // 하위 카테고리가 없을 경우
+      return <MenubarItem key={category._id} onClick={() => handleCategorySelect(category)}>{category.name}</MenubarItem>;
+    });
+  };
+
+
   const moveToTrash = () => {
-    if (!selectedNoteState.is_trashed) {
-      saveNoteChanges(
-          {noteId: selectedNoteState._id, updatedFields: {is_trashed: true}});
-      setSelectedNoteState(null);
-      router.push(`/notes`, undefined, {shallow: true});
+    const isCurrentlyTrashed = selectedNoteState.is_trashed;
+    const updatedFields = { is_trashed: !isCurrentlyTrashed }; // 상태 반전
+
+    saveNoteChanges({
+      updatedFieldsList: [{ id: selectedNoteState._id, ...updatedFields }],
+    });
+
+    setSelectedNoteState(defaultNoteStateAtom);
+
+    if (isCurrentlyTrashed) {
+      router.push(`/notes?view=trash`, undefined, { shallow: true }); // 복구 후
     } else {
-      saveNoteChanges(
-          {noteId: selectedNoteState._id, updatedFields: {is_trashed: false}});
-      setSelectedNoteState(null);
-      router.push(`/notes?view=trash`, undefined, {shallow: true});
+      router.push(`/notes`, undefined, { shallow: true }); // 휴지통으로 이동 후
     }
   };
 
+
   const handlePermanentDelete = () => {
-    console.log('삭제')
     if (selectedNoteState.is_trashed) {
       setNoteEvent({
         type: 'DELETE',
-        targetId: selectedNoteState._id
-      })
-      router.push('/notes?view=trash', undefined, {shallow: true});
+        payload: [selectedNoteState._id],
+      });
+      router.push('/notes?view=trash', undefined, { shallow: true });
     }
-  }
+  };
 
   useEffect(() => {
     saveChanges();
@@ -152,7 +196,7 @@ export default function NoteDisplay() {
             {/* Move to Junk Button */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!selectedNoteState} onClick={handlePermanentDelete}>
+                <Button variant="ghost" size="icon" disabled={selectedNoteState.is_trashed === false} onClick={handlePermanentDelete}>
                   <ArchiveX className="h-4 w-4"/>
                   <span className="sr-only">Move to junk</span>
                 </Button>
@@ -176,6 +220,18 @@ export default function NoteDisplay() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+
+            {categoryTree.length ? (
+                <Menubar>
+                  <MenubarMenu>
+                    <MenubarTrigger className="cursor-pointer">{selectedNoteState.category._id ? selectedNoteState.category.name : "카테고리 선택"}</MenubarTrigger>
+                    <MenubarContent>
+                      <CategoryMenuItems categories={categoryTree} />
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
+            ) : ('')}
+
             {/* Reply Button */}
             <Tooltip>
               <TooltipTrigger asChild>

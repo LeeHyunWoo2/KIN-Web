@@ -51,30 +51,36 @@ export const createNote = async (noteData) => {
 };
 
 // 노트 업데이트
-export const updateNote = async (id, updatedData) => {
-  const response = await apiClient.put(`/notes/${id}`, updatedData);
-  const updatedNote = response.data;
+export const updateNote = async (updateDataList) => {
+  const response = await apiClient.put("/notes", { updateDataList }); // 배열로 전달
+  const updatedNotes = response.data;
 
   const db = await initDB();
   const tx = db.transaction("notes", "readwrite");
   const store = tx.objectStore("notes");
-  store.put(updatedNote);
+
+  for (const updatedNote of updatedNotes) {
+    store.put(updatedNote); // 배열로 처리
+  }
   await tx.done;
 
-  return updatedNote;
+  return updatedNotes; // 배열 반환
 };
 
 // 완전 삭제 (휴지통에서 영구 삭제)
-export const deleteNote = async (id) => {
-  await apiClient.delete(`/notes/${id}`);
+export const deleteNote = async (ids) => {
+  await apiClient.delete("/notes", { data: { ids } });
 
   const db = await initDB();
   const tx = db.transaction("notes", "readwrite");
   const store = tx.objectStore("notes");
-  store.delete(id);
+
+  for (const id of ids) {
+    store.delete(id);
+  }
   await tx.done;
 
-  return id;
+  return ids;
 };
 
 // 30일 경과한 노트 자동 삭제

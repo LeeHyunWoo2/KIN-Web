@@ -10,9 +10,18 @@ export default function NoteList({notes}) {
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
     if (!note.is_trashed) {
-      router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
+      if (router.query.id === note._id) {
+        router.push('/notes', undefined, {shallow: true});
+      } else {
+        router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
+      }
     } else {
-      router.push(`/notes?id=${note._id}&view=trash`, undefined, {shallow: true});
+      if (router.query.id === note._id) {
+        router.push('/notes?view=trash', undefined, {shallow: true});
+      } else {
+        router.push(`/notes?id=${note._id}&view=trash`, undefined,
+            {shallow: true});
+      }
     }
   };
 
@@ -31,7 +40,8 @@ export default function NoteList({notes}) {
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
-                      <div className="font-semibold">{note.title}</div> {/*선택된 노트는 제목 실시간 반영*/}
+                      <div className="font-semibold">{note.title}</div>
+                      {/*선택된 노트는 제목 실시간 반영*/}
                     </div>
                     <div
                         className={cn(

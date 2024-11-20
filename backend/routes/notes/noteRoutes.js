@@ -10,9 +10,9 @@ router.get('/', authenticateUser, noteController.getNotes);
 router.post('/', authenticateUser, noteController.createNote);
 
 // 노트 업데이트
-router.put('/:noteId', authenticateUser, noteController.updateNote);
+router.put('/', authenticateUser, noteController.updateNotes);
 
 // 노트 삭제
-router.delete('/:noteId', authenticateUser, noteController.deleteNote);
+router.delete('/', authenticateUser, noteController.deleteNotes);
 
 module.exports = router;

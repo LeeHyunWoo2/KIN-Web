@@ -1,4 +1,5 @@
 import * as React from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
 import {
   ArrowDown,
@@ -17,25 +18,24 @@ import {
   CornerUpRight,
   CreditCard,
   FileText,
-  Folder,
-  Forward,
   Frame,
-  GalleryVerticalEnd, Home, Inbox,
+  GalleryVerticalEnd,
+  Home,
+  Inbox,
   LineChart,
   Link as LinkIcon,
   LogOut,
   Map,
   Menu,
-  MoreHorizontal,
   PieChart,
-  SquarePen,
   Plus,
   Settings2,
+  SquarePen,
   SquareTerminal,
   Star,
   Trash,
   Trash2,
-  UserRoundCog, ListPlus,
+  UserRoundCog,
 } from "lucide-react"
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
@@ -45,11 +45,6 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,16 +62,11 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
@@ -85,17 +75,11 @@ import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import SettingsDialog from "@/components/ListMode";
 import {logoutUser} from "@/services/user/authService";
-import {useEffect, useState} from "react";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import {
-  noteCountAtom,
-  noteEventAtom
-} from '@/atoms/noteStateAtom';
+import {noteCountAtom, noteEventAtom} from '@/atoms/noteStateAtom';
 import {router} from "next/client";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
 
 const data = {
   teams: [

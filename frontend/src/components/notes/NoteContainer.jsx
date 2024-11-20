@@ -13,6 +13,7 @@ import {TooltipProvider} from "@/components/ui/tooltip";
 import {Input} from "@/components/ui/input";
 import {useAtom} from 'jotai';
 import {
+  defaultNoteStateAtom,
   noteCountAtom,
   noteListAtom,
   selectedNoteStateAtom
@@ -30,12 +31,11 @@ export default function NoteContainer({ defaultLayout }) {
   const [notes] = useAtom(noteListAtom);
   const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
-  const [, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
+  const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
   const [, setNoteCount] = useAtom(noteCountAtom);
   const [onReload, setOnReload] = useState(false);
 
   // 로딩 상태 관리
-  const [currentNote, setCurrentNote] = useState(null); // 현재 표시 중인 노트
   const [layout, setLayout] = useState(() => {
     // 로컬스토리지에서 값을 가져오고, 없으면 기본값 설정
     const savedLayout = localStorage.getItem("note-layout");
@@ -53,6 +53,8 @@ export default function NoteContainer({ defaultLayout }) {
   const handleOnReload = async () => {
     setOnReload(true);
     await checkAndSyncOnFirstLoad(true); // 동기화 로직 호출
+    await initializeNotes(); // 노트 데이터 초기화
+    await initializeCategories(); // 카테고리 데이터 초기화
     setTimeout(() => {
       setOnReload(false);
     }, 1500);
@@ -77,15 +79,22 @@ export default function NoteContainer({ defaultLayout }) {
 
   useEffect(() => {
     if (id) {
+      console.log(notes)
       const selectedNote = notes.find((note) => note._id === id);
       if (selectedNote) {
         // 전역 상태 업데이트
         setSelectedNoteState((prev) => ({ ...prev, ...selectedNote }));
         // 화면에 표시될 데이터 변경 -> 렌더링이 데이터보다 먼저 작동해서 화면 깜빡이던거 방지됨
-        setCurrentNote(selectedNote);
       }
+    } else {
+      setSelectedNoteState(defaultNoteStateAtom);
     }
   }, [id, notes, setSelectedNoteState]);
+
+
+  useEffect(() => {
+    console.log(selectedNoteState);
+  }, [selectedNoteState]);
 
 
   // view가 trash일 경우 휴지통 필터 적용
@@ -121,8 +130,11 @@ export default function NoteContainer({ defaultLayout }) {
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={layout[1]}>
             {/* 로딩 중에도 기존 상태 유지 */}
-            {currentNote && (
-                <NoteDisplay note={currentNote} />
+            {selectedNoteState._id ? (
+                <NoteDisplay note={selectedNoteState} />
+            ) : (
+                <div className="p-8 text-center text-muted-foreground">선택된 노트가
+                  없습니다.</div>
             )}
           </ResizablePanel>
         </ResizablePanelGroup>
