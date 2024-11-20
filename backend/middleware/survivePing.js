@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const pingVercel = async () => {
   try {
-    await axios.get(process.env.FRONTEND_URL);
+    await axios.get(process.env.FRONTEND_URL+'/api/ping');
     console.log('핑');
   } catch (error) {
     console.error('핑실패', error.message);
