@@ -32,7 +32,7 @@ export const initializeCategoriesAtom = atom(null, async (get, set) => {
 // 이벤트 핸들러
 export const noteEventHandlerAtom = atom((get) => get(noteEventAtom),
     async (get, set, event) => {
-      const { type, targetId, payload } = event;
+      const { type, payload } = event;
       const noteList = get(noteListAtom);
 
       switch (type) {
@@ -45,13 +45,15 @@ export const noteEventHandlerAtom = atom((get) => get(noteEventAtom),
           break;
 
         case 'UPDATE':
-          const updatedNote = await updateNote(targetId, payload);
-          set(noteListAtom, noteList.map(note => note._id === targetId ? updatedNote : note));
+          const updatedNotes = await updateNote(payload); // 배열로 전달
+          set(noteListAtom, noteList.map(note =>
+              updatedNotes.find(updated => updated._id === note._id) || note
+          ));
           break;
 
         case 'DELETE':
-          await deleteNote(targetId);
-          set(noteListAtom, noteList.filter(note => note._id !== targetId));
+          await deleteNote(payload);
+          set(noteListAtom, noteList.filter(note => !payload.includes(note._id)));
           break;
       }
       debouncedSynchronize();

@@ -121,7 +121,6 @@ export default function AuthenticationPage() {
       const response = await apiClient.post('/auth/verify-recaptcha', {
         token: recaptchaToken,
       });
-      console.log(response.data.message);
       if (response.status === 200) {
         // 리캡차 성공 시 회원가입 요청
         await registerUser(formData);

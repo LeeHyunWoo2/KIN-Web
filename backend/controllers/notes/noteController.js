@@ -31,18 +31,25 @@ exports.createNote = async (req, res) => {
 };
 
 // 노트 수정
-exports.updateNote = async (req, res) => {
+exports.updateNotes = async (req, res) => {
   try {
-    const id = req.params.noteId;
-    const user_id = req.user.id;
-    const updates = req.body; // 변경이 생긴 필드만
+    const user_id = req.user.id; // 사용자 인증 정보
+    const updateDataList = req.body.updateDataList; // 배열로 전달
 
-    const updatedNote = await noteService.updateNote(
-        { _id: id, user_id },
-        updates
+    if (!Array.isArray(updateDataList) || updateDataList.length === 0) {
+      return res.status(400).json({ message: "업데이트할 데이터가 없습니다." });
+    }
+
+    const updatedNotes = await Promise.all(
+        updateDataList.map((data) =>
+            noteService.updateNote(
+                { _id: data.id, user_id }, // 필터
+                { ...data }               // 업데이트 필드
+            )
+        )
     );
-    if (!updatedNote) return res.status(404).json({ message: "해당 노트를 찾을 수 없습니다." });
-    res.status(200).json(updatedNote);
+
+    res.status(200).json(updatedNotes.filter(Boolean)); // 업데이트된 노트 반환
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "노트 수정 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });
@@ -50,13 +57,21 @@ exports.updateNote = async (req, res) => {
 };
 
 
+
 // 노트 삭제
-exports.deleteNote = async (req, res) => {
+exports.deleteNotes = async (req, res) => {
   try {
-    const { noteId } = req.params;
-    const deletedNote = await noteService.deleteNote(noteId);
-    if (!deletedNote) return res.status(404).json({ message: '해당 노트를 찾을 수 없습니다.' });
-    res.status(200).json();
+    const { ids } = req.body; // 삭제할 노트 ID 배열
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "삭제할 노트 ID가 없습니다." });
+    }
+
+    const deletedNotes = await Promise.all(
+        ids.map((id) => noteService.deleteNote(id))
+    ); // 배열 돌려가면서 삭제
+
+    res.status(200).json(deletedNotes.filter(Boolean)); // 삭제된 노트 반환
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "노트 삭제 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });

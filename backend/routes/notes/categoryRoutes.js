@@ -13,6 +13,6 @@ router.post('/', authenticateUser, categoryController.createCategory);
 router.put('/:categoryId', authenticateUser, categoryController.updateCategory);
 
 // 카테고리 삭제
-router.delete('/:categoryId', authenticateUser, categoryController.deleteCategory);
+router.delete('/', authenticateUser, categoryController.deleteCategory);
 
 module.exports = router;

@@ -33,7 +33,11 @@ import {
   buildCategoryTree,
   calculateCategoryDepth
 } from "@/lib/notes/categoryUtils";
-import {createCategory, updateCategory} from "@/services/notes/categoryService";
+import {
+  createCategory,
+  deleteCategory,
+  updateCategory
+} from "@/services/notes/categoryService";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,16 +45,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {DropdownMenuTrigger} from "@radix-ui/react-dropdown-menu";
 import {useAtom} from "jotai/index";
-import {initializeCategoriesAtom} from "@/lib/notes/noteState";
+import {
+  initializeCategoriesAtom,
+  initializeNotesAtom
+} from "@/lib/notes/noteState";
+import {
+  defaultNoteStateAtom,
+  selectedNoteStateAtom
+} from "@/atoms/noteStateAtom";
+import {router} from "next/client";
 
 function CategoryItem({category}) {
   const categories = useAtomValue(categoryListAtom); // 카테고리 구조 상태
+  const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
-  const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryAtom);
+  const [, setSelectedCategory] = useAtom(selectedCategoryAtom);
+  const setSelectedNoteState = useSetAtom(selectedNoteStateAtom);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId); // 선택된 카테고리를 전역 상태에 저장
+    
   };
 
   const [isAddCategoryPopoverOpen, setIsAddCategoryPopoverOpen] = useState(
@@ -62,7 +77,6 @@ function CategoryItem({category}) {
 
   // 마우스 위치 상태
   const [popoverPosition, setPopoverPosition] = useState({x: 0, y: 0});
-  const [isHovered, setIsHovered] = useState(false);
 
   const handlePopoverOpen = (event) => {
     const rect = event.currentTarget.getBoundingClientRect(); // 클릭된 버튼의 위치
@@ -108,6 +122,25 @@ function CategoryItem({category}) {
 
   const hasChildren = category.children && category.children.length > 0;
   // className={hasChildren ? "main-style" : "sub-style"} 이런식으로 사용 예정
+
+
+// 삭제
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      // 서버와 IndexedDB에서 삭제
+      await deleteCategory(categoryId, categories);
+
+      setSelectedNoteState(defaultNoteStateAtom);
+      await router.push(`/notes`, undefined, {shallow: true});
+      // 노트와 카테고리 상태 초기화
+      await initializeNotes();
+      await initializeCategories();
+    } catch (error) {
+      console.error("삭제 실패:", error);
+      alert("삭제 중 문제가 발생했습니다.");
+    }
+  };
+
 
   return (
       <Collapsible
@@ -167,7 +200,7 @@ function CategoryItem({category}) {
                 <span>이름 변경</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator/>
-              <DropdownMenuItem>
+              <DropdownMenuItem  onClick={() => handleDeleteCategory(category._id)}>
                 <Trash2 className="text-muted-foreground"/>
                 <span className="text-red-500">카테고리 삭제</span>
               </DropdownMenuItem>
