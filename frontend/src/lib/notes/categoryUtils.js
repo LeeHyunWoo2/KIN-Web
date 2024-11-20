@@ -13,13 +13,6 @@ export function buildCategoryTree(categories) {
     if (category.parent_id) {
       const parent = categoryMap.get(category.parent_id);
 
-      // 부모가 이미 2차 카테고리면 하위 연결 금지
-      if (parent && parent.parent_id) {
-        const grandParent = categoryMap.get(parent.parent_id);
-        if (grandParent) {
-          return;
-        }
-      }
       if (parent) {
         parent.children.push(categoryMap.get(category._id));
       }
