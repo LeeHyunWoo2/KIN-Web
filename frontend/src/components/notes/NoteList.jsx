@@ -9,19 +9,10 @@ export default function NoteList({notes}) {
 
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
-    if (!note.is_trashed) {
       if (router.query.id === note._id) {
         router.push('/notes', undefined, {shallow: true});
       } else {
         router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
-      }
-    } else {
-      if (router.query.id === note._id) {
-        router.push('/notes?view=trash', undefined, {shallow: true});
-      } else {
-        router.push(`/notes?id=${note._id}&view=trash`, undefined,
-            {shallow: true});
-      }
     }
   };
 

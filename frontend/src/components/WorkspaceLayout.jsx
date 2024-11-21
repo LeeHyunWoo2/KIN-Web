@@ -79,6 +79,7 @@ import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
 import {noteCountAtom, noteEventAtom} from '@/atoms/noteStateAtom';
+import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 
 const data = {
@@ -279,7 +280,6 @@ function Page({children}) {
     profileIcon: '',
   });
   const [noteCount] = useAtom(noteCountAtom);
-  const {view} = router.query;
 
   const handleNewNote = () => {
     setNoteEvent({
@@ -297,18 +297,9 @@ function Page({children}) {
     }
   }, []);
 
-
   const moveToHome = () => {
     router.push('/notes', undefined, {shallow: true});
   }
-
-  const moveToTrash = () => {
-    if (view !== 'trash') {
-      router.push('/notes?view=trash', undefined, {shallow: true});
-    } else {
-      router.push('/notes', undefined, {shallow: true});
-    }
-  };
 
   return (
       <SidebarProvider>
@@ -407,21 +398,19 @@ function Page({children}) {
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenu className="cursor-pointer">
-                  <SidebarMenuItem>
-                    <SidebarMenuButton onClick={handleNewNote}>
-                      <SquarePen/> 새 노트
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
               <SidebarMenuItem>
-                    <SidebarMenuButton onClick={moveToHome}>
-                      <Home/> 홈
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                <SidebarMenuButton onClick={handleNewNote}>
+                  <SquarePen/> 새 노트
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
-                    <SidebarMenuButton onClick={moveToHome}>
-                      <Inbox/> 전체 보기 ( {noteCount.active} )
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                <SidebarMenuButton disabled>
+                  <Home/> 홈
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem onClick={moveToHome}>
+                <ListView/>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarHeader>
           <Separator/>
@@ -429,10 +418,7 @@ function Page({children}) {
           <SidebarFooter>
             <SidebarMenu className="cursor-pointer">
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={moveToTrash}>
-                  <Trash2/>
-                  <span>휴지통 ( {noteCount.trashed} )</span>
-                </SidebarMenuButton>
+                <TrashFilter/>
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenu>
@@ -526,7 +512,6 @@ function Page({children}) {
       </SidebarProvider>
   )
 }
-
 
 function NavActions({
   actions,

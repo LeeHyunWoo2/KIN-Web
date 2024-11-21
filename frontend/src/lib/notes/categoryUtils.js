@@ -34,7 +34,7 @@ export function getChildCategoryIds(parentId, categories) {
     result.push(currentId);
 
     // 현재 ID에 해당하는 자식 카테고리 탐색
-    categories.forEach(category => {
+    (categories || []).forEach(category => {
       if (category.parent_id === currentId) {
         parent.push(category._id);
       }

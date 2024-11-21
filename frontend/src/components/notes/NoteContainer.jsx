@@ -11,7 +11,7 @@ import {
 import {Separator} from "@/components/ui/separator";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {Input} from "@/components/ui/input";
-import {useAtom} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import {
   defaultNoteStateAtom,
   noteCountAtom,
@@ -24,16 +24,24 @@ import {
 } from "@/lib/notes/noteState";
 import {Button} from "@/components/ui/button";
 import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
+import {filteredNotesAtom} from "@/lib/notes/filterNotes";
+import {
+  isTrashedAtom,
+  selectedCategoryNameAtom
+} from "@/atoms/filterAtoms";
 
 export default function NoteContainer({ defaultLayout }) {
   const router = useRouter();
-  const { id, view } = router.query; // URL에서 id와 view 가져옴
+  const { id } = router.query; // URL에서 id와 view 가져옴
   const [notes] = useAtom(noteListAtom);
   const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
   const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
   const [, setNoteCount] = useAtom(noteCountAtom);
   const [onReload, setOnReload] = useState(false);
+  const filteredNotes = useAtomValue(filteredNotesAtom);
+  const isTrashed = useAtomValue(isTrashedAtom);
+  const category = useAtomValue(selectedCategoryNameAtom);
 
   // 로딩 상태 관리
   const [layout, setLayout] = useState(() => {
@@ -64,6 +72,16 @@ export default function NoteContainer({ defaultLayout }) {
   const handleLayoutChange = (sizes) => {
     setLayout(sizes);
     localStorage.setItem("note-layout", JSON.stringify(sizes));
+  };
+
+  const getListTitle = () => {
+    if (isTrashed) {
+      return '휴지통';
+    }
+    if (category) {
+      return category;
+    }
+    return '전체보기';
   };
 
   useEffect(() => {
@@ -97,17 +115,16 @@ export default function NoteContainer({ defaultLayout }) {
   }, [selectedNoteState]);
 
 
-  // view가 trash일 경우 휴지통 필터 적용
-  const filteredNotes = view === 'trash'
-      ? notes.filter((note) => note.is_trashed) // 휴지통 필터
-      : notes.filter((note) => !note.is_trashed); // 일반 필터
+
 
   return (
       <TooltipProvider delayDuration={0}>
         <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
             <div className="flex items-center px-4 py-2  justify-between">
-              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([20, 80])}>Notes</h1>
+              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([20, 80])}>
+                {getListTitle()}
+              </h1>
               { !onReload ? (
               <Button variant="outline"  className="flex flex-1 min-w-[77px] max-w-fit" onClick={handleOnReload}>Reload</Button>
             ) : (
