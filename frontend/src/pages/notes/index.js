@@ -4,6 +4,7 @@ import {useAtom} from "jotai";
 import {noteEventHandlerAtom} from "@/lib/notes/noteState";
 import {useEffect} from "react";
 import {noteEventAtom} from "@/atoms/noteStateAtom";
+import FilterMonitor from "@/components/notes/FilterMonitor";
 
 export default function NotePage() {
   const [event] = useAtom(noteEventAtom); // 변경 감지
@@ -19,6 +20,7 @@ export default function NotePage() {
   return (
       <>
             <NoteContainer />
+        <FilterMonitor />
       </>
   );
 }

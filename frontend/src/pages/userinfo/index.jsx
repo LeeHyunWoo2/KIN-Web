@@ -28,6 +28,7 @@ import Image from "next/image";
 import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
+import { Badge } from '@/components/ui/badge';
 
 
 function UserInfoPage() {
@@ -75,7 +76,7 @@ function UserInfoPage() {
   const getSocialAccountStatus = (provider) => {
     const account = userInfo.socialAccounts.find(
         (acc) => acc.provider === provider);
-    return account ? `연동됨: ${account.providerId}` : '미연동';
+    return account ? '연동됨' : '미연동';
   };
 
   const providerIconPath = (provider) => {
@@ -237,15 +238,14 @@ function UserInfoPage() {
                   </CardHeader>
                   <CardContent>
                     <p>{socialStatus === "미연동" ? "연동된 계정이 없습니다."
-                        : `연동됨: ${socialStatus}`}</p>
+                        : <Badge>연동 완료</Badge>}</p>
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     {isLinked ? (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                                disabled={ isLocalAccount() === false }
-                                className= "opacity-50 cursor-not-allowed">연동 해제
+                                disabled={ isLocalAccount() === false }>연동 해제
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>

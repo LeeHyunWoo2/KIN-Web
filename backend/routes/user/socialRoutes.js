@@ -71,8 +71,8 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
 router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
   const provider = req.params.provider;
 
-  passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (err) => {
-    if (err) {
+  passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (error) => {
+    if (error) {
       // 에러 발생 시 메시지 포함
       return res.redirect(`${process.env.FRONTEND_URL}/userinfo?error=${encodeURIComponent("이미 연동된 계정입니다.")}`);
     }

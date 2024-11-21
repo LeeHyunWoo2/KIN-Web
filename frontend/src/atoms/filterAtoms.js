@@ -1,9 +1,13 @@
 import { atom } from 'jotai';
 
 // 필터 조건들
-export const categoryListAtom = atom([]); // 카테고리 구조를 따로 관리(빠른필터링용)
-export const categoryTreeAtom = atom([]);
+export const categoryListAtom = atom([]); // 일반 배열 카테고리 리스트
+export const categoryTreeAtom = atom([]); // 카테고리 트리구조 상태
 export const selectedCategoryAtom = atom(null); // 선택된 카테고리 (기본값 없음)
+export const selectedCategoryNameAtom = atom(null); // 선택된 카테고리 이름 (구조 바꾸기 곤란해져서 그냥 따로 추가)
 export const selectedTagsAtom = atom([]); // 선택된 태그들
 export const searchTermAtom = atom(''); // 검색어
 export const sortByAtom = atom('date'); // 정렬 기준 (기본값: 날짜)
+export const isLockedAtom = atom(false); // 잠금 상태 필터
+export const isPinnedAtom = atom(false); // 고정 상태 필터
+export const isTrashedAtom = atom(false); // 휴지통 상태

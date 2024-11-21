@@ -3,10 +3,10 @@ import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
 import {
+  defaultNoteStateAtom,
   noteEventAtom,
   saveNoteChangesAtom,
-  selectedNoteStateAtom,
-  defaultNoteStateAtom
+  selectedNoteStateAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
@@ -31,9 +31,12 @@ import {categoryTreeAtom} from "@/atoms/filterAtoms";
 import {
   Menubar,
   MenubarContent,
-  MenubarItem, MenubarMenu,
+  MenubarItem,
+  MenubarMenu,
   MenubarSub,
-  MenubarSubContent, MenubarSubTrigger, MenubarTrigger
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger
 } from "@/components/ui/menubar";
 
 const produce = require("immer").produce;
@@ -136,11 +139,8 @@ export default function NoteDisplay() {
 
     setSelectedNoteState(defaultNoteStateAtom);
 
-    if (isCurrentlyTrashed) {
-      router.push(`/notes?view=trash`, undefined, { shallow: true }); // 복구 후
-    } else {
       router.push(`/notes`, undefined, { shallow: true }); // 휴지통으로 이동 후
-    }
+
   };
 
 
