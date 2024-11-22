@@ -17,11 +17,19 @@ export const getNotes = async (forceReload = false) => { // 기본적으로 fals
 
 // 데이터가 없거나 강제 동기화 플래그가 활성화된 경우 서버에서 가져옴
   if (notes.length === 0 || forceReload) {
+    // 강제 동기화 시 IndexedDB 비우기
+    if (forceReload) {
+      const clearTx = db.transaction("notes", "readwrite");
+      const clearStore = clearTx.objectStore("notes");
+      await clearStore.clear(); // IndexedDB 비우기
+      await clearTx.done;
+    }
     const response = await apiClient.get("/notes", {
       headers: {
         'cache-control': 'no-cache',
       },
     }); // 그냥 리로드 버튼 누르면 캐싱해버려서 추가
+
     const loadedNotes = response.data;
 
     // IndexedDB에 저장
