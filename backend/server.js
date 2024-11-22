@@ -45,7 +45,7 @@ app.use(session({
   saveUninitialized: false,  // 초기화되지 않은 세션을 저장하지 않음
   // 배포 시 쿠키가 HTTPS 연결에서만 전송되도록 설정, 같은 사이트에서만 쿠키가 전송되도록 설정하여 CSRF 방지
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     httpOnly: true,
     sameSite: 'lax'
   },
