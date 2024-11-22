@@ -15,11 +15,6 @@ const unlinkAccount = async (userId, provider) => {
 
     // 마지막 소셜 계정 연동 해제 방지
     const socialAccounts = user.socialAccounts.filter(acc => acc.provider !== provider);
-    if (socialAccounts.length === 0 && !user.password) {
-      const error = new Error("마지막 계정은 해제할 수 없습니다. 로컬 계정을 먼저 추가해 주세요.");
-      error.status = 400;
-      throw error;
-    }
 
     // OAuth 토큰 생성 및 소셜 플랫폼 연동 해제 요청
     const oauthToken = await tokenService.generateOAuthToken(user, provider);

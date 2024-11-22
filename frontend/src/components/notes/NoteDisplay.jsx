@@ -104,10 +104,12 @@ export default function NoteDisplay() {
   };
 
   const handleCategorySelect = (category) => {
-    const setCategory = {category: { _id: category._id, name:category.name }};
-    saveNoteChanges({
-      updatedFieldsList: [{ id: selectedNoteState._id, ...setCategory}],
-    })
+    if (category._id !== selectedNoteState.category._id) {
+      const setCategory = {category: {_id: category._id, name: category.name}};
+      saveNoteChanges({
+        updatedFieldsList: [{id: selectedNoteState._id, ...setCategory}],
+      })
+    }
   };
 
   const CategoryMenuItems = ({ categories }) => {
@@ -115,8 +117,11 @@ export default function NoteDisplay() {
       if (category.children && category.children.length > 0) {
         // 하위 카테고리가 있을 경우
         return (
-            <MenubarSub key={category._id} onClick={() => handleCategorySelect(category._id)}>
-              <MenubarSubTrigger>{category.name}</MenubarSubTrigger>
+            <MenubarSub key={category._id}>
+              <MenubarSubTrigger
+                  className={category._id === selectedNoteState.category._id ? "opacity-50" : "opacity-100"}
+                  onClick={() => handleCategorySelect(category)}
+              >{category.name}</MenubarSubTrigger>
               <MenubarSubContent>
                 <CategoryMenuItems categories={category.children} />
               </MenubarSubContent>
@@ -193,6 +198,27 @@ export default function NoteDisplay() {
               <TooltipContent>Archive</TooltipContent>
             </Tooltip>*/}
 
+            {categoryTree.length ? (
+                <Menubar>
+                  <MenubarMenu>
+                    <MenubarTrigger className="cursor-pointer">{selectedNoteState.category._id ? selectedNoteState.category.name : "카테고리 선택"}</MenubarTrigger>
+                    <MenubarContent>
+                      <CategoryMenuItems categories={categoryTree} />
+                      {selectedNoteState.category._id &&
+                        <MenubarItem className="text-red-500" onClick={() => {handleCategorySelect({_id: null, name: null})}}>
+                          카테고리 초기화
+                        </MenubarItem>
+                      }
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
+            ) : ('')}
+          </div>
+
+          <Separator orientation="vertical" className="mx-3 h-6"/>
+
+          <div className="ml-auto flex items-center gap-2">
+
             {/* Move to Junk Button */}
             <Tooltip>
               <TooltipTrigger asChild>
@@ -215,23 +241,7 @@ export default function NoteDisplay() {
               </TooltipTrigger>
               <TooltipContent>휴지통으로 이동</TooltipContent>
             </Tooltip>
-
             <Separator orientation="vertical" className="mx-1 h-6"/>
-          </div>
-
-          <div className="ml-auto flex items-center gap-2">
-
-            {categoryTree.length ? (
-                <Menubar>
-                  <MenubarMenu>
-                    <MenubarTrigger className="cursor-pointer">{selectedNoteState.category._id ? selectedNoteState.category.name : "카테고리 선택"}</MenubarTrigger>
-                    <MenubarContent>
-                      <CategoryMenuItems categories={categoryTree} />
-                    </MenubarContent>
-                  </MenubarMenu>
-                </Menubar>
-            ) : ('')}
-
             {/* Reply Button */}
             <Tooltip>
               <TooltipTrigger asChild>

@@ -83,6 +83,7 @@ const generateOAuthToken = async (user, provider) => {
     }
 
   } catch (error) {
+    console.log(error)
     throw new Error;
   }
 };

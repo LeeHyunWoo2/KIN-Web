@@ -1,4 +1,7 @@
 const User = require('../../models/user');
+const Note = require('../../models/note');
+const Category = require('../../models/category');
+const Tag = require('../../models/tag');
 const bcrypt = require('bcryptjs');
 const tokenService = require('./tokenService');
 const { revokeSocialAccess } = require('./socialService'); // 연동 해제를 위한 서비스 호출
@@ -46,18 +49,29 @@ const addLocalAccount = async (userId, id, email, password) => {
 // 4. 회원 탈퇴
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
+  console.log(user)
   if (!user) {
     throw new Error;
   }
 
   for (const account of user.socialAccounts) {
     if (account.provider !== 'local') {
+      console.log('아오')
+      console.log(account.provider)
       const accessToken = await tokenService.generateOAuthToken(user, account.provider);
       await revokeSocialAccess(account.provider, accessToken);
     }
   }
 
+    await Tag.deleteMany({ user_id: userId });
+  console.log('태그삭제')
+    await Category.deleteMany({ user_id: userId });
+  console.log('카테고리삭제')
+  await Note.deleteMany({ user_id: userId });
+  console.log('노트삭제')
   await User.findByIdAndDelete(userId);
+  console.log('탈퇴')
+
 };
 
 module.exports = {

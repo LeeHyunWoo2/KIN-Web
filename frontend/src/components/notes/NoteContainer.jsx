@@ -11,7 +11,7 @@ import {
 import {Separator} from "@/components/ui/separator";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {Input} from "@/components/ui/input";
-import {useAtom, useAtomValue} from 'jotai';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
   noteCountAtom,
@@ -33,11 +33,11 @@ import {
 export default function NoteContainer({ defaultLayout }) {
   const router = useRouter();
   const { id } = router.query; // URL에서 id와 view 가져옴
-  const [notes] = useAtom(noteListAtom);
-  const [, initializeNotes] = useAtom(initializeNotesAtom);
-  const [, initializeCategories] = useAtom(initializeCategoriesAtom);
+  const notes = useAtomValue(noteListAtom);
+  const  initializeNotes = useSetAtom(initializeNotesAtom);
+  const  initializeCategories = useSetAtom(initializeCategoriesAtom);
   const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
-  const [, setNoteCount] = useAtom(noteCountAtom);
+  const setNoteCount = useSetAtom(noteCountAtom);
   const [onReload, setOnReload] = useState(false);
   const filteredNotes = useAtomValue(filteredNotesAtom);
   const isTrashed = useAtomValue(isTrashedAtom);
@@ -92,6 +92,8 @@ export default function NoteContainer({ defaultLayout }) {
   useEffect(() => {
     const activeCount = notes.filter(note => !note.is_trashed).length;
     const trashedCount = notes.filter(note => note.is_trashed).length;
+    const categoryCount = notes.filter(note => note.category._id).length;
+    console.log(categoryCount);
     setNoteCount({ active: activeCount, trashed: trashedCount });
   }, [notes]);
 

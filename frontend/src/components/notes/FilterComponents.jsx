@@ -1,11 +1,10 @@
 import React from 'react';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {isTrashedAtom, searchTermAtom} from '@/atoms/filterAtoms';
-import {SidebarMenuButton} from "@/components/ui/sidebar";
+import {SidebarMenuBadge, SidebarMenuButton} from "@/components/ui/sidebar";
 import {Inbox, Trash2, Undo2} from "lucide-react";
 import {noteCountAtom} from "@/atoms/noteStateAtom";
 import {resetFiltersAtom} from "@/lib/notes/filterNotes";
-import { Badge } from '@/components/ui/badge';
 
 // 전체보기
 const ListView = () => {
@@ -14,7 +13,7 @@ const ListView = () => {
 
   return (
       <SidebarMenuButton onClick={resetFilters}>
-        <Inbox/><span>전체 보기 ( {noteCount.active} )</span>
+        <Inbox/><span>전체 보기</span><SidebarMenuBadge className="text-sm"> {noteCount.active} </SidebarMenuBadge>
       </SidebarMenuButton>
   );
 };
@@ -34,7 +33,7 @@ const TrashFilter = () => {
               )
               : (
                   <>
-                    <Trash2/><span>휴지통</span><Badge className="ml-auto"> {noteCount.trashed} </Badge>
+                    <Trash2/><span>휴지통</span><SidebarMenuBadge className="text-sm"> {noteCount.trashed} </SidebarMenuBadge>
                   </>
               )
         }

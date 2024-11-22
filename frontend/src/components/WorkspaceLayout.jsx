@@ -78,7 +78,7 @@ import {logoutUser} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import {noteCountAtom, noteEventAtom} from '@/atoms/noteStateAtom';
+import { noteEventAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 
@@ -279,7 +279,6 @@ function Page({children}) {
     email: '',
     profileIcon: '',
   });
-  const [noteCount] = useAtom(noteCountAtom);
 
   const handleNewNote = () => {
     setNoteEvent({
@@ -319,7 +318,7 @@ function Page({children}) {
                             alt={userInfo.name}
                         />
                         <AvatarFallback
-                            className="rounded-lg">CN</AvatarFallback>
+                            className="rounded-lg">KIN</AvatarFallback>
                       </Avatar>
                       <div
                           className="grid flex-1 text-left text-sm leading-tight">
@@ -348,7 +347,7 @@ function Page({children}) {
                               alt={userInfo.name}
                           />
                           <AvatarFallback className="rounded-lg">
-                            CN
+                            KIN
                           </AvatarFallback>
                         </Avatar>
                         <div
@@ -489,15 +488,15 @@ function Page({children}) {
         </Sidebar>
         <SidebarInset>
           <header
-              className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-4">
-            <div className="flex flex-1 items-center gap-2 px-3">
-              <SidebarTrigger/>
+              className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-2">
+            <div className="flex flex-1 items-center gap-2">
+              <SidebarTrigger className="w-20 h-10"/>
               <Separator orientation="vertical" className="mr-2 h-4"/>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbPage className="line-clamp-1">
-                      Project Management & Task Tracking
+                      탭 추가 예정
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>

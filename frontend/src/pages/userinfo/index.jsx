@@ -21,14 +21,12 @@ import {Button} from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader
 } from "@/components/ui/card";
 import Image from "next/image";
 import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { Badge } from '@/components/ui/badge';
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 
 function UserInfoPage() {
@@ -223,24 +221,21 @@ function UserInfoPage() {
             const socialStatus = getSocialAccountStatus(provider);
 
             return (
-                <Card key={provider} className="w-[350px]">
-                  <CardHeader>
+                <Card key={provider} className="w-[350px] flex flex-col space-y-1.5">
+                  <CardContent className="flex justify-between p-3">
                     <div className="flex">
                       <Image src={providerIconPath(provider)} priority={true}
                              alt={`${provider} logo`} className="mr-3"
                              width={36} height={36}/>
 
-                      <h3 className="font-semibold  flex items-center">
-                        {provider.charAt(0).toUpperCase()
-                            + provider.slice(1)}
+                      <h3 className="font-semibold  flex items-center min-w-10">
+                        {provider === "google" ? "구글" : provider === "kakao" ? "카카오" : "네이버"}
                       </h3>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p>{socialStatus === "미연동" ? "연동된 계정이 없습니다."
-                        : <Badge>연동 완료</Badge>}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
+                    {socialStatus === "미연동" ? <div
+                            className=" inline-flex items-center rounded-full border px-3 text-sm font-semibold border-transparent bg-red-100 text-red-500">미연동</div>
+                        : <div
+                            className=" inline-flex items-center rounded-full border px-3 text-sm font-semibold border-transparent bg-blue-100 text-blue-500">연결됨</div>}
                     {isLinked ? (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -263,16 +258,38 @@ function UserInfoPage() {
                           </AlertDialogContent>
                         </AlertDialog>
                     ) : (
-                        <Button disabled={ isLocalAccount() === false } onClick={() => handleSocialAccountToggle(provider)}>연동하기</Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                                className={isLocalAccount() ? "opacity-100" : "opacity-50"}
+                                onClick={isLocalAccount() ? () => handleSocialAccountToggle(provider) : null}>연동하기</Button>
+                          </TooltipTrigger>
+                          <TooltipContent>추가 연동은 일반계정에서 가능합니다.</TooltipContent>
+                        </Tooltip>
                     )}
-                     <p className="text-sm">{!isLocalAccount() && socialStatus === "미연동" ? "추가 연동은 일반계정에서 가능합니다." : ""}</p>
-                  </CardFooter>
+                  </CardContent>
                 </Card>
             );
           })}
         </div>
         <div className="flex justify-end mt-10">
-          <Button variant="destructive" onClick={deleteUserProfile}>회원탈퇴</Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">회원탈퇴</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>회원 탈퇴를 진행 하시겠습니까?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  탈퇴 시 모든 정보가 삭제되며, 복구가 불가능 합니다.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-blue-500 text-white">Cancel</AlertDialogCancel>
+                <Button variant="secondary" onClick={deleteUserProfile}>탈퇴 진행</Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
   );

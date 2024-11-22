@@ -78,10 +78,6 @@ app.get("/api/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
 });
 
-app.get('/ping', (req, res) => {
-  res.send('핑수신');
-});
-
 // 4. 전역 에러 처리
 app.use((err, req, res, next) => {
   const { statusCode, message } = createErrorResponse(err.status || 500, err.message || "서버에서 오류가 발생했습니다.");
