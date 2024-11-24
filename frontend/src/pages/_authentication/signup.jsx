@@ -166,20 +166,10 @@ export default function AuthenticationPage() {
               </svg>
               KINote
             </div>
-
-            <div className="relative z-20 mt-auto">
-              <blockquote className="space-y-2">
-                <p className="text-lg">
-                  &ldquo;대충 검은 화면에 큰따옴표로 아무 말이나 적으면 명언 같아 보인다.&rdquo;
-                </p>
-                <footer className="text-sm">현우</footer>
-              </blockquote>
-            </div>
           </div>
           <div className="lg:p-8">
 
             {/*회원가입 첫 페이지*/}
-
 
             {page === 0 && (
                 <div
@@ -229,7 +219,7 @@ export default function AuthenticationPage() {
                     </Link>{" "}
                     and{" "}
                     <Link
-                        href=""
+                        href="/privacy-policy"
                         className="underline underline-offset-4 hover:text-primary"
                     >
                       Privacy Policy

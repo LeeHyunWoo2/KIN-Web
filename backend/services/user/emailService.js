@@ -4,7 +4,7 @@ const { generateEmailVerificationToken, verifyEmailVerificationToken } = require
 const sendVerificationEmail = async (email) => {
   // 이메일 인증 토큰 생성
   const token = generateEmailVerificationToken(email);
-  const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
   // 이메일 전송
   const transporter = nodemailer.createTransport({

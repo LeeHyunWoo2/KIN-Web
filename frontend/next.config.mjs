@@ -11,6 +11,10 @@ const nextConfig = {
         source: '/signup',
         destination: '/_authentication/signup',
       },
+      {
+        source: '/privacy-policy',
+        destination: '/_authentication/privacy-policy',
+      },
     ];
   },
   webpack: (config, { isServer }) => {
