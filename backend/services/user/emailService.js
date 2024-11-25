@@ -19,7 +19,8 @@ const sendVerificationEmail = async (email) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: '이메일 인증 요청',
-    text: `Keep Idea Note 에 방문해주셔서 감사합니다.
+    text: `
+    Keep Idea Note 를 찾아주셔서 감사합니다.
     
     본인의 인증 요청이 맞다면 다음 링크를 클릭하여 이메일 인증을 완료하실 수 있습니다.
      
