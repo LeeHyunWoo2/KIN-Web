@@ -73,6 +73,12 @@ app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
 app.use('/email', emailRoutes);
 
+
+app.get('/', (req, res) => {
+  res.send('서버 실행중');
+});
+
+
 // 서버 타임
 app.get("/api/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
