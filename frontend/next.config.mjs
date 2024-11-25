@@ -11,6 +11,14 @@ const nextConfig = {
         source: '/signup',
         destination: '/_authentication/signup',
       },
+      {
+        source: '/verify-email',
+        destination: '/_authentication/verify-email',
+      },
+      {
+        source: '/privacy-policy',
+        destination: '/_authentication/privacy-policy',
+      },
     ];
   },
   webpack: (config, { isServer }) => {

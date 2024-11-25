@@ -97,6 +97,7 @@ const verifyEmailVerificationToken = (token) => {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
+    console.log(error.message);
     return null;
   }
 };
