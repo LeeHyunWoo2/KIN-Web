@@ -92,8 +92,6 @@ export default function NoteContainer({ defaultLayout }) {
   useEffect(() => {
     const activeCount = notes.filter(note => !note.is_trashed).length;
     const trashedCount = notes.filter(note => note.is_trashed).length;
-    const categoryCount = notes.filter(note => note.category._id).length;
-    console.log(categoryCount);
     setNoteCount({ active: activeCount, trashed: trashedCount });
   }, [notes]);
 

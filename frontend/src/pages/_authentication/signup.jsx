@@ -28,18 +28,14 @@ import {
 } from "@/components/ui/alert-dialog"
 import {Input} from "@/components/ui/input";
 import {registerUser} from '@/services/user/authService'
-import {z} from 'zod';
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
 import Recaptcha from "@/components/Recaptcha";
 import apiClient from "@/lib/apiClient";
-import { MailOpen } from "lucide-react"
+import { MailOpen, Check } from "lucide-react"
+import { page1Schema, page2Schema } from "@/lib/validationSchemas";
 
-z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -48,6 +44,7 @@ export default function AuthenticationPage() {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [message, setMessage] = useState("");
+  const [emailVerified, setEmailVerified] = useState(false);
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -79,9 +76,19 @@ export default function AuthenticationPage() {
           email &&
           password &&
           passwordConfirm &&
-          password === passwordConfirm &&
-          termsAgreed
+          password === passwordConfirm
       );
+    }
+  };
+
+  const validatePage = (page, formData) => {
+    const schemas = [page1Schema, page2Schema]; // 페이지별 스키마 배열
+    try {
+      schemas[page].parse(formData); // 해당 페이지 스키마로 검증
+      return true; // 검증 성공
+    } catch (error) {
+      console.error(error.errors); // 검증 실패 시 에러 출력
+      return false;
     }
   };
 
@@ -109,12 +116,31 @@ export default function AuthenticationPage() {
 
   // 모든 필드를 처리하는 handleChange 함수
   const handleChange = (e) => {
-    const {name, value, type, checked} = e.target;
+    const { name, value, type, checked } = e.target;
+    if (name === "email") {
+      setEmail(value); // 이메일 상태 업데이트
+    }
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value, // 체크박스와 일반 필드 처리
+      [name]: type === "checkbox" ? checked : value, // 체크박스와 일반 필드 처리
     });
   };
+
+
+  // 이메일 인증 주기적으로 체크
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const isVerified = localStorage.getItem("emailVerified");
+      if (isVerified === "true") {
+        setEmailVerified(true); // 상태 업데이트
+        localStorage.removeItem("emailVerified"); // 로컬스토리지 정리
+        clearInterval(intervalId); // 인터벌 중지
+      }
+    }, 1000);
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+  }, []);
+
+
 
   const handleSubmit = async () => {
     try {
@@ -212,14 +238,14 @@ export default function AuthenticationPage() {
                   <p className="px-8 text-center text-sm text-muted-foreground">
                     By clicking continue, you agree to our{" "}
                     <Link
-                        href=""
+                        href="#"
                         className="underline underline-offset-4 hover:text-primary"
                     >
                       Terms of Service
                     </Link>{" "}
                     and{" "}
                     <Link
-                        href="/privacy-policy"
+                        href="#"
                         className="underline underline-offset-4 hover:text-primary"
                     >
                       Privacy Policy
@@ -346,23 +372,23 @@ export default function AuthenticationPage() {
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="email">Email</Label>
-                          <input
+                          <Input
                               type="email"
                               id="email"
                               name="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="example@example.com"
+                              readOnly={emailVerified === true}
                               required
-                              className="border p-2 rounded"
                           />
                           <Button
                               variant="outline"
                               onClick={handleSendVerificationEmail}
                               className="w-full"
-                              disabled={!email}
+                              disabled={!email || emailVerified === true}
                           >
-                            <MailOpen /> 이메일 인증하기
+                            {emailVerified === false ? <><MailOpen/> 이메일 인증하기</> :<> <Check/> 인증 완료</>}
                           </Button>
                           {isEmailSent && <p className="text-green-500">{message}</p>}
                           {!isEmailSent && message && <p className="text-red-500">{message}</p>}

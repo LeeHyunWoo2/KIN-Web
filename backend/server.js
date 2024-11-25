@@ -40,7 +40,17 @@ app.use(
     cors({
       origin: [ process.env.FRONTEND_URL, process.env.NEXT_PUBLIC_API_URL ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 허용할 HTTP 메서드
-      allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Cache-Control',
+        'Accept',
+        'Origin',
+        'Referer',
+        'User-Agent',
+        'X-CSRF-Token',
+        'X-Requested-With'
+      ], // 허용할 헤더
       credentials: true, // 쿠키를 포함한 요청 허용
     })
 );
