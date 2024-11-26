@@ -8,6 +8,8 @@ const initializePassport = require('./config/passport');
 const connectDB = require('./config/db');
 const morgan = require('morgan');
 const { createErrorResponse } = require('./middleware/errorHandler');
+const https = require('https');
+const fs = require('fs');
 
 // 라우터 불러오기
 const authRoutes = require('./routes/user/authRoutes');
@@ -24,8 +26,15 @@ const redisClient = require('./config/redis');
 
 const app = express();
 initializePassport(passport);
+
 // 1. 데이터베이스 연결
 connectDB();
+
+// HTTPS 옵션 추가
+const httpsOptions = {
+key: fs.readFileSync(process.env.SSL_KEY_PATH), // SSL 키 경로 (환경변수에 설정)
+cert: fs.readFileSync(process.env.SSL_CERT_PATH), // SSL 인증서 경로 (환경변수에 설정)
+};
 
 // 커스텀 토큰 설정: 요청 쿼리, 본문
 morgan.token('query', (req) => JSON.stringify(req.query)); // 쿼리 파라미터
@@ -67,7 +76,7 @@ app.use(
       resave: false, // 변경이 없을 경우 세션 저장 방지
       saveUninitialized: false, // 초기화되지 않은 세션 저장 방지
       cookie: {
-        secure: process.env.NODE_ENV === 'production', // HTTPS에서만 쿠키 전송
+        secure: true, // HTTPS에서만 쿠키 전송
         httpOnly: true, // XSS 방지
         sameSite: 'lax', // CSRF 방지
         maxAge: 24 * 60 * 60 * 1000, // 세션 쿠키 유효 기간 (1일)
@@ -106,6 +115,15 @@ app.get('/', (req, res) => {
 // 서버 타임
 app.get("/api/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
 });
 
 // 4. 전역 에러 처리
