@@ -430,9 +430,6 @@ function NavActions({
           <Settings/>
         </Button>
        {/* <SettingsDialog/>*/}
-        <Button variant="ghost" size="icon" className="h-7 w-7">
-          <Star/>
-        </Button>
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button

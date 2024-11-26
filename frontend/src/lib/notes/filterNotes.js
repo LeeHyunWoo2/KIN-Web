@@ -6,7 +6,6 @@ import {
   searchTermAtom,
   sortByAtom,
   isLockedAtom,
-  isPinnedAtom,
   isTrashedAtom,
   categoryListAtom, selectedCategoryNameAtom
 } from '@/atoms/filterAtoms';
@@ -75,10 +74,9 @@ export const filteredNotesAtom = atom((get) => {
   const searchTerm = get(searchTermAtom);
   const sortBy = get(sortByAtom);
   const isLocked = get(isLockedAtom); // 잠금 상태
-  const isPinned = get(isPinnedAtom); // 고정 상태
   const isTrashed = get(isTrashedAtom); // 휴지통 상태
 
-  return filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isPinned, isTrashed });
+  return filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isTrashed });
 });
 
 
@@ -90,6 +88,5 @@ export const resetFiltersAtom = atom(null, (get, set) => {
   set(searchTermAtom, '');
   set(sortByAtom, 'date');
   set(isLockedAtom, false);
-  set(isPinnedAtom, false);
   set(isTrashedAtom, false);
 });

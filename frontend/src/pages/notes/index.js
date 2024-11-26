@@ -1,6 +1,6 @@
 import WorkspaceLayout from "@/components/WorkspaceLayout"
 import NoteContainer from "@/components/notes/NoteContainer";
-import {useAtom, useAtomValue} from "jotai";
+import {useAtom} from "jotai";
 import {noteEventHandlerAtom} from "@/lib/notes/noteState";
 import {useEffect} from "react";
 import {noteEventAtom} from "@/atoms/noteStateAtom";
@@ -8,13 +8,13 @@ import FilterMonitor from "@/components/notes/FilterMonitor";
 
 export default function NotePage() {
   const [event] = useAtom(noteEventAtom); // 변경 감지
-  const handleEvent = useAtomValue(noteEventHandlerAtom); // 직접 부름
+  const [, handleEvent] = useAtom(noteEventHandlerAtom); // 직접 부름
 
   useEffect(() => {
     if (event) {
       handleEvent(event);
     }
-  }, [event]);
+  }, [event, handleEvent]);
 
 
   return (

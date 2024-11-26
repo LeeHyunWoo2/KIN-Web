@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import {X, Tag} from 'lucide-react';
 import {
   Dialog,
@@ -10,19 +10,16 @@ import {SidebarGroupLabel, SidebarMenuButton} from "@/components/ui/sidebar";
 import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Input} from "@/components/ui/input";
-import {createTag} from "@/services/notes/tagService";
+import {createTag, deleteTag} from "@/services/notes/tagService";
 import {useAtomValue} from "jotai";
 import {initializeTagsAtom} from "@/lib/notes/noteState";
 import {tagListAtom} from "@/atoms/filterAtoms";
 import {useSetAtom} from "jotai/index";
 
 export default function TagManagerModal() {
-  const [open, setOpen] = React.useState(true)
   const [newTagName, setNewTagName] = useState("");
   const initializeTags = useSetAtom(initializeTagsAtom);
   const tagList = useAtomValue(tagListAtom);
-
-
 
   const handleAddTag = async () => {
     try {
@@ -42,8 +39,17 @@ export default function TagManagerModal() {
     }
   }
 
+  const handleDeleteTag = async (tagId) => {
+    try {
+      await deleteTag(tagId);
+      await initializeTags();
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   return (
-      <Dialog onOpenChange={setOpen}>
+      <Dialog>
         <DialogTrigger asChild>
           <SidebarMenuButton variant="ghost">
             <Tag/> 태그 관리
@@ -51,8 +57,8 @@ export default function TagManagerModal() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="mb-4">
-            <DialogTitle className="flex justify-between items-center">태그
-              관리 ({tagList.length}) <X/></DialogTitle>
+            <DialogTitle className="flex justify-between items-center">내 태그
+               ({tagList.length}) <X/></DialogTitle>
             <DialogDescription>
               모든 노트에서 사용할 태그를 관리합니다.
             </DialogDescription>
@@ -62,8 +68,9 @@ export default function TagManagerModal() {
               {tagList.map((tag) => (
                   <div
                       key={tag._id}
-                      className="flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-700 border border-gray-300 rounded-md text-sm whitespace-nowrap overflow-hidden text-ellipsis"
+                      className="flex items-center cursor-pointer justify-center mx-0.5 px-3 py-1 bg-gray-100 text-gray-700 border border-gray-300 rounded-md text-sm whitespace-nowrap overflow-hidden text-ellipsis"
                       style={{minWidth: "80px", maxWidth: "calc(100% - 16px)"}}
+                      onClick={() => {handleDeleteTag(tag._id)}}
                   >
                     {tag.name}
                   </div>

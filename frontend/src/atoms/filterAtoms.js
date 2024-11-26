@@ -10,5 +10,4 @@ export const selectedTagsAtom = atom([]); // 선택된 태그들
 export const searchTermAtom = atom(''); // 검색어
 export const sortByAtom = atom('date'); // 정렬 기준 (기본값: 날짜)
 export const isLockedAtom = atom(false); // 잠금 상태 필터
-export const isPinnedAtom = atom(false); // 고정 상태 필터
 export const isTrashedAtom = atom(false); // 휴지통 상태

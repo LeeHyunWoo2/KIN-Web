@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import {
   isTrashedAtom,
-  isPinnedAtom,
   isLockedAtom,
   searchTermAtom,
   sortByAtom,
@@ -14,7 +13,6 @@ import {
 function FilterMonitor() {
   // 필터 상태 구독
   const isTrashed = useAtomValue(isTrashedAtom);
-  const isPinned = useAtomValue(isPinnedAtom);
   const isLocked = useAtomValue(isLockedAtom);
   const searchTerm = useAtomValue(searchTermAtom);
   const sortBy = useAtomValue(sortByAtom);
@@ -26,7 +24,6 @@ function FilterMonitor() {
   useEffect(() => {
     console.log('필터 상태 : ', {
       isTrashed,
-      isPinned,
       isLocked,
       searchTerm,
       sortBy,
@@ -34,7 +31,7 @@ function FilterMonitor() {
       categoryName,
       tags,
     });
-  }, [isTrashed, isPinned, isLocked, searchTerm, sortBy, category, categoryName, tags]);
+  }, [isTrashed, isLocked, searchTerm, sortBy, category, categoryName, tags]);
 
   return null; // 화면에 표시할 필요 없음
 }
