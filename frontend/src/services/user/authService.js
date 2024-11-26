@@ -21,6 +21,18 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   try {
     const {data} = await apiClient.post('/auth/login', credentials);
+/*    const ttl = Date.now() + data.ttl * 1000; // 남는시간 비교를 위해 ttl을 현재시간에서 더해서 저장 (만료예정시각)
+    localStorage.setItem('tokenTTL', ttl);*/
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
+
+// 공개 프로필 데이터 요청 API
+export const getPublicProfile = async () => {
+  try {
+    const { data } = await apiClient.get('/user/public-profile');
     localStorage.setItem('userInfo', JSON.stringify({
       name: data.name,
       email: data.email,
@@ -28,7 +40,8 @@ export const loginUser = async (credentials) => {
     }));
     return data;
   } catch (error) {
-    return null;
+    console.error('공개 프로필 정보 요청 실패:', error.message);
+    throw error;
   }
 };
 
@@ -72,6 +85,6 @@ export const logoutUser = async () => {
     await apiClient.post('/auth/logout', {});
   } catch (error) {
   }
+/*  localStorage.removeItem('tokenTTL');*/
   localStorage.removeItem('userInfo');
-  window.location.href = '/login';
 };

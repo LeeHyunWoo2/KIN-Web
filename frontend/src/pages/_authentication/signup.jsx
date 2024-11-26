@@ -45,6 +45,7 @@ export default function AuthenticationPage() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [message, setMessage] = useState("");
   const [emailVerified, setEmailVerified] = useState(false);
+  const [count, setCount] = useState();
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -60,7 +61,6 @@ export default function AuthenticationPage() {
     password: '',
     passwordConfirm: '',
     termsAgreed: false,
-    phone: '',
     marketingConsent: false,
   });
 
@@ -81,17 +81,6 @@ export default function AuthenticationPage() {
     }
   };
 
-  const validatePage = (page, formData) => {
-    const schemas = [page1Schema, page2Schema]; // 페이지별 스키마 배열
-    try {
-      schemas[page].parse(formData); // 해당 페이지 스키마로 검증
-      return true; // 검증 성공
-    } catch (error) {
-      console.error(error.errors); // 검증 실패 시 에러 출력
-      return false;
-    }
-  };
-
   const [recaptchaToken, setRecaptchaToken] = useState("");
   const handleCaptchaChange = (token) => {
     setRecaptchaToken(token);
@@ -100,7 +89,9 @@ export default function AuthenticationPage() {
   const handleSendVerificationEmail = async () => {
     try {
       const response = await apiClient.post("/email/send-verification-email", {email});
+      console.log(email)
       setIsEmailSent(true);
+      setCount(300);
       setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");
     } catch (error) {
       setMessage(error.response?.data?.message || "이메일 전송에 실패했습니다.");
@@ -126,6 +117,24 @@ export default function AuthenticationPage() {
     });
   };
 
+  const formatTime = time => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCount(count => count - 1);
+    }, 1000);
+    if (count === 0) {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [count]);
+
 
   // 이메일 인증 주기적으로 체크
   useEffect(() => {
@@ -149,6 +158,7 @@ export default function AuthenticationPage() {
       });
       if (response.status === 200) {
         // 리캡차 성공 시 회원가입 요청
+        formData.email = email;
         await registerUser(formData);
         router.push('/login');
       } else {
@@ -313,7 +323,25 @@ export default function AuthenticationPage() {
                             </Label>
                           </div>
                         </div>
-                        <Recaptcha onVerify={handleCaptchaChange} />
+                        <div
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                          <Checkbox
+                              name="marketingConsent"
+                              checked={formData.marketingConsent}
+                              onCheckedChange={(value) =>
+                                  setFormData(
+                                      {...formData, marketingConsent: value})
+                              }
+                          />
+                          <div className="space-y-1 leading-none">
+                            <Label>동의 (선택)</Label><br/>
+                            <Label
+                                className="text-[0.8rem] text-muted-foreground">
+                              선택 체크 내용
+                            </Label>
+                          </div>
+                        </div>
+                        <Recaptcha onVerify={handleCaptchaChange}/>
                         <Button
                             type="button"
                             className="w-full"
@@ -387,11 +415,17 @@ export default function AuthenticationPage() {
                               onClick={handleSendVerificationEmail}
                               className="w-full"
                               disabled={!email || emailVerified === true}
+                              style={{
+                                color: emailVerified ? '#00d326' : 'inherit',
+                                opacity: emailVerified ? 1 : undefined,
+                                cursor: emailVerified ? 'default' : 'pointer',
+                          }}
                           >
                             {emailVerified === false ? <><MailOpen/> 이메일 인증하기</> :<> <Check/> 인증 완료</>}
                           </Button>
-                          {isEmailSent && <p className="text-green-500">{message}</p>}
+                          {isEmailSent && !emailVerified &&<p className="text-green-500">{message}</p>}
                           {!isEmailSent && message && <p className="text-red-500">{message}</p>}
+                          {isEmailSent && !emailVerified && <span>{formatTime(count)}</span>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="password">비밀번호</Label>
@@ -418,68 +452,6 @@ export default function AuthenticationPage() {
                           />
                         </div>
 
-                        <Button
-                            type="button"
-                            className="w-full"
-                            disabled={isButtonDisabled}
-                            onClick={handleNext}
-                        >
-                          다음 단계
-                        </Button>
-                        <Button variant="outline" className="w-full"
-                                onClick={handlePrev}>
-                          이전으로
-                        </Button>
-                      </div>
-                      <div className="mt-4 text-sm text-center">
-                        Already have an account?{" "}
-                        <Link href="/login" className="underline">
-                          Login
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
-              )}
-
-              {page === 3 && (
-                  <Card className="max-w-sm mx-auto">
-                    <CardHeader>
-                      <CardTitle className="text-xl">Sign Up</CardTitle>
-                      <CardDescription>
-                        Enter your information to create an account
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid gap-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="phone">전화번호 (선택)</Label>
-                          <Input
-                              type="phone"
-                              name="phone"
-                              value={formData.phone}
-                              onChange={handleChange}
-                              placeholder="010-1234-5678"
-                              required
-                          />
-                        </div>
-                        <div
-                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
-                          <Checkbox
-                              name="marketingConsent"
-                              checked={formData.marketingConsent}
-                              onCheckedChange={(value) =>
-                                  setFormData(
-                                      {...formData, marketingConsent: value})
-                              }
-                          />
-                          <div className="space-y-1 leading-none">
-                            <Label>마케팅 동의 (선택)</Label><br/>
-                            <Label
-                                className="text-[0.8rem] text-muted-foreground">
-                              마케팅같은거안하는데그냥선택체크하나만들고싶었음
-                            </Label>
-                          </div>
-                        </div>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button className="w-full">가입하기</Button>

@@ -8,8 +8,9 @@ import { createNote, getNotes, updateNote, deleteNote } from '@/services/notes/n
 import debounce from "lodash/debounce";
 import {SynchronizeWithServer} from "@/services/user/syncService";
 import {router} from "next/client";
-import {categoryListAtom} from "@/atoms/filterAtoms";
+import {categoryListAtom, tagListAtom} from "@/atoms/filterAtoms";
 import {getCategories} from "@/services/notes/categoryService";
+import {getTags} from "@/services/notes/tagService";
 
 
 const debouncedSynchronize = debounce(async () => {
@@ -28,6 +29,12 @@ export const initializeCategoriesAtom = atom(null, async (get, set) => {
   const categories = await getCategories();
   set(categoryListAtom, categories); // 배열로 상태 저장
 });
+
+// 태그 초기화
+export const initializeTagsAtom = atom(null, async (get, set) => {
+  const tags = await getTags();
+  set(tagListAtom, tags); // 배열
+})
 
 // 이벤트 핸들러
 export const noteEventHandlerAtom = atom((get) => get(noteEventAtom),

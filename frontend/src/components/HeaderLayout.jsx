@@ -2,11 +2,11 @@ import * as React from "react";
 import {Button} from "@/components/ui/button"
 import {Triangle} from "lucide-react";
 import Link from "next/link";
-import {useAtom} from "jotai/index";
 import {authAtom} from "@/atoms/authAtom";
+import {useAtomValue} from "jotai";
 
 export default function HeaderLayout({children}) {
-  const [auth, setAuth] = useAtom(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
+  const auth = useAtomValue(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
 
   return (
       <>

@@ -20,10 +20,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false, // 소셜 로그인 사용자는 비밀번호가 없을 수 있음
   },
-  phone: {
+/*  phone: {
     type: String,
     required: false, // 선택사항
-  },
+  },*/
   termsAgreed: {
     type: Boolean,
     required: false, // 이용 약관 동의는 필수
@@ -59,10 +59,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg'
   },
-/*  refreshToken: { // 발급된 Refresh Token을 저장
-    type: String,  // 로그인 시 발급되므로 초기에는 없음
-    required: false,
-  },*/
   otpEnabled: {
     type: Boolean,
     default: false,

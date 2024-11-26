@@ -3,6 +3,8 @@ const passport = require('passport');
 const { unlinkSocialAccount } = require('../../controllers/user/socialController');
 const tokenService = require('../../services/user/tokenService');
 const authenticateUser = require('../../middleware/user/authenticateUser');
+const setCookie = require("../../utils/setCookie");
+const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const router = express.Router();
 
 
@@ -36,14 +38,13 @@ router.get('/:provider/callback', (req, res, next) => {
 
     try {
       // 토큰 발급
-      const tokens = tokenService.generateTokens(user);
+      const tokens = await tokenService.generateTokens(user);
       // 토큰을 HTTP-Only 쿠키로 설정
-      res.cookie('accessToken', tokens.accessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 }); // 1시간
-      res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7일
+      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
+      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
 
-      // 로그인 성공 후 리다이렉트, 유저 프로필 정보는 간단하게 쿼리스트링으로 전달
-      const redirectUrl = `${process.env.FRONTEND_URL}/social-login-success?name=${user.name}&email=${user.email}&profileIcon=${user.profileIcon}`;
-      return res.redirect(redirectUrl);
+      // 로그인 성공 후 리다이렉트
+      return res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
     } catch (error) {
       res.redirect(`${process.env.FRONTEND_URL}/login`);
     }

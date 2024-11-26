@@ -20,7 +20,7 @@ import {
 } from "@/atoms/noteStateAtom";
 import {
   initializeCategoriesAtom,
-  initializeNotesAtom
+  initializeNotesAtom, initializeTagsAtom
 } from "@/lib/notes/noteState";
 import {Button} from "@/components/ui/button";
 import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
@@ -36,6 +36,7 @@ export default function NoteContainer({ defaultLayout }) {
   const notes = useAtomValue(noteListAtom);
   const  initializeNotes = useSetAtom(initializeNotesAtom);
   const  initializeCategories = useSetAtom(initializeCategoriesAtom);
+  const  initializeTags = useSetAtom(initializeTagsAtom);
   const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
   const setNoteCount = useSetAtom(noteCountAtom);
   const [onReload, setOnReload] = useState(false);
@@ -63,6 +64,7 @@ export default function NoteContainer({ defaultLayout }) {
     await checkAndSyncOnFirstLoad(true); // 동기화 로직 호출
     await initializeNotes(); // 노트 데이터 초기화
     await initializeCategories(); // 카테고리 데이터 초기화
+    await initializeTags();
     setTimeout(() => {
       setOnReload(false);
     }, 1500);
@@ -87,7 +89,8 @@ export default function NoteContainer({ defaultLayout }) {
   useEffect(() => {
     initializeNotes(); // 노트 데이터 초기화
     initializeCategories(); // 카테고리 데이터 초기화
-  }, [initializeNotes, initializeCategories]);
+    initializeTags();
+  }, [initializeNotes, initializeCategories, initializeTags]);
 
   useEffect(() => {
     const activeCount = notes.filter(note => !note.is_trashed).length;

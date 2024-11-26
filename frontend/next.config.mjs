@@ -12,6 +12,10 @@ const nextConfig = {
         destination: '/_authentication/signup',
       },
       {
+        source: '/loginSuccess',
+        destination: '/_authentication/loginSuccess',
+      },
+      {
         source: '/verify-email',
         destination: '/_authentication/verify-email',
       },
