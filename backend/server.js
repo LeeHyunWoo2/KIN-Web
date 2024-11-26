@@ -19,6 +19,8 @@ const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
 const emailRoutes = require('./routes/user/emailRoutes');
 const session = require("express-session");
+const RedisStore = require('connect-redis').default; // redis를 express-session에 연동
+const redisClient = require('./config/redis');
 
 const app = express();
 initializePassport(passport);
@@ -57,18 +59,21 @@ app.use(
 app.options('*', cors()); // CORS 사전요청 허용
 
 
-// express-session 설정
-app.use(session({
-  secret: process.env.SESSION_SECRET,  // 세션 암호화에 사용할 비밀키
-  resave: false,  // 세션을 강제로 다시 저장하지 않음
-  saveUninitialized: false,  // 초기화되지 않은 세션을 저장하지 않음
-  // 배포 시 쿠키가 HTTPS 연결에서만 전송되도록 설정, 같은 사이트에서만 쿠키가 전송되도록 설정하여 CSRF 방지
-  cookie: {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax'
-  },
-}));
+// express-session 설정 + redis
+app.use(
+    session({
+      store: new RedisStore({ client: redisClient }),
+      secret: process.env.SESSION_SECRET, // 세션 암호화 키
+      resave: false, // 변경이 없을 경우 세션 저장 방지
+      saveUninitialized: false, // 초기화되지 않은 세션 저장 방지
+      cookie: {
+        secure: process.env.NODE_ENV === 'production', // HTTPS에서만 쿠키 전송
+        httpOnly: true, // XSS 방지
+        sameSite: 'lax', // CSRF 방지
+        maxAge: 24 * 60 * 60 * 1000, // 세션 쿠키 유효 기간 (1일)
+      },
+    })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());

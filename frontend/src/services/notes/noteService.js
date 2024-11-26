@@ -67,7 +67,7 @@ export const updateNote = async (updateDataList) => {
   const tx = db.transaction("notes", "readwrite");
   const store = tx.objectStore("notes");
 
-  for (const updatedNote of updatedNotes) {
+  for await (const updatedNote of updatedNotes) {
     store.put(updatedNote); // 배열로 처리
   }
   await tx.done;

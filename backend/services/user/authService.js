@@ -50,7 +50,7 @@ const loginUser = async (id, password) => {
   }
 
   // 로그인 성공 시 토큰 발급
-  const tokens = tokenService.generateTokens(user);
+  const tokens = await tokenService.generateTokens(user);
   return { user, tokens };
 };
 

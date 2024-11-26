@@ -4,31 +4,26 @@ import Link from "next/link"
 import {
   ArrowDown,
   ArrowUp,
-  AudioWaveform,
   BadgeCheck,
   Bell,
   BookOpen,
   Bot,
   ChevronRight,
-  ChevronsUpDown,
   ClipboardList,
-  Command,
   Copy,
   CornerUpLeft,
   CornerUpRight,
-  CreditCard,
   FileText,
   Frame,
   GalleryVerticalEnd,
-  Home,
-  Inbox,
+  Tag,
   LineChart,
   Link as LinkIcon,
   LogOut,
   Map,
   Menu,
   PieChart,
-  Plus,
+  Settings,
   Settings2,
   SquarePen,
   SquareTerminal,
@@ -40,19 +35,12 @@ import {
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {Separator} from "@/components/ui/separator"
@@ -73,33 +61,16 @@ import {
 } from "@/components/ui/sidebar"
 import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
-import SettingsDialog from "@/components/ListMode";
 import {logoutUser} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom} from "jotai";
-import { noteEventAtom} from '@/atoms/noteStateAtom';
+import {noteEventAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
+import TagManagerModal from "@/components/notes/TagManagement";
 
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -249,10 +220,6 @@ const data = {
         label: "Show delete pages",
         icon: Trash,
       },
-      {
-        label: "Notifications",
-        icon: Bell,
-      },
     ],
     [
       {
@@ -269,11 +236,11 @@ const data = {
 
 const handleLogout = () => {
   logoutUser();
+  return window.location.href ='/login';
 };
 
 function Page({children}) {
   const [, setNoteEvent] = useAtom(noteEventAtom);
-  const [activeTeam, setActiveTeam] = React.useState(data.teams[0])
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -292,7 +259,7 @@ function Page({children}) {
     if (storedUserInfo) {
       setUserInfo(storedUserInfo);
     } else {
-      setUserInfo({name: '', email: '', profileIcon: ''}); // 로그아웃 후 초기화
+      setUserInfo({name: '', email: '', profileIcon: ''});
     }
   }, []);
 
@@ -372,15 +339,11 @@ function Page({children}) {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem disabled>
                         <BadgeCheck/>
                         Account
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <CreditCard/>
-                        Billing
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem disabled>
                         <Bell/>
                         Notifications
                       </DropdownMenuItem>
@@ -403,9 +366,7 @@ function Page({children}) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton disabled>
-                  <Home/> 홈
-                </SidebarMenuButton>
+                  <TagManagerModal/>
               </SidebarMenuItem>
               <SidebarMenuItem onClick={moveToHome}>
                 <ListView/>
@@ -415,72 +376,9 @@ function Page({children}) {
           <Separator/>
           <CategorySidebar/>
           <SidebarFooter>
-            <SidebarMenu className="cursor-pointer">
+            <SidebarMenu className="cursor-pointer mb-1">
               <SidebarMenuItem>
                 <TrashFilter/>
-              </SidebarMenuItem>
-            </SidebarMenu>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton
-                        size="lg"
-                        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                    >
-                      <div
-                          className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground min-w-fit">
-                        <activeTeam.logo className="size-4"/>
-                      </div>
-                      <div
-                          className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {activeTeam.name}
-                      </span>
-                        <span className="truncate text-xs">
-                        {activeTeam.plan}
-                      </span>
-                      </div>
-                      <ChevronsUpDown className="ml-auto"/>
-                    </SidebarMenuButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                      className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                      align="start"
-                      side="right"
-                      sideOffset={4}
-                  >
-                    <DropdownMenuLabel
-                        className="text-xs text-muted-foreground">
-                      Teams
-                    </DropdownMenuLabel>
-                    {data.teams.map((team, index) => (
-                        <DropdownMenuItem
-                            key={team.name}
-                            onClick={() => setActiveTeam(team)}
-                            className="gap-2 p-2"
-                        >
-                          <div
-                              className="flex size-6 items-center justify-center rounded-sm border">
-                            <team.logo className="size-4 shrink-0"/>
-                          </div>
-                          {team.name}
-                          <DropdownMenuShortcut>⌘{index
-                              + 1}</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem className="gap-2 p-2">
-                      <div
-                          className="flex size-6 items-center justify-center rounded-md border bg-background">
-                        <Plus className="size-4"/>
-                      </div>
-                      <div className="font-medium text-muted-foreground">
-                        Add team
-                      </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
@@ -492,7 +390,7 @@ function Page({children}) {
             <div className="flex flex-1 items-center gap-2">
               <SidebarTrigger className="w-20 h-10"/>
               <Separator orientation="vertical" className="mr-2 h-4"/>
-              <Breadcrumb>
+{/*              <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbPage className="line-clamp-1">
@@ -500,7 +398,7 @@ function Page({children}) {
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
-              </Breadcrumb>
+              </Breadcrumb>*/}
             </div>
             <div className="ml-auto px-3">
               <NavActions actions={data.actions}/>
@@ -516,27 +414,22 @@ function NavActions({
   actions,
 }) {
   const [isOpen, setIsOpen] = React.useState(false)
-
   React.useEffect(() => {
     setIsOpen(false)
   }, [])
 
   return (
       <div className="flex items-center gap-2 text-sm">
-        <Link href="/list">
           <Button variant="ghost">
             <ClipboardList/>
           </Button>
-        </Link>
-        <Link href="/settings">
           <Button variant="ghost">
             <UserRoundCog/>
           </Button>
-        </Link>
-        <SettingsDialog/>
-        <Button variant="ghost" size="icon" className="h-7 w-7">
-          <Star/>
+        <Button variant="ghost">
+          <Settings/>
         </Button>
+       {/* <SettingsDialog/>*/}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button

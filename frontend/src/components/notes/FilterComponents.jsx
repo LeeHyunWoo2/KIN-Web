@@ -5,6 +5,7 @@ import {SidebarMenuBadge, SidebarMenuButton} from "@/components/ui/sidebar";
 import {Inbox, Trash2, Undo2} from "lucide-react";
 import {noteCountAtom} from "@/atoms/noteStateAtom";
 import {resetFiltersAtom} from "@/lib/notes/filterNotes";
+import {Input} from "@/components/ui/input";
 
 // 전체보기
 const ListView = () => {
@@ -46,8 +47,9 @@ const SearchFilter = () => {
   const [searchTerm, setSearchTerm] = useAtom(searchTermAtom);
 
   return (
-      <input
+      <Input
           type="text"
+          className="pl-8"
           value={searchTerm}
           placeholder="검색어 입력"
           onChange={(e) => setSearchTerm(e.target.value)}

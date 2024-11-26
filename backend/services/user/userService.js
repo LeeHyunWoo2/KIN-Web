@@ -5,8 +5,46 @@ const Tag = require('../../models/tag');
 const bcrypt = require('bcryptjs');
 const tokenService = require('./tokenService');
 const { revokeSocialAccess } = require('./socialService'); // 연동 해제를 위한 서비스 호출
+const redisClient = require('../../config/redis');
 
-// 1. 사용자 정보 조회
+
+// 1. 사용자 공개 데이터 조회
+const getUserPublicProfile = async (userId) => {
+  try {
+    // Redis에서 프로필 정보 조회
+    const cachedProfile = await redisClient.get(`publicProfile:${userId}`);
+    if (cachedProfile) {
+      return JSON.parse(cachedProfile);
+    }
+
+    // Redis에 없을 경우 DB에서 조회
+    const user = await User.findById(userId).select('name email profileIcon');
+    if (!user) {
+      throw new Error('사용자를 찾을 수 없습니다.');
+    }
+
+    const publicProfile = {
+      name: user.name,
+      email: user.email,
+      profileIcon: user.profileIcon,
+    };
+
+    // Redis에 프로필 정보 저장 (TTL: 1시간)
+    await redisClient.set(
+        `publicProfile:${userId}`,
+        JSON.stringify(publicProfile),
+        'EX',
+        3600 // 1시간
+    );
+
+    return publicProfile;
+  } catch (error) {
+    console.error('프로필 정보 처리 중 오류:', error.message);
+    throw error;
+  }
+};
+
+// 2. 사용자 정보 조회
 const getUserById = async (userId) => {
   const user = await User.findById(userId).select('-password');
   if (!user) {
@@ -15,7 +53,7 @@ const getUserById = async (userId) => {
   return user;
 };
 
-// 2. 사용자 정보 수정
+// 3. 사용자 정보 수정
 const updateUser = async (userId, updateData) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -27,7 +65,7 @@ const updateUser = async (userId, updateData) => {
   return user;
 };
 
-// 3. 로컬 계정 추가 (소셜 Only 계정용)
+// 4. 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccount = async (userId, id, email, password) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -46,7 +84,7 @@ const addLocalAccount = async (userId, id, email, password) => {
   await user.save();
 };
 
-// 4. 회원 탈퇴
+// 5. 회원 탈퇴
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
   console.log(user)
@@ -75,6 +113,7 @@ const deleteUserById = async (userId) => {
 };
 
 module.exports = {
+  getUserPublicProfile,
   getUserById,
   updateUser,
   addLocalAccount,

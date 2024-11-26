@@ -30,16 +30,14 @@ export const setupInterceptors = () => {
 
         if (!originalRequest._interceptorProcessed) {
           originalRequest._interceptorProcessed = true;
-
-          if (error.response && error.response.status === 401
+          if (error.response && error.response.status === 419
               && !originalRequest._retry) {
+            originalRequest._retry = true;
+            return
+          } else if (error.response.status === 401) {
             originalRequest._retry = true; // 반복 요청 방지
-            try {
-              await refreshToken(); // authService의 토큰 갱신 로직 호출
-              return apiClient(originalRequest); // 갱신된 토큰으로 원래 요청 재실행
-            } catch (err) {
-              toast.error("세션이 만료되었습니다. 다시 로그인해주세요.");
-            }
+            await refreshToken(); // authService의 토큰 갱신 로직 호출
+            return await apiClient(originalRequest); // 갱신된 토큰으로 원래 요청 재실행
           } else {
             const errorMessage = error.response?.data?.message || "오류가 발생했습니다.";
             toast.error(errorMessage);

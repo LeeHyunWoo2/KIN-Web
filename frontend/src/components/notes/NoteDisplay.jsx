@@ -16,7 +16,7 @@ import {
   Forward,
   MoreVertical,
   Reply,
-  ReplyAll,
+  ReplyAll, Star, StarOff,
   Trash2
 } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
@@ -137,17 +137,20 @@ export default function NoteDisplay() {
   const moveToTrash = () => {
     const isCurrentlyTrashed = selectedNoteState.is_trashed;
     const updatedFields = { is_trashed: !isCurrentlyTrashed }; // 상태 반전
-
     saveNoteChanges({
       updatedFieldsList: [{ id: selectedNoteState._id, ...updatedFields }],
     });
-
     setSelectedNoteState(defaultNoteStateAtom);
-
       router.push(`/notes`, undefined, { shallow: true }); // 휴지통으로 이동 후
-
   };
 
+  const pinTheNote = () => {
+    const isCurrentlyPinned = selectedNoteState.is_pinned;
+    const updatedFields = { is_pinned: !isCurrentlyPinned }; // 상태 반전
+    saveNoteChanges({
+      updatedFieldsList: [{ id: selectedNoteState._id, ...updatedFields }],
+    });
+  };
 
   const handlePermanentDelete = () => {
     if (selectedNoteState.is_trashed) {
@@ -186,17 +189,6 @@ export default function NoteDisplay() {
       <div className="flex flex-col h-full">
         <div className="flex items-center p-1">
           <div className="flex items-center gap-2">
-            {/* Archive Button */}
-{/*            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon"
-                        disabled={!selectedNoteState}>
-                  <Archive className="h-4 w-4"/>
-                  <span className="sr-only">Archive</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Archive</TooltipContent>
-            </Tooltip>*/}
 
             {categoryTree.length ? (
                 <Menubar>
@@ -216,6 +208,20 @@ export default function NoteDisplay() {
           </div>
 
           <Separator orientation="vertical" className="mx-3 h-6"/>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={pinTheNote}>
+                {selectedNoteState.is_pinned ? (
+                    <Star className="h-4 w-4"/>
+                ):(
+                    <StarOff />
+                )}
+                <span className="sr-only">즐겨찾기</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>즐겨찾기</TooltipContent>
+          </Tooltip>
 
           <div className="ml-auto flex items-center gap-2">
 

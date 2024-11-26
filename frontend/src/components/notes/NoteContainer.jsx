@@ -20,15 +20,16 @@ import {
 } from "@/atoms/noteStateAtom";
 import {
   initializeCategoriesAtom,
-  initializeNotesAtom
+  initializeNotesAtom, initializeTagsAtom
 } from "@/lib/notes/noteState";
 import {Button} from "@/components/ui/button";
 import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
 import {filteredNotesAtom} from "@/lib/notes/filterNotes";
 import {
   isTrashedAtom,
-  selectedCategoryNameAtom
+  selectedCategoryNameAtom, sortByAtom
 } from "@/atoms/filterAtoms";
+import {SearchFilter} from "@/components/notes/FilterComponents";
 
 export default function NoteContainer({ defaultLayout }) {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function NoteContainer({ defaultLayout }) {
   const notes = useAtomValue(noteListAtom);
   const  initializeNotes = useSetAtom(initializeNotesAtom);
   const  initializeCategories = useSetAtom(initializeCategoriesAtom);
+  const  initializeTags = useSetAtom(initializeTagsAtom);
   const [selectedNoteState, setSelectedNoteState] = useAtom(selectedNoteStateAtom);
   const setNoteCount = useSetAtom(noteCountAtom);
   const [onReload, setOnReload] = useState(false);
@@ -56,13 +58,16 @@ export default function NoteContainer({ defaultLayout }) {
     if (savedLayout) {
       setLayout(JSON.parse(savedLayout));
     }
-  }, []);
+    handleOnReload(); // 동기화도 그김에 한번 해줌
+  }, []); // 빈배열 -> 컴포넌트 마운트 시 실행
 
   const handleOnReload = async () => {
     setOnReload(true);
+
     await checkAndSyncOnFirstLoad(true); // 동기화 로직 호출
     await initializeNotes(); // 노트 데이터 초기화
     await initializeCategories(); // 카테고리 데이터 초기화
+    await initializeTags();
     setTimeout(() => {
       setOnReload(false);
     }, 1500);
@@ -87,7 +92,8 @@ export default function NoteContainer({ defaultLayout }) {
   useEffect(() => {
     initializeNotes(); // 노트 데이터 초기화
     initializeCategories(); // 카테고리 데이터 초기화
-  }, [initializeNotes, initializeCategories]);
+    initializeTags();
+  }, [initializeNotes]);
 
   useEffect(() => {
     const activeCount = notes.filter(note => !note.is_trashed).length;
@@ -114,9 +120,6 @@ export default function NoteContainer({ defaultLayout }) {
     console.log(selectedNoteState);
   }, [selectedNoteState]);
 
-
-
-
   return (
       <TooltipProvider delayDuration={0}>
         <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
@@ -138,7 +141,7 @@ export default function NoteContainer({ defaultLayout }) {
               <form>
                 <div className="relative">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search" className="pl-8" />
+                  <SearchFilter/>
                 </div>
               </form>
             </div>

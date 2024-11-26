@@ -35,15 +35,12 @@ function UserInfoPage() {
     profileIcon: '',
     email: '',
     name: '',
-    phone: '',
     createdAt: '',
     socialAccounts: [],
   });
 
   const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [newName, setNewName] = useState('');
-  const [newPhone, setNewPhone] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   // 사용자 정보 불러오기 함수
@@ -96,6 +93,7 @@ function UserInfoPage() {
     }
   };
 
+/*
   // 전화번호 업데이트 함수
   const handlePhoneUpdate = async () => {
     try {
@@ -105,6 +103,7 @@ function UserInfoPage() {
     } catch (error) {
     }
   };
+*/
 
   // 소셜 계정 연동 or 해제 함수
   const handleSocialAccountToggle = async (provider) => {
@@ -181,7 +180,7 @@ function UserInfoPage() {
           )}
         </div>
 
-        <div className="mb-4">
+{/*        <div className="mb-4">
           <label className="block text-gray-700">전화번호:</label>
           {isEditingPhone ? (
               <div>
@@ -206,7 +205,7 @@ function UserInfoPage() {
                 </button>
               </div>
           )}
-        </div>
+        </div>*/}
 
         <div className="mb-4">
           <label className="block text-gray-700">계정 생성일:</label>
