@@ -135,5 +135,5 @@ app.use((err, req, res, next) => {
 // 5. HTTPS 서버 실행
 const PORT = process.env.PORT;
 https.createServer(httpsOptions, app).listen(PORT, () => {
-console.log(HTTPS 서버가 포트 `${PORT}`에서 실행 중입니다.);
+console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
 });
