@@ -217,7 +217,6 @@ export default function PrivacyPolicy() {
               </section>
             </CardContent>
           </TabsContent>
-
       </Card>
       </Tabs>
   );
