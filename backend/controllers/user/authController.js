@@ -49,7 +49,7 @@ const logoutController = async (req, res) => {
 
     if (refreshToken) {
       // 리프레시 토큰이 있으면 Redis에서 삭제 (만료 여부 상관없이 삭제)
-      const decoded = jwt.decode(refreshToken);// 검증 대신 디코딩만
+      const decoded = await jwt.decode(refreshToken);// 검증 대신 디코딩만
       await tokenService.deleteRefreshTokenFromRedis(decoded.id);
     }
 

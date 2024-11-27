@@ -234,8 +234,8 @@ const data = {
   ],
 }
 
-const handleLogout = () => {
-  logoutUser();
+const handleLogout = async () => {
+  await logoutUser();
   return window.location.href ='/login';
 };
 

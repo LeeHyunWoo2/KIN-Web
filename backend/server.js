@@ -6,7 +6,6 @@ const cors = require('cors');
 const passport = require('passport');
 const initializePassport = require('./config/passport');
 const connectDB = require('./config/db');
-const morgan = require('morgan');
 const { createErrorResponse } = require('./middleware/errorHandler');
 
 // 라우터 불러오기
@@ -21,18 +20,17 @@ const emailRoutes = require('./routes/user/emailRoutes');
 const session = require("express-session");
 const RedisStore = require('connect-redis').default; // redis를 express-session에 연동
 const redisClient = require('./config/redis');
+const logger = require("./middleware/logger");
 
 const app = express();
 initializePassport(passport);
 // 1. 데이터베이스 연결
 connectDB();
 
-// 커스텀 토큰 설정: 요청 쿼리, 본문
-morgan.token('query', (req) => JSON.stringify(req.query)); // 쿼리 파라미터
-morgan.token('body', (req) => JSON.stringify(req.body)); // 요청 본문
-morgan.token('errorMessage', (req, res) => {
-  return res.statusCode >= 400 ? `Error: ${res.statusMessage || 'Unknown error'}` : '';
-}); // 오류 메시지
+app.set('trust proxy', true);
+
+// morgan 미들웨어
+app.use(logger);
 
 // 2. 기본 미들웨어 설정
 app.use(express.json());
@@ -79,13 +77,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// 로그 형식 설정: 기본 형식 + 쿼리 + 본문 + 오류 메시지
-app.use(morgan(
-    ':method :url :status :response-time ms - query: :query - body: :body - :errorMessage',
-    /*{
-      skip: (req, res) => res.statusCode < 400, // 400 이상일 때만 로깅
-    }*/
-));
 
 // 3. 라우터 설정
 app.use('/auth', authRoutes);
