@@ -21,8 +21,6 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   try {
     const {data} = await apiClient.post('/auth/login', credentials);
-/*    const ttl = Date.now() + data.ttl * 1000; // 남는시간 비교를 위해 ttl을 현재시간에서 더해서 저장 (만료예정시각)
-    localStorage.setItem('tokenTTL', ttl);*/
     return data;
   } catch (error) {
     return null;
@@ -85,6 +83,5 @@ export const logoutUser = async () => {
     await apiClient.post('/auth/logout', {});
   } catch (error) {
   }
-/*  localStorage.removeItem('tokenTTL');*/
   localStorage.removeItem('userInfo');
 };

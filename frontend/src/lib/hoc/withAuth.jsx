@@ -63,7 +63,7 @@ const withAuth = (WrappedComponent) => {
           {auth ? <WrappedComponent {...props} /> : null}
           {showAlert && (
               <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-                <AlertDialogPortal>
+                <AlertDialogPortal >
                   <AlertDialogOverlay />
                   <AlertDialogContent className="max-w-md">
                     <AlertDialogHeader>
