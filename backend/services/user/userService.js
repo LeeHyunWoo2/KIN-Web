@@ -94,7 +94,6 @@ const deleteUserById = async (userId) => {
 
   for (const account of user.socialAccounts) {
     if (account.provider !== 'local') {
-      console.log('아오')
       console.log(account.provider)
       const accessToken = await tokenService.generateOAuthToken(user, account.provider);
       await revokeSocialAccess(account.provider, accessToken);

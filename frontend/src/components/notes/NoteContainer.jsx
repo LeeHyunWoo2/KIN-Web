@@ -103,7 +103,6 @@ export default function NoteContainer({ defaultLayout }) {
 
   useEffect(() => {
     if (id) {
-      console.log(notes)
       const selectedNote = notes.find((note) => note._id === id);
       if (selectedNote) {
         // 전역 상태 업데이트
@@ -116,9 +115,6 @@ export default function NoteContainer({ defaultLayout }) {
   }, [id, notes, setSelectedNoteState]);
 
 
-  useEffect(() => {
-    console.log(selectedNoteState);
-  }, [selectedNoteState]);
 
   return (
       <TooltipProvider delayDuration={0}>
