@@ -35,11 +35,15 @@ app.set('trust proxy', true);
 // morgan 미들웨어
 app.use(logger);
 
+let httpsOptions = null;
+
 // HTTPS 옵션 추가
-const httpsOptions = {
-  key: fs.readFileSync(process.env.SSL_KEY_PATH), // SSL 키 경로 (환경변수에 설정)
-  cert: fs.readFileSync(process.env.SSL_CERT_PATH), // SSL 인증서 경로 (환경변수에 설정)
-};
+if (process.env.NODE_ENV === 'production') {
+  httpsOptions = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH), // SSL 키 경로 (환경변수에 설정)
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH), // SSL 인증서 경로 (환경변수에 설정)
+  };
+}
 
 // 2. 기본 미들웨어 설정
 app.use(express.json());
@@ -74,7 +78,7 @@ app.use(
       resave: false, // 변경이 없을 경우 세션 저장 방지
       saveUninitialized: false, // 초기화되지 않은 세션 저장 방지
       cookie: {
-        secure: true, // HTTPS에서만 쿠키 전송
+        secure: process.env.NODE_ENV === 'production', // HTTPS에서만 쿠키 전송
         httpOnly: true, // XSS 방지
         sameSite: 'lax', // CSRF 방지
         maxAge: 24 * 60 * 60 * 1000, // 세션 쿠키 유효 기간 (1일)
@@ -97,6 +101,9 @@ app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
 app.use('/email', emailRoutes);
 
+app.head('/', (req, res) => {
+  res.status(200).end(); // 본문 없이 상태 코드만 반환
+});
 
 app.get('/', (req, res) => {
   res.send('서버 실행중');
@@ -125,6 +132,12 @@ app.use((err, req, res, next) => {
 
 // 5. HTTPS 서버 실행
 const PORT = process.env.PORT;
-https.createServer(httpsOptions, app).listen(PORT, () => {
-  console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
-});
+if (process.env.NODE_ENV === 'production'){
+  https.createServer(httpsOptions, app).listen(PORT, () => {
+    console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
+  });
+} else {
+  app.listen(PORT, () => {
+    console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+  });
+}

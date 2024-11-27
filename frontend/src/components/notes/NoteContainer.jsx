@@ -49,7 +49,7 @@ export default function NoteContainer({ defaultLayout }) {
   const [layout, setLayout] = useState(() => {
     // 로컬스토리지에서 값을 가져오고, 없으면 기본값 설정
     const savedLayout = localStorage.getItem("note-layout");
-    return savedLayout ? JSON.parse(savedLayout) : defaultLayout || [20, 80];
+    return savedLayout ? JSON.parse(savedLayout) : defaultLayout || [23, 80];
   });
 
   // 로컬스토리지에서 레이아웃 초기값 불러옴
@@ -121,7 +121,7 @@ export default function NoteContainer({ defaultLayout }) {
         <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
             <div className="flex items-center px-4 py-2  justify-between">
-              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([20, 80])}>
+              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([23, 80])}>
                 {getListTitle()}
               </h1>
               { !onReload ? (

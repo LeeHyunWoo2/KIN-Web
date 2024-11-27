@@ -19,7 +19,9 @@ export default function NoteList({notes}) {
   return (
       <ScrollArea className="h-screen">
         <div className="flex flex-col gap-2 p-4 pt-0">
-          {notes.map((note) => (
+          {notes
+          .sort((a, b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0)) // is_pinned를 기준으로 정렬
+          .map((note) => (
               <button
                   key={note._id}
                   className={cn(
@@ -43,7 +45,7 @@ export default function NoteList({notes}) {
                         )}
                     >
                       {formatDistanceToNow(new Date(note.updated_at), {
-                        addSuffix: true,
+                        addSuffix: false,
                       })}
                     </div>
                   </div>
