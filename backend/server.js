@@ -37,8 +37,8 @@ app.use(logger);
 
 // HTTPS 옵션 추가
 const httpsOptions = {
-key: fs.readFileSync(process.env.SSL_KEY_PATH), // SSL 키 경로 (환경변수에 설정)
-cert: fs.readFileSync(process.env.SSL_CERT_PATH), // SSL 인증서 경로 (환경변수에 설정)
+  key: fs.readFileSync(process.env.SSL_KEY_PATH), // SSL 키 경로 (환경변수에 설정)
+  cert: fs.readFileSync(process.env.SSL_CERT_PATH), // SSL 인증서 경로 (환경변수에 설정)
 };
 
 // 2. 기본 미들웨어 설정
@@ -126,5 +126,5 @@ app.use((err, req, res, next) => {
 // 5. HTTPS 서버 실행
 const PORT = process.env.PORT;
 https.createServer(httpsOptions, app).listen(PORT, () => {
-console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
+  console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
 });
