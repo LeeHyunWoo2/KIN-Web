@@ -6,7 +6,6 @@ const getUserPublicProfileController = async (req, res) => {
   try {
     const userId = req.user.id; // 유저 검증 미들웨어를 통해 추가된 정보
     const publicProfile = await userService.getUserPublicProfile(userId);
-
     res.status(200).json(publicProfile);
   } catch (error) {
     res.status(500).json({ message: '프로필 조회 실패', error: error.message });
@@ -27,6 +26,13 @@ const getUserInfoController = async (req, res) => {
 // 3. 사용자 정보 수정
 const updateUserInfoController = async (req, res) => {
   try {
+    // 테스트 계정 ID 배열
+    const testAccountIds = ['672ae1ad9595d29f7bfbf34a', '672ae28b9595d29f7bfbf353'];
+    if (testAccountIds.includes(req.user.id)){
+      const customError = new Error('테스트 계정은 변경할 수 없습니다.');
+      customError.status = 418;
+      throw customError;
+    }
     const { name, profileIcon } = req.body;
     const updatedUser = await userService.updateUser(req.user.id, { name, profileIcon });
     res.status(200).json({user: updatedUser});
@@ -51,6 +57,13 @@ const addLocalAccountController = async (req, res) => {
 // 5. 회원 탈퇴
 const deleteUserController = async (req, res) => {
   try {
+    // 테스트 계정 ID 배열
+    const testAccountIds = ['672ae1ad9595d29f7bfbf34a', '672ae28b9595d29f7bfbf353'];
+    if (testAccountIds.includes(req.user.id)){
+      const customError = new Error('테스트 계정은 탈퇴할 수 없습니다.');
+      customError.status = 418;
+      throw customError;
+    }
     await userService.deleteUserById(req.user.id);
     res.clearCookie('accessToken', { httpOnly: true });
     res.clearCookie('refreshToken', { httpOnly: true });

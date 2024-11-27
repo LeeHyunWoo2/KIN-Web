@@ -5,4 +5,4 @@ import { atomWithStorage } from "jotai/utils";
 export const authAtom = atom(null);
 
 // 로컬 스토리지와 동기화되는 atom
-export const userProfileAtom = atomWithStorage('userProfile', null);
+export const userProfileAtom = atomWithStorage('userInfo', null);
