@@ -8,7 +8,14 @@ export const getTags = async (forceReload = false) => {
   const store = tx.objectStore("tags");
 
   const tags = await store.getAll();
+
   if (tags.length === 0 || forceReload) {
+    if (forceReload){
+      const clearTx = db.transaction("tags", "readwrite");
+      const clearStore = clearTx.objectStore("tags");
+      await clearStore.clear();
+      await clearTx.done();
+    }
     const response = await apiClient.get('/tags', {
       headers: {
         'cache-control': 'no-cache',
@@ -22,7 +29,6 @@ export const getTags = async (forceReload = false) => {
       store.put(tag);
     }
     await tx.done;
-
     return loadedTags;
   }
 

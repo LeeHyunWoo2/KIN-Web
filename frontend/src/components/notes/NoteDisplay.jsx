@@ -16,7 +16,7 @@ import {
   Forward,
   MoreVertical,
   Reply,
-  ReplyAll, Star, StarOff,
+  ReplyAll, Star, StarOff, Undo2,
   Trash2
 } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
@@ -211,16 +211,15 @@ export default function NoteDisplay() {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" onClick={pinTheNote}>
-                {selectedNoteState.is_pinned ? (
+              <Button variant="ghost" size="icon" onClick={pinTheNote} disabled={selectedNoteState.is_trashed}>
+                {!selectedNoteState.is_pinned ? (
                     <Star className="h-4 w-4"/>
                 ):(
                     <StarOff />
                 )}
-                <span className="sr-only">즐겨찾기</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>즐겨찾기</TooltipContent>
+            <TooltipContent>{!selectedNoteState.is_pinned ? '즐겨찾기' : '즐겨찾기 해제'}</TooltipContent>
           </Tooltip>
 
           <div className="ml-auto flex items-center gap-2">
@@ -240,66 +239,30 @@ export default function NoteDisplay() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon"
-                        disabled={!selectedNoteState} onClick={moveToTrash}>
-                  <Trash2 className="h-4 w-4"/>
-                  <span className="sr-only">Move to trash</span>
+                        disabled={selectedNoteState.is_pinned === true} onClick={moveToTrash}>
+                  {!selectedNoteState.is_trashed === true ? (
+                  <Trash2 className="h-4 w-4"/>) : (
+                  <Undo2 />)}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>휴지통으로 이동</TooltipContent>
+              <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동' : '복구하기'}</TooltipContent>
             </Tooltip>
             <Separator orientation="vertical" className="mx-1 h-6"/>
-            {/* Reply Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon"
-                        disabled={!selectedNoteState}>
-                  <Reply className="h-4 w-4"/>
-                  <span className="sr-only">Reply</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Reply</TooltipContent>
-            </Tooltip>
-
-            {/* Reply All Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon"
-                        disabled={!selectedNoteState}>
-                  <ReplyAll className="h-4 w-4"/>
-                  <span className="sr-only">Reply all</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Reply all</TooltipContent>
-            </Tooltip>
-
-            {/* Forward Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon"
-                        disabled={!selectedNoteState}>
-                  <Forward className="h-4 w-4"/>
-                  <span className="sr-only">Forward</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Forward</TooltipContent>
-            </Tooltip>
           </div>
-
-          <Separator orientation="vertical" className="mx-2 h-6"/>
 
           {/* More Options Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!selectedNoteState}>
+              <Button variant="ghost" size="icon">
                 <MoreVertical className="h-4 w-4"/>
                 <span className="sr-only">More</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Mark as unread</DropdownMenuItem>
-              <DropdownMenuItem>Star thread</DropdownMenuItem>
-              <DropdownMenuItem>Add label</DropdownMenuItem>
-              <DropdownMenuItem>Mute thread</DropdownMenuItem>
+              <DropdownMenuItem>샘플 메뉴 1</DropdownMenuItem>
+              <DropdownMenuItem>샘플 메뉴 2</DropdownMenuItem>
+              <DropdownMenuItem>샘플 메뉴 3</DropdownMenuItem>
+              <DropdownMenuItem>샘플 메뉴 4</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

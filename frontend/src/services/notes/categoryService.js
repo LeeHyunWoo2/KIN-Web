@@ -10,7 +10,14 @@ export const getCategories = async (forceReload = false) => {
   const store = tx.objectStore("categories");
 
   const categories = await store.getAll();
+
   if (categories.length === 0 || forceReload) {
+    if (forceReload){
+      const clearTx = db.transaction("categories", "readwrite");
+      const clearStore = clearTx.objectStore("categories");
+      await clearStore.clear();
+      await clearTx.done();
+    }
     const response = await apiClient.get('/category', {
       headers: {
         'cache-control': 'no-cache',
@@ -24,10 +31,8 @@ export const getCategories = async (forceReload = false) => {
       store.put(category);
     }
     await tx.done;
-
     return loadedCategories;
   }
-
   return categories;
 };
 

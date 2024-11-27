@@ -4,7 +4,7 @@ import {deleteExpiredNotes, getNotes} from "@/services/notes/noteService";
 import {getCategories} from "@/services/notes/categoryService";
 import {
   initializeCategoriesAtom,
-  initializeNotesAtom
+  initializeNotesAtom, initializeTagsAtom
 } from "@/lib/notes/noteState";
 import {useSetAtom} from "jotai";
 
@@ -48,8 +48,10 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
       const initializeNotes = useSetAtom(initializeNotesAtom); // Jotai 상태 갱신
       const initializeCategories = useSetAtom(initializeCategoriesAtom);
+      const initializeTags = useSetAtom(initializeTagsAtom);
       await initializeNotes(); // 노트 상태 초기화
       await initializeCategories(); // 카테고리 상태 초기화
+      await initializeTags(); // 태그 상태 초기화
 
       // 동기화 시점 저장
       await SynchronizeWithServer(Date.now());
