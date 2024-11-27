@@ -7,8 +7,6 @@ export default function VerifyEmailPage() {
   const { token } = router.query; // URL에서 토큰 가져오기
   const [message, setMessage] = useState("");
 
-  console.log(token)
-
   const handleClose = () => {
     // 인증 상태를 로컬스토리지에 저장
     localStorage.setItem("emailVerified", "true");

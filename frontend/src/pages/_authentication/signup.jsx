@@ -89,7 +89,6 @@ export default function AuthenticationPage() {
   const handleSendVerificationEmail = async () => {
     try {
       const response = await apiClient.post("/email/send-verification-email", {email});
-      console.log(email)
       setIsEmailSent(true);
       setCount(300);
       setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");

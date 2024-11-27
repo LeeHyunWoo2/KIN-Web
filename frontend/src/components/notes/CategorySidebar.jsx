@@ -314,7 +314,6 @@ export default function CategorySidebar() {
 
   useEffect(() => {
     setCategoryTree(buildCategoryTree(categories));
-    console.log(categories)
   }, [categories]);
 
   const handleAddCategory = async (parentId) => {
