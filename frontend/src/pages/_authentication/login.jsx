@@ -9,6 +9,8 @@ import {useState} from "react";
 import {router} from "next/client";
 import {useSetAtom} from "jotai/index";
 import {userProfileAtom} from "@/atoms/authAtom";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {toast} from "sonner";
 
 export default function Dashboard() {
   const [id, setId] = useState("");
@@ -18,20 +20,23 @@ export default function Dashboard() {
   const handleLogin = async (event, id, password) => {
     event.preventDefault();
 
-    const credentials = { id, password };
-
-    const tokens = await loginUser(credentials);
-    if (tokens) {
-      const profile = await getPublicProfile(); // 공개 데이터 API 호출
-      setUserProfile(profile); // Jotai 및 LocalStorage에 저장
-      // 로그인 성공 시 리다이렉트
-      await router.push("/notes");
+    if (!id || !password) {
+      toast.error('아이디 혹은 비밀번호를 입력해주세요');
+    } else {
+      const credentials = {id, password};
+      const tokens = await loginUser(credentials);
+      if (tokens) {
+        const profile = await getPublicProfile(); // 공개 데이터 API 호출
+        setUserProfile(profile); // Jotai 및 LocalStorage에 저장
+        // 로그인 성공 시 리다이렉트
+        await router.push("/notes");
+      }
     }
   };
 
-
   return (
-      <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols xl:min-h-[800px]">
+      <div
+          className="w-full lg:grid lg:min-h-[600px] lg:grid-cols xl:min-h-[800px]">
         <div className="flex items-center justify-center py-12">
           <div className="mx-auto grid w-[350px] gap-6">
             <div className="grid gap-2 text-center">
@@ -40,7 +45,11 @@ export default function Dashboard() {
 
               </p>
             </div>
-            <div className="grid gap-4">
+            <div className="grid gap-4"  onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleLogin(e, id, password);
+              }
+            }}>
               <div className="grid gap-2">
                 <Label htmlFor="id">아이디</Label>
                 <Input
@@ -53,14 +62,20 @@ export default function Dashboard() {
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
+                <div className="flex items-center" >
                   <Label htmlFor="password">비밀번호</Label>
-                  <Link
-                      href=""
-                      className="ml-auto inline-block text-sm underline"
-                  >
-                    비밀번호 찾기
-                  </Link>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                          href=""
+                          className="ml-auto inline-block text-sm underline"
+                          tabIndex={-1}
+                      >
+                        비밀번호 찾기
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>개발중</TooltipContent>
+                  </Tooltip>
                 </div>
                 <Input
                     id="password"
@@ -71,7 +86,9 @@ export default function Dashboard() {
                     onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
                 />
               </div>
-              <Button type="submit" className="w-full" onClick={(e) => handleLogin(e, id, password)}>
+              <Button type="submit" className="w-full"
+                      onClick={(e) => handleLogin(e, id, password)}
+              >
                 로그인
               </Button>
               <div>

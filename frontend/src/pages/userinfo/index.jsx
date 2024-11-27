@@ -24,10 +24,9 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
-import { useRouter } from "next/router";
-import { toast } from "sonner";
+import {useRouter} from "next/router";
+import {toast} from "sonner";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
-
 
 function UserInfoPage() {
   const router = useRouter();
@@ -59,11 +58,11 @@ function UserInfoPage() {
   }, []);
 
   useEffect(() => {
-    const { error } = router.query;
+    const {error} = router.query;
     if (error) {
       toast.error(decodeURIComponent(error));
       // 토스트 보여주고나서 URL에서 쿼리 제거
-      router.replace("/userinfo", undefined, { shallow: true });
+      router.replace("/userinfo", undefined, {shallow: true});
     }
   }, [router.query]);
 
@@ -86,24 +85,14 @@ function UserInfoPage() {
   // 이름 업데이트 함수
   const handleNameUpdate = async () => {
     try {
-      await updateUserProfile({name: newName});
-      setUserInfo((prev) => ({...prev, name: newName}));
+      if (userInfo.name !== newName) {
+        await updateUserProfile({name: newName});
+        setUserInfo((prev) => ({...prev, name: newName}));
+      }
       setIsEditingName(false);
     } catch (error) {
     }
   };
-
-/*
-  // 전화번호 업데이트 함수
-  const handlePhoneUpdate = async () => {
-    try {
-      await updateUserProfile({phone: newPhone});
-      setUserInfo((prev) => ({...prev, phone: newPhone}));
-      setIsEditingPhone(false);
-    } catch (error) {
-    }
-  };
-*/
 
   // 소셜 계정 연동 or 해제 함수
   const handleSocialAccountToggle = async (provider) => {
@@ -136,7 +125,7 @@ function UserInfoPage() {
           <p className="text-gray-600">
             {isLocalAccount() ? '이메일 계정' : '소셜 계정'}
           </p>
-          {isLocalAccount() ? ''  : <ChangeToLocalAccount/>}
+          {isLocalAccount() ? '' : <ChangeToLocalAccount/>}
         </div>
 
         <div className="mb-4">
@@ -173,39 +162,15 @@ function UserInfoPage() {
           ) : (
               <div>
                 <p className="text-gray-600">{userInfo.name}</p>
-                <button onClick={() => setIsEditingName(true)}
+                <button onClick={() => {
+                  setNewName(userInfo.name);
+                  setIsEditingName(true);
+                }}
                         className="text-blue-500">이름 변경
                 </button>
               </div>
           )}
         </div>
-
-{/*        <div className="mb-4">
-          <label className="block text-gray-700">전화번호:</label>
-          {isEditingPhone ? (
-              <div>
-                <input
-                    type="text"
-                    value={newPhone}
-                    onChange={(e) => setNewPhone(e.target.value)}
-                    className="border p-1 w-full"
-                />
-                <button onClick={handlePhoneUpdate}
-                        className="text-blue-500 mr-2">저장
-                </button>
-                <button onClick={() => setIsEditingPhone(false)}
-                        className="text-gray-500">취소
-                </button>
-              </div>
-          ) : (
-              <div>
-                <p className="text-gray-600">{userInfo.phone}</p>
-                <button onClick={() => setIsEditingPhone(true)}
-                        className="text-blue-500">전화번호 변경
-                </button>
-              </div>
-          )}
-        </div>*/}
 
         <div className="mb-4">
           <label className="block text-gray-700">계정 생성일:</label>
@@ -220,7 +185,8 @@ function UserInfoPage() {
             const socialStatus = getSocialAccountStatus(provider);
 
             return (
-                <Card key={provider} className="w-[350px] flex flex-col space-y-1.5">
+                <Card key={provider}
+                      className="w-[350px] flex flex-col space-y-1.5">
                   <CardContent className="flex justify-between p-3">
                     <div className="flex">
                       <Image src={providerIconPath(provider)} priority={true}
@@ -228,7 +194,8 @@ function UserInfoPage() {
                              width={36} height={36}/>
 
                       <h3 className="font-semibold  flex items-center min-w-10">
-                        {provider === "google" ? "구글" : provider === "kakao" ? "카카오" : "네이버"}
+                        {provider === "google" ? "구글" : provider === "kakao"
+                            ? "카카오" : "네이버"}
                       </h3>
                     </div>
                     {socialStatus === "미연동" ? <div
@@ -239,7 +206,7 @@ function UserInfoPage() {
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                                disabled={ isLocalAccount() === false }>연동 해제
+                                disabled={isLocalAccount() === false}>연동 해제
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -260,8 +227,11 @@ function UserInfoPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
-                                className={isLocalAccount() ? "opacity-100" : "opacity-50"}
-                                onClick={isLocalAccount() ? () => handleSocialAccountToggle(provider) : null}>연동하기</Button>
+                                className={isLocalAccount() ? "opacity-100"
+                                    : "opacity-50"}
+                                onClick={isLocalAccount()
+                                    ? () => handleSocialAccountToggle(provider)
+                                    : null}>연동하기</Button>
                           </TooltipTrigger>
                           <TooltipContent>추가 연동은 일반계정에서 가능합니다.</TooltipContent>
                         </Tooltip>
@@ -284,8 +254,10 @@ function UserInfoPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-blue-500 text-white">Cancel</AlertDialogCancel>
-                <Button variant="secondary" onClick={deleteUserProfile}>탈퇴 진행</Button>
+                <AlertDialogCancel
+                    className="bg-blue-500 text-white">Cancel</AlertDialogCancel>
+                <Button variant="secondary" onClick={deleteUserProfile}>탈퇴
+                  진행</Button>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

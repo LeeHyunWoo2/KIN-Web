@@ -51,8 +51,16 @@ export const getUserProfile = async () => {
 
 // 정보 수정 API
 export const updateUserProfile = async (profileData) => {
-  const {data} = await apiClient.put('/user/profile', profileData);
-  return data;
+  try {
+    const {data} = await apiClient.put('/user/profile', profileData);
+    await getPublicProfile(data);
+    return data;
+  } catch (error) {
+    if (error.response.status === 418) {
+      alert('테스트용 계정은 변경할 수 없습니다.')
+      return window.location.reload();
+    }
+  }
 };
 
 // 회원 탈퇴 API
@@ -60,8 +68,12 @@ export const deleteUserProfile = async () => {
   try {
     await apiClient.delete('/user/profile');
   } catch (error) {
+    if (error.response.status === 418) {
+      alert('테스트용 계정은 탈퇴할 수 없습니다.')
+      return window.location.reload();
+    }
   }
-  localStorage.removeItem('userInfo');
+  localStorage.removeItem('userInfo');``
   window.location.href = '/login';
 };
 

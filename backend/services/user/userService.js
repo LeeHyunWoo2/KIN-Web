@@ -55,14 +55,52 @@ const getUserById = async (userId) => {
 
 // 3. 사용자 정보 수정
 const updateUser = async (userId, updateData) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error;
+    }
+    // 변경사항이 있는 항목은 db에 업데이트
+    if (updateData.name) user.name = updateData.name;
+    if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
+    await user.save();
+
+    // redis에서 유저 정보 ttl 로드
+    const redisKey = `publicProfile:${userId}`;
+    const ttl = await redisClient.ttl(redisKey);
+
+    // redis 기존 데이터 로드
+    const cachedProfile = await redisClient.get(redisKey);
+    let updatedProfile = {}; // 업데이트용 빈객체
+
+    if (cachedProfile) {
+      // 기존 데이터가 있으면 병합
+      const parsedProfile = JSON.parse(cachedProfile);
+      updatedProfile = {
+        ...parsedProfile,
+        name: updateData.name || parsedProfile.name,
+        profileIcon: updateData.profileIcon || parsedProfile.profileIcon,
+      };
+    } else {
+      // 기존 데이터가 없으면 생성 (절묘하게 ttl 만기될수도 있기 때문에)
+      updatedProfile = {
+        name: user.name,
+        email: user.email,
+        profileIcon: user.profileIcon,
+      };
+    }
+
+    // Redis에 수정된 데이터 저장 (기존 TTL 유지)
+    await redisClient.set(redisKey, JSON.stringify(updatedProfile));
+    if (ttl > 0) {
+      await redisClient.expire(redisKey, ttl);
+    }
+
+    return updatedProfile;
+  } catch (error) {
+    console.error('사용자 정보 수정 중 오류:', error.message);
+    throw error;
   }
-  if (updateData.name) user.name = updateData.name;
-  if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
-  await user.save();
-  return user;
 };
 
 // 4. 로컬 계정 추가 (소셜 Only 계정용)
