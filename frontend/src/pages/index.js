@@ -41,10 +41,13 @@ export default function Home() {
                     variant="outline" onClick={handleStarter}>
                   <LogIn size={200}/>시작하기
                 </Button>
-                <Button  type="button" className="mt-10" onClick={() => (window.location.href = 'https://github.com/LeeHyunWoo2/KIN-Web')}>
+                <a rel="noopener noreferrer" target="_blank"
+                   href = 'https://github.com/LeeHyunWoo2/KIN-Web'>
+                <Button  type="button" className="mt-10">
                   <Icons.gitHub className="mr-2 h-4 w-4"/>
                   개발자 GitHub
                 </Button>
+                </a>
               </CardFooter>
             </Card>
           </main>
