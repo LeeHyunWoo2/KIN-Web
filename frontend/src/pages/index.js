@@ -5,6 +5,8 @@ import {LogIn} from "lucide-react";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/authAtom";
 import {useRouter} from "next/router";
+import {Icons} from "@/components/icons";
+import * as React from "react";
 
 
 export default function Home() {
@@ -38,6 +40,10 @@ export default function Home() {
                     className="h-20 rounded-2xl px-16 text-2xl font-bold shadow-md [&_svg]:size-2/3 [&_svg]:-ml-7"
                     variant="outline" onClick={handleStarter}>
                   <LogIn size={200}/>시작하기
+                </Button>
+                <Button  type="button" className="mt-10" onClick={() => (window.location.href = 'https://github.com/LeeHyunWoo2/KIN-Web')}>
+                  <Icons.gitHub className="mr-2 h-4 w-4"/>
+                  개발자 GitHub
                 </Button>
               </CardFooter>
             </Card>
