@@ -13,10 +13,10 @@ import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
 import {
   ArchiveX,
-  Forward,
   MoreVertical,
-  Reply,
-  ReplyAll, Star, StarOff, Undo2,
+  Star,
+  StarOff,
+  Undo2,
   Trash2
 } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
@@ -38,11 +38,14 @@ import {
   MenubarSubTrigger,
   MenubarTrigger
 } from "@/components/ui/menubar";
+import { useToast } from "@/hooks/use-toast"
+import {ToastAction, toastAction} from "@/components/ui/toast"
 
 const produce = require("immer").produce;
 
 export default function NoteDisplay() {
   const router = useRouter();
+  const toast = useToast();
   const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
   const [selectedNoteState, setSelectedNoteState] = useAtom(
       selectedNoteStateAtom);
@@ -204,7 +207,12 @@ export default function NoteDisplay() {
                     </MenubarContent>
                   </MenubarMenu>
                 </Menubar>
-            ) : ('')}
+            ) : (
+                  <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm
+                  font-medium pointer-events-none opacity-60 border  bg-background shadow-sm h-9 px-4 py-2">
+                    카테고리 없음
+                  </div>
+            )}
           </div>
 
           <Separator orientation="vertical" className="mx-3 h-6"/>

@@ -9,7 +9,11 @@ import {useState} from "react";
 import {router} from "next/client";
 import {useSetAtom} from "jotai/index";
 import {userProfileAtom} from "@/atoms/authAtom";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 import {toast} from "sonner";
 
 export default function Dashboard() {

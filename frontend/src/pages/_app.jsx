@@ -42,7 +42,7 @@ function App({Component, pageProps}) {
         <Head>
           <title>Keep Idea Note</title>
         </Head>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={0}>
           <Component {...pageProps} />
         </TooltipProvider>
         <Toaster richColors position="bottom-right"/>
