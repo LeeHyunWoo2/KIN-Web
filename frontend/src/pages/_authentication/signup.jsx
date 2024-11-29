@@ -33,9 +33,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
 import Recaptcha from "@/components/Recaptcha";
 import apiClient from "@/lib/apiClient";
-import { MailOpen, Check } from "lucide-react"
-import { page1Schema, page2Schema } from "@/lib/validationSchemas";
-
+import {MailOpen, Check, Loader2} from "lucide-react"
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -45,6 +43,7 @@ export default function AuthenticationPage() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [message, setMessage] = useState("");
   const [emailVerified, setEmailVerified] = useState(false);
+  const [isSending, setIsSending] = useState(false); // 이메일 전송 중 상태
   const [count, setCount] = useState();
 
   const handleNext = () => {
@@ -87,15 +86,21 @@ export default function AuthenticationPage() {
   };
 
   const handleSendVerificationEmail = async () => {
+    setIsSending(true); // 전송 중 상태 활성화
     try {
-      const response = await apiClient.post("/email/send-verification-email", {email});
+      const response = await apiClient.post("/email/send-verification-email", {
+        email,
+      });
       setIsEmailSent(true);
       setCount(300);
       setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");
     } catch (error) {
       setMessage(error.response?.data?.message || "이메일 전송에 실패했습니다.");
+    } finally {
+      setIsSending(false); // 전송 완료 후 상태 초기화
     }
   };
+
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -106,7 +111,7 @@ export default function AuthenticationPage() {
 
   // 모든 필드를 처리하는 handleChange 함수
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const {name, value, type, checked} = e.target;
     if (name === "email") {
       setEmail(value); // 이메일 상태 업데이트
     }
@@ -134,7 +139,6 @@ export default function AuthenticationPage() {
     return () => clearInterval(timer);
   }, [count]);
 
-
   // 이메일 인증 주기적으로 체크
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -147,8 +151,6 @@ export default function AuthenticationPage() {
     }, 1000);
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, []);
-
-
 
   const handleSubmit = async () => {
     try {
@@ -171,16 +173,7 @@ export default function AuthenticationPage() {
   return (
       <>
         <div
-            className="container relative hidden h-[calc(100vh-64px)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-          <Link
-              href="/login"
-              className={cn(
-                  buttonVariants({variant: "ghost"}),
-                  "absolute right-4 top-4 md:right-8 md:top-8",
-              )}
-          >
-            Login
-          </Link>
+            className="container relative h-[calc(100vh-64px)] flex-col items-center justify-center grid max-w-none grid-cols-[1fr_3fr_1fr] px-0">
           <div
               className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
             <div className="absolute inset-0 bg-zinc-900"/>
@@ -266,10 +259,10 @@ export default function AuthenticationPage() {
 
             <motion.div
                 key={page}
-                initial={{ y: 7, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -7, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={{y: 7, opacity: 0}}
+                animate={{y: 0, opacity: 1}}
+                exit={{y: -7, opacity: 0}}
+                transition={{duration: 0.2}}
             >
 
               {page === 1 && (
@@ -285,11 +278,12 @@ export default function AuthenticationPage() {
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
                           <ScrollArea className="h-48 w-full text-sm">
-                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며 기타등등.....<br/><br/>
+                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며
+                            기타등등.....<br/><br/>
                             김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
                             구름이
                             허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
-                        <br/><br/>
+                            <br/><br/>
                             Lorem ipsum dolor sit amet, consectetur adipiscing
                             elit, sed do eiusmod tempor incididunt ut labore et
                             dolore magna aliqua. Ut enim ad minim veniam, quis
@@ -306,24 +300,31 @@ export default function AuthenticationPage() {
 
                       <div className="grid gap-4">
                         <div
-                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
+                        onClick={() =>
+                            setFormData((formData) => ({...formData, termsAgreed: !formData.termsAgreed}))}
+                        >
                           <Checkbox
                               name="termsAgreed"
                               checked={formData.termsAgreed}
                               onCheckedChange={(value) =>
                                   setFormData({...formData, termsAgreed: value})
                               }
+                              onClick={(e) => e.stopPropagation()}
                           />
                           <div className="space-y-1 leading-none">
-                            <Label>필수 약관 동의</Label><br/>
+                            <Label className="cursor-pointer">필수 약관 동의</Label><br/>
                             <Label
-                                className="text-[0.8rem] text-muted-foreground">
+                                className="text-[0.8rem] text-muted-foreground cursor-pointer">
                               필수 약관을 동의하셔야 가입이 가능합니다.
                             </Label>
                           </div>
                         </div>
                         <div
-                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
+                            onClick={() =>
+                                setFormData((formData) => ({...formData, marketingConsent: !formData.marketingConsent}))}
+                        >
                           <Checkbox
                               name="marketingConsent"
                               checked={formData.marketingConsent}
@@ -331,20 +332,20 @@ export default function AuthenticationPage() {
                                   setFormData(
                                       {...formData, marketingConsent: value})
                               }
+                              onClick={(e) => e.stopPropagation()}
                           />
                           <div className="space-y-1 leading-none">
-                            <Label>동의 (선택)</Label><br/>
+                            <Label className="cursor-pointer">동의 (선택)</Label><br/>
                             <Label
-                                className="text-[0.8rem] text-muted-foreground">
+                                className="text-[0.8rem] text-muted-foreground cursor-pointer">
                               선택 체크 내용
                             </Label>
                           </div>
                         </div>
-                        <Recaptcha onVerify={handleCaptchaChange}/>
                         <Button
                             type="button"
                             className="w-full"
-                            disabled={!recaptchaToken || isButtonDisabled}
+                            disabled={isButtonDisabled}
                             onClick={handleNext}
                         >
                           다음 단계
@@ -353,12 +354,6 @@ export default function AuthenticationPage() {
                                 onClick={handlePrev}>
                           이전으로
                         </Button>
-                      </div>
-                      <div className="mt-4 text-sm text-center">
-                        Already have an account?{" "}
-                        <Link href="/login" className="underline">
-                          Login
-                        </Link>
                       </div>
                     </CardContent>
                   </Card>
@@ -413,18 +408,33 @@ export default function AuthenticationPage() {
                               variant="outline"
                               onClick={handleSendVerificationEmail}
                               className="w-full"
-                              disabled={!email || emailVerified === true}
+                              disabled={!email || emailVerified === true || isSending}
                               style={{
                                 color: emailVerified ? '#00d326' : 'inherit',
                                 opacity: emailVerified ? 1 : undefined,
                                 cursor: emailVerified ? 'default' : 'pointer',
-                          }}
+                              }}
                           >
-                            {emailVerified === false ? <><MailOpen/> 이메일 인증하기</> :<> <Check/> 인증 완료</>}
+                            {emailVerified ? (
+                                <>
+                                  <Check /> 인증 완료
+                                </>
+                            ) : isSending ? (
+                                <>
+                                  <Loader2 className="animate-spin" />이메일 전송 중...
+                                </>
+                            ) : (
+                                <>
+                                  <MailOpen /> 이메일 인증하기
+                                </>
+                            )}
                           </Button>
-                          {isEmailSent && !emailVerified &&<p className="text-green-500">{message}</p>}
-                          {!isEmailSent && message && <p className="text-red-500">{message}</p>}
-                          {isEmailSent && !emailVerified && <span>{formatTime(count)}</span>}
+                          {isEmailSent && !emailVerified && <p
+                              className="text-green-500">{message}</p>}
+                          {!isEmailSent && message && <p
+                              className="text-red-500">{message}</p>}
+                          {isEmailSent && !emailVerified && <span>{formatTime(
+                              count)}</span>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="password">비밀번호</Label>
@@ -464,9 +474,12 @@ export default function AuthenticationPage() {
                                 마이페이지에서 회원정보 수정이 가능합니다.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
+                              <div className="flex flex-col items-center my-4">
+                                <Recaptcha onVerify={handleCaptchaChange}/>
+                              </div>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <Button onClick={handleSubmit}>Continue</Button>
+                              <AlertDialogCancel onClick={() => {setRecaptchaToken("")}}>Cancel</AlertDialogCancel>
+                              <Button disabled={!recaptchaToken} onClick={handleSubmit}>Continue</Button>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -475,16 +488,24 @@ export default function AuthenticationPage() {
                           이전으로
                         </Button>
                       </div>
-                      <div className="mt-4 text-sm text-center">
-                        Already have an account?{" "}
-                        <Link href="/login" className="underline">
-                          Login
-                        </Link>
-                      </div>
                     </CardContent>
                   </Card>
               )}
             </motion.div>
+          </div>
+          <div
+              className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+            <div className="absolute inset-0 bg-zinc-900">
+              <Link
+                  href="/login"
+                  className={cn(
+                      buttonVariants({variant: "ghost"}),
+                      "absolute right-4 top-4 md:right-8 md:top-8",
+                  )}
+              >
+                로그인
+              </Link>
+            </div>
           </div>
         </div>
       </>

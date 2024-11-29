@@ -95,5 +95,4 @@ export const logoutUser = async () => {
     await apiClient.post('/auth/logout', {});
   } catch (error) {
   }
-  localStorage.removeItem('userInfo');
 };

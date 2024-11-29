@@ -9,6 +9,14 @@ const connectDB = require('./config/db');
 const { createErrorResponse } = require('./middleware/errorHandler');
 const https = require('https');
 const fs = require('fs');
+const session = require("express-session");
+const RedisStore = require('connect-redis').default; // redis를 express-session에 연동
+const redisClient = require('./config/redis');
+const logger = require("./middleware/logger");
+const rateLimit = require("express-rate-limit");
+const helmet = require('helmet');
+const compression = require('compression');
+
 
 // 라우터 불러오기
 const authRoutes = require('./routes/user/authRoutes');
@@ -19,21 +27,27 @@ const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
 const emailRoutes = require('./routes/user/emailRoutes');
-const session = require("express-session");
-const RedisStore = require('connect-redis').default; // redis를 express-session에 연동
-const redisClient = require('./config/redis');
-const logger = require("./middleware/logger");
 
 const app = express();
 initializePassport(passport);
 
+app.set('trust proxy', true);
+
 // 1. 데이터베이스 연결
 connectDB();
 
-app.set('trust proxy', true);
-
 // morgan 미들웨어
 app.use(logger);
+
+app.use(
+    helmet({
+      contentSecurityPolicy: false, // 필요시 설정
+      hsts: {
+        maxAge: 60 * 60 * 24 * 365, // HTTPS 강제: 1년
+        includeSubDomains: true, // 서브도메인 포함
+      },
+    })
+);
 
 let httpsOptions = null;
 
@@ -46,9 +60,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 2. 기본 미들웨어 설정
-app.use(express.json());
+app.use(compression()); // 압축
+app.use(express.json()); // JSON 파싱
 app.use(cookieParser());
 app.use(bodyParser.json());
+
 app.use(
     cors({
       origin: [ process.env.FRONTEND_URL, process.env.NEXT_PUBLIC_API_URL ],
@@ -89,17 +105,35 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const globalLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 1500, // IP당 1000 요청
+  message: "요청 횟수를 초과했습니다.",
+});
 
+const apiLimiter = rateLimit({
+  windowMs: 3 * 60 * 1000,
+  max: 100, // IP당 최대 100 요청
+  message: "요청 횟수를 초과 하였습니다. 잠시 후 다시 시도해주세요.",
+  keyGenerator: (req) => {
+    // 클라이언트의 실제 IP
+    return req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip;
+  },
+});
+
+app.use(globalLimiter); // 전역 요청 제한
+
+app.use('/auth', apiLimiter, authRoutes); // 좀 더 빡세게 제한
+app.use('/email', apiLimiter, emailRoutes);
 
 // 3. 라우터 설정
-app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/social', socialRoutes);
 app.use('/notes', noteRoutes);
 app.use('/category', categoryRoutes);
 app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
-app.use('/email', emailRoutes);
+
 
 app.head('/', (req, res) => {
   res.status(200).end(); // 본문 없이 상태 코드만 반환
