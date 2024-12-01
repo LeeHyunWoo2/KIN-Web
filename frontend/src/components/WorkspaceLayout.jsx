@@ -69,6 +69,7 @@ import {noteEventAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
+import TutorialButton from "@/components/notes/TutorialButton";
 
 const data = {
   navMain: [
@@ -274,6 +275,7 @@ function Page({children}) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <DropdownMenu>
+                  <div className="step2">
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
                         size="lg"
@@ -356,32 +358,39 @@ function Page({children}) {
                       </DropdownMenuItem>
                     </Link>
                   </DropdownMenuContent>
+                  </div>
                 </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenu className="cursor-pointer">
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleNewNote}>
-                  <SquarePen/> 새 노트
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
+              <div className="step1">
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleNewNote}>
+                    <SquarePen/> 새 노트
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </div>
+                <SidebarMenuItem>
                   <TagManagerModal/>
-              </SidebarMenuItem>
-              <SidebarMenuItem onClick={moveToHome}>
-                <ListView/>
-              </SidebarMenuItem>
+                </SidebarMenuItem>
+                <SidebarMenuItem onClick={moveToHome}>
+                  <ListView/>
+                </SidebarMenuItem>
+              <TutorialButton/>
             </SidebarMenu>
           </SidebarHeader>
           <Separator/>
           <CategorySidebar/>
           <SidebarFooter>
             <SidebarMenu className="cursor-pointer mb-1">
-              <SidebarMenuItem>
-                <TrashFilter/>
-              </SidebarMenuItem>
+                <SidebarMenuItem>
+              <div className="step4">
+                  <TrashFilter/>
+              </div>
+                </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
+          <div className="p-1"/>
           <SidebarRail/>
         </Sidebar>
         <SidebarInset>

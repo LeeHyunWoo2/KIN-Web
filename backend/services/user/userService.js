@@ -27,6 +27,7 @@ const getUserPublicProfile = async (userId) => {
       name: user.name,
       email: user.email,
       profileIcon: user.profileIcon,
+      userId: userId,
     };
 
     // Redis에 프로필 정보 저장 (TTL: 1시간)

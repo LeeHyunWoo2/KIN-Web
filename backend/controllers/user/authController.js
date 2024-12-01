@@ -82,7 +82,7 @@ const newTokenController = async (req, res) => {
     const tokens = await tokenService.generateTokens(user);
 
     // Redis에 새 리프레시 토큰 저장
-    await tokenService.saveRefreshTokenToRedis(user._id, tokens.refreshToken);
+    await tokenService.saveRefreshTokenToRedis(user._id, tokens.refreshToken, tokens.refreshTokenTTL);
 
     // 새로 발급된 토큰을 쿠키에 설정
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });

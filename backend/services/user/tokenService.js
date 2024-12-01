@@ -31,7 +31,7 @@ const generateTokens = async (user) => {
   // Redis에 리프레시 토큰 저장 (TTL은 JWT와 같은걸로)
   await saveRefreshTokenToRedis(user._id, refreshToken, refreshTokenTTL);
 
-  return {accessToken, refreshToken};
+  return {accessToken, refreshToken, refreshTokenTTL};
 };
 
 // 2. JWT 검증

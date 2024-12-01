@@ -35,6 +35,7 @@ export const getPublicProfile = async () => {
       name: data.name,
       email: data.email,
       profileIcon: data.profileIcon,
+      userId: data.userId,
     }));
     return data;
   } catch (error) {
