@@ -237,7 +237,6 @@ const data = {
 
 const handleLogout = async () => {
   await logoutUser();
-  return window.location.href = '/login';
 };
 
 function Page({children}) {
