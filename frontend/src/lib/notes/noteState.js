@@ -32,7 +32,7 @@ export const initializeCategoriesAtom = atom(null, async (get, set) => {
 
 // 태그 초기화
 export const initializeTagsAtom = atom(null, async (get, set) => {
-  const tags = await getTags();
+  const tags = await getTags(true);
   set(tagListAtom, tags); // 배열
 })
 

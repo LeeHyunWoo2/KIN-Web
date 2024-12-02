@@ -14,7 +14,7 @@ export const getTags = async (forceReload = false) => {
       const clearTx = db.transaction("tags", "readwrite");
       const clearStore = clearTx.objectStore("tags");
       await clearStore.clear();
-      await clearTx.done();
+      await clearTx.done;
     }
     const response = await apiClient.get('/tags', {
       headers: {

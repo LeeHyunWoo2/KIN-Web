@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { tutorialActiveAtom, tutorialSkippedAtom } from "@/atoms/userState";
-import {Button} from "@/components/ui/button";
+import {Lightbulb} from "lucide-react";
+import {SidebarMenuButton} from "@/components/ui/sidebar";
 
 export default function TutorialButton() {
   const setTutorialActive = useAtom(tutorialActiveAtom)[1];
@@ -15,8 +16,8 @@ export default function TutorialButton() {
   };
 
   return (
-      <Button variant="outline" onClick={handleStartTutorial} className="step5">
-        튜토리얼
-      </Button>
+      <SidebarMenuButton variant="outline" onClick={handleStartTutorial} className="step5 justify-center font-medium  border bg-background shadow-sm">
+        <Lightbulb /><span className="group-data-[collapsible=icon]:hidden">튜토리얼</span>
+      </SidebarMenuButton>
   );
 }

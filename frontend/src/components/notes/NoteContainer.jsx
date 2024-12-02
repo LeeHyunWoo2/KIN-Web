@@ -27,7 +27,7 @@ import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
 import {filteredNotesAtom} from "@/lib/notes/filterNotes";
 import {
   isTrashedAtom,
-  selectedCategoryNameAtom, sortByAtom
+  selectedCategoryNameAtom
 } from "@/atoms/filterAtoms";
 import {SearchFilter} from "@/components/notes/FilterComponents";
 

@@ -3,6 +3,8 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {cn} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {ko} from "date-fns/locale";
+import {format} from "date-fns";
 
 export default function NoteList({notes}) {
   const router = useRouter();
@@ -16,6 +18,26 @@ export default function NoteList({notes}) {
     }
   };
 
+  function customFormatDistanceToNow(date) {
+    const now = new Date();
+    const isSameYear = now.getFullYear() === date.getFullYear();
+    const daysDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+    if (daysDiff === 1) {
+      return '어제'; // "1일 전"을 "어제"로 변경
+    }
+
+    if (daysDiff > 1) {
+      // 2일 전부터는 날짜 그대로 출력
+      return isSameYear
+          ? format(date, 'MM월 dd일', { locale: ko }) // 같은 해라면 월-일
+          : format(date, 'yyyy년 MM월 dd일', { locale: ko }); // 다른 해라면 년-월-일
+    }
+
+    const result = formatDistanceToNow(date, { addSuffix: true, locale: ko });
+    return result.replace('약 ', ''); // "약" 제거
+  }
+
   return (
       <ScrollArea className="h-screen">
         <div className="flex flex-col gap-2 p-4 pt-0">
@@ -25,7 +47,7 @@ export default function NoteList({notes}) {
               <button
                   key={note._id}
                   className={cn(
-                      "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px]",
+                      "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px]",
                       router.query.id === note._id && "bg-muted" // URL의 ID와 매칭되면 스타일 적용
                   )}
                   onClick={() => handleNoteClick(note)} // 노트 클릭 시 URL에 ID 추가
@@ -34,20 +56,10 @@ export default function NoteList({notes}) {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div className="font-semibold">{note.title}</div>
-                      {note.is_pinned && (<span className="flex h-2 w-2 rounded-full bg-blue-500" />)}
+                      {note.is_pinned && (<span
+                          className="flex h-2 w-2 rounded-full bg-blue-500"/>)}
                     </div>
-                    <div
-                        className={cn(
-                            "ml-auto text-xs",
-                            router.query.id === note._id
-                                ? "text-foreground"
-                                : "text-muted-foreground"
-                        )}
-                    >
-                      {formatDistanceToNow(new Date(note.updated_at), {
-                        addSuffix: false,
-                      })}
-                    </div>
+
                   </div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
@@ -55,29 +67,29 @@ export default function NoteList({notes}) {
                 </div>
                 {note.tags.length ? (
                     <div className="flex items-center gap-2">
-                      {note.tags.map((label) => (
-                          <Badge key={label}
-                                 variant={getBadgeVariantFromLabel(label)}>
-                            {label}
+                      {note.tags.map((tag) => (
+                          <Badge key={tag} className="text-xs" color="blue">
+                            {tag}
                           </Badge>
                       ))}
                     </div>
                 ) : null}
+                <div
+                    className={cn(
+                        "absolute bottom-2 right-3 text-xs",
+                        router.query.id === note._id
+                            ? "text-foreground"
+                            : "text-muted-foreground"
+                    )}
+                >
+                  {customFormatDistanceToNow(new Date(note.updated_at), {
+                    addSuffix: true,
+                    locale: ko,
+                  })}
+                </div>
               </button>
           ))}
         </div>
       </ScrollArea>
   );
-}
-
-function getBadgeVariantFromLabel(label) {
-  if (["work"].includes(label.toLowerCase())) {
-    return "default";
-  }
-
-  if (["personal"].includes(label.toLowerCase())) {
-    return "outline";
-  }
-
-  return "secondary";
 }

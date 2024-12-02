@@ -38,14 +38,13 @@ import {
   MenubarSubTrigger,
   MenubarTrigger
 } from "@/components/ui/menubar";
-import { useToast } from "@/hooks/use-toast"
-import {ToastAction, toastAction} from "@/components/ui/toast"
+import TagSelector from './TagSelector'
+
 
 const produce = require("immer").produce;
 
 export default function NoteDisplay() {
   const router = useRouter();
-  const toast = useToast();
   const [, setNoteEvent] = useAtom(noteEventAtom); // 이벤트 전송용 아톰
   const [selectedNoteState, setSelectedNoteState] = useAtom(
       selectedNoteStateAtom);
@@ -192,101 +191,111 @@ export default function NoteDisplay() {
       <div className="flex flex-col h-full">
         <div className="flex items-center p-1">
           <div className="flex items-center gap-2">
-
             {categoryTree.length ? (
                 <Menubar>
                   <MenubarMenu>
-                    <MenubarTrigger className="cursor-pointer">{selectedNoteState.category._id ? selectedNoteState.category.name : "카테고리 선택"}</MenubarTrigger>
+                    <MenubarTrigger
+                        className="cursor-pointer">{selectedNoteState.category._id
+                        ? selectedNoteState.category.name
+                        : "카테고리 선택"}</MenubarTrigger>
                     <MenubarContent>
-                      <CategoryMenuItems categories={categoryTree} />
+                      <CategoryMenuItems categories={categoryTree}/>
                       {selectedNoteState.category._id &&
-                        <MenubarItem className="text-red-500" onClick={() => {handleCategorySelect({_id: null, name: null})}}>
-                          카테고리 초기화
-                        </MenubarItem>
+                          <MenubarItem className="text-red-500" onClick={() => {
+                            handleCategorySelect({_id: null, name: null})
+                          }}>
+                            카테고리 초기화
+                          </MenubarItem>
                       }
                     </MenubarContent>
                   </MenubarMenu>
                 </Menubar>
             ) : (
-                  <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm
+                <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm
                   font-medium pointer-events-none opacity-60 border  bg-background shadow-sm h-9 px-4 py-2">
-                    카테고리 없음
-                  </div>
+                  카테고리 없음
+                </div>
             )}
           </div>
-
           <Separator orientation="vertical" className="mx-3 h-6"/>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" onClick={pinTheNote} disabled={selectedNoteState.is_trashed}>
-                {!selectedNoteState.is_pinned ? (
-                    <Star className="h-4 w-4"/>
-                ):(
-                    <StarOff />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{!selectedNoteState.is_pinned ? '즐겨찾기' : '즐겨찾기 해제'}</TooltipContent>
-          </Tooltip>
-
-          <div className="ml-auto flex items-center gap-2">
-
-            {/* Move to Junk Button */}
+            <TagSelector/>
+            <Separator orientation="vertical" className="mx-3 h-6"/>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={selectedNoteState.is_trashed === false} onClick={handlePermanentDelete}>
-                  <ArchiveX className="h-4 w-4"/>
-                  <span className="sr-only">Move to junk</span>
+                <Button variant="ghost" size="icon" onClick={pinTheNote}
+                        disabled={selectedNoteState.is_trashed}>
+                  {!selectedNoteState.is_pinned ? (
+                      <Star className="h-4 w-4"/>
+                  ) : (
+                      <StarOff/>
+                  )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>영구삭제</TooltipContent>
+              <TooltipContent>{!selectedNoteState.is_pinned ? '즐겨찾기'
+                  : '즐겨찾기 해제'}</TooltipContent>
             </Tooltip>
 
-            {/* Trash Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon"
-                        disabled={selectedNoteState.is_pinned === true} onClick={moveToTrash}>
-                  {!selectedNoteState.is_trashed === true ? (
-                  <Trash2 className="h-4 w-4"/>) : (
-                  <Undo2 />)}
+            <div className="ml-auto flex items-center gap-2">
+
+              {/* Move to Junk Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon"
+                          disabled={selectedNoteState.is_trashed === false}
+                          onClick={handlePermanentDelete}>
+                    <ArchiveX className="h-4 w-4"/>
+                    <span className="sr-only">Move to junk</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>영구삭제</TooltipContent>
+              </Tooltip>
+
+              {/* Trash Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon"
+                          disabled={selectedNoteState.is_pinned === true}
+                          onClick={moveToTrash}>
+                    {!selectedNoteState.is_trashed === true ? (
+                        <Trash2 className="h-4 w-4"/>) : (
+                        <Undo2/>)}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동'
+                    : '복구하기'}</TooltipContent>
+              </Tooltip>
+              <Separator orientation="vertical" className="mx-1 h-6"/>
+            </div>
+
+            {/* More Options Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4"/>
+                  <span className="sr-only">More</span>
                 </Button>
-              </TooltipTrigger>
-              <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동' : '복구하기'}</TooltipContent>
-            </Tooltip>
-            <Separator orientation="vertical" className="mx-1 h-6"/>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>샘플 메뉴 1</DropdownMenuItem>
+                <DropdownMenuItem>샘플 메뉴 2</DropdownMenuItem>
+                <DropdownMenuItem>샘플 메뉴 3</DropdownMenuItem>
+                <DropdownMenuItem>샘플 메뉴 4</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* More Options Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-4 w-4"/>
-                <span className="sr-only">More</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>샘플 메뉴 1</DropdownMenuItem>
-              <DropdownMenuItem>샘플 메뉴 2</DropdownMenuItem>
-              <DropdownMenuItem>샘플 메뉴 3</DropdownMenuItem>
-              <DropdownMenuItem>샘플 메뉴 4</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Separator/>
+          <Input
+              value={selectedNoteState.title}
+              onChange={handleTitleChange} // 뭔가 바뀌면 호출
+              className="mb-4 text-xl font-semibold"
+          />
+          <Textarea
+              value={selectedNoteState.content}
+              onChange={handleContentChange}
+              className="flex-1"
+          />
+          {/*추후 카테고리와 태그 설정 추가할것*/}
         </div>
-
-        <Separator/>
-        <Input
-            value={selectedNoteState.title}
-            onChange={handleTitleChange} // 뭔가 바뀌면 호출
-            className="mb-4 text-xl font-semibold"
-        />
-        <Textarea
-            value={selectedNoteState.content}
-            onChange={handleContentChange}
-            className="flex-1"
-        />
-        {/*추후 카테고리와 태그 설정 추가할것*/}
-      </div>
-  );
-}
+        );
+        }
