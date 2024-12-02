@@ -1,4 +1,8 @@
-
+> [!CAUTION]
+> 이 프로젝트의 Readme 는 미완성 상태입니다.
+> 최대한 빠른 시일 내에 완성 하겠습니다.
+  <br>
+  
 # KIN - Keep Idea Note
 <table>
 <tr>
@@ -8,12 +12,6 @@ KIN Noteapp은 간단하고 직관적인 노트 관리 웹 애플리케이션으
 </td>
 </tr>
 </table>
-<br>
-
-> [!CAUTION]
-> 이 프로젝트의 Readme 는 미완성 상태입니다.
-> 최대한 빠른 시일 내에 완성 하겠습니다.
-
 <br>
 
 ## 목차
