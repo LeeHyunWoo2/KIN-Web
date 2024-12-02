@@ -4,11 +4,9 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import SocialLogin from "@/components/SocialLogin";
-import {getPublicProfile, loginUser} from "@/services/user/authService";
+import { loginUser} from "@/services/user/authService";
 import {useState} from "react";
 import {router} from "next/client";
-import {useSetAtom} from "jotai/index";
-import {userProfileAtom} from "@/atoms/authAtom";
 import {
   Tooltip,
   TooltipContent,
@@ -19,7 +17,6 @@ import {toast} from "sonner";
 export default function Dashboard() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const setUserProfile = useSetAtom(userProfileAtom);
 
   const handleLogin = async (event, id, password) => {
     event.preventDefault();
@@ -30,10 +27,8 @@ export default function Dashboard() {
       const credentials = {id, password};
       const tokens = await loginUser(credentials);
       if (tokens) {
-        const profile = await getPublicProfile(); // 공개 데이터 API 호출
-        setUserProfile(profile); // Jotai 및 LocalStorage에 저장
-        // 로그인 성공 시 리다이렉트
-        await router.push("/notes");
+        // 로그인 성공 시 loginSuccess로 리다이렉트
+        await router.push("/loginSuccess");
       }
     }
   };

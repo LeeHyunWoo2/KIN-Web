@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { getPublicProfile } from '@/services/user/authService';
 import { useSetAtom} from 'jotai';
-import { userProfileAtom } from '@/atoms/authAtom';
+import { userProfileAtom } from '@/atoms/userState';
+
 
 const LoginSuccess = () => {
   const router = useRouter();

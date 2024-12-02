@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import apiClient from "@/lib/apiClient";
 import {useAtom} from "jotai";
-import {authAtom} from "@/atoms/authAtom";
+import {authAtom} from "@/atoms/userState";
 
 
 const withAuth = (WrappedComponent) => {
@@ -36,7 +36,7 @@ const withAuth = (WrappedComponent) => {
         try {
           const response = await apiClient.get('/auth/check-session');
           if (response.status === 200) {
-            setAuth(response.data.user); // 인증 성공 시 인증 상태 저장
+           await setAuth(response.data.user); // 인증 성공 시 인증 상태 저장
           } else {
             setShowAlert(true);
           }

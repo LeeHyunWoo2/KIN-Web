@@ -35,6 +35,7 @@ export const getPublicProfile = async () => {
       name: data.name,
       email: data.email,
       profileIcon: data.profileIcon,
+      userId: data.userId,
     }));
     return data;
   } catch (error) {
@@ -92,6 +93,7 @@ export const unlinkSocialAccount = async (provider) => {
 // 로그아웃 API (토큰 제거)
 export const logoutUser = async () => {
   try {
+    window.location.href = '/login';
     await apiClient.post('/auth/logout', {});
   } catch (error) {
   }

@@ -349,37 +349,41 @@ export default function CategorySidebar() {
               <Popover>
                 <PopoverTrigger asChild>
                   <SidebarGroupLabel>
-                    <button
-                        className="rounded-md p-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                      <ListPlus className="max-w-5"/>
-                    </button>
+                    <div className="step3">
+                      <button
+                          className="rounded-md p-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                        <ListPlus className="max-w-5"/>
+                      </button>
+                    </div>
                   </SidebarGroupLabel>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <div className="grid gap-1">
-                    <div className="space-y-2">
-                      <h5 className="font-medium leading-none">최상위 카테고리 추가</h5>
-                    </div>
-                    <div className="grid gap-2">
-                      <div className="grid grid-cols-1 items-center gap-2">
-                        <p className="text-sm text-muted-foreground">
-                          엔터(Enter)키로 적용
-                        </p>
-                        <Input
-                            type="text"
-                            value={newCategoryName}
-                            onChange={(e) => setNewCategoryName(e.target.value)}
-                            placeholder="카테고리 이름"
-                            className="col-span-2 h-8"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                handleAddCategory()
-                              }
-                            }}
-                        />
+                      <div className="space-y-2">
+                        <h5 className="font-medium leading-none">최상위 카테고리
+                          추가</h5>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="grid grid-cols-1 items-center gap-2">
+                          <p className="text-sm text-muted-foreground">
+                            엔터(Enter)키로 적용
+                          </p>
+                          <Input
+                              type="text"
+                              value={newCategoryName}
+                              onChange={(e) => setNewCategoryName(
+                                  e.target.value)}
+                              placeholder="카테고리 이름"
+                              className="col-span-2 h-8"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleAddCategory()
+                                }
+                              }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </PopoverContent>
               </Popover>
             </div>

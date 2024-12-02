@@ -106,12 +106,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const globalLimiter = rateLimit({
+  validate: {trustProxy: false}, // 프록시 검사 끄기, 클라우드 플레어 때문에 켬
   windowMs: 10 * 60 * 1000,
   max: 1500, // IP당 1000 요청
   message: "요청 횟수를 초과했습니다.",
 });
 
 const apiLimiter = rateLimit({
+  validate: {trustProxy: false},
   windowMs: 3 * 60 * 1000,
   max: 100, // IP당 최대 100 요청
   message: "요청 횟수를 초과 하였습니다. 잠시 후 다시 시도해주세요.",

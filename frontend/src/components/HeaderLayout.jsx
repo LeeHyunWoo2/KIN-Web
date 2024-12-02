@@ -2,7 +2,7 @@ import * as React from "react";
 import {Button} from "@/components/ui/button"
 import {Triangle} from "lucide-react";
 import Link from "next/link";
-import {authAtom} from "@/atoms/authAtom";
+import {authAtom} from "@/atoms/userState";
 import {useAtomValue} from "jotai";
 
 export default function HeaderLayout({children}) {
