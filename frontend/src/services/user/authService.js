@@ -74,7 +74,7 @@ export const deleteUserProfile = async () => {
       return window.location.reload();
     }
   }
-  localStorage.removeItem('userInfo');``
+  localStorage.removeItem('userInfo');
   window.location.href = '/login';
 };
 
@@ -93,6 +93,7 @@ export const unlinkSocialAccount = async (provider) => {
 // 로그아웃 API (토큰 제거)
 export const logoutUser = async () => {
   try {
+    localStorage.removeItem('userInfo');
     window.location.href = '/login';
     await apiClient.post('/auth/logout', {});
   } catch (error) {
