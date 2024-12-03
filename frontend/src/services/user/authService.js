@@ -74,7 +74,7 @@ export const deleteUserProfile = async () => {
       return window.location.reload();
     }
   }
-  localStorage.removeItem('userInfo');``
+  localStorage.removeItem('userInfo');
   window.location.href = '/login';
 };
 
