@@ -16,7 +16,6 @@ import {
   FileText,
   Frame,
   GalleryVerticalEnd,
-  Tag,
   LineChart,
   Link as LinkIcon,
   LogOut,
@@ -27,7 +26,6 @@ import {
   Settings2,
   SquarePen,
   SquareTerminal,
-  Star,
   Trash,
   Trash2,
   UserRoundCog,
@@ -70,6 +68,7 @@ import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
 import TutorialButton from "@/components/notes/TutorialButton";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 const data = {
   navMain: [
@@ -247,6 +246,8 @@ function Page({children}) {
     profileIcon: '',
   });
 
+  const isMobile = useIsMobile();
+
   const handleNewNote = () => {
     setNoteEvent({
       type: 'ADD',
@@ -302,7 +303,7 @@ function Page({children}) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                        side="right"
+                        side={isMobile ? "bottom" : "right"}
                         align="end"
                         sideOffset={4}
                     >
@@ -350,12 +351,10 @@ function Page({children}) {
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator/>
-                      <Link href="/">
                         <DropdownMenuItem onClick={handleLogout}>
                           <LogOut/>
                           Log out
                         </DropdownMenuItem>
-                      </Link>
                     </DropdownMenuContent>
                   </div>
                 </DropdownMenu>

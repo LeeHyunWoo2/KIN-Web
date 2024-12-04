@@ -12,13 +12,14 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Input} from "@/components/ui/input";
 import {createTag, deleteTag} from "@/services/notes/tagService";
 import {useAtomValue} from "jotai";
-import {initializeTagsAtom} from "@/lib/notes/noteState";
+import {initializeNotesAtom, initializeTagsAtom} from "@/lib/notes/noteState";
 import {tagListAtom} from "@/atoms/filterAtoms";
 import {useSetAtom} from "jotai/index";
 
 export default function TagManagerModal() {
   const [newTagName, setNewTagName] = useState("");
   const initializeTags = useSetAtom(initializeTagsAtom);
+  const initializeNotes = useSetAtom(initializeNotesAtom);
   const tagList = useAtomValue(tagListAtom);
 
   const handleAddTag = async () => {
@@ -43,6 +44,7 @@ export default function TagManagerModal() {
     try {
       await deleteTag(tagId);
       await initializeTags();
+      await initializeNotes();
     } catch (error) {
       console.error(error.message);
     }

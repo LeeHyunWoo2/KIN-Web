@@ -93,9 +93,9 @@ export const unlinkSocialAccount = async (provider) => {
 // 로그아웃 API (토큰 제거)
 export const logoutUser = async () => {
   try {
+    await apiClient.post('/auth/logout', {});
     localStorage.removeItem('userInfo');
     window.location.href = '/login';
-    await apiClient.post('/auth/logout', {});
   } catch (error) {
   }
 };

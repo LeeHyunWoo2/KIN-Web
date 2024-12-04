@@ -65,13 +65,52 @@ export const updateTag = async (tagId, updatedData) => {
 
 // 태그 삭제
 export const deleteTag = async (tagId) => {
-  await apiClient.delete(`/tags/${tagId}`);
+  try {
+    // 1. 태그를 참조 중인 노트 추적
+    const db = await initDB();
+    const noteStore = db.transaction("notes", "readonly").objectStore("notes");
+    const notes = await noteStore.getAll();
 
-  const db = await initDB();
-  const tx = db.transaction("tags", "readwrite");
-  const store = tx.objectStore("tags");
-  store.delete(tagId);
-  await tx.done;
+    const noteIdsToUpdate = notes
+    .filter((note) => note.tags.some((tag) => tag._id === tagId)) // 해당 태그를 포함한 노트 찾기
+    .map((note) => note._id);
 
-  return tagId;
+    // 2. 서버에 삭제 요청
+    const response = await apiClient.delete(`/tags/${tagId}`, {
+      data: {
+        noteIds: noteIdsToUpdate, // 업데이트할 노트 ID 포함
+      },
+    });
+
+    const { tagId: deletedTagId, updatedNotes } = response.data
+
+    console.log(deletedTagId)
+    console.log(updatedNotes)
+
+    // 3. 동기화
+    if (updatedNotes && updatedNotes.length > 0) {
+      const tx = db.transaction("notes", "readwrite");
+      const noteStoreWritable = tx.objectStore("notes");
+
+      for (const id of updatedNotes) {
+        const note = await noteStoreWritable.get(id);
+        if (note) {
+          // 태그 배열에서 삭제된 태그 제거
+          note.tags = note.tags.filter((tag) => tag._id !== deletedTagId);
+          noteStoreWritable.put(note); // 수정된 노트 저장
+        }
+      }
+      await tx.done;
+    }
+
+    // IndexedDB에서 제거
+    const tagTx = db.transaction("tags", "readwrite");
+    const tagStore = tagTx.objectStore("tags");
+    tagStore.delete(tagId);
+    await tagTx.done;
+
+  } catch (error) {
+    console.error(error);
+    throw new Error("태그 삭제 중 문제가 발생했습니다.");
+  }
 };

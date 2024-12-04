@@ -6,7 +6,7 @@ import {MoreHorizontal} from "lucide-react";
 
 const steps = [
   { target: ".step1", content: "이곳에서 새 노트를 작성할 수 있습니다.", disableBeacon: true },
-  { target: ".step2", content: "이곳에서 각종 설정 및 로그아웃을 할 수 있습니다."},
+  { target: ".step2", content: "프로필을 클릭해 설정 및 로그아웃을 할 수 있습니다."},
   { target: ".step3", content: (
       <>
         <div className="flex justify-center mb-5">

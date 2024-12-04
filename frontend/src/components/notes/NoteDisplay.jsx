@@ -39,6 +39,7 @@ import {
   MenubarTrigger
 } from "@/components/ui/menubar";
 import TagSelector from './TagSelector'
+import {Badge} from "@/components/ui/badge";
 
 
 const produce = require("immer").produce;
@@ -182,11 +183,6 @@ export default function NoteDisplay() {
     }
   }, [isNotSaved]);
 
-  if (!selectedNoteState) {
-    return <div className="p-8 text-center text-muted-foreground">선택된 노트가
-      없습니다.</div>;
-  }
-
   return (
       <div className="flex flex-col h-full">
         <div className="flex items-center p-1">
@@ -284,7 +280,14 @@ export default function NoteDisplay() {
             </DropdownMenu>
           </div>
 
-          <Separator/>
+        <div className="flex flex-col flex-1 -mt-2 p-4">
+          {selectedNoteState.tags.length === 0 ? (
+              <div className="mb-2 min-h-7">태그 없음</div>
+          ):(
+              <div className="mb-2 min-h-7">태그 : {selectedNoteState.tags.map((tag) =>
+                  <Badge variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
+              )}</div>
+          )}
           <Input
               value={selectedNoteState.title}
               onChange={handleTitleChange} // 뭔가 바뀌면 호출
@@ -296,6 +299,7 @@ export default function NoteDisplay() {
               className="flex-1"
           />
           {/*추후 카테고리와 태그 설정 추가할것*/}
+        </div>
         </div>
         );
         }
