@@ -136,6 +136,9 @@ app.use('/category', categoryRoutes);
 app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
 
+redisClient.on('error', (err) => {
+  console.error('Redis Error:', err);
+});
 
 app.head('/', (req, res) => {
   res.status(200).end(); // 본문 없이 상태 코드만 반환
@@ -153,7 +156,7 @@ app.get("/api/server-time", (req, res) => {
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
-  process.exit(1);
+  // process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {

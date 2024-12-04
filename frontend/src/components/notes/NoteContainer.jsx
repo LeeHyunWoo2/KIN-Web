@@ -9,8 +9,6 @@ import {
   ResizablePanelGroup
 } from "@/components/ui/resizable";
 import {Separator} from "@/components/ui/separator";
-import {TooltipProvider} from "@/components/ui/tooltip";
-import {Input} from "@/components/ui/input";
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,

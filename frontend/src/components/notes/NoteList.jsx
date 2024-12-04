@@ -68,8 +68,8 @@ export default function NoteList({notes}) {
                 {note.tags.length ? (
                     <div className="flex items-center gap-2">
                       {note.tags.map((tag) => (
-                          <Badge key={tag} className="text-xs" color="blue">
-                            {tag}
+                          <Badge key={tag._id} variant={ router.query.id === note._id ? "default2" : "secondary2"}>
+                            {tag.name}
                           </Badge>
                       ))}
                     </div>

@@ -44,10 +44,16 @@ exports.updateTag = async (req, res) => {
 exports.deleteTag = async (req, res) => {
   try {
     const { tagId } = req.params;
+    const { noteIds } = req.body; // 클라이언트에서 전달한 noteIds
 
-    const deletedTag = await tagService.deleteTag(req.user.id, tagId);
-    if (!deletedTag) return res.status(404).json({ message: "해당 태그를 찾을 수 없습니다." });
-    res.status(200).json();
+    console.log(noteIds);
+
+    const deletedTag = await tagService.deleteTag(req.user.id, tagId, noteIds);
+    if (!deletedTag) {
+      return res.status(404).json({ message: "해당 태그를 찾을 수 없습니다." });
+    }
+
+    res.status(200).json(deletedTag); // 삭제 결과 반환
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "태그 삭제 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });

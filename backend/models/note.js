@@ -27,8 +27,13 @@ const NoteSchema = new mongoose.Schema({
   tags: {
     type: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tag',
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Tag',
+        },
+        name: {
+          type: String,
+        }
       }
     ],
     default: [], // 태그가 없는 경우 빈 배열
