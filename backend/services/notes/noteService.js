@@ -2,8 +2,8 @@ const Note = require('../../models/note');
 
 // 노트 리스트 조회
 exports.getNotes = async (userId) => {
-  return Note.find({user_id: userId}).sort(
-      {created_at: -1});
+  return Note.find({user_id: userId})
+  .sort({created_at: -1});
 };
 
 // 노트 생성

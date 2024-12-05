@@ -4,7 +4,7 @@ const Note = require("../../models/note");
 
 // 카테고리 리스트 조회
 exports.getCategories = async (userId) => {
-  return Category.find({user_id: userId});
+  return Category.find({user_id: userId})
 };
 
 // 카테고리 생성

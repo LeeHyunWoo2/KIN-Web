@@ -285,7 +285,7 @@ export default function NoteDisplay() {
               <div className="mb-2 min-h-7">태그 없음</div>
           ):(
               <div className="mb-2 min-h-7">태그 : {selectedNoteState.tags.map((tag) =>
-                  <Badge variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
+                  <Badge key={tag._id} variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
               )}</div>
           )}
           <Input

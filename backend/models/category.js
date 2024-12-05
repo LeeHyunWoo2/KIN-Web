@@ -15,5 +15,7 @@ const CategorySchema = new mongoose.Schema({
     ref: 'Category',
     required: false,
   }
+}, {
+  versionKey: false // __v 필드 비활성화
 });
 module.exports = mongoose.model('Category', CategorySchema);
