@@ -76,6 +76,8 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
     required: false,
   }
+}, {
+  versionKey: false // __v 필드 비활성화
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

@@ -62,6 +62,8 @@ const NoteSchema = new mongoose.Schema({
     type:Date,
     default: null,
   }
+}, {
+  versionKey: false // __v 필드 비활성화
 });
 
 module.exports = mongoose.model('Note', NoteSchema);
