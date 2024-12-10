@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/menubar";
 import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
+import {PlateEditor} from "@/components/notes/editor/plate-editor";
 
 
 const produce = require("immer").produce;
@@ -293,6 +294,7 @@ export default function NoteDisplay() {
               onChange={handleTitleChange} // 뭔가 바뀌면 호출
               className="mb-4 text-xl font-semibold"
           />
+          <PlateEditor/>
           <Textarea
               value={selectedNoteState.content}
               onChange={handleContentChange}
