@@ -1,18 +1,23 @@
 'use client';
 
-import { Plate } from '@udecode/plate-common/react';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
-import { useCreateEditor } from '@/components/notes/editor/use-create-editor';
-import { Editor, EditorContainer } from '@/components/notes/plate-ui/editor';
+import {Plate} from '@udecode/plate-common/react';
 
-export function PlateEditor() {
+import {useCreateEditor} from '@/components/notes/editor/editor-plugins';
+import {Editor, EditorContainer} from '@/components/plate-ui/editor';
+
+export default function PlateEditor() {
   const editor = useCreateEditor();
 
   return (
-    <Plate editor={editor}>
-      <EditorContainer className="border rounded-md">
-        <Editor variant="fullWidth" placeholder="새 페이지" />
-      </EditorContainer>
-    </Plate>
+      <DndProvider backend={HTML5Backend}>
+        <Plate editor={editor}>
+          <EditorContainer className="border rounded-md">
+            <Editor variant="fullWidth"/>
+          </EditorContainer>
+        </Plate>
+      </DndProvider>
   );
 }

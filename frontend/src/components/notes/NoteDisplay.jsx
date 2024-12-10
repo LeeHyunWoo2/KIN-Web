@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/menubar";
 import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
-import {PlateEditor} from "@/components/notes/editor/plate-editor";
+import PlateEditor from "@/components/notes/editor/plate-editor";
 
 
 const produce = require("immer").produce;
@@ -281,7 +281,7 @@ export default function NoteDisplay() {
             </DropdownMenu>
           </div>
 
-        <div className="flex flex-col flex-1 -mt-2 p-4">
+        <div className="flex flex-col flex-1 -mt-2 p-4" data-registry="plate">
           {selectedNoteState.tags.length === 0 ? (
               <div className="mb-2 min-h-7">태그 없음</div>
           ):(
