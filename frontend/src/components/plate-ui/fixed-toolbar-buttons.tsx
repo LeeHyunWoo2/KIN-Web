@@ -68,43 +68,32 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <ExportToolbarButton>
-              <ArrowUpToLineIcon />
-            </ExportToolbarButton>
-          </ToolbarGroup>
-
-          <ToolbarGroup>
-            <InsertDropdownMenu />
-            <TurnIntoDropdownMenu />
-          </ToolbarGroup>
-
-          <ToolbarGroup>
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (Ctrl+B)">
               <BoldIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={ItalicPlugin.key}
-              tooltip="Italic (⌘+I)"
+              tooltip="Italic (Ctrl+I)"
             >
               <ItalicIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={UnderlinePlugin.key}
-              tooltip="Underline (⌘+U)"
+              tooltip="Underline (Ctrl+U)"
             >
               <UnderlineIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={StrikethroughPlugin.key}
-              tooltip="Strikethrough (⌘+⇧+M)"
+              tooltip="Strikethrough (Ctrl+Shift+M)"
             >
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (Ctrl+E)">
               <Code2Icon />
             </MarkToolbarButton>
 
@@ -125,11 +114,15 @@ export function FixedToolbarButtons() {
 
           <ToolbarGroup>
             <AlignDropdownMenu />
-
             <IndentListToolbarButton nodeType={ListStyleType.Disc} />
             <IndentListToolbarButton nodeType={ListStyleType.Decimal} />
             <IndentTodoToolbarButton />
             <ToggleToolbarButton />
+          </ToolbarGroup>
+
+          <ToolbarGroup>
+            <InsertDropdownMenu />
+            <TurnIntoDropdownMenu />
           </ToolbarGroup>
 
           <ToolbarGroup>
@@ -153,13 +146,17 @@ export function FixedToolbarButtons() {
           <ToolbarGroup>
             <MoreDropdownMenu />
           </ToolbarGroup>
+
+          <ToolbarGroup>
+            <ExportToolbarButton>
+              <ArrowUpToLineIcon />
+            </ExportToolbarButton>
+          </ToolbarGroup>
         </>
       )}
-
-      <div className="grow" />
-
+      <div/>
       <ToolbarGroup>
-        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="Highlight">
+        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="하이라이트">
           <HighlighterIcon />
         </MarkToolbarButton>
       </ToolbarGroup>
