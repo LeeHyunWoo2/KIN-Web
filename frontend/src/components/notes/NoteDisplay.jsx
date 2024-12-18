@@ -95,7 +95,7 @@ export default function NoteDisplay() {
     setIsNotSaved(true); // 변경 사항 표시
   };
 
-  const handleTitleChange = (e) => {
+/*  const handleTitleChange = (e) => {
     const newTitle = e.target.value;
     setSelectedNoteState((prev) => produce(prev, (draft) => {
       draft.title = newTitle;
@@ -121,7 +121,7 @@ export default function NoteDisplay() {
     );
     setIsInitialLoad(false);
     setIsNotSaved(true);
-  };
+  };*/
 
   const handleCategorySelect = (category) => {
     if (category._id !== selectedNoteState.category._id) {
