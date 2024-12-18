@@ -115,7 +115,7 @@ export default function NoteContainer({ defaultLayout }) {
 
 
   return (
-        <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
+        <ResizablePanelGroup direction="horizontal" className="h-full max-h-[calc(100vh-48px)]  items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
             <div className="flex items-center px-4 py-2  justify-between">
               <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([23, 80])}>

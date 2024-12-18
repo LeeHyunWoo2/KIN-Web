@@ -234,6 +234,30 @@ const data = {
   ],
 }
 
+const defaultTitle = ([
+  {
+    children: [{text: "playground"}],
+    type: "h1",
+  }
+])
+
+const defaultContent = ([
+  {
+    children: [{ text: "Playground" }],
+    type: "h1"
+  },
+  {
+    children: [
+      { text: "A rich-text editor with AI capabilities. Try the " },
+      { bold: true, text: "AI commands" },
+      { text: " or use " },
+      { kbd: true, text: "Cmd+J" },
+      { text: " to open the AI menu." }
+    ],
+    type: "paragraph"
+  }
+])
+
 const handleLogout = async () => {
   await logoutUser();
 };
@@ -251,7 +275,7 @@ function Page({children}) {
   const handleNewNote = () => {
     setNoteEvent({
       type: 'ADD',
-      payload: {title: '', content: ''}
+      payload: {title: defaultTitle, content: defaultContent}
     })
   };
 
@@ -392,8 +416,7 @@ function Page({children}) {
           <SidebarRail/>
         </Sidebar>
         <SidebarInset>
-          <header
-              className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-2">
+          <header className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-2">
             <div className="flex flex-1 items-center gap-2">
               <SidebarTrigger className="w-20 h-10"/>
               <Separator orientation="vertical" className="mr-2 h-4"/>

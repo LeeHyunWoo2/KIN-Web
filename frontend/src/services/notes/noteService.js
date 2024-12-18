@@ -1,5 +1,7 @@
 import { initDB } from "@/lib/notes/initDB";
 import apiClient from "@/lib/apiClient";
+import { compressContent, decompressContent } from '@/lib/notes/noteCompressor';
+
 
 // 서버 시간 가져오기
 async function getServerTime() {
@@ -18,6 +20,13 @@ export const getNotes = async (forceReload = false) => {
     });
     const loadedNotes = response.data;
 
+    // 복원
+    const decompressedNotes = loadedNotes.map((note) => ({
+      ...note,
+      title: decompressContent(note.title),
+      content: decompressContent(note.content),
+    }))
+
     // PouchDB 초기화
     const existingNotes = await db.find({ selector: { type: "note" } });
     for (const note of existingNotes.docs) {
@@ -25,11 +34,11 @@ export const getNotes = async (forceReload = false) => {
     }
 
     // 서버 데이터 저장
-    for (const note of loadedNotes) {
+    for (const note of decompressedNotes) {
       await db.put({ ...note, type: "note", _id: note._id || note.id });
     }
 
-    return loadedNotes;
+    return decompressedNotes;
   } else {
     // PouchDB에서 노트 가져오기
     const result = await db.find({ selector: { type: "note" } }); // type 필터링
@@ -42,14 +51,28 @@ export const getNotes = async (forceReload = false) => {
 export const createNote = async (noteData) => {
   const db = await initDB();
 
+  // title과 content 만 압축, 나머진 그대로 전송
+  const compressData = {
+    ...noteData,
+    title: compressContent(noteData.title),
+    content: compressContent(noteData.content),
+  };
+
   // 서버에 새 노트 생성 요청
-  const response = await apiClient.post("/notes", noteData);
+  const response = await apiClient.post("/notes", compressData); // 압축된 데이터를 서버로 전달
   const newNote = response.data;
 
   // PouchDB에 저장
-  await db.put({ ...newNote, type: "note", _id: newNote._id || newNote.id });
+  const decompressedNewNote = {
+    ...newNote,
+    title: decompressContent(newNote.title),
+    content: decompressContent(newNote.content),
+  };
+  console.log(decompressedNewNote.title)
+  console.log(decompressedNewNote.content)
+  await db.put({ ...decompressedNewNote, type: "note", _id: newNote._id || newNote.id });
 
-  return newNote;
+  return decompressedNewNote;
 };
 
 
@@ -57,8 +80,14 @@ export const createNote = async (noteData) => {
 export const updateNote = async (updateDataList) => {
   const db = await initDB();
 
+  const compressedDataList = updateDataList.map((note) => ({
+    ...note,
+    ...(note.title && { title: compressContent(note.title) }),
+    ...(note.content && { content: compressContent(note.content) }),
+  }));
+
   // 서버에 업데이트 요청
-  const response = await apiClient.put("/notes", { updateDataList });
+  const response = await apiClient.put("/notes", { updateDataList: compressedDataList });
   const updatedNotes = response.data;
 
   // PouchDB 업데이트

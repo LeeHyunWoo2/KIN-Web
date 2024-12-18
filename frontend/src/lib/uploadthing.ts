@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { OurFileRouter } from '@/lib/notes/uploadthing/route';
+import type { OurFileRouter } from '@/pages/api/uploadthing';
 import type {
   ClientUploadedFileData,
   UploadFilesOptions,
@@ -13,14 +13,15 @@ import { z } from 'zod';
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
 
 interface UseUploadFileProps
-  extends Pick<
-    UploadFilesOptions<OurFileRouter, keyof OurFileRouter>,
+// @ts-ignore
+  extends Pick<UploadFilesOptions<OurFileRouter, keyof OurFileRouter>,
     'headers' | 'onUploadBegin' | 'onUploadProgress' | 'skipPolling'
   > {
   onUploadComplete?: (file: UploadedFile) => void;
   onUploadError?: (error: unknown) => void;
 }
 
+// @ts-ignore
 export function useUploadFile({
   onUploadComplete,
   onUploadError,
@@ -49,7 +50,9 @@ export function useUploadFile({
       onUploadComplete?.(res[0]);
 
       return uploadedFile;
+
     } catch (error) {
+
       const errorMessage = getErrorMessage(error);
 
       const message =

@@ -11,10 +11,10 @@ export default function NoteList({notes}) {
 
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
-      if (router.query.id === note._id) {
-        router.push('/notes', undefined, {shallow: true});
-      } else {
-        router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
+    if (router.query.id === note._id) {
+      router.push('/notes', undefined, {shallow: true});
+    } else {
+      router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
     }
   };
 
@@ -38,6 +38,26 @@ export default function NoteList({notes}) {
     return result.replace('약 ', ''); // "약" 제거
   }
 
+  // Title 데이터 정제 함수
+  const extractTitleText = (titles) => {
+    if (!titles || !Array.isArray(titles)) return "";
+    return titles[0]?.children?.[0]?.text || ""; // 첫 번째 children의 text 값 추출
+  };
+
+  // Content 데이터 정제 함수
+  const extractContentText = (contents) => {
+    if (!contents || !Array.isArray(contents)) return "";
+    return contents
+    .map((content) => {
+      // 각 객체의 children 배열에서 text 값만 추출해 합치기
+      if (content.children && Array.isArray(content.children)) {
+        return content.children.map((child) => child.text || "").join("");
+      }
+      return ""; // children이 없으면 빈 문자열 반환
+    })
+    .join(" "); // 섹션 간 텍스트는 공백으로 이어붙임
+  };
+
   return (
       <ScrollArea className="h-screen">
         <div className="flex flex-col gap-2 p-4 pt-0">
@@ -47,7 +67,7 @@ export default function NoteList({notes}) {
               <button
                   key={note._id}
                   className={cn(
-                      "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px]",
+                      "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px] overflow-hidden",
                       router.query.id === note._id && "bg-muted" // URL의 ID와 매칭되면 스타일 적용
                   )}
                   onClick={() => handleNoteClick(note)} // 노트 클릭 시 URL에 ID 추가
@@ -55,7 +75,9 @@ export default function NoteList({notes}) {
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
-                      <div className="font-semibold">{note.title}</div>
+                      <div className="font-semibold">
+                        {extractTitleText(note.title)}
+                      </div>
                       {note.is_pinned && (<span
                           className="flex h-2 w-2 rounded-full bg-blue-500"/>)}
                     </div>
@@ -63,7 +85,7 @@ export default function NoteList({notes}) {
                   </div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
-                  {note.content.substring(0, 300)}
+                  {extractContentText(note.content)}
                 </div>
                 {note.tags.length ? (
                     <div className="flex items-center gap-2">

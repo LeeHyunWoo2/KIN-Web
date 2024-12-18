@@ -155,7 +155,6 @@ const DropLine = React.memo(
   React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ children, className, ...props }, ref) => {
       const state = useDropLine();
-      console.log(ref)
 
       if (!state.dropLine) return null;
 
