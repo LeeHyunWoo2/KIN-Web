@@ -115,7 +115,7 @@ export default function NoteContainer({ defaultLayout }) {
 
 
   return (
-        <ResizablePanelGroup direction="horizontal" className="h-full max-h-[840px] items-stretch" onLayout={handleLayoutChange}>
+        <ResizablePanelGroup direction="horizontal" className="h-full max-h-[calc(100vh-48px)]  items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
             <div className="flex items-center px-4 py-2  justify-between">
               <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([23, 80])}>
@@ -144,7 +144,7 @@ export default function NoteContainer({ defaultLayout }) {
           <ResizablePanel defaultSize={layout[1]}>
             {/* 로딩 중에도 기존 상태 유지 */}
             {selectedNoteState._id ? (
-                <NoteDisplay note={selectedNoteState} />
+                <NoteDisplay/>
             ) : (
                 <div className="p-8 text-center text-muted-foreground">선택된 노트가
                   없습니다.</div>
