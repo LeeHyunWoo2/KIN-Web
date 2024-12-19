@@ -14,6 +14,12 @@ export const getNotes = async (forceReload = false) => {
   const db = await initDB(); // PouchDB 초기화
 
   if (forceReload) {
+    // PouchDB 삭제
+    await db.destroy();
+
+    // 새 PouchDB 초기화
+    const newDb = await initDB();
+
     // 서버에서 최신 데이터 가져오기
     const response = await apiClient.get("/notes", {
       headers: { "cache-control": "no-cache" },
@@ -27,15 +33,9 @@ export const getNotes = async (forceReload = false) => {
       content: decompressContent(note.content),
     }))
 
-    // PouchDB 초기화
-    const existingNotes = await db.find({ selector: { type: "note" } });
-    for (const note of existingNotes.docs) {
-      await db.remove(note); // type이 "note"인 문서만 삭제
-    }
-
     // 서버 데이터 저장
     for (const note of decompressedNotes) {
-      await db.put({ ...note, type: "note", _id: note._id || note.id });
+      await newDb.put({ ...note, type: "note", _id: note._id || note.id });
     }
 
     return decompressedNotes;
@@ -70,7 +70,7 @@ export const createNote = async (noteData) => {
   };
   await db.put({ ...decompressedNewNote, type: "note", _id: newNote._id || newNote.id });
 
-  return newNote;
+  return decompressedNewNote;
 };
 
 

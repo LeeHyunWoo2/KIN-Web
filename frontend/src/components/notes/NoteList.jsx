@@ -11,10 +11,10 @@ export default function NoteList({notes}) {
 
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
-      if (router.query.id === note._id) {
-        router.push('/notes', undefined, {shallow: true});
-      } else {
-        router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
+    if (router.query.id === note._id) {
+      router.push('/notes', undefined, {shallow: true});
+    } else {
+      router.push(`/notes?id=${note._id}`, undefined, {shallow: true});
     }
   };
 

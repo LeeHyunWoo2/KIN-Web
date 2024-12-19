@@ -18,19 +18,17 @@ export default function PlateEditor({onChange}) {
   const value = selectedNoteState.content;
   const editor = useCreateEditor(value); // value를 주입
 
-  useEffect(() => {
-    if (onChange){
-      onChange(editor.children); // 변경사항을 부모객체로 전달
-    }
-  }, [editor.children, onChange]);
-
   return (
       <DndProvider backend={HTML5Backend}>
         <Plate
             editor={editor}
             // @ts-ignore
-            value={value} // Plate에 value 설정
-            onChange={(newValue) => {onChange && onChange(newValue);
+            value={value}
+            onChange={(newValue) => {
+              console.log('onChange triggered:', newValue);
+              if (onChange) {
+                onChange(newValue); // 부모 컴포넌트로 변경된 데이터를 전달
+              } // 이거 지금 newValue 보면 editor 하고 value 두가지가 있어서 이중 value만 따로 보내도록 수정해야함
             }}
         >
           <EditorContainer className="border rounded-md">

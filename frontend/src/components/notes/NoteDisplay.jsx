@@ -178,7 +178,7 @@ export default function NoteDisplay() {
         type: 'DELETE',
         payload: [selectedNoteState._id],
       });
-      router.push('/notes', undefined, { shallow: true });
+      router.push('/notes?view=trash', undefined, { shallow: true });
     }
   };
 
@@ -311,7 +311,7 @@ export default function NoteDisplay() {
               className="mb-4 text-xl font-semibold"
           />*/}
           <div className="absolute h-full p-3 left-0 right-0 bottom-0" data-registry="plate">
-            <PlateEditor onChange={handleEditorChange} />
+            <PlateEditor/>
           </div>
           {/*<Textarea
               value={selectedNoteState.content}

@@ -234,6 +234,30 @@ const data = {
   ],
 }
 
+const defaultTitle = ([
+  {
+    children: [{text: "playground"}],
+    type: "h1",
+  }
+])
+
+const defaultContent = ([
+  {
+    children: [{ text: "Playground" }],
+    type: "h1"
+  },
+  {
+    children: [
+      { text: "A rich-text editor with AI capabilities. Try the " },
+      { bold: true, text: "AI commands" },
+      { text: " or use " },
+      { kbd: true, text: "Cmd+J" },
+      { text: " to open the AI menu." }
+    ],
+    type: "paragraph"
+  }
+])
+
 const handleLogout = async () => {
   await logoutUser();
 };
@@ -248,37 +272,10 @@ function Page({children}) {
 
   const isMobile = useIsMobile();
 
-  const defaultTitle = [
-    {
-      children: [{text: "playground"}],
-      type: "h1",
-    }
-  ]
-
-  const defaultContent = [
-    {
-      children: [{ text: "Playground" }],
-      type: "h1"
-    },
-    {
-      children: [
-        { text: "A rich-text editor with AI capabilities. Try the " },
-        { bold: true, text: "AI commands" },
-        { text: " or use " },
-        { kbd: true, text: "Cmd+J" },
-        { text: " to open the AI menu." }
-      ],
-      type: "paragraph"
-    }
-  ]
-
   const handleNewNote = () => {
     setNoteEvent({
       type: 'ADD',
-      payload: {
-        title: defaultTitle,
-        content: defaultContent,
-      }
+      payload: {title: defaultTitle, content: defaultContent}
     })
   };
 

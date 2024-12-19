@@ -45,6 +45,7 @@ export const noteEventHandlerAtom = atom((get) => get(noteEventAtom),
       switch (type) {
         case 'ADD':
           const newNote = await createNote(payload);
+          console.log(newNote)
           set(noteListAtom, [...noteList, newNote]);
           set(selectedNoteAtom, newNote._id);
           await router.push(`/notes?id=${newNote._id}`, undefined,
