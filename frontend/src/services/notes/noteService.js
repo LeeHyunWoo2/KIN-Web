@@ -29,7 +29,6 @@ export const getNotes = async (forceReload = false) => {
     // 복원
     const decompressedNotes = loadedNotes.map((note) => ({
       ...note,
-      title: decompressContent(note.title),
       content: decompressContent(note.content),
     }))
 
@@ -51,10 +50,9 @@ export const getNotes = async (forceReload = false) => {
 export const createNote = async (noteData) => {
   const db = await initDB();
 
-  // title과 content 만 압축, 나머진 그대로 전송
+  // content 만 압축, 나머진 그대로 전송
   const compressData = {
     ...noteData,
-    title: compressContent(noteData.title),
     content: compressContent(noteData.content),
   };
 
@@ -65,7 +63,6 @@ export const createNote = async (noteData) => {
   // PouchDB에 저장
   const decompressedNewNote = {
     ...newNote,
-    title: decompressContent(newNote.title),
     content: decompressContent(newNote.content),
   };
   await db.put({ ...decompressedNewNote, type: "note", _id: newNote._id || newNote.id });
@@ -78,25 +75,32 @@ export const createNote = async (noteData) => {
 export const updateNote = async (updateDataList) => {
   const db = await initDB();
 
+  // 데이터 압축
   const compressedDataList = updateDataList.map((note) => ({
     ...note,
-    ...(note.title && { title: compressContent(note.title) }),
     ...(note.content && { content: compressContent(note.content) }),
   }));
 
-  // 서버에 업데이트 요청
+  // 서버에 압축된 데이터 전송
   const response = await apiClient.put("/notes", { updateDataList: compressedDataList });
   const updatedNotes = response.data;
 
-  // PouchDB 업데이트
-  for (const updatedNote of updatedNotes) {
+  // 서버 응답 데이터 복원
+  const decompressedUpdatedNotes = updatedNotes.map((note) => ({
+    ...note,
+    content: decompressContent(note.content),
+  }));
+
+  // PouchDB에 복원된 데이터를 저장
+  for (const updatedNote of decompressedUpdatedNotes) {
     await db.upsert(updatedNote._id || updatedNote.id, (doc) => {
       doc.type = "note";
       return { ...doc, ...updatedNote }; // 기존 문서와 병합
     });
   }
 
-  return updatedNotes;
+  // 복원된 데이터를 반환
+  return decompressedUpdatedNotes;
 };
 
 

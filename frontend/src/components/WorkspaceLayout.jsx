@@ -234,30 +234,6 @@ const data = {
   ],
 }
 
-const defaultTitle = ([
-  {
-    children: [{text: "playground"}],
-    type: "h1",
-  }
-])
-
-const defaultContent = ([
-  {
-    children: [{ text: "Playground" }],
-    type: "h1"
-  },
-  {
-    children: [
-      { text: "A rich-text editor with AI capabilities. Try the " },
-      { bold: true, text: "AI commands" },
-      { text: " or use " },
-      { kbd: true, text: "Cmd+J" },
-      { text: " to open the AI menu." }
-    ],
-    type: "paragraph"
-  }
-])
-
 const handleLogout = async () => {
   await logoutUser();
 };
@@ -275,7 +251,10 @@ function Page({children}) {
   const handleNewNote = () => {
     setNoteEvent({
       type: 'ADD',
-      payload: {title: defaultTitle, content: defaultContent}
+      payload: {
+        title: '새 페이지',
+        content: '나중에 노트생성 로직 이슈 해결하기',
+      }
     })
   };
 

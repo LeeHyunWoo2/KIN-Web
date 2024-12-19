@@ -129,6 +129,7 @@ export const useCreateEditor = (value: any) => {
     plugins: [
       ...editorPlugins,
     ],
-    value
+    value,
+    autoSelect: "end",
   });
 };

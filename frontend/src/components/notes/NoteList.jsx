@@ -38,12 +38,6 @@ export default function NoteList({notes}) {
     return result.replace('약 ', ''); // "약" 제거
   }
 
-  // Title 데이터 정제 함수
-  const extractTitleText = (titles) => {
-    if (!titles || !Array.isArray(titles)) return "";
-    return titles[0]?.children?.[0]?.text || ""; // 첫 번째 children의 text 값 추출
-  };
-
   // Content 데이터 정제 함수
   const extractContentText = (contents) => {
     if (!contents || !Array.isArray(contents)) return "";
@@ -76,7 +70,7 @@ export default function NoteList({notes}) {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div className="font-semibold">
-                        {extractTitleText(note.title)}
+                        {note.title}
                       </div>
                       {note.is_pinned && (<span
                           className="flex h-2 w-2 rounded-full bg-blue-500"/>)}
