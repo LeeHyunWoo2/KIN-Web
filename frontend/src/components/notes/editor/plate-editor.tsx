@@ -17,7 +17,6 @@ type PlateEditorProps = {
 };
 
 export default function PlateEditor({ onChange }: PlateEditorProps) {
-
   const selectedNoteState = useAtomValue(selectedNoteStateAtom);
 
   // 현재 노트의 content를 value로 설정

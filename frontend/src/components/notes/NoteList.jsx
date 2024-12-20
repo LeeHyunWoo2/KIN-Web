@@ -5,9 +5,24 @@ import {Badge} from "@/components/ui/badge";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {ko} from "date-fns/locale";
 import {format} from "date-fns";
+import {
+  ContextMenu,
+  ContextMenuContent, ContextMenuItem,
+  ContextMenuTrigger
+} from "@/components/ui/context-menu";
+import {useAtom, useSetAtom} from "jotai/index";
+import {
+  defaultNoteStateAtom,
+  noteEventAtom,
+  saveNoteChangesAtom, selectedNoteStateAtom
+} from "@/atoms/noteStateAtom";
+
 
 export default function NoteList({notes}) {
   const router = useRouter();
+  const [, setNoteEvent] = useAtom(noteEventAtom);
+  const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
+  const setSelectedNoteState = useSetAtom(selectedNoteStateAtom);
 
   const handleNoteClick = (note) => {
     // URL에 선택한 노트 ID를 추가
@@ -52,16 +67,36 @@ export default function NoteList({notes}) {
     .join(" "); // 섹션 간 텍스트는 공백으로 이어붙임
   };
 
+  const handlePermanentDelete = (note) => {
+    if (note.is_trashed) {
+      setNoteEvent({
+        type: 'DELETE',
+        payload: [note._id],
+      });
+      router.push('/notes?view=trash', undefined, { shallow: true });
+    } else if (!note.is_trashed){
+      const updatedFields = { is_trashed: true };
+      saveNoteChanges({
+        updatedFieldsList: [{ id: note._id, ...updatedFields }],
+      });
+      setSelectedNoteState(defaultNoteStateAtom);
+      router.push(`/notes`, undefined, { shallow: true }); // 휴지통으로 이동 후
+    }
+  };
+
   return (
       <ScrollArea className="h-screen">
         <div className="flex flex-col gap-2 p-4 pt-0">
           {notes
           .sort((a, b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0)) // is_pinned를 기준으로 정렬
           .map((note) => (
-              <button
+              <ContextMenu
                   key={note._id}
+              >
+                <ContextMenuTrigger>
+              <button
                   className={cn(
-                      "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px] overflow-hidden",
+                      "relative flex flex-col w-full items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent min-h-[116px] overflow-hidden",
                       router.query.id === note._id && "bg-muted" // URL의 ID와 매칭되면 스타일 적용
                   )}
                   onClick={() => handleNoteClick(note)} // 노트 클릭 시 URL에 ID 추가
@@ -75,7 +110,6 @@ export default function NoteList({notes}) {
                       {note.is_pinned && (<span
                           className="flex h-2 w-2 rounded-full bg-blue-500"/>)}
                     </div>
-
                   </div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
@@ -104,6 +138,13 @@ export default function NoteList({notes}) {
                   })}
                 </div>
               </button>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handlePermanentDelete(note)}>
+                    {note.is_trashed ? '영구삭제' : '휴지통으로'}
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
           ))}
         </div>
       </ScrollArea>

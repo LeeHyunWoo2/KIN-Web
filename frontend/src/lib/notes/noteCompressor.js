@@ -2,7 +2,9 @@ import zlib from 'zlib';
 
 export const compressContent = (content) => {
   try {
-      return zlib.gzipSync(JSON.stringify(content)).toString('base64');
+      const zip = zlib.gzipSync(JSON.stringify(content)).toString('base64');
+    console.log(zip)
+      return zip;
   } catch (error) {
     console.error('압축 실패', error);
     return content;

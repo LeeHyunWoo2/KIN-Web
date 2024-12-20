@@ -62,8 +62,8 @@ import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import {logoutUser} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
-import {useAtom} from "jotai";
-import {noteEventAtom} from '@/atoms/noteStateAtom';
+import {useAtom, useAtomValue} from "jotai";
+import {noteEventAtom, selectedNoteStateAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
@@ -239,6 +239,7 @@ const handleLogout = async () => {
 };
 
 function Page({children}) {
+  const selectedNoteState = useAtomValue(selectedNoteStateAtom);
   const [, setNoteEvent] = useAtom(noteEventAtom);
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -249,13 +250,15 @@ function Page({children}) {
   const isMobile = useIsMobile();
 
   const handleNewNote = () => {
-    setNoteEvent({
-      type: 'ADD',
-      payload: {
-        title: '새 페이지',
-        content: '나중에 노트생성 로직 이슈 해결하기',
-      }
-    })
+    {
+      setNoteEvent({
+        type: 'ADD',
+        payload: {
+          title: '새 페이지',
+          content: selectedNoteState.content,
+        }
+      });
+    };
   };
 
   useEffect(() => {
@@ -354,10 +357,10 @@ function Page({children}) {
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator/>
-                        <DropdownMenuItem onClick={handleLogout}>
-                          <LogOut/>
-                          Log out
-                        </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut/>
+                        Log out
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </div>
                 </DropdownMenu>
@@ -377,7 +380,7 @@ function Page({children}) {
               <SidebarMenuItem onClick={moveToHome}>
                 <ListView/>
               </SidebarMenuItem>
-                <TutorialButton/>
+              <TutorialButton/>
             </SidebarMenu>
           </SidebarHeader>
           <Separator/>
@@ -395,7 +398,8 @@ function Page({children}) {
           <SidebarRail/>
         </Sidebar>
         <SidebarInset>
-          <header className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-2">
+          <header
+              className="flex sticky top-0 bg-background h-12 shrink-0 items-center gap-2 border-b px-2">
             <div className="flex flex-1 items-center gap-2">
               <SidebarTrigger className="w-20 h-10"/>
               <Separator orientation="vertical" className="mr-2 h-4"/>
