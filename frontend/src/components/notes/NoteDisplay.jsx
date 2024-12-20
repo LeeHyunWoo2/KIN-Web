@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/menubar";
 import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
+import PlateEditor from "@/components/notes/editor/plate-editor";
 
 
 const produce = require("immer").produce;
@@ -92,19 +93,24 @@ export default function NoteDisplay() {
     setIsNotSaved(true);
   };
 
-  const handleContentChange = (e) => {
-    const newContent = e.target.value;
-    setSelectedNoteState((prev) => produce(prev, (draft) => {
-      draft.content = newContent;
-    }));
-    setLocalPayload((prevPayload) =>
-        produce(prevPayload, (draft) => {
-          draft.content = newContent;
+// PlateEditor의 변경사항을 처리
+  const handleEditorChange = (newContent) => {
+    // 현재 선택된 노트의 content 업데이트
+    setSelectedNoteState((prev) =>
+        produce(prev, (draft) => {
+          draft.content = newContent; // JSON 데이터를 content에 그대로 저장
         })
     );
-    setIsInitialLoad(false);
-    setIsNotSaved(true);
+    // localPayload 업데이트
+    setLocalPayload((prevPayload) =>
+        produce(prevPayload, (draft) => {
+          draft.content = newContent; // 서버에 전송할 변경 내용
+        })
+    );
+    setIsInitialLoad(false); // 초기 로드를 완료한 상태로 설정
+    setIsNotSaved(true);     // 변경사항 플래그 설정
   };
+
 
   const handleCategorySelect = (category) => {
     if (category._id !== selectedNoteState.category._id) {
@@ -185,7 +191,7 @@ export default function NoteDisplay() {
 
   return (
       <div className="flex flex-col h-full">
-        <div className="flex items-center p-1">
+        <div className="flex p-1">
           <div className="flex items-center gap-2">
             {categoryTree.length ? (
                 <Menubar>
@@ -279,26 +285,22 @@ export default function NoteDisplay() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-        <div className="flex flex-col flex-1 -mt-2 p-4">
-          {selectedNoteState.tags.length === 0 ? (
-              <div className="mb-2 min-h-7">태그 없음</div>
-          ):(
-              <div className="mb-2 min-h-7">태그 : {selectedNoteState.tags.map((tag) =>
-                  <Badge key={tag._id} variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
-              )}</div>
-          )}
-          <Input
-              value={selectedNoteState.title}
-              onChange={handleTitleChange} // 뭔가 바뀌면 호출
-              className="mb-4 text-xl font-semibold"
-          />
-          <Textarea
-              value={selectedNoteState.content}
-              onChange={handleContentChange}
-              className="flex-1"
-          />
-          {/*추후 카테고리와 태그 설정 추가할것*/}
+        {selectedNoteState.tags.length === 0 ? (
+            <div className="mb-2 min-h-7">태그 없음</div>
+        ):(
+            <div className="mb-2 min-h-7">태그 : {selectedNoteState.tags.map((tag) =>
+                <Badge key={tag._id} variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
+            )}</div>
+        )}
+        <Input
+            value={selectedNoteState.title}
+            onChange={handleTitleChange} // 뭔가 바뀌면 호출
+            className="mb-4 text-xl font-semibold"
+        />
+        <div className="flex flex-col flex-1 p-3 relative">
+          <div className="absolute h-full p-3 left-0 right-0 bottom-0" data-registry="plate">
+            <PlateEditor onChange={handleEditorChange} />
+          </div>
         </div>
         </div>
         );

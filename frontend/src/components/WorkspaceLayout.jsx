@@ -62,8 +62,8 @@ import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import {logoutUser} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
-import {useAtom} from "jotai";
-import {noteEventAtom} from '@/atoms/noteStateAtom';
+import {useAtom, useAtomValue} from "jotai";
+import {noteEventAtom, selectedNoteStateAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
@@ -239,6 +239,7 @@ const handleLogout = async () => {
 };
 
 function Page({children}) {
+  const selectedNoteState = useAtomValue(selectedNoteStateAtom);
   const [, setNoteEvent] = useAtom(noteEventAtom);
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -249,10 +250,15 @@ function Page({children}) {
   const isMobile = useIsMobile();
 
   const handleNewNote = () => {
-    setNoteEvent({
-      type: 'ADD',
-      payload: {title: '', content: ''}
-    })
+    {
+      setNoteEvent({
+        type: 'ADD',
+        payload: {
+          title: '새 페이지',
+          content: selectedNoteState.content,
+        }
+      });
+    };
   };
 
   useEffect(() => {
@@ -351,10 +357,10 @@ function Page({children}) {
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator/>
-                        <DropdownMenuItem onClick={handleLogout}>
-                          <LogOut/>
-                          Log out
-                        </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut/>
+                        Log out
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </div>
                 </DropdownMenu>
@@ -374,7 +380,7 @@ function Page({children}) {
               <SidebarMenuItem onClick={moveToHome}>
                 <ListView/>
               </SidebarMenuItem>
-                <TutorialButton/>
+              <TutorialButton/>
             </SidebarMenu>
           </SidebarHeader>
           <Separator/>

@@ -7,6 +7,7 @@ import 'nprogress/nprogress.css';
 import Head from 'next/head';
 import {Toaster} from 'sonner';
 import {setupInterceptors} from "@/lib/interceptors";
+import '@/styles/code-block-element.css';
 
 NProgress.configure({showSpinner: false});
 
