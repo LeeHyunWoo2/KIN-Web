@@ -1,7 +1,7 @@
 const userService = require('../../services/user/userService');
 const {createErrorResponse} = require("../../middleware/errorHandler");
 
-// 1. 공개프로필 데이터
+// 공개프로필 데이터
 const getUserPublicProfileController = async (req, res) => {
   try {
     const userId = req.user.id; // 유저 검증 미들웨어를 통해 추가된 정보
@@ -12,7 +12,7 @@ const getUserPublicProfileController = async (req, res) => {
   }
 };
 
-// 2. 사용자 정보 조회
+// 사용자 정보 조회
 const getUserInfoController = async (req, res) => {
   try {
     const user = await userService.getUserById(req.user.id);
@@ -23,7 +23,17 @@ const getUserInfoController = async (req, res) => {
   }
 };
 
-// 3. 사용자 정보 수정
+// 사용자 정보 조회 (이메일로 유저 찾기)
+const getUserByEmailController = async (req, res) => {
+  try{
+    const user = await userService.getUserByEmail(req.params.email);
+    res.status(200).json({});
+  } catch (error){
+    res.status(404).json();
+  }
+}
+
+// 사용자 정보 수정
 const updateUserInfoController = async (req, res) => {
   try {
     // 테스트 계정 ID 배열
@@ -42,7 +52,7 @@ const updateUserInfoController = async (req, res) => {
   }
 };
 
-// 4. 로컬 계정 추가 (소셜 Only 계정용)
+// 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccountController = async (req, res) => {
   try {
     const { id, email, password } = req.body;
@@ -54,7 +64,7 @@ const addLocalAccountController = async (req, res) => {
   }
 };
 
-// 5. 회원 탈퇴
+// 회원 탈퇴
 const deleteUserController = async (req, res) => {
   try {
     // 테스트 계정 ID 배열
@@ -77,6 +87,7 @@ const deleteUserController = async (req, res) => {
 module.exports = {
   getUserPublicProfileController,
   getUserInfoController,
+  getUserByEmailController,
   updateUserInfoController,
   addLocalAccountController,
   deleteUserController,
