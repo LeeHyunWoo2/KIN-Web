@@ -31,7 +31,7 @@ import {registerUser} from '@/services/user/authService'
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
-import Recaptcha from "@/components/Recaptcha";
+import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
 import {MailOpen, Check, Loader2} from "lucide-react"
 

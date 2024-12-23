@@ -14,7 +14,7 @@ export const getNotes = async (forceReload = false) => {
   const db = await initDB(); // PouchDB 초기화
 
   if (forceReload) {
-    // PouchDB 삭제
+    // PouchDB 삭제 (변경기록이 수시로 남아서 정크데이터가 너무 빨리 쌓이기 때문에 노트쪽에만 사용)
     await db.destroy();
 
     // 새 PouchDB 초기화

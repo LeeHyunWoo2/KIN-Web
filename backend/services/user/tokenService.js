@@ -5,14 +5,17 @@ const {
   JWT_SECRET,
   JWT_EXPIRATION,
   REFRESH_TOKEN_SECRET,
-  REFRESH_EXPIRATION
+  REFRESH_EXPIRATION,
+  REMEMBER_REFRESH_EXPIRATION
 } = process.env;
 
 // 1. JWT와 리프레시 토큰 발급
-const generateTokens = async (user) => {
+const generateTokens = async (user, rememberMe = false) => {
+
   // 환경변수에서 TTL 로드
   const accessTokenTTL = parseInt(JWT_EXPIRATION, 10); // 3600초 = 1시간
-  const refreshTokenTTL = parseInt(REFRESH_EXPIRATION, 10); // 604800초 = 7일
+  // 604800초 = 7일 or 2592000 = 30일 (로그인 기억하기)REFRESH_EXPIRATION
+  const refreshTokenTTL = parseInt(rememberMe ? REMEMBER_REFRESH_EXPIRATION : REFRESH_EXPIRATION, 10);
 
   // 액세스 토큰 생성
   const accessToken = jwt.sign(
@@ -29,7 +32,7 @@ const generateTokens = async (user) => {
   );
 
   // Redis에 리프레시 토큰 저장 (TTL은 JWT와 같은걸로)
-  await saveRefreshTokenToRedis(user._id, refreshToken, refreshTokenTTL);
+  await saveRefreshTokenToRedis(user._id, refreshToken, refreshTokenTTL, rememberMe);
 
   return {accessToken, refreshToken, refreshTokenTTL};
 };
@@ -51,7 +54,8 @@ const verifyRefreshToken = async (refreshToken) => {
     const userId = decoded.id;
 
     // Redis에서 확인
-    const storedToken = await redisClient.get(`refreshToken:${userId}`);
+    const storedToken = await JSON.parse(redisClient.get(`refreshToken:${userId}`)).token;
+
     if (!storedToken || storedToken !== refreshToken) {
       throw new Error('유효하지 않은 Refresh Token입니다.');
     }
@@ -133,11 +137,12 @@ const verifyEmailVerificationToken = (token) => {
 };
 
 // redis 관련 로직
-const saveRefreshTokenToRedis = async (userId, refreshToken, ttl) => {
+const saveRefreshTokenToRedis = async (userId, refreshToken, ttl, rememberMe) => {
+  // 토큰에 rememberMe 여부를 함께 저장, 이후 갱신할때 활용
   try {
     await redisClient.set(
         `refreshToken:${userId}`, // ${userId}:${deviceId} 이런식으로 하면 기기정보도 함께 저장해서 다중로그인 가능
-        refreshToken,
+        JSON.stringify({ token: refreshToken, rememberMe:rememberMe }),
         'EX',
         ttl // 남은시간
     );
@@ -148,7 +153,7 @@ const saveRefreshTokenToRedis = async (userId, refreshToken, ttl) => {
 };
 
 const deleteRefreshTokenFromRedis = async (userId) => {
-  await redisClient.del(`refreshToken:${userId}`);
+  await redisClient.del(`refreshToken:${userId}`, `publicProfile:${userId}`);
 };
 
 // 블랙리스트 로직 / 로그아웃 했을때 그냥 삭제를 하면 누군가 탈취하거나, 타 기기에 등록된걸로 재인증이 성공할 수 있음
@@ -162,7 +167,7 @@ const invalidateAccessToken = async (accessToken) => {
 
 const isAccessTokenInvalidated = async (accessToken) => {
   const isBlacklisted = await redisClient.get(`blacklist:${accessToken}`);
-  return !!isBlacklisted; // 블랙리스트에 존재하면 true 반환 (!!)
+  return !!isBlacklisted; // 블랙리스트에 존재하면 true 반환 (!! 쓰면 true)
 };
 
 module.exports = {
