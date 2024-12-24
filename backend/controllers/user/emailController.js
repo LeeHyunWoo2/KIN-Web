@@ -18,7 +18,7 @@ const verifyEmail = async (req, res) => {
     const email = await emailService.verifyEmailToken(token);
     res.status(200).send({message: '이메일 인증이 완료되었습니다.', email});
   } catch (error) {
-    res.status(400).send({message: '유효하지 않은 토큰입니다.', error: error.message});
+    res.status(400).send({message: '인증 시간이 만료되었습니다.', error: error.message});
   }
 };
 

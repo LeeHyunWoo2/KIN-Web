@@ -27,9 +27,9 @@ const getUserInfoController = async (req, res) => {
 const getUserByEmailController = async (req, res) => {
   try{
     const user = await userService.getUserByEmail(req.params.email);
-    res.status(200).json({});
+    res.status(200).json();
   } catch (error){
-    res.status(404).json();
+    res.status(404).json({message: '해당 이메일로 가입된 유저가 없습니다.'});
   }
 }
 
