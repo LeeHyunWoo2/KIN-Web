@@ -45,6 +45,8 @@ export default function AuthenticationPage() {
   const [emailVerified, setEmailVerified] = useState(false);
   const [isSending, setIsSending] = useState(false); // 이메일 전송 중 상태
   const [count, setCount] = useState();
+  const [isTimedOut, setIsTimedOut] = useState(false);
+
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -135,9 +137,11 @@ export default function AuthenticationPage() {
     }, 1000);
     if (count === 0) {
       clearInterval(timer);
+      setIsTimedOut(true);
     }
     return () => clearInterval(timer);
   }, [count]);
+
 
   // 이메일 인증 주기적으로 체크
   useEffect(() => {
@@ -151,6 +155,7 @@ export default function AuthenticationPage() {
     }, 1000);
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, []);
+
 
   const handleSubmit = async () => {
     try {
@@ -429,12 +434,19 @@ export default function AuthenticationPage() {
                                 </>
                             )}
                           </Button>
-                          {isEmailSent && !emailVerified && <p
-                              className="text-green-500">{message}</p>}
-                          {!isEmailSent && message && <p
-                              className="text-red-500">{message}</p>}
+                          <div className="text-sm text-muted-foreground">
+                            {isEmailSent && !emailVerified && count !== 0 && (
+                                <p className="text-green-500">{message}</p>
+                            )}
+                            {!isEmailSent && message && (
+                                <p className="text-red-500">{message}</p>
+                            )}
+                            {isTimedOut && count === 0 && (
+                                <p className="text-red-500">시간 초과. 다시 시도해주세요.</p>
+                            )}
                           {isEmailSent && !emailVerified && <span>{formatTime(
                               count)}</span>}
+                          </div>
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="password">비밀번호</Label>

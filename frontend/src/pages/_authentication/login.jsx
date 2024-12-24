@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isForgotPasswordOpen ,setIsForgotPasswordOpen] = useState(false);
 
   const handleLogin = async (event, id, password) => {
     event.preventDefault();
@@ -44,7 +45,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="grid gap-4"  onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' && !isForgotPasswordOpen) {
                 handleLogin(e, id, password);
               }
             }}>
@@ -62,7 +63,9 @@ export default function Dashboard() {
               <div className="grid gap-2">
                 <div className="flex items-center" >
                   <Label htmlFor="password">비밀번호</Label>
-                  <ForgotPassword/>
+                  <ForgotPassword
+                      setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+                  />
                 </div>
                 <Input
                     id="password"
