@@ -26,10 +26,10 @@ const getUserInfoController = async (req, res) => {
 // 사용자 정보 조회 (이메일로 유저 찾기)
 const getUserByEmailController = async (req, res) => {
   try{
-    const user = await userService.getUserByEmail(req.params.email);
-    res.status(200).json();
+    await userService.getUserByEmail(req.params.email);
+    res.status(200).json({signal: 'user_found'});
   } catch (error){
-    res.status(404).json({message: '해당 이메일로 가입된 유저가 없습니다.'});
+    res.status(200).json({signal: 'user_not_found'});
   }
 }
 
@@ -51,6 +51,18 @@ const updateUserInfoController = async (req, res) => {
     res.status(statusCode).json({ message });
   }
 };
+
+// 사용자 정보 수정 (비밀번호 변경, 이메일로 찾기)
+const resetPasswordController = async (req, res) => {
+  try {
+    const { newPassword, email } = req.body;
+    await userService.resetPassword(newPassword, email);
+    res.status(200).json();
+  } catch (error) {
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "사용자 정보 수정 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
+  }
+}
 
 // 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccountController = async (req, res) => {
@@ -89,6 +101,7 @@ module.exports = {
   getUserInfoController,
   getUserByEmailController,
   updateUserInfoController,
+  resetPasswordController,
   addLocalAccountController,
   deleteUserController,
 };

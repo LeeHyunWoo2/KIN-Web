@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const { generateEmailVerificationToken, verifyEmailVerificationToken } = require('./tokenService');
 
 const sendVerificationEmail = async (email) => {
+
   // 이메일 인증 토큰 생성
   const token = generateEmailVerificationToken(email);
   const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;

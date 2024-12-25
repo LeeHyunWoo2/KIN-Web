@@ -116,6 +116,21 @@ const updateUser = async (userId, updateData) => {
   }
 };
 
+const resetPassword = async (newPassword, email) => {
+  try {
+    console.log('유저 새 비밀번호', newPassword, email)
+    const user = await User.findOne({email});
+    if (!user) {
+      throw new Error;
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+}
+
 // 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccount = async (userId, id, email, password) => {
   const user = await User.findById(userId);
@@ -163,6 +178,7 @@ module.exports = {
   getUserById,
   getUserByEmail,
   updateUser,
+  resetPassword,
   addLocalAccount,
   deleteUserById,
 };
