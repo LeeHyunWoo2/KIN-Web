@@ -27,12 +27,6 @@ const validateUserSignup = [
   .isLength({ min: 2, max: 30 })
   .withMessage('이름은 2자 이상 30자 이하로 입력하세요.'),
 
-  // 전화번호 검증 (선택 사항)
-  body('phone')
-  .optional({ checkFalsy: true })
-  .matches(/^010-\d{4}-\d{4}$/)
-  .withMessage('전화번호는 "010-xxxx-xxxx" 형식으로 입력하세요.'),
-
   // 이용 약관 동의 검증
   body('termsAgreed')
   .equals('true')
@@ -90,11 +84,6 @@ const validateUserUpdate = [
   .withMessage('비밀번호에는 숫자가 포함되어야 합니다.')
   .matches(/[!@#$%^&*(),.?":{}|<>]/)
   .withMessage('비밀번호에는 특수 문자가 포함되어야 합니다.'),
-
-  body('phone')
-  .optional({ checkFalsy: true })
-  .matches(/^010-\d{4}-\d{4}$/)
-  .withMessage('전화번호는 "010-xxxx-xxxx" 형식으로 입력하세요.'),
 
   // 검증 결과 처리
   (req, res, next) => {

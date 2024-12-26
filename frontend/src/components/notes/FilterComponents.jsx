@@ -51,7 +51,7 @@ const SearchFilter = () => {
           type="text"
           className="pl-8"
           value={searchTerm}
-          placeholder="검색어 입력"
+          placeholder="제목으로 검색"
           onChange={(e) => setSearchTerm(e.target.value)}
       />
   );

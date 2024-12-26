@@ -69,6 +69,7 @@ import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
 import TutorialButton from "@/components/notes/TutorialButton";
 import {useIsMobile} from "@/hooks/use-mobile";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 const data = {
   navMain: [
@@ -413,9 +414,11 @@ function Page({children}) {
                 </BreadcrumbList>
               </Breadcrumb>*/}
             </div>
+
             <div className="ml-auto px-3">
               <NavActions actions={data.actions}/>
             </div>
+
           </header>
           {children}
         </SidebarInset>
@@ -444,6 +447,8 @@ function NavActions({
         </Button>
         {/* <SettingsDialog/>*/}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Tooltip>
+          <TooltipTrigger asChild>
           <PopoverTrigger asChild>
             <Button
                 variant="ghost"
@@ -453,6 +458,9 @@ function NavActions({
               <Menu/>
             </Button>
           </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>샘플 메뉴</TooltipContent>
+        </Tooltip>
           <PopoverContent
               className="w-56 overflow-hidden rounded-lg p-0"
               align="end"
