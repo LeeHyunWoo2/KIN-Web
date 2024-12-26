@@ -341,7 +341,7 @@ function Page({children}) {
                         <Link href="/userinfo">
                           <DropdownMenuItem>
                             <UserRoundCog/>
-                            Account Settings
+                            내 정보
                           </DropdownMenuItem>
                         </Link>
                       </DropdownMenuGroup>

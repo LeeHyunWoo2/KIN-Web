@@ -74,7 +74,7 @@ export default function ForgotPassword({setIsForgotPasswordOpen, isCapsLockOn, s
       const user = await getUserProfileByEmail(email);
       if (user.accountType === "SNS") {
         setMessage(
-            "SNS 계정은 비밀번호 설정이 불가능합니다.\n내 정보 수정 -> 일반 계정 전환을 통해 비밀번호를 추가 할 수 있습니다.")
+            "SNS 계정은 비밀번호 설정이 불가능합니다.\n내 정보 -> 일반 계정 전환을 통해 비밀번호를 추가 할 수 있습니다.")
       } else if (user.accountType === "Local") {
         setVerify(true);
         await SendVerificationEmail();
