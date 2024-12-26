@@ -24,18 +24,16 @@ const registerController = async (req, res) => {
 // 2. 로그인 (로컬)
 const loginController = async (req, res) => {
   try {
-    const { id, password } = req.body;
-    console.log('테스트1')
+    const { id, password, rememberMe } = req.body;
+
     // 로그인 로직을 서비스에서 처리하고, 사용자와 토큰 반환
-    const { user, tokens } = await authService.loginUser(id, password);
-    console.log('테스트2')
+    const { user, tokens } = await authService.loginUser(id, password, rememberMe);
+
     // 쿠키에 JWT와 리프레시 토큰 설정
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
     setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
-    console.log('테스트3')
 
     res.status(200).json({user});
-    console.log('테스트4')
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로그인 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });
@@ -80,10 +78,7 @@ const newTokenController = async (req, res) => {
 
     // 사용자 조회 및 새로운 토큰 발급
     const user = await authService.getUserById(decoded.id);
-    const tokens = await tokenService.generateTokens(user);
-
-    // Redis에 새 리프레시 토큰 저장
-    await tokenService.saveRefreshTokenToRedis(user._id, tokens.refreshToken, tokens.refreshTokenTTL);
+    const tokens = await tokenService.generateTokens(user, decoded.rememberMe);
 
     // 새로 발급된 토큰을 쿠키에 설정
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });

@@ -50,6 +50,12 @@ export const getUserProfile = async () => {
   return data;
 };
 
+// 이메일로 회원 정보 조회 API (비밀번호 변경, 가입메일 중복확인 등)
+export const getUserProfileByEmail = async (email) => {
+  const {data} = await apiClient.get(`/user/profile/findUserByEmail/${email}`);
+  return data;
+}
+
 // 정보 수정 API
 export const updateUserProfile = async (profileData) => {
   try {
@@ -63,6 +69,24 @@ export const updateUserProfile = async (profileData) => {
     }
   }
 };
+
+// 비밀번호 변경 API
+export const changePassword = async (newPassword, email) => {
+  try {
+    const {data} = await apiClient.put('/user/profile/changePassword', {newPassword, email});
+    const message = data.message;
+    return {
+      message,
+      commit: true,
+    };
+  } catch (error) {
+    const message = error.response.data.message;
+    return {
+      message,
+      commit: false,
+    };
+  }
+}
 
 // 회원 탈퇴 API
 export const deleteUserProfile = async () => {

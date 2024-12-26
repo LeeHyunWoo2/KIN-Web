@@ -4,11 +4,10 @@ const Category = require('../../models/category');
 const Tag = require('../../models/tag');
 const bcrypt = require('bcryptjs');
 const tokenService = require('./tokenService');
-const { revokeSocialAccess } = require('./socialService'); // 연동 해제를 위한 서비스 호출
+const {revokeSocialAccess} = require('./socialService'); // 연동 해제를 위한 서비스 호출
 const redisClient = require('../../config/redis');
 
-
-// 1. 사용자 공개 데이터 조회
+// 사용자 공개 데이터 조회
 const getUserPublicProfile = async (userId) => {
   try {
     // Redis에서 프로필 정보 조회
@@ -45,7 +44,7 @@ const getUserPublicProfile = async (userId) => {
   }
 };
 
-// 2. 사용자 정보 조회
+// 사용자 정보 조회 (로그인된 유저의 경우)
 const getUserById = async (userId) => {
   const user = await User.findById(userId).select('-password');
   if (!user) {
@@ -54,7 +53,16 @@ const getUserById = async (userId) => {
   return user;
 };
 
-// 3. 사용자 정보 수정
+// 사용자 정보 조회 (이메일로 아이디 찾기)
+const getUserByEmail = async (email) => {
+  const user = await User.findOne({email});
+  if (!user) {
+    throw new Error;
+  }
+  return user;
+}
+
+// 사용자 정보 수정
 const updateUser = async (userId, updateData) => {
   try {
     const user = await User.findById(userId);
@@ -62,8 +70,12 @@ const updateUser = async (userId, updateData) => {
       throw new Error;
     }
     // 변경사항이 있는 항목은 db에 업데이트
-    if (updateData.name) user.name = updateData.name;
-    if (updateData.profileIcon) user.profileIcon = updateData.profileIcon;
+    if (updateData.name) {
+      user.name = updateData.name;
+    }
+    if (updateData.profileIcon) {
+      user.profileIcon = updateData.profileIcon;
+    }
     await user.save();
 
     // redis에서 유저 정보 ttl 로드
@@ -104,7 +116,73 @@ const updateUser = async (userId, updateData) => {
   }
 };
 
-// 4. 로컬 계정 추가 (소셜 Only 계정용)
+const calculateDateDifference = (pastDate) => {
+  const now = new Date();
+  const diffInMs = now - pastDate;
+
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const diffInWeeks = Math.floor(diffInDays / (7));
+  const diffInMonths = Math.floor(diffInWeeks / 4);
+
+  if (diffInMonths > 0) {
+    return diffInMonths + '개월 전';
+  } else if (diffInWeeks > 0) {
+    return diffInWeeks + '주 전';
+  } else if (diffInDays > 0) {
+    return diffInDays + '일 전'
+  } else {
+    return '최근';
+  }
+};
+
+// 비밀번호 변경
+const resetPassword = async (newPassword, email) => {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      const error = new Error("유저를 찾을 수 없습니다.");
+      error.status = 404;
+      throw error;
+    }
+
+    // 현재 비밀번호와 중복되는지 확인
+    const isCurrentPassword = await bcrypt.compare(newPassword, user.password);
+    if (isCurrentPassword) {
+      const error = new Error("현재 사용 중인 비밀번호와 다른 비밀번호를 입력해주세요.");
+      error.status = 400;
+      throw error;
+    }
+
+    // 과거 비밀번호 중복 검사
+    const duplicateRecord = user.passwordHistory.find(record =>
+        bcrypt.compareSync(newPassword, record.password)
+    );
+    if (duplicateRecord) {
+      const timeDifference = calculateDateDifference(duplicateRecord.changedAt);
+      const error = new Error(`${timeDifference}에 사용된 비밀번호입니다.`);
+      error.status = 400;
+      throw error;
+    }
+
+    // 새 비밀번호 해싱 및 저장
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    // 비밀번호 기록에 추가 (최대 5개 기록 유지)
+    if (user.passwordHistory.length >= 5) {
+      user.passwordHistory.shift(); // 가장 오래된 기록 제거
+    }
+    user.passwordHistory.push({ password: hashedPassword, changedAt: new Date() });
+
+    // 비밀번호 저장
+    await user.save();
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
+
+// 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccount = async (userId, id, email, password) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -119,11 +197,11 @@ const addLocalAccount = async (userId, id, email, password) => {
   user.id = id;
   user.email = email;
   user.password = await bcrypt.hash(password, 10);
-  user.socialAccounts.push({ provider: 'local', providerId: id });
+  user.socialAccounts.push({provider: 'local', providerId: id});
   await user.save();
 };
 
-// 5. 회원 탈퇴
+// 회원 탈퇴
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
   console.log(user)
@@ -134,26 +212,24 @@ const deleteUserById = async (userId) => {
   for (const account of user.socialAccounts) {
     if (account.provider !== 'local') {
       console.log(account.provider)
-      const accessToken = await tokenService.generateOAuthToken(user, account.provider);
+      const accessToken = await tokenService.generateOAuthToken(user,
+          account.provider);
       await revokeSocialAccess(account.provider, accessToken);
     }
   }
 
-    await Tag.deleteMany({ user_id: userId });
-  console.log('태그삭제')
-    await Category.deleteMany({ user_id: userId });
-  console.log('카테고리삭제')
-  await Note.deleteMany({ user_id: userId });
-  console.log('노트삭제')
+  await Tag.deleteMany({user_id: userId});
+  await Category.deleteMany({user_id: userId});
+  await Note.deleteMany({user_id: userId});
   await User.findByIdAndDelete(userId);
-  console.log('탈퇴')
-
 };
 
 module.exports = {
   getUserPublicProfile,
   getUserById,
+  getUserByEmail,
   updateUser,
+  resetPassword,
   addLocalAccount,
   deleteUserById,
 };

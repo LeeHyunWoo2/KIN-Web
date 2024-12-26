@@ -17,23 +17,24 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input";
-import {registerUser} from '@/services/user/authService'
+import {getUserProfileByEmail, registerUser} from '@/services/user/authService'
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
-import Recaptcha from "@/components/Recaptcha";
+import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
 import {MailOpen, Check, Loader2} from "lucide-react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -45,12 +46,23 @@ export default function AuthenticationPage() {
   const [emailVerified, setEmailVerified] = useState(false);
   const [isSending, setIsSending] = useState(false); // 이메일 전송 중 상태
   const [count, setCount] = useState();
+  const [isTimedOut, setIsTimedOut] = useState(false);
+  const [isOverlayActive, setIsOverlayActive] = useState(false);
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
   };
   const handlePrev = () => {
     setPage((prev) => prev - 1);
+  };
+
+  const handleSocialLogin = (provider) => {
+    // 통합된 소셜 로그인 URL 생성
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
+
+    if (url) {
+      window.location.href = url; // 소셜 로그인 URL로 리다이렉트
+    }
   };
 
   const [formData, setFormData] = useState({
@@ -85,6 +97,16 @@ export default function AuthenticationPage() {
     setRecaptchaToken(token);
   };
 
+  const checkDuplicateEmail = async () => {
+    const response = await getUserProfileByEmail(email);
+    if (response.signal === 'user_not_found') {
+      await handleSendVerificationEmail();
+    } else {
+      setIsEmailSent(false);
+      return setMessage("이미 가입된 이메일 입니다.");
+    }
+  }
+
   const handleSendVerificationEmail = async () => {
     setIsSending(true); // 전송 중 상태 활성화
     try {
@@ -100,7 +122,6 @@ export default function AuthenticationPage() {
       setIsSending(false); // 전송 완료 후 상태 초기화
     }
   };
-
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -135,6 +156,7 @@ export default function AuthenticationPage() {
     }, 1000);
     if (count === 0) {
       clearInterval(timer);
+      setIsTimedOut(true);
     }
     return () => clearInterval(timer);
   }, [count]);
@@ -218,7 +240,7 @@ export default function AuthenticationPage() {
                         </Label>
                       </div>
                       <Button onClick={handleNext}>
-                        Sign In with Email
+                        일반 계정 회원가입
                       </Button>
                     </div>
                     <div className="relative">
@@ -232,19 +254,26 @@ export default function AuthenticationPage() {
           </span>
                       </div>
                     </div>
-                    <Button variant="outline" type="button">
-                      <Icons.gitHub className="mr-2 h-4 w-4"/>
-                      GitHub
+                    <Button variant="outline" type="button" className="[&_svg]:size-[18px]" onClick={() => handleSocialLogin('google')}>
+                      <Icons.google className="mr-2 h-4 w-4"/>
+                      Continue with Google
+                    </Button>
+                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('kakao')}>
+                      <Icons.kakao className="mr-2 h-4 w-4"/>
+                      &nbsp;&nbsp;Continue with Kakao
+                    </Button>
+                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('naver')}>
+                      <Icons.naver className="mr-2 h-4 w-4"/>
+                      Continue with Naver
                     </Button>
                   </div>
                   <p className="px-8 text-center text-sm text-muted-foreground">
                     By clicking continue, you agree to our{" "}
-                    <Link
-                        href="#"
-                        className="underline underline-offset-4 hover:text-primary"
+                    <span
+                        className="underline underline-offset-4 hover:text-primary cursor-pointer"
                     >
                       Terms of Service
-                    </Link>{" "}
+                    </span>{" "}
                     and{" "}
                     <Link
                         href="/privacy-policy"
@@ -294,6 +323,7 @@ export default function AuthenticationPage() {
                             fugiat nulla pariatur. Excepteur sint occaecat
                             cupidatat non proident, sunt in culpa qui officia
                             deserunt mollit anim id est laborum.
+                            <PrivacyPolicy/>
                           </ScrollArea>
                         </div>
                       </div>
@@ -301,8 +331,11 @@ export default function AuthenticationPage() {
                       <div className="grid gap-4">
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
-                        onClick={() =>
-                            setFormData((formData) => ({...formData, termsAgreed: !formData.termsAgreed}))}
+                            onClick={() =>
+                                setFormData((formData) => ({
+                                  ...formData,
+                                  termsAgreed: !formData.termsAgreed
+                                }))}
                         >
                           <Checkbox
                               name="termsAgreed"
@@ -313,7 +346,8 @@ export default function AuthenticationPage() {
                               onClick={(e) => e.stopPropagation()}
                           />
                           <div className="space-y-1 leading-none">
-                            <Label className="cursor-pointer">필수 약관 동의</Label><br/>
+                            <Label className="cursor-pointer">필수 약관
+                              동의</Label><br/>
                             <Label
                                 className="text-[0.8rem] text-muted-foreground cursor-pointer">
                               필수 약관을 동의하셔야 가입이 가능합니다.
@@ -323,7 +357,10 @@ export default function AuthenticationPage() {
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
                             onClick={() =>
-                                setFormData((formData) => ({...formData, marketingConsent: !formData.marketingConsent}))}
+                                setFormData((formData) => ({
+                                  ...formData,
+                                  marketingConsent: !formData.marketingConsent
+                                }))}
                         >
                           <Checkbox
                               name="marketingConsent"
@@ -335,7 +372,8 @@ export default function AuthenticationPage() {
                               onClick={(e) => e.stopPropagation()}
                           />
                           <div className="space-y-1 leading-none">
-                            <Label className="cursor-pointer">동의 (선택)</Label><br/>
+                            <Label className="cursor-pointer">동의
+                              (선택)</Label><br/>
                             <Label
                                 className="text-[0.8rem] text-muted-foreground cursor-pointer">
                               선택 체크 내용
@@ -406,9 +444,10 @@ export default function AuthenticationPage() {
                           />
                           <Button
                               variant="outline"
-                              onClick={handleSendVerificationEmail}
+                              onClick={checkDuplicateEmail}
                               className="w-full"
-                              disabled={!email || emailVerified === true || isSending}
+                              disabled={!email || emailVerified === true
+                                  || isSending}
                               style={{
                                 color: emailVerified ? '#00d326' : 'inherit',
                                 opacity: emailVerified ? 1 : undefined,
@@ -417,24 +456,32 @@ export default function AuthenticationPage() {
                           >
                             {emailVerified ? (
                                 <>
-                                  <Check /> 인증 완료
+                                  <Check/> 인증 완료
                                 </>
                             ) : isSending ? (
                                 <>
-                                  <Loader2 className="animate-spin" />이메일 전송 중...
+                                  <Loader2 className="animate-spin"/>이메일 전송 중...
                                 </>
                             ) : (
                                 <>
-                                  <MailOpen /> 이메일 인증하기
+                                  <MailOpen/> 이메일 인증하기
                                 </>
                             )}
                           </Button>
-                          {isEmailSent && !emailVerified && <p
-                              className="text-green-500">{message}</p>}
-                          {!isEmailSent && message && <p
-                              className="text-red-500">{message}</p>}
-                          {isEmailSent && !emailVerified && <span>{formatTime(
-                              count)}</span>}
+                          <div className="text-sm text-muted-foreground">
+                            {isEmailSent && !emailVerified && count !== 0 && (
+                                <p className="text-green-500">{message}</p>
+                            )}
+                            {!isEmailSent && message && (
+                                <p className="text-red-500">{message}</p>
+                            )}
+                            {isTimedOut && count === 0 && (
+                                <p className="text-red-500">시간 초과. 다시
+                                  시도해주세요.</p>
+                            )}
+                            {isEmailSent && !emailVerified && <span>{formatTime(
+                                count)}</span>}
+                          </div>
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="password">비밀번호</Label>
@@ -461,28 +508,64 @@ export default function AuthenticationPage() {
                           />
                         </div>
 
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
+                        {isOverlayActive && (
+                            <div
+                                style={{
+                                  position: "fixed", // radix 모달의 클릭제한 때문에 reCaptcha가 작동하지 않아 임의로 만든 레이아웃
+                                  top: 0,
+                                  left: 0,
+                                  width: "100vw",
+                                  height: "100vh",
+                                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                  zIndex: 10,
+                                  pointerEvents: "auto", // 외부 클릭 차단
+                                }}
+                            />
+                        )}
+
+                        <Dialog modal={false}
+                                onOpenChange={(isOpen) => {
+                                  if (isOpen) {
+                                    setIsOverlayActive(true);
+                                  } else {
+                                    setRecaptchaToken("");
+                                    setIsOverlayActive(false);
+                                  }
+                                }}
+                        >
+                          <DialogTrigger asChild>
                             <Button className="w-full">가입하기</Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>회원가입을
-                                진행하시겠습니까?</AlertDialogTitle>
-                              <AlertDialogDescription>
+                          </DialogTrigger>
+                          <DialogContent
+                              onInteractOutside={(e) => {
+                                e.preventDefault();
+                              }}
+                          >
+                            <DialogHeader>
+                              <DialogTitle>회원가입을
+                                진행하시겠습니까?</DialogTitle>
+                              <DialogDescription>
                                 입력된 정보로 회원가입을 완료합니다.<br/>
                                 마이페이지에서 회원정보 수정이 가능합니다.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                              <div className="flex flex-col items-center my-4">
-                                <Recaptcha onVerify={handleCaptchaChange}/>
-                              </div>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel onClick={() => {setRecaptchaToken("")}}>Cancel</AlertDialogCancel>
-                              <Button disabled={!recaptchaToken} onClick={handleSubmit}>Continue</Button>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex flex-col items-center my-4">
+                              <Recaptcha onVerify={handleCaptchaChange}/>
+                            </div>
+                            <DialogFooter>
+                              <DialogPrimitive.Close>
+                                <div className="inline-flex items-center justify-center gap-2
+                                 whitespace-nowrap rounded-md text-sm font-medium
+                                  transition-colors focus-visible:outline-none focus-visible:ring-1
+                                  focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+                                  [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">Cancel</div>
+                              </DialogPrimitive.Close>
+                              <Button disabled={!recaptchaToken}
+                                      onClick={handleSubmit}>Continue</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                         <Button variant="outline" className="w-full"
                                 onClick={handlePrev}>
                           이전으로

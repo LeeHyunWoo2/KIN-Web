@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  id:{
+  id: {
     type: String,
     required: false, // 소셜 유저가 로컬 등록을 안하면 id와 pw란이 비워져있어야함
     unique: true,
@@ -20,10 +20,21 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false, // 소셜 로그인 사용자는 비밀번호가 없을 수 있음
   },
-/*  phone: {
-    type: String,
-    required: false, // 선택사항
-  },*/
+  passwordHistory: {
+    type: [
+      {
+        password: {
+          type: String,
+          required: false,
+        }, // 변경 전 비밀번호 저장
+        changedAt: {
+          type: Date,
+          default: Date.now
+        } // 변경 날짜
+      }
+    ],
+    default: [],
+  },
   termsAgreed: {
     type: Boolean,
     required: false, // 이용 약관 동의는 필수
@@ -36,7 +47,7 @@ const UserSchema = new mongoose.Schema({
   socialAccounts: [
     { // 없으면 둘다 local로 저장됨
       provider: {
-        type: String, // 'google', 'facebook', 'github' 등 소셜 로그인 제공자
+        type: String, // 'google', 'kakao', 'naver' 등 소셜 로그인 제공자
         required: true,
       },
       providerId: {
@@ -45,7 +56,7 @@ const UserSchema = new mongoose.Schema({
         unique: true,
       },
       socialRefreshToken: {
-        type:String,
+        type: String,
         required: false,
       }
     }

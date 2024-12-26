@@ -37,7 +37,7 @@ const registerUser = async ({ id, email, password, name, phone, marketingConsent
 };
 
 // 2. 로그인 검증
-const loginUser = async (id, password) => {
+const loginUser = async (id, password, rememberMe) => {
 
   // 사용자 확인
   const user = await User.findOne({ id });
@@ -50,7 +50,7 @@ const loginUser = async (id, password) => {
   }
 
   // 로그인 성공 시 토큰 발급
-  const tokens = await tokenService.generateTokens(user);
+  const tokens = await tokenService.generateTokens(user, rememberMe);
   return { user, tokens };
 };
 

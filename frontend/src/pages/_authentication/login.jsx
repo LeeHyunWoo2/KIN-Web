@@ -3,20 +3,34 @@ import HeaderLayout from "@/components/HeaderLayout";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import SocialLogin from "@/components/SocialLogin";
+import SocialLogin from "@/components/auth/SocialLogin";
 import { loginUser} from "@/services/user/authService";
 import {useState} from "react";
 import {router} from "next/client";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip";
 import {toast} from "sonner";
+import {Checkbox} from "@/components/ui/checkbox";
+import ForgotPassword from "@/components/auth/ForgotPassword"
+
 
 export default function Dashboard() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isForgotPasswordOpen ,setIsForgotPasswordOpen] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
+  const handleKeyDown = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
+
+  const handleFocus = () => {
+    // 포커싱될 때 keydown 이벤트 연결
+    document.addEventListener("keydown", handleKeyDown);
+  };
 
   const handleLogin = async (event, id, password) => {
     event.preventDefault();
@@ -24,7 +38,7 @@ export default function Dashboard() {
     if (!id || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
     } else {
-      const credentials = {id, password};
+      const credentials = {id, password, rememberMe};
       const tokens = await loginUser(credentials);
       if (tokens) {
         // 로그인 성공 시 loginSuccess로 리다이렉트
@@ -45,7 +59,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="grid gap-4"  onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' && !isForgotPasswordOpen) {
                 handleLogin(e, id, password);
               }
             }}>
@@ -63,18 +77,11 @@ export default function Dashboard() {
               <div className="grid gap-2">
                 <div className="flex items-center" >
                   <Label htmlFor="password">비밀번호</Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                          href=""
-                          className="ml-auto inline-block text-sm underline"
-                          tabIndex={-1}
-                      >
-                        비밀번호 찾기
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>개발중</TooltipContent>
-                  </Tooltip>
+                  <ForgotPassword
+                      setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+                      isCapsLockOn={isCapsLockOn}
+                      setIsCapsLockOn={setIsCapsLockOn}
+                  />
                 </div>
                 <Input
                     id="password"
@@ -83,6 +90,24 @@ export default function Dashboard() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
+                    onKeyDown={handleKeyDown}
+                    onBlur={() => setIsCapsLockOn(false)}
+                />
+                {isCapsLockOn && (
+                <span className="text-red-500 text-sm text-muted-foreground">Caps Lock 이 활성화 되어있습니다!</span>
+                )}
+              </div>
+              <div className="flex ml-auto">
+                <label
+                    htmlFor="rememberMe"
+                    className="text-[14px] font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  로그인 기억하기&nbsp;&nbsp;
+                </label>
+                <Checkbox id="rememberMe"
+                          checked={rememberMe}
+                          onCheckedChange={(e) => setRememberMe(e)}
+                          /*radix의 상태변경 기능 활용(시간날때 회원가입쪽도 수정하기)*/
                 />
               </div>
               <Button type="submit" className="w-full"
