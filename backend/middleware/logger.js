@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const skipLog = (req) => {
   const excludedPaths = ['/notes', '/category', '/tags', '/api/server-time', '/sync/activity', '/auth/check-session'];
   const fullPath = req.originalUrl.split('?')[0]; // 쿼리스트링 제거
-  return (req.method === 'GET' || req.method === 'OPTIONS') && excludedPaths.includes(fullPath);
+  return (req.method === 'GET' || req.method === 'OPTIONS' || req.method === 'PUT') && excludedPaths.includes(fullPath);
 };
 
 // 현재 시간 토큰 추가 (포맷팅 최적화)
