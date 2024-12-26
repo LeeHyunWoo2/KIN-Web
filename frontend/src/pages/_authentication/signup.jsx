@@ -536,7 +536,12 @@ export default function AuthenticationPage() {
                             </div>
                             <DialogFooter>
                               <DialogPrimitive.Close>
-                                <Button variant="secondary">Cancel</Button>
+                                <div className="inline-flex items-center justify-center gap-2
+                                 whitespace-nowrap rounded-md text-sm font-medium
+                                  transition-colors focus-visible:outline-none focus-visible:ring-1
+                                  focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+                                  [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">Cancel</div>
                               </DialogPrimitive.Close>
                               <Button disabled={!recaptchaToken}
                                       onClick={handleSubmit}>Continue</Button>

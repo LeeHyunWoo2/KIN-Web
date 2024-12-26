@@ -71,11 +71,20 @@ export const updateUserProfile = async (profileData) => {
 };
 
 // 비밀번호 변경 API
-export const changePassword = async (passwordData) => {
+export const changePassword = async (newPassword, email) => {
   try {
-    const {data} = await apiClient.put('/user/profile/change-password', passwordData);
-    return data;
-  } catch (error){
+    const {data} = await apiClient.put('/user/profile/changePassword', {newPassword, email});
+    const message = data.message;
+    return {
+      message,
+      commit: true,
+    };
+  } catch (error) {
+    const message = error.response.data.message;
+    return {
+      message,
+      commit: false,
+    };
   }
 }
 

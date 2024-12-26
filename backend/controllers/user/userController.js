@@ -26,8 +26,18 @@ const getUserInfoController = async (req, res) => {
 // 사용자 정보 조회 (이메일로 유저 찾기)
 const getUserByEmailController = async (req, res) => {
   try{
-    await userService.getUserByEmail(req.params.email);
-    res.status(200).json({signal: 'user_found'});
+    const user = await userService.getUserByEmail(req.params.email);
+    let checkAccountType;
+
+    // 로컬 계정 여부 확인
+    const hasLocalAccount = user.socialAccounts.some(account => account.provider === 'local');
+    if (!hasLocalAccount) {
+       checkAccountType = "SNS";
+    } else {
+       checkAccountType = "Local";
+    }
+
+    res.status(200).json({signal: 'user_found', accountType: checkAccountType});
   } catch (error){
     res.status(200).json({signal: 'user_not_found'});
   }
@@ -57,12 +67,12 @@ const resetPasswordController = async (req, res) => {
   try {
     const { newPassword, email } = req.body;
     await userService.resetPassword(newPassword, email);
-    res.status(200).json();
+    res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
   } catch (error) {
-    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "사용자 정보 수정 중 오류가 발생했습니다.");
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "비밀번호 변경 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });
   }
-}
+};
 
 // 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccountController = async (req, res) => {

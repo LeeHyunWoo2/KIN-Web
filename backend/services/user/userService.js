@@ -116,20 +116,71 @@ const updateUser = async (userId, updateData) => {
   }
 };
 
+const calculateDateDifference = (pastDate) => {
+  const now = new Date();
+  const diffInMs = now - pastDate;
+
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const diffInWeeks = Math.floor(diffInDays / (7));
+  const diffInMonths = Math.floor(diffInWeeks / 4);
+
+  if (diffInMonths > 0) {
+    return diffInMonths + '개월 전';
+  } else if (diffInWeeks > 0) {
+    return diffInWeeks + '주 전';
+  } else if (diffInDays > 0) {
+    return diffInDays + '일 전'
+  } else {
+    return '최근';
+  }
+};
+
+// 비밀번호 변경
 const resetPassword = async (newPassword, email) => {
   try {
-    console.log('유저 새 비밀번호', newPassword, email)
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
     if (!user) {
-      throw new Error;
+      const error = new Error("유저를 찾을 수 없습니다.");
+      error.status = 404;
+      throw error;
     }
-    user.password = await bcrypt.hash(newPassword, 10);
+
+    // 현재 비밀번호와 중복되는지 확인
+    const isCurrentPassword = await bcrypt.compare(newPassword, user.password);
+    if (isCurrentPassword) {
+      const error = new Error("현재 사용 중인 비밀번호와 다른 비밀번호를 입력해주세요.");
+      error.status = 400;
+      throw error;
+    }
+
+    // 과거 비밀번호 중복 검사
+    const duplicateRecord = user.passwordHistory.find(record =>
+        bcrypt.compareSync(newPassword, record.password)
+    );
+    if (duplicateRecord) {
+      const timeDifference = calculateDateDifference(duplicateRecord.changedAt);
+      const error = new Error(`${timeDifference}에 사용된 비밀번호입니다.`);
+      error.status = 400;
+      throw error;
+    }
+
+    // 새 비밀번호 해싱 및 저장
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    // 비밀번호 기록에 추가 (최대 5개 기록 유지)
+    if (user.passwordHistory.length >= 5) {
+      user.passwordHistory.shift(); // 가장 오래된 기록 제거
+    }
+    user.passwordHistory.push({ password: hashedPassword, changedAt: new Date() });
+
+    // 비밀번호 저장
     await user.save();
   } catch (error) {
     console.error(error.message);
     throw error;
   }
-}
+};
 
 // 로컬 계정 추가 (소셜 Only 계정용)
 const addLocalAccount = async (userId, id, email, password) => {

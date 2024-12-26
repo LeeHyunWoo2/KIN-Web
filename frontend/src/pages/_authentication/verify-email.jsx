@@ -8,8 +8,6 @@ export default function VerifyEmailPage() {
   const [message, setMessage] = useState("");
 
   const handleClose = () => {
-    // 인증 상태를 로컬스토리지에 저장
-    localStorage.setItem("emailVerified", "true");
     window.close();
   };
 
@@ -18,7 +16,10 @@ export default function VerifyEmailPage() {
       try {
         const response = await apiClient.get(`/email/verify-email?token=${token}`);
         setMessage(response.data.message || "이메일 인증이 완료되었습니다. 탭을 닫으셔도 좋습니다.");
+        // 인증 상태를 로컬스토리지에 저장
+        localStorage.setItem("emailVerified", "true");
       } catch (error) {
+        // 만료된 토큰 등등의 상황일땐 아무것도 저장하지 않음
         setMessage(error.response?.data?.message || "이메일 인증에 실패했습니다.");
       }
     };

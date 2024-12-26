@@ -17,6 +17,20 @@ export default function Dashboard() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isForgotPasswordOpen ,setIsForgotPasswordOpen] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
+  const handleKeyDown = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
+
+  const handleFocus = () => {
+    // 포커싱될 때 keydown 이벤트 연결
+    document.addEventListener("keydown", handleKeyDown);
+  };
 
   const handleLogin = async (event, id, password) => {
     event.preventDefault();
@@ -65,6 +79,8 @@ export default function Dashboard() {
                   <Label htmlFor="password">비밀번호</Label>
                   <ForgotPassword
                       setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+                      isCapsLockOn={isCapsLockOn}
+                      setIsCapsLockOn={setIsCapsLockOn}
                   />
                 </div>
                 <Input
@@ -74,7 +90,12 @@ export default function Dashboard() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
+                    onKeyDown={handleKeyDown}
+                    onBlur={() => setIsCapsLockOn(false)}
                 />
+                {isCapsLockOn && (
+                <span className="text-red-500 text-sm text-muted-foreground">Caps Lock 이 활성화 되어있습니다!</span>
+                )}
               </div>
               <div className="flex ml-auto">
                 <label
