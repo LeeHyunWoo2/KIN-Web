@@ -34,6 +34,7 @@ import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
 import {MailOpen, Check, Loader2} from "lucide-react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -53,6 +54,15 @@ export default function AuthenticationPage() {
   };
   const handlePrev = () => {
     setPage((prev) => prev - 1);
+  };
+
+  const handleSocialLogin = (provider) => {
+    // 통합된 소셜 로그인 URL 생성
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
+
+    if (url) {
+      window.location.href = url; // 소셜 로그인 URL로 리다이렉트
+    }
   };
 
   const [formData, setFormData] = useState({
@@ -230,7 +240,7 @@ export default function AuthenticationPage() {
                         </Label>
                       </div>
                       <Button onClick={handleNext}>
-                        Sign In with Email
+                        일반 계정 회원가입
                       </Button>
                     </div>
                     <div className="relative">
@@ -244,19 +254,26 @@ export default function AuthenticationPage() {
           </span>
                       </div>
                     </div>
-                    <Button variant="outline" type="button">
-                      <Icons.gitHub className="mr-2 h-4 w-4"/>
-                      GitHub
+                    <Button variant="outline" type="button" className="[&_svg]:size-[18px]" onClick={() => handleSocialLogin('google')}>
+                      <Icons.google className="mr-2 h-4 w-4"/>
+                      Continue with Google
+                    </Button>
+                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('kakao')}>
+                      <Icons.kakao className="mr-2 h-4 w-4"/>
+                      &nbsp;&nbsp;Continue with Kakao
+                    </Button>
+                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('naver')}>
+                      <Icons.naver className="mr-2 h-4 w-4"/>
+                      Continue with Naver
                     </Button>
                   </div>
                   <p className="px-8 text-center text-sm text-muted-foreground">
                     By clicking continue, you agree to our{" "}
-                    <Link
-                        href="#"
-                        className="underline underline-offset-4 hover:text-primary"
+                    <span
+                        className="underline underline-offset-4 hover:text-primary cursor-pointer"
                     >
                       Terms of Service
-                    </Link>{" "}
+                    </span>{" "}
                     and{" "}
                     <Link
                         href="/privacy-policy"
@@ -306,6 +323,7 @@ export default function AuthenticationPage() {
                             fugiat nulla pariatur. Excepteur sint occaecat
                             cupidatat non proident, sunt in culpa qui officia
                             deserunt mollit anim id est laborum.
+                            <PrivacyPolicy/>
                           </ScrollArea>
                         </div>
                       </div>
