@@ -1,12 +1,5 @@
 const morgan = require('morgan');
 
-// 전체 URL 기준으로 필터링
-const skipLog = (req) => {
-  const excludedPaths = ['/notes', '/category', '/tags', '/api/server-time', '/sync/activity', '/auth/check-session'];
-  const fullPath = req.originalUrl.split('?')[0]; // 쿼리스트링 제거
-  return (req.method === 'GET' || req.method === 'OPTIONS' || req.method === 'PUT') && excludedPaths.includes(fullPath);
-};
-
 // 현재 시간 토큰 추가 (포맷팅 최적화)
 morgan.token('time', () => {
   const now = new Date();
@@ -16,20 +9,48 @@ morgan.token('time', () => {
   return `${date} / ${time}.${ms}`;
 });
 
-// 커스텀 토큰
-morgan.token('query', (req) => JSON.stringify(req.query || {}));
+// Body 내용을 수정하여 특정 필드 제외
 morgan.token('body', (req) => {
   const body = req.body || {};
-  return JSON.stringify(body, null, 2); // JSON 포매팅
+
+  // PUT /notes 요청인지 확인
+  if (req.method === 'PUT' && req.originalUrl.split('?')[0] === '/notes') {
+    const { updateDataList } = body;
+
+    // updateDataList가 배열이면 content 값을 제거
+    if (Array.isArray(updateDataList)) {
+      const sanitizedDataList = updateDataList.map((item) => {
+        const { content, ...rest } = item; // content 필드 제외
+        return rest;
+      });
+
+      // 변경된 body 반환 (content 제거 후 JSON으로 포매팅)
+      return JSON.stringify({ ...body, updateDataList: sanitizedDataList }, null, 2);
+    }
+  }
+
+  // 기본적으로 전체 body 출력 (수정 없음)
+  return JSON.stringify(body, null, 2);
 });
+
+// 커스텀 토큰 생성: query, errorMessage
+morgan.token('query', (req) => JSON.stringify(req.query || {}));
 morgan.token('errorMessage', (req, res) => {
   return res.statusCode >= 400 ? `Error: ${res.statusMessage || 'Unknown error'}` : '';
 });
 
-// 커스텀 로그 포맷 (시간 포함)
-const logFormat = ':time / :method :url [:status]  query: :query  body: :body  :errorMessage';
+// 로그 포맷 정의
+const logFormat = ':time / :method :url [:status] query: :query body: :body :errorMessage';
 
-// 미들웨어 생성
+// 기본적으로 로그를 제외할 요청 경로 검증 (예외 처리)
+const skipLog = (req) => {
+  const excludedPaths = ['/category', '/tags', '/api/server-time', '/sync/activity', '/auth/check-session'];
+  const fullPath = req.originalUrl.split('?')[0];
+  // GET, OPTIONS 메서드에 대해 특정 경로만 로깅 제외
+  return (req.method === 'GET' || req.method === 'OPTIONS') && excludedPaths.includes(fullPath);
+};
+
+// morgan 미들웨어 생성
 const logger = morgan(logFormat, { skip: skipLog });
 
 module.exports = logger;
