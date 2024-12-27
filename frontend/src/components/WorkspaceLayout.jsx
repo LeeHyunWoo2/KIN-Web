@@ -360,7 +360,7 @@ function Page({children}) {
                       <DropdownMenuSeparator/>
                       <DropdownMenuItem onClick={handleLogout}>
                         <LogOut/>
-                        Log out
+                        로그아웃
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </div>

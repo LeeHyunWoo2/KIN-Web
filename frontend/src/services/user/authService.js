@@ -50,9 +50,9 @@ export const getUserProfile = async () => {
   return data;
 };
 
-// 이메일로 회원 정보 조회 API (비밀번호 변경, 가입메일 중복확인 등)
-export const getUserProfileByEmail = async (email) => {
-  const {data} = await apiClient.get(`/user/profile/findUserByEmail/${email}`);
+// 이메일로 회원 정보 조회 API (아이디 찾기, 비밀번호 변경, 가입메일 중복확인 등)
+export const getUserProfileByInput = async (inputData) => {
+  const {data} = await apiClient.post(`/user/profile/findUserByInput`, inputData);
   return data;
 }
 

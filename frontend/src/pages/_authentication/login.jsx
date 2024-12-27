@@ -9,14 +9,15 @@ import {useState} from "react";
 import {router} from "next/client";
 import {toast} from "sonner";
 import {Checkbox} from "@/components/ui/checkbox";
-import ForgotPassword from "@/components/auth/ForgotPassword"
+import ForgotComponent from "@/components/auth/ForgotComponent"
+import * as React from "react";
 
 
 export default function Dashboard() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isForgotPasswordOpen ,setIsForgotPasswordOpen] = useState(false);
+  const [isForgotComponentOpen ,setIsForgotComponentOpen] = useState(false);
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   const handleKeyDown = (event) => {
@@ -59,7 +60,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="grid gap-4"  onKeyDown={(e) => {
-              if (e.key === 'Enter' && !isForgotPasswordOpen) {
+              if (e.key === 'Enter' && !isForgotComponentOpen) {
                 handleLogin(e, id, password);
               }
             }}>
@@ -77,10 +78,9 @@ export default function Dashboard() {
               <div className="grid gap-2">
                 <div className="flex items-center" >
                   <Label htmlFor="password">비밀번호</Label>
-                  <ForgotPassword
-                      setIsForgotPasswordOpen={setIsForgotPasswordOpen}
-                      isCapsLockOn={isCapsLockOn}
-                      setIsCapsLockOn={setIsCapsLockOn}
+                  <ForgotComponent
+                      setIsForgotComponentOpen={setIsForgotComponentOpen}
+                      setId={setId}
                   />
                 </div>
                 <Input
