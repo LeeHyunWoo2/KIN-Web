@@ -40,8 +40,9 @@ const getUserByInputController = async (req, res) => {
     }
     if(inputData.fetchUserId){
       res.status(200).json({signal: 'user_found', accountType: checkAccountType, id: user.id});
+    } else {
+      res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
     }
-    res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
   } catch (error){
     res.status(200).json({signal: 'user_not_found'});
   }
