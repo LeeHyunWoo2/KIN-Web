@@ -1,5 +1,5 @@
 const express = require('express');
-const { getUserInfoController, updateUserInfoController, addLocalAccountController, deleteUserController, getUserByEmailController,
+const { getUserInfoController, updateUserInfoController, addLocalAccountController, deleteUserController, getUserByInputController,
   getUserPublicProfileController, resetPasswordController
 } = require('../../controllers/user/userController');
 const authenticateUser = require('../../middleware/user/authenticateUser');
@@ -11,8 +11,8 @@ router.get('/public-profile', authenticateUser, getUserPublicProfileController)
 // 사용자 정보 조회
 router.get('/profile', authenticateUser, getUserInfoController);
 
-// 사용자 정보 조회 (이메일)
-router.get('/profile/findUserByEmail/:email',  getUserByEmailController);
+// 사용자 정보 조회 (아이디찾기, 비밀번호 찾기, 이메일중복 전용)
+router.post('/profile/findUserByInput',  getUserByInputController);
 
 // 사용자 정보 수정
 router.put('/profile', authenticateUser, updateUserInfoController);

@@ -26,7 +26,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input";
-import {getUserProfileByEmail, registerUser} from '@/services/user/authService'
+import {getUserProfileByInput, registerUser} from '@/services/user/authService'
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
@@ -98,7 +98,11 @@ export default function AuthenticationPage() {
   };
 
   const checkDuplicateEmail = async () => {
-    const response = await getUserProfileByEmail(email);
+    const inputData = {
+      input: email,
+      inputType: "email",
+    }
+    const response = await getUserProfileByInput(inputData);
     if (response.signal === 'user_not_found') {
       await handleSendVerificationEmail();
     } else {

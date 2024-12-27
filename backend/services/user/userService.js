@@ -44,7 +44,7 @@ const getUserPublicProfile = async (userId) => {
   }
 };
 
-// 사용자 정보 조회 (로그인된 유저의 경우)
+// 사용자 정보 조회 (로그인된 유저의 비밀번호 제외 모든 정보)
 const getUserById = async (userId) => {
   const user = await User.findById(userId).select('-password');
   if (!user) {
@@ -53,9 +53,17 @@ const getUserById = async (userId) => {
   return user;
 };
 
-// 사용자 정보 조회 (이메일로 아이디 찾기)
-const getUserByEmail = async (email) => {
-  const user = await User.findOne({email});
+// 사용자 정보 조회 (아이디, 비밀번호 찾기 전용)
+const getUserByInput = async (inputData) => {
+  const {input, inputType} = inputData;
+  let user;
+  if (inputType === 'email') {
+    user = await User.findOne({email: input});
+  } else if (inputType === 'id') {
+    user = await User.findOne({id: input});
+  } else {
+    throw new Error;
+  }
   if (!user) {
     throw new Error;
   }
@@ -138,7 +146,7 @@ const calculateDateDifference = (pastDate) => {
 // 비밀번호 변경
 const resetPassword = async (newPassword, email) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({email});
     if (!user) {
       const error = new Error("유저를 찾을 수 없습니다.");
       error.status = 404;
@@ -172,7 +180,8 @@ const resetPassword = async (newPassword, email) => {
     if (user.passwordHistory.length >= 5) {
       user.passwordHistory.shift(); // 가장 오래된 기록 제거
     }
-    user.passwordHistory.push({ password: hashedPassword, changedAt: new Date() });
+    user.passwordHistory.push(
+        {password: hashedPassword, changedAt: new Date()});
 
     // 비밀번호 저장
     await user.save();
@@ -227,7 +236,7 @@ const deleteUserById = async (userId) => {
 module.exports = {
   getUserPublicProfile,
   getUserById,
-  getUserByEmail,
+  getUserByInput,
   updateUser,
   resetPassword,
   addLocalAccount,

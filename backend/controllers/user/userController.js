@@ -24,9 +24,11 @@ const getUserInfoController = async (req, res) => {
 };
 
 // 사용자 정보 조회 (이메일로 유저 찾기)
-const getUserByEmailController = async (req, res) => {
+const getUserByInputController = async (req, res) => {
   try{
-    const user = await userService.getUserByEmail(req.params.email);
+    const inputData= req.body;
+    const user = await userService.getUserByInput(inputData);
+
     let checkAccountType;
 
     // 로컬 계정 여부 확인
@@ -36,8 +38,11 @@ const getUserByEmailController = async (req, res) => {
     } else {
        checkAccountType = "Local";
     }
-
-    res.status(200).json({signal: 'user_found', accountType: checkAccountType});
+    if(inputData.fetchUserId){
+      res.status(200).json({signal: 'user_found', accountType: checkAccountType, id: user.id});
+    } else {
+      res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
+    }
   } catch (error){
     res.status(200).json({signal: 'user_not_found'});
   }
@@ -109,7 +114,7 @@ const deleteUserController = async (req, res) => {
 module.exports = {
   getUserPublicProfileController,
   getUserInfoController,
-  getUserByEmailController,
+  getUserByInputController,
   updateUserInfoController,
   resetPasswordController,
   addLocalAccountController,
