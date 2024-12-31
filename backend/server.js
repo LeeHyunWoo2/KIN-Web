@@ -16,6 +16,8 @@ const logger = require("./middleware/logger");
 const rateLimit = require("express-rate-limit");
 const helmet = require('helmet');
 const compression = require('compression');
+const schedule = require('node-schedule');
+const { backupDatabase } = require('./services/notes/backupService');
 
 
 // 라우터 불러오기
@@ -169,7 +171,13 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ message, code: statusCode });
 });
 
-// 5. HTTPS 서버 실행
+// 5. 백업 스케줄러 실행 (매일 정각)
+schedule.scheduleJob('0 0 * * *', () => {
+  console.log('백업 실행 : ', new Date());
+  backupDatabase();
+});
+
+// 6. HTTPS 서버 실행
 const PORT = process.env.PORT;
 if (process.env.NODE_ENV === 'production'){
   https.createServer(httpsOptions, app).listen(PORT, () => {

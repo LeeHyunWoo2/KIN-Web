@@ -74,11 +74,13 @@ const newTokenController = async (req, res) => {
     const { refreshToken } = req.cookies;
 
     // 리프레시 토큰 검증
-    const decoded = await tokenService.verifyRefreshToken(refreshToken);
+    const decodedData = await tokenService.verifyRefreshToken(refreshToken);
 
-    // 사용자 조회 및 새로운 토큰 발급
-    const user = await authService.getUserById(decoded.id);
-    const tokens = await tokenService.generateTokens(user, decoded.rememberMe);
+    // 사용자 조회
+    const user = await authService.getUserById(decodedData.id);
+
+    // 토큰 갱신
+    const tokens = await tokenService.generateTokens(user, decodedData.rememberMe, decodedData.ttl);
 
     // 새로 발급된 토큰을 쿠키에 설정
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });

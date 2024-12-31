@@ -13,14 +13,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import apiClient from "@/lib/apiClient";
-import {useAtom} from "jotai";
+import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
 
 
 const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
     const router = useRouter();
-    const [auth, setAuth] = useAtom(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
+    const auth = useAtomValue(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
     const [isLoading, setIsLoading] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
 
@@ -35,9 +35,7 @@ const withAuth = (WrappedComponent) => {
       const checkAuth = async () => {
         try {
           const response = await apiClient.get('/auth/check-session');
-          if (response.status === 200) {
-           await setAuth(response.data.user); // 인증 성공 시 인증 상태 저장
-          } else {
+          if (response.status !== 200) {
             setShowAlert(true);
           }
         } catch (error) {
@@ -45,9 +43,8 @@ const withAuth = (WrappedComponent) => {
         }
         setIsLoading(false);
       };
-
       checkAuth();
-    }, [auth, setAuth]);
+    }, [auth]);
 
     const handleRedirect = () => {
       setShowAlert(false);
