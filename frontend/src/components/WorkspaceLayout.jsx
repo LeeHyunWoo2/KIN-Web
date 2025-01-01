@@ -29,6 +29,7 @@ import {
   Trash,
   Trash2,
   UserRoundCog,
+  CircleGauge,
 } from "lucide-react"
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
@@ -70,6 +71,7 @@ import TagManagerModal from "@/components/notes/TagManagement";
 import TutorialButton from "@/components/notes/TutorialButton";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {authAtom} from "@/atoms/userState";
 
 const data = {
   navMain: [
@@ -242,6 +244,7 @@ const handleLogout = async () => {
 function Page({children}) {
   const selectedNoteState = useAtomValue(selectedNoteStateAtom);
   const [, setNoteEvent] = useAtom(noteEventAtom);
+  const auth = useAtomValue(authAtom);
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -259,7 +262,8 @@ function Page({children}) {
           content: selectedNoteState.content,
         }
       });
-    };
+    }
+    ;
   };
 
   useEffect(() => {
@@ -348,14 +352,19 @@ function Page({children}) {
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator/>
                       <DropdownMenuGroup>
+                        {auth === 'admin' ? (
+                        <Link href="/admin">
+                          <DropdownMenuItem>
+                            <CircleGauge />
+                            관리자 대시보드
+                          </DropdownMenuItem>
+                        </Link>
+                        ) : (
                         <DropdownMenuItem disabled>
                           <BadgeCheck/>
                           Account
                         </DropdownMenuItem>
-                        <DropdownMenuItem disabled>
-                          <Bell/>
-                          Notifications
-                        </DropdownMenuItem>
+                        )}
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator/>
                       <DropdownMenuItem onClick={handleLogout}>
@@ -447,20 +456,20 @@ function NavActions({
         </Button>
         {/* <SettingsDialog/>*/}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 data-[state=open]:bg-accent"
-            >
-              <Menu/>
-            </Button>
-          </PopoverTrigger>
-          </TooltipTrigger>
-          <TooltipContent>샘플 메뉴</TooltipContent>
-        </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 data-[state=open]:bg-accent"
+                >
+                  <Menu/>
+                </Button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent>샘플 메뉴</TooltipContent>
+          </Tooltip>
           <PopoverContent
               className="w-56 overflow-hidden rounded-lg p-0"
               align="end"

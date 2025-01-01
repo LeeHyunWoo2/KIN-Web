@@ -1,6 +1,6 @@
 import apiClient from "@/lib/apiClient";
-import { refreshToken } from "@/services/user/authService";
-import { toast } from "sonner";
+import {refreshToken} from "@/services/user/authService";
+import {toast} from "sonner";
 
 export const setupInterceptors = () => {
   apiClient.interceptors.response.use(
@@ -34,8 +34,11 @@ export const setupInterceptors = () => {
             // 필요한 로직 추가 가능
           } else {
             // 기타 에러 처리
-            const errorMessage = error.response?.data?.message || "오류가 발생했습니다.";
-            toast.error(errorMessage);
+            if (error.response.status !== 404) {
+              const errorMessage = error.response?.data?.message
+                  || "오류가 발생했습니다.";
+              toast.error(errorMessage);
+            }
           }
         }
         return Promise.reject(error);

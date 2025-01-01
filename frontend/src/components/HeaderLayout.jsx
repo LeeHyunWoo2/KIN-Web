@@ -20,17 +20,24 @@ export default function HeaderLayout({children}) {
           <>
             {!auth ? (
                 <Link href="/login">
-                  <Button variant="outline" aria-label="Home">
-                    Login
+                  <Button variant="outline" aria-label="Login">
+                    로그인
                   </Button>
                 </Link>
             ) : (
                 <Link href="/notes">
-                  <Button variant="outline">
-                    Workspace
+                  <Button variant="outline" aria-label="Notes">
+                    노트
                   </Button>
                 </Link>
             )}
+            {auth === 'admin' && (
+                <Link href="/admin">
+                  <Button variant="outline">
+                    관리자 대시보드
+                  </Button>
+                </Link>
+                )}
           </>
         </header>
         {children}

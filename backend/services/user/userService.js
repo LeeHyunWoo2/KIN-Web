@@ -17,7 +17,7 @@ const getUserPublicProfile = async (userId) => {
     }
 
     // Redis에 없을 경우 DB에서 조회
-    const user = await User.findById(userId).select('name email profileIcon');
+    const user = await User.findById(userId).select('name email profileIcon role');
     if (!user) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -27,6 +27,7 @@ const getUserPublicProfile = async (userId) => {
       email: user.email,
       profileIcon: user.profileIcon,
       userId: userId,
+      role: user.role,
     };
 
     // Redis에 프로필 정보 저장 (TTL: 1시간)

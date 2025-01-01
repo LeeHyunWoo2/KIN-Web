@@ -36,6 +36,7 @@ export const getPublicProfile = async () => {
       email: data.email,
       profileIcon: data.profileIcon,
       userId: data.userId,
+      role: data.role,
     }));
     return data;
   } catch (error) {
@@ -118,6 +119,7 @@ export const unlinkSocialAccount = async (provider) => {
 export const logoutUser = async () => {
   try {
     await apiClient.post('/auth/logout', {});
+    localStorage.removeItem('auth');
     localStorage.removeItem('userInfo');
     window.location.href = '/login';
   } catch (error) {

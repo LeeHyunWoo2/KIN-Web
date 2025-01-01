@@ -1,11 +1,26 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-// 기본 인증 상태를 null로 초기화한 authAtom 생성
-export const authAtom = atom(null);
-
-// 로컬 스토리지와 동기화되는 atom
-export const userProfileAtom = atomWithStorage('userInfo', null);
+// localStorage를 이용한 authAtom 생성 (UX를 위한 전역 상태이며, 실제 인증요소는 아님)
+export const authAtom = atomWithStorage("auth", null, {
+  getItem: (key) => {
+    if(typeof window !== "undefined") {
+      const storedValue = localStorage.getItem(key);
+      return storedValue ? JSON.parse(storedValue) : null;
+    }
+    return null;
+  },
+  setItem: (key, value) => {
+    if(typeof window !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  },
+  removeItem: (key) => {
+    if(typeof window !== "undefined") {
+      localStorage.removeItem(key);
+    }
+  }
+});
 
 // 튜토리얼 활성화 상태
 export const tutorialActiveAtom = atom(false);

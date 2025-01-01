@@ -14,7 +14,7 @@ import {getTags} from "@/services/notes/tagService";
 
 
 const debouncedSynchronize = debounce(async () => {
-  const currentTime = Date.now(); // 활동 시각 전달
+  const currentTime = Date.now() + 9 * 60 * 60 * 1000; // 유닉스 타임 기준에서 9시간 더하기 (한국시간으로 변환)
   await SynchronizeWithServer(currentTime);
 }, 2000);
 

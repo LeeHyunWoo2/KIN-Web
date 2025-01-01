@@ -8,12 +8,23 @@ import Head from 'next/head';
 import {Toaster} from 'sonner';
 import {setupInterceptors} from "@/lib/interceptors";
 import '@/styles/code-block-element.css';
+import { authAtom } from "@/atoms/userState";
+import {useAtom} from "jotai";
 
 NProgress.configure({showSpinner: false});
 
 function App({Component, pageProps}) {
   const getLayout = Component.getLayout || ((page) => page);
   const router = useRouter();
+  const [auth, setAuth] = useAtom(authAtom);
+
+  // 페이지 로드 시 localStorage와 authAtom 동기화
+  useEffect(() => {
+    const storedAuth = JSON.parse(localStorage.getItem("auth"));
+    if (!auth && storedAuth) {
+      setAuth(storedAuth); // 로컬스토리지의 정보를 authAtom에 설정
+    }
+  }, [auth, setAuth]);
 
   useEffect(() => {
     const handleStart = () => {
