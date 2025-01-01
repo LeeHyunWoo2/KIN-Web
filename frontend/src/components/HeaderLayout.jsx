@@ -20,13 +20,13 @@ export default function HeaderLayout({children}) {
           <>
             {!auth ? (
                 <Link href="/login">
-                  <Button variant="outline" aria-label="Home">
+                  <Button variant="outline" aria-label="Login">
                     로그인
                   </Button>
                 </Link>
             ) : (
                 <Link href="/notes">
-                  <Button variant="outline">
+                  <Button variant="outline" aria-label="Notes">
                     노트
                   </Button>
                 </Link>

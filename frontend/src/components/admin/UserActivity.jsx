@@ -2,13 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 
 const activityData = [
-  { date: '월', logins: 120, notes: 45 },
-  { date: '화', logins: 150, notes: 55 },
-  { date: '수', logins: 180, notes: 70 },
-  { date: '목', logins: 200, notes: 80 },
-  { date: '금', logins: 250, notes: 100 },
-  { date: '토', logins: 180, notes: 60 },
-  { date: '일', logins: 140, notes: 50 },
+  { date: '12 - 29', logins: 120, notes: 45 },
+  { date: '12 - 30', logins: 150, notes: 55 },
+  { date: '12 - 31', logins: 180, notes: 70 },
+  { date: '01 - 01', logins: 200, notes: 80 },
+  { date: '01 - 02', logins: 250, notes: 100 },
+  { date: '01 - 03', logins: 180, notes: 60 },
+  { date: '01 - 04', logins: 140, notes: 50 },
 ]
 
 const activityRatio = [
@@ -41,7 +41,7 @@ export function UserActivity() {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>일일 활동 내역</CardTitle>
+          <CardTitle>최근 7일 활동 그래프</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>

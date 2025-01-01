@@ -7,13 +7,15 @@ import { RotateCcw, AlertTriangle, CheckCircle } from 'lucide-react'
 
 // 임시 데이터
 const serverStatus = [
-  { name: "Redis", status: "정상", responseTime: "5ms" },
+  { name: "Oracle Cloud", status: "정상", responseTime: "15ms" },
+  { name: "Redis", status: "정상", responseTime: "50ms" },
   { name: "MongoDB", status: "정상", responseTime: "120ms" },
+  { name: "Uploadthing", status: "비정상", responseTime: "2120ms" },
 ]
 
 const errorLogs = [
-  { id: 1, date: "2023-05-01 09:00:00", errorCode: "500", errorMessage: "Internal Server Error", apiPath: "/api/users" },
-  { id: 2, date: "2023-05-01 10:30:00", errorCode: "404", errorMessage: "Not Found", apiPath: "/api/notes" },
+  { id: 1, date: "2024-12-01 09:00:00", errorCode: "500", errorMessage: "Internal Server Error", apiPath: "/api/users" },
+  { id: 2, date: "2024-12-01 10:30:00", errorCode: "404", errorMessage: "Not Found", apiPath: "/api/notes" },
   // ... 더 많은 로그 데이터
 ]
 

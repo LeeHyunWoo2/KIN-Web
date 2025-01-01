@@ -10,8 +10,8 @@ const stats = [
 ]
 
 const activityLog = [
-  { id: 1, user: "홍길동", action: "로그인", timestamp: "2023-05-01 09:00:00" },
-  { id: 2, user: "김철수", action: "노트 작성", timestamp: "2023-05-01 10:30:00" },
+  { id: 1, user: "이현우", action: "로그인", timestamp: "2024-12-03 09:00:00" },
+  { id: 2, user: "조건재", action: "노트 작성", timestamp: "2024-12-04 10:30:00" },
   // ... 더 많은 로그 데이터
 ]
 

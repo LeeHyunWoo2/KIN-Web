@@ -1,0 +1,53 @@
+import { useEffect, useState } from 'react';
+import apiClient from '@/lib/apiClient';
+import { useAtomValue } from 'jotai';
+import { authAtom } from '@/atoms/userState';
+import PageNotFound from '@/pages/404'; // 404 페이지 컴포넌트
+
+const withAdminAuth = (WrappedComponent) => {
+  const AdminAuthenticatedComponent = (props) => {
+    const auth = useAtomValue(authAtom);
+    const [hasAccess, setHasAccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      if (auth === undefined) return; // auth 상태가 명확할 때만 실행
+
+      // 관리자 인증 상태 체크
+      const checkAdminAuth = async () => {
+        try {
+          const response = await apiClient.get('/auth/check-admin-session');
+          if (response.status === 200 && response.data.isAdmin === true) {
+            setHasAccess(true);
+          } else {
+            setHasAccess(false);
+          }
+        } catch (error) {
+          setHasAccess(false);
+        }
+        setIsLoading(false);
+      };
+      checkAdminAuth();
+    }, [auth]);
+
+    if (isLoading) {
+      return null; // 로딩 상태에서는 아무것도 렌더링하지 않음
+    }
+
+    if (!hasAccess) {
+      // 404 페이지 컴포넌트를 렌더링하여 존재하지 않는 페이지처럼 보이게 처리
+      return <PageNotFound />;
+    }
+
+    // 관리자 권한이 확인되면 요청한 컴포넌트를 렌더링
+    return <WrappedComponent {...props} />;
+  };
+
+  if (WrappedComponent.getLayout) {
+    AdminAuthenticatedComponent.getLayout = WrappedComponent.getLayout;
+  }
+
+  return AdminAuthenticatedComponent;
+};
+
+export default withAdminAuth;

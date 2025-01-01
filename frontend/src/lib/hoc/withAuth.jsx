@@ -25,6 +25,7 @@ const withAuth = (WrappedComponent) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
+
       // 이미 인증된 경우 인증 체크를 스킵
       if (auth) {
         setIsLoading(false);

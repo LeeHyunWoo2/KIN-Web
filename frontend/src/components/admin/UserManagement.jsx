@@ -9,9 +9,9 @@ import { Textarea } from "@/components/ui/textarea"
 
 // 임시 데이터
 const users = [
-  { id: 1, name: "홍길동", email: "hong@example.com", role: "관리자", status: "활성", banReason: "" },
-  { id: 2, name: "김철수", email: "kim@example.com", role: "사용자", status: "비활성", banReason: "불건전한 게시물 작성" },
-  // ... 더 많은 사용자 데이터
+  { id: 1, name: "이현우", email: "triaxis159@gmail.com", role: "관리자", status: "활성", comments: "" },
+  { id: 2, name: "조건재", email: "example@example.com", role: "사용자", status: "활성", comments: "" },
+  { id: 3, name: "박주천", email: "example2@example.com", role: "사용자", status: "비활성", comments: "스팸 유저" },
 ]
 
 export function UserManagement() {
@@ -49,7 +49,7 @@ export function UserManagement() {
             <TableHead>역할</TableHead>
             <TableHead>상태</TableHead>
             <TableHead>작업</TableHead>
-            <TableHead>제재 사유</TableHead>
+            <TableHead>비고</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -77,15 +77,15 @@ export function UserManagement() {
               <TableCell>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">제재 사유</Button>
+                    <Button variant="outline" size="sm">상세보기</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>{user.name}의 제재 사유</DialogTitle>
+                      <DialogTitle>특이사항 - {user.name}</DialogTitle>
                     </DialogHeader>
                     <Textarea
-                      placeholder="제재 사유를 입력하세요"
-                      defaultValue={user.banReason}
+                      placeholder="기록할 특이 사항을 입력하세요."
+                      defaultValue={user.comments}
                     />
                     <Button>저장</Button>
                   </DialogContent>

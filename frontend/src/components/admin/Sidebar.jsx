@@ -1,4 +1,4 @@
-import { Home, Users, BarChart2, Settings, MessageSquare, Activity } from 'lucide-react'
+import { Users, BarChart2, Settings, MessageSquare, Activity } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 
 export function Sidebar({ activeTab, setActiveTab }) {

@@ -8,9 +8,9 @@ import { Search } from 'lucide-react'
 
 // 임시 데이터
 const feedbacks = [
-  { id: 1, author: "홍길동", title: "로그인 문제", status: "읽지 않음", date: "2023-05-01" },
-  { id: 2, author: "김철수", title: "기능 제안", status: "진행 중", date: "2023-05-02" },
-  { id: 3, author: "이영희", title: "버그 리포트", status: "완료", date: "2023-05-03" },
+  { id: 1, author: "이현우", title: "로그인 문제", status: "읽지 않음", date: "2025-01-01" },
+  { id: 2, author: "조건재", title: "기능 제안", status: "진행 중", date: "2025-01-02" },
+  { id: 3, author: "박주천", title: "버그 리포트", status: "완료", date: "2025-02-03" },
 ]
 
 export function Feedback() {

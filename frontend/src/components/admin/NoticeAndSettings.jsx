@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 // 임시 데이터
 const notices = [
-  { id: 1, title: "시스템 점검 안내", content: "5월 1일 오전 2시부터 4시까지 시스템 점검이 있을 예정입니다." },
-  { id: 2, title: "새로운 기능 추가", content: "이제 음성 메모 기능을 사용하실 수 있습니다." },
+  { id: 1, title: "시스템 점검 안내", content: "5월 1일 오전 2시부터 4시까지 시스템 점검이 있을 예정입니다.", timestamp: "2025-01-01 00:00" },
+  { id: 2, title: "새로운 기능 추가", content: "이제 음성 메모 기능을 사용하실 수 있습니다.", timestamp: "2025-01-02 15:00"},
   // ... 더 많은 공지사항 데이터
 ]
 
@@ -42,6 +42,7 @@ export function NoticeAndSettings() {
                 <TableRow>
                   <TableHead>제목</TableHead>
                   <TableHead>내용</TableHead>
+                  <TableHead>작성일</TableHead>
                   <TableHead>작업</TableHead>
                 </TableRow>
               </TableHeader>
@@ -50,6 +51,7 @@ export function NoticeAndSettings() {
                     <TableRow key={notice.id}>
                       <TableCell>{notice.title}</TableCell>
                       <TableCell>{notice.content}</TableCell>
+                      <TableCell>{notice.timestamp}</TableCell>
                       <TableCell>
                         <Button variant="ghost">수정</Button>
                         <Button variant="ghost">삭제</Button>
