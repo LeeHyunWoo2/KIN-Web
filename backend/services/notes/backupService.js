@@ -11,7 +11,7 @@ const Tag = require('../../models/tag');
 // 백업 관련 설정
 const BACKUP_PATH = process.env.BACKUP_DIRECTORY || path.join(__dirname, '../../../backups');
 const MONGO_URI = process.env.MONGO_URI;
-const BACKUP_RETENTION_DAYS = 2;
+const BACKUP_RETENTION_DAYS = 7;
 
 // 디렉토리 확인 및 생성
 if (!fs.existsSync(BACKUP_PATH)) {
