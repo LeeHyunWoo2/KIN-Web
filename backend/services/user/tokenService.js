@@ -194,6 +194,7 @@ const deleteRefreshTokenFromRedis = async (userId) => {
   await redisClient.del(`refreshToken:${userId}`, `publicProfile:${userId}`);
 };
 
+// TODO : 관리자는 리프레시 토큰도 함께 폐기하는 로직 만들기
 // 블랙리스트 로직 / 로그아웃 했을때 그냥 삭제를 하면 누군가 탈취하거나, 타 기기에 등록된걸로 재인증이 성공할 수 있음
 const invalidateAccessToken = async (accessToken) => {
   const decoded = jwt.decode(accessToken);

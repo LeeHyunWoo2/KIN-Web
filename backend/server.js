@@ -18,7 +18,8 @@ const helmet = require('helmet');
 const compression = require('compression');
 const schedule = require('node-schedule');
 const { backupDatabase } = require('./services/notes/backupService');
-
+const WebSocket = require('ws'); // WebSocket 모듈
+const { getStatus } = require('./services/admin/statusService'); // 상태 정보 서비스
 
 // 라우터 불러오기
 const authRoutes = require('./routes/user/authRoutes');
@@ -29,6 +30,7 @@ const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
 const emailRoutes = require('./routes/user/emailRoutes');
+const os = require("os");
 
 const app = express();
 initializePassport(passport);
@@ -177,14 +179,77 @@ schedule.scheduleJob('0 0 * * *', () => {
   backupDatabase();
 });
 
-// 6. HTTPS 서버 실행
+// 6. WebSocket 서버 생성
+const wss = new WebSocket.Server({ noServer: true });
+let isClientConnected = false; // 클라이언트 연결 상태 추적
+let refreshInterval = 5000; // 기본값 5초
+let intervalId;
+
+// 웹소켓 핸들러 설정
+wss.on('connection', async (ws) => {
+  console.log('클라이언트 연결됨');
+  isClientConnected = true;
+
+  // 첫 연결에 한해서 바로 전송
+  const initialStatus = {
+    ...(await getStatus()),
+    cpuCount: os.cpus().length,
+    cpuModel: os.cpus()[0].model,
+    cpuSpeed: os.cpus()[0].speed
+  } // 정적인 데이터는 갱신데이터에서 제외하고 처음에만 추가로 전송
+  ws.send(JSON.stringify(initialStatus));
+
+  ws.on('message', (message) => {
+    const data = JSON.parse(message);
+    if (data.type === "setInterval" && typeof data.interval === "number") {
+      refreshInterval = data.interval * 1000; // ms 단위로 변환
+      clearInterval(intervalId); // 기존 간격 제거
+      startInterval(); // 새 간격으로 시작
+      console.log(`새로고침 간격 : ${refreshInterval / 1000}초`);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('클라이언트 연결 종료');
+    if (wss.clients.size === 0) {
+      isClientConnected = false; // 모든 클라이언트가 연결 종료되면 false (여러 관리자가 모니터링중일때 바로 끊어지면 안됨)
+    }
+  });
+});
+
+// 상태 정보를 주기적으로 클라이언트에 전송
+const startInterval = () => {
+  intervalId = setInterval(async () => {
+    const status = await getStatus();
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(status));
+      }
+    });
+  }, refreshInterval);
+};
+
+// 서버 시작 시 초기 호출
+startInterval();
+
+// 7. Express, WebSocket 서버 연결
 const PORT = process.env.PORT;
-if (process.env.NODE_ENV === 'production'){
-  https.createServer(httpsOptions, app).listen(PORT, () => {
+if (process.env.NODE_ENV === 'production') {
+  https.createServer(httpsOptions, app).on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  }).listen(PORT, () => {
     console.log(`HTTPS 서버가 포트 ${PORT}에서 실행 중입니다.`);
   });
 } else {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+  });
+
+  server.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
   });
 }

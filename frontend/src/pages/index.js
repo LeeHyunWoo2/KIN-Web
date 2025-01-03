@@ -7,7 +7,7 @@ import {authAtom} from "@/atoms/userState";
 import {useRouter} from "next/router";
 import {Icons} from "@/components/icons";
 import * as React from "react";
-
+import IntroContent from "@/components/introduce/IntroComponent";
 
 export default function Home() {
   const router = useRouter();
@@ -22,13 +22,12 @@ export default function Home() {
   }
 
   return (
-      <div className="flex flex-col max-w-3xl mx-auto mt-24 mb-5">
-        <div
-            className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]"
-        >
-          <main
-              className="row-start-3 flex gap-6 flex-wrap items-center justify-center text-4xl">
-            <Card>
+      <>
+        <div className="flex flex-col max-w-3xl mx-auto mt-24 mb-5">
+          {/*<div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">*/}
+            <main
+                className="row-start-3 flex gap-6 flex-wrap items-center justify-center text-4xl">
+              <Card>
               <CardHeader className="font-bold text-3xl items-center">
                 메인 화면은 개발중입니다.
               </CardHeader>
@@ -50,9 +49,11 @@ export default function Home() {
                 </a>
               </CardFooter>
             </Card>
-          </main>
+            </main>
+          {/*</div>*/}
         </div>
-      </div>
+        <IntroContent/>
+      </>
   );
 }
 

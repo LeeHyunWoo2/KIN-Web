@@ -96,17 +96,15 @@ export default function NoteDisplay() {
 // PlateEditor의 변경사항을 처리
   const handleEditorChange = (newContent) => {
     // 현재 선택된 노트의 content 업데이트
-    setSelectedNoteState((prev) =>
-        produce(prev, (draft) => {
-          draft.content = newContent; // JSON 데이터를 content에 그대로 저장
-        })
-    );
+    setSelectedNoteState((prev) => ({
+      ...prev,
+      content: newContent, // JSON 데이터를 content에 그대로 저장
+    }));
     // localPayload 업데이트
-    setLocalPayload((prevPayload) =>
-        produce(prevPayload, (draft) => {
-          draft.content = newContent; // 서버에 전송할 변경 내용
-        })
-    );
+    setLocalPayload((prevPayload) => ({
+      ...prevPayload,
+      content: newContent, // 서버에 전송할 변경 내용
+    }));
     setIsInitialLoad(false); // 초기 로드를 완료한 상태로 설정
     setIsNotSaved(true);     // 변경사항 플래그 설정
   };
@@ -295,7 +293,7 @@ export default function NoteDisplay() {
         <Input
             value={selectedNoteState.title}
             onChange={handleTitleChange} // 뭔가 바뀌면 호출
-            className="mb-4 text-xl font-semibold"
+            className="mb-4 text-xl font-semibold mx-4"
         />
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0" data-registry="plate">
