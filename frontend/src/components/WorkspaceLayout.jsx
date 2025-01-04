@@ -259,7 +259,12 @@ function Page({children}) {
         type: 'ADD',
         payload: {
           title: '새 페이지',
-          content: selectedNoteState.content,
+          content: [
+            {
+              children: [{ text: '' }],
+              type: 'p',
+            },
+          ],
         }
       });
     }

@@ -13,19 +13,13 @@ import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
 import {
   ArchiveX,
-  MoreVertical,
   Star,
   StarOff,
   Undo2,
+  Tags,
   Trash2
 } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import {useRouter} from "next/router";
 import {categoryTreeAtom} from "@/atoms/filterAtoms";
 import {
@@ -217,8 +211,22 @@ export default function NoteDisplay() {
                 </div>
             )}
           </div>
-          <Separator orientation="vertical" className="mx-3 h-6"/>
-            <TagSelector/>
+          <Separator orientation="vertical" className="mx-3 "/>
+          <TagSelector/>
+          <Separator orientation="vertical" className="mx-3 "/>
+          <div className="flex items-center gap-1">
+          <Tags className="mr-1" size={20}/>
+            {selectedNoteState.tags.length !== 0 && (
+                <>
+                  {selectedNoteState.tags.map((tag) =>
+                      <Badge key={tag._id} variant="secondary2"
+                             className="mr-2 text-sm"> {tag.name}</Badge>
+                  )}
+                </>
+            )}
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
             <Separator orientation="vertical" className="mx-3 h-6"/>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -234,72 +242,46 @@ export default function NoteDisplay() {
               <TooltipContent>{!selectedNoteState.is_pinned ? '즐겨찾기'
                   : '즐겨찾기 해제'}</TooltipContent>
             </Tooltip>
-
-            <div className="ml-auto flex items-center gap-2">
-
-              {/* Move to Junk Button */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon"
-                          disabled={selectedNoteState.is_trashed === false}
-                          onClick={handlePermanentDelete}>
-                    <ArchiveX className="h-4 w-4"/>
-                    <span className="sr-only">Move to junk</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>영구삭제</TooltipContent>
-              </Tooltip>
-
-              {/* Trash Button */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon"
-                          disabled={selectedNoteState.is_pinned === true}
-                          onClick={moveToTrash}>
-                    {!selectedNoteState.is_trashed === true ? (
-                        <Trash2 className="h-4 w-4"/>) : (
-                        <Undo2/>)}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동'
-                    : '복구하기'}</TooltipContent>
-              </Tooltip>
-              <Separator orientation="vertical" className="mx-1 h-6"/>
-            </div>
-
-            {/* More Options Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-4 w-4"/>
-                  <span className="sr-only">More</span>
+            <Separator orientation="vertical" className="mx-3 h-6"/>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon"
+                        disabled={selectedNoteState.is_trashed === false}
+                        onClick={handlePermanentDelete}>
+                  <ArchiveX className="h-4 w-4"/>
+                  <span className="sr-only">Move to junk</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>샘플 메뉴 1</DropdownMenuItem>
-                <DropdownMenuItem>샘플 메뉴 2</DropdownMenuItem>
-                <DropdownMenuItem>샘플 메뉴 3</DropdownMenuItem>
-                <DropdownMenuItem>샘플 메뉴 4</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </TooltipTrigger>
+              <TooltipContent>영구삭제</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon"
+                        disabled={selectedNoteState.is_pinned === true}
+                        onClick={moveToTrash}>
+                  {!selectedNoteState.is_trashed === true ? (
+                      <Trash2 className="h-4 w-4"/>) : (
+                      <Undo2/>)}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동'
+                  : '복구하기'}</TooltipContent>
+            </Tooltip>
+            <Separator orientation="vertical" className="mx-1 h-6"/>
           </div>
-        {selectedNoteState.tags.length === 0 ? (
-            <div className="mb-2 min-h-7">태그 없음</div>
-        ):(
-            <div className="mb-2 min-h-7">태그 : {selectedNoteState.tags.map((tag) =>
-                <Badge key={tag._id} variant="secondary2" className="mr-2 text-sm"> {tag.name}</Badge>
-            )}</div>
-        )}
+        </div>
         <Input
             value={selectedNoteState.title}
             onChange={handleTitleChange} // 뭔가 바뀌면 호출
-            className="mb-4 text-xl font-semibold mx-4"
+            className="text-xl font-semibold mt-1 mx-3 w-auto"
         />
         <div className="flex flex-col flex-1 p-3 relative">
-          <div className="absolute h-full p-3 left-0 right-0 bottom-0" data-registry="plate">
-            <PlateEditor onChange={handleEditorChange} />
+          <div className="absolute h-full p-3 left-0 right-0 bottom-0"
+               data-registry="plate">
+            <PlateEditor onChange={handleEditorChange}/>
           </div>
         </div>
-        </div>
-        );
-        }
+      </div>
+  );
+}
