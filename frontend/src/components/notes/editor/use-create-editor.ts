@@ -130,6 +130,6 @@ export const useCreateEditor = (value: any) => {
       ...editorPlugins,
     ],
     value,
-    autoSelect: "end",
+    autoSelect: true,
   });
 };

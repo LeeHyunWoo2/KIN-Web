@@ -33,6 +33,8 @@ export function ServiceStatus() {
   const [loadAverageData, setLoadAverageData] = useState([]);
   const [refreshInterval, setRefreshInterval] = useState(5); // 기본값 5초
   const [webSocket, setWebSocket] = useState(null);
+  const [isSampleData, setIsSampleData] = useState(false);
+
 
   // 웹소켓 연결
   useEffect(() => {
@@ -49,11 +51,14 @@ export function ServiceStatus() {
 
       // 테스트용 랜덤값 생성 함수
       const generateRandomLoad = () => {
+        if (!isSampleData) {
+          setIsSampleData(true);
+        }
         const base = parseFloat((Math.random() * 2).toFixed(2)); // 0 ~ 2 사이 값 생성
         return {
-          load1: base, // 1분 평균은 기준 부하 값
+          load1: base, // 1분 평균
           load5: parseFloat((base * 0.8 + Math.random() * 0.4).toFixed(2)), // 5분 평균은 1분 평균보다 안정적
-          load15: parseFloat((base * 0.65 + Math.random() * 0.35).toFixed(2)), // 15분 평균은 가장 안정적
+          load15: parseFloat((base * 0.65 + Math.random() * 0.35).toFixed(2)), // 15분 평균
         };
       };
 
@@ -125,7 +130,7 @@ export function ServiceStatus() {
   const totalMemoryGB = (cpuTotalUsage / (1024 ** 3)).toFixed(2);
   const freeMemoryGB = (cpuFreeMemory / (1024 ** 3)).toFixed(2);
   const cpuUsageFormatted = cpuUsagePerCore.map((usage, index) => ({
-    core: `Core ${index + 1}`,
+    core: `Thread ${index + 1} `,
     time: `${(usage / 1000).toFixed(2)}`,
   }));
 
@@ -223,7 +228,7 @@ export function ServiceStatus() {
                   <div className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted
                   flex items-center ">
                     <div className="text-center p-2">
-                      코어별 CPU 사용량(ms)
+                      스레드 개별 사용량(ms)
                     </div>
                 </div>
                 <div>
@@ -256,7 +261,16 @@ export function ServiceStatus() {
             </div>
             <Card className="my-4">
               <CardHeader>
-                <CardTitle>CPU 평균 부하</CardTitle>
+                <div className="flex items-center gap-2">
+                <CardTitle>
+                  CPU 평균 부하
+                </CardTitle>
+                <span>
+                  {isSampleData && (
+                      "(샘플 데이터)"
+                  )}
+                </span>
+                </div>
                 <CardDescription>1분, 5분, 15분간 발생한 CPU 부하의 평균을 모니터링 합니다.</CardDescription>
               </CardHeader>
               <CardContent>
@@ -271,9 +285,9 @@ export function ServiceStatus() {
                         tickFormatter={(value) => value}
                     />
                     <YAxis
-                        domain={[0, 2]} // 예: 0~2 범위 설정
-                        tickCount={5} // 0.0, 0.5, 1.0, 1.5, 2.0
-                        tickFormatter={(value) => value.toFixed(1)} // 소수점 한 자리 유지
+                        domain={[0, 2]}
+                        tickCount={5}
+                        tickFormatter={(value) => value.toFixed(1)}
                     />
                     <ChartTooltip
                         cursor={true}
@@ -319,25 +333,36 @@ export function ServiceStatus() {
                 </ResponsiveContainer>
               </CardContent>
               <div className="flex justify-center px-20 -mt-2 mb-4">
-                {/* 색깔 가이드 */}
                 <div className="flex items-center gap-10">
                   <div className="flex items-center gap-2">
       <span
           className="w-3 h-3 rounded-full"
-          style={{ backgroundColor: "#EE6FA5" }}/>
-                    <span>1분</span>
+          style={{backgroundColor: "#EE6FA5"}}/>
+                    <span>1분 </span>
+                    <span className="text-sm -ml-1 text-gray-600">
+        ({loadAverageData.length > 0 ? loadAverageData[loadAverageData.length
+                    - 1].load1.toFixed(2) : '0.00'})
+      </span>
                   </div>
                   <div className="flex items-center gap-2">
       <span
           className="w-3 h-3 rounded-full"
-          style={{ backgroundColor: "#3872AE" }}/>
+          style={{backgroundColor: "#3872AE"}}/>
                     <span>5분</span>
+                    <span className="text-sm -ml-1 text-gray-600">
+        ({loadAverageData.length > 0 ? loadAverageData[loadAverageData.length
+                    - 1].load5.toFixed(2) : '0.00'})
+      </span>
                   </div>
                   <div className="flex items-center gap-2">
       <span
           className="w-3 h-3 rounded-full"
-          style={{ backgroundColor: "#36AC60" }}/>
+          style={{backgroundColor: "#36AC60"}}/>
                     <span>15분</span>
+                    <span className="text-sm -ml-1 text-gray-600">
+        ({loadAverageData.length > 0 ? loadAverageData[loadAverageData.length
+                    - 1].load15.toFixed(2) : '0.00'})
+      </span>
                   </div>
                 </div>
               </div>
@@ -368,7 +393,7 @@ export function ServiceStatus() {
                   </TableRow>
                   <TableRow>
                     <TableCell>
-                      CPU 코어 수: {cpuCount}
+                      프로세서 스레드 수: {cpuCount}
                     </TableCell>
                   </TableRow>
                   <TableRow>

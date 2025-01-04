@@ -1,5 +1,26 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  PieChart,
+  Pie,
+  LabelList
+} from 'recharts'
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent, ChartTooltip, ChartTooltipContent
+} from "@/components/ui/chart";
 
 const activityData = [
   { date: '12 - 29', logins: 120, notes: 45 },
@@ -12,76 +33,108 @@ const activityData = [
 ]
 
 const activityRatio = [
-  { name: '활성', value: 70 },
-  { name: '비활성', value: 30 },
+  { name: 'active', value: 70, fill: "var(--color-active)" },
+  { name: 'deactivate', value: 30, fill: "var(--color-deactivate)"},
 ]
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
+const chartConfig = {
+  login: {
+    label: "로그인",
+    color: "hsl(var(--chart-1))",
+  },
+  createNote: {
+    label: "노트작성",
+    color: "hsl(var(--chart-2))",
+  },
+}
+
+const pieChartConfig = {
+  active: {
+    label: "활성",
+    color: "hsl(var(--chart-5))",
+  },
+  deactivate: {
+    label: "비활성",
+    color: "hsl(var(--chart-1))",
+  }
+}
 
 export function UserActivity() {
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">총 활동 횟수</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">최근 7일 활성 사용자</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">890</div>
-          </CardContent>
-        </Card>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>최근 7일 활동 그래프</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={activityData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="logins" fill="#8884d8" name="로그인" />
-              <Bar dataKey="notes" fill="#82ca9d" name="노트 작성" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>활동 비율</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={activityRatio}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
+      <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader
+                className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">총 활동 횟수</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5,432</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader
+                className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">최근 7일 활성
+                사용자</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">890</div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>최근 7일 활동 그래프</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="-ml-6">
+                <BarChart data={activityData}>
+                  <CartesianGrid/>
+                  <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                  />
+                  <YAxis
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                  />
+                  <Tooltip/>
+                  <Bar dataKey="logins" fill="var(--color-login)" name="로그인"/>
+                  <Bar dataKey="notes" fill="var(--color-createNote)" name="노트 작성"/>
+                </BarChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col">
+            <CardHeader className="items-center pb-0">
+              <CardTitle>활동 비율</CardTitle>
+              <CardDescription>2024년 12월</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-0">
+              <ChartContainer
+                  config={pieChartConfig}
+                  className="mx-auto aspect-square max-h-[300px]"
               >
-                {activityRatio.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+                <PieChart>
+                  <ChartTooltip
+                      content={<ChartTooltipContent nameKey="name" hideLabel />}
+                  />
+                  <Pie data={activityRatio} dataKey="value" />
+                  <ChartLegend
+                      content={<ChartLegendContent nameKey="name" />}
+                      className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center text-sm"
+                  />
+                </PieChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+        </div>
+        )
+        }
 

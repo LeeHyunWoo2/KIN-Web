@@ -1,5 +1,3 @@
-'use client';
-
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -26,12 +24,13 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
   const editor = useCreateEditor(value);
 
   const lastValue = useRef(value);
+  const laseId = useRef(selectedNoteState._id);
 
   const handleEditorChange = (newValue: any) => {
     const currentValue = newValue.editor.children;
 
-    // 데이터 비교: 값이 변경되었을 때만 onChange 호출
-    if (!isEqual(lastValue.current, currentValue)) {
+    // 값이 변경되었고 노트id가 같을 때만 onChange 호출 (노트를 선택하는것만으로 다르다고 판단해 저장이 발생하기 때문)
+    if (!isEqual(lastValue.current, currentValue) && laseId.current === selectedNoteState._id) {
       lastValue.current = currentValue; // 상태 업데이트
       if (onChange) {
         onChange(currentValue); // 변경된 값만 전달
@@ -42,6 +41,7 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
   useEffect(() => {
     editor.tf.reset();
     editor.tf.setValue(value); // 노트의 _id 가 변경되면 value 재배치
+    laseId.current = selectedNoteState._id;
   },[selectedNoteState._id])
 
 
@@ -52,7 +52,7 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
             // 현재 노트의 content 값을 에디터로 전달
             // @ts-ignore
             value={value}
-            onChange={handleEditorChange} // 공식 API에 onValueChange 라는게 있지만, 클릭만해도 저장호출이 되서 그냥 따로 함수 작성
+            onValueChange={handleEditorChange}
             maxLength={20000}
         >
           <EditorContainer className="border rounded-md">
