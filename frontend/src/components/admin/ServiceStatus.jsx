@@ -64,6 +64,7 @@ export function ServiceStatus() {
 
       if (data.loadAverage) {
         // 테스트 환경 (Windows)에서 loadAverage가 모두 0인 경우 랜덤 값으로 대체
+       console.log(`loadAverage: ${data.loadAverage[0]}, ${data.loadAverage[1]}, ${data.loadAverage[2]}`);
         const loadAverage =
             data.loadAverage[0] === 0 && data.loadAverage[1] === 0 && data.loadAverage[2] === 0
                 ? generateRandomLoad()
