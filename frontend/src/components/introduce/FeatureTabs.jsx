@@ -4,7 +4,6 @@ import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Upload, Sparkles, Menu, Slash, ActivityIcon as Function } from 'lucide-react'
 
 export default function FeatureTabs() {
@@ -96,7 +95,7 @@ export default function FeatureTabs() {
   ]
 
   return (
-      <Card className="w-full max-w-4xl mx-auto mt-16">
+      <Card className="w-full max-w-4xl mx-auto mb-16">
         <CardHeader>
           <div className="flex items-center space-x-2">
             <Tabs defaultValue="equation" className="w-full">
