@@ -9,129 +9,117 @@ import { Badge } from "@/components/ui/badge"
 import { StarIcon } from 'lucide-react'
 import FeatureTabs from "@/components/introduce/FeatureTabs";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import TechStack from "@/components/introduce/Tech-Stack";
+import * as React from "react";
+
 
 export default function IntroContent() {
   return (
-      <div className="flex flex-col h-[calc(100vh-64px)]">
+      <div className="flex flex-col">
         <section className="container mx-auto px-4 py-20 text-center">
           <Badge variant="secondary" className="mb-4">
             Introducing Keep Idea Note
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
-            Build Notion-like editors,
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+            노트 앱 소개
             <br/>
-            faster than ever
+            샘플 제목
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-[600px] mx-auto">
-            Over 100+ beautifully crafted components and a full-stack AI editor
-            template, powered by Plate.js.
-            Save time. Build better. Launch sooner.
+            2~3 문장 정도의 소개 문구<br/>
+            2~3 문장 정도의 소개 문구
           </p>
           <div className="flex gap-4 justify-center mb-8">
-            <Button size="lg">Browse Templates</Button>
-            <Button size="lg" variant="outline">Get all-access</Button>
+            <Button size="lg">버튼1</Button>
+            <Button size="lg" variant="outline">버튼2</Button>
           </div>
           <div
               className="flex items-center justify-center gap-2 text-muted-foreground">
             <StarIcon className="h-5 w-5 text-yellow-400"/>
-            <span>15,000+ developers using Plate</span>
+            <span>예제 문구</span>
           </div>
         </section>
+
+        {/*주요 기능 사진, gif*/}
+        <FeatureTabs/>
+
+        <TechStack/>
+
         <section className="bg-slate-50 py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Plate Plus</h2>
+              <h2 className="text-3xl font-bold mb-4">Title</h2>
               <p className="text-muted-foreground">
-                Lifetime access to all our components and templates.
+                description 1
                 <br/>
-                One simple price.
+                description 2
               </p>
             </div>
 
+            {/* 주요 기술 스택 */}
             <div className="grid md:grid-cols-2 gap-8 max-w-[1000px] mx-auto">
-              {/* Personal Plan */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Personal</CardTitle>
-                  <p className="text-sm text-muted-foreground">For individual
-                    builders.</p>
+                  <CardTitle>A</CardTitle>
+                  <p className="text-sm text-muted-foreground"></p>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4">
-                    <span className="text-4xl font-bold">$299</span>
+                    <span className="text-4xl font-bold">1</span>
                     <span
-                        className="text-muted-foreground"> one-time payment</span>
+                        className="text-muted-foreground"> one</span>
                   </div>
-                  <Button className="w-full mb-6">Get all-access</Button>
+                  <Button className="w-full mb-6"></Button>
                   <ul className="space-y-4">
-                    <li className="flex items-center gap-2">
-                      <span
-                          className="font-medium">90+ premium components</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="font-medium">All editor templates</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="font-medium">Lifetime access</span>
-                    </li>
+                    <li>content 1</li>
+                    <li>content 2</li>
                   </ul>
                 </CardContent>
               </Card>
-
-              {/* Teams Plan */}
               <Card className="bg-slate-900 text-white">
                 <CardHeader>
-                  <CardTitle>Teams</CardTitle>
-                  <p className="text-sm text-slate-400">Five developer
-                    licenses.</p>
+                  <CardTitle>B</CardTitle>
+                  <p className="text-sm text-slate-400"></p>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4">
-                    <span className="text-4xl font-bold">$799</span>
-                    <span className="text-slate-400"> one-time payment</span>
+                    <span className="text-4xl font-bold">2</span>
+                    <span className="text-slate-400"> two</span>
                   </div>
                   <Button
                       className="w-full mb-6 bg-white text-slate-900 hover:bg-slate-100">
-                    Get all-access for your team
                   </Button>
                   <ul className="space-y-4">
-                    <li className="flex items-center gap-2">
-                      <span className="font-medium">Team-wide access</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="font-medium">License for up to 5 team members</span>
-                    </li>
+                    <li>content 1</li>
+                    <li>content 2</li>
                   </ul>
+
                 </CardContent>
               </Card>
             </div>
           </div>
         </section>
-        <FeatureTabs/>
-
 
         <section className="container mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked
-            Questions</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Q&A</h2>
           <Accordion type="single" collapsible
                      className="max-w-[800px] mx-auto">
             <AccordionItem value="item-1">
-              <AccordionTrigger>How does it work?</AccordionTrigger>
+              <AccordionTrigger>질문 1</AccordionTrigger>
               <AccordionContent>
-                설명을 여기에 추가하세요.
+                설명 예제
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger>Can I use this in my project?</AccordionTrigger>
+              <AccordionTrigger>질문 2</AccordionTrigger>
               <AccordionContent>
-                설명을 여기에 추가하세요.
+                설명 예제
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-              <AccordionTrigger>What does "lifetime access"
-                mean?</AccordionTrigger>
+              <AccordionTrigger>질문 3</AccordionTrigger>
               <AccordionContent>
-                설명을 여기에 추가하세요.
+                설명 예제
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -141,7 +129,7 @@ export default function IntroContent() {
         <footer className="border-t py-8">
           <div
               className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
+            <p>&copy; 2024 이현우. All rights reserved.</p>
           </div>
         </footer>
       </div>

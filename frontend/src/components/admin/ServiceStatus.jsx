@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/select";
 import {Separator} from "@/components/ui/separator";
 import {Label} from "@/components/ui/label";
+import {Button} from "@/components/ui/button";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 export function ServiceStatus() {
   const [serverStatus, setServerStatus] = useState(null);
@@ -34,7 +36,6 @@ export function ServiceStatus() {
   const [refreshInterval, setRefreshInterval] = useState(5); // 기본값 5초
   const [webSocket, setWebSocket] = useState(null);
   const [isSampleData, setIsSampleData] = useState(false);
-
 
   // 웹소켓 연결
   useEffect(() => {
@@ -51,9 +52,6 @@ export function ServiceStatus() {
 
       // 테스트용 랜덤값 생성 함수
       const generateRandomLoad = () => {
-        if (!isSampleData) {
-          setIsSampleData(true);
-        }
         const base = parseFloat((Math.random() * 2).toFixed(2)); // 0 ~ 2 사이 값 생성
         return {
           load1: base, // 1분 평균
@@ -63,15 +61,19 @@ export function ServiceStatus() {
       };
 
       if (data.loadAverage) {
-        // 테스트 환경 (Windows)에서 loadAverage가 모두 0인 경우 랜덤 값으로 대체
-        const loadAverage =
-            data.loadAverage[0] === 0 && data.loadAverage[1] === 0 && data.loadAverage[2] === 0
-                ? generateRandomLoad()
-                : {
-                  load1: data.loadAverage[0],
-                  load5: data.loadAverage[1],
-                  load15: data.loadAverage[2],
-                };
+        let loadAverage;
+
+        // 랜덤 모드 활성화 시 랜덤값 사용
+        if (isSampleData) {
+          loadAverage = generateRandomLoad();
+        } else {
+          // 수신된 데이터를 그대로 사용
+          loadAverage = {
+            load1: data.loadAverage[0],
+            load5: data.loadAverage[1],
+            load15: data.loadAverage[2],
+          };
+        }
 
         setLoadAverageData((prevData) => [
           // 기존 데이터의 경과 시간 업데이트
@@ -109,7 +111,7 @@ export function ServiceStatus() {
     };
 
     return () => socket.close();
-  }, []);
+  }, [isSampleData]);
 
   // 갱신 주기 변경 핸들러
   const handleIntervalChange = (value) => {
@@ -265,11 +267,17 @@ export function ServiceStatus() {
                 <CardTitle>
                   CPU 평균 부하
                 </CardTitle>
-                <span>
-                  {isSampleData && (
-                      "(샘플 데이터)"
-                  )}
-                </span>
+                  <Tooltip>
+                    <TooltipTrigger>
+                    <Button variant="outline" className="ml-2"
+                            onClick={() => setIsSampleData(isSampleData => !isSampleData)}
+                    >샘플 데이터 모드 {isSampleData ? '끄기' : '켜기'}</Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-sm">
+                    서버의 활동이 없거나, 서버가 윈도우 환경일 경우 값이 0입니다.<br/>
+                    누르면 임시 데이터로 전환됩니다. (차트 예시용)
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <CardDescription>1분, 5분, 15분간 발생한 CPU 부하의 평균을 모니터링 합니다.</CardDescription>
               </CardHeader>
