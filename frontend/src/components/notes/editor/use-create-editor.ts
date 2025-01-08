@@ -77,12 +77,11 @@ import { TableElement } from '@/components/plate-ui/table-element';
 import { TableRowElement } from '@/components/plate-ui/table-row-element';
 import { TocElement } from '@/components/plate-ui/toc-element';
 import { ToggleElement } from '@/components/plate-ui/toggle-element';
-import { withDraggables } from '@/components/plate-ui/with-draggables';
 
 export const useCreateEditor = (value: any) => {
   return usePlateEditor({
     override: {
-      components: withDraggables(
+      components:
           withPlaceholders({
             [AudioPlugin.key]: MediaAudioElement,
             [BlockquotePlugin.key]: BlockquoteElement,
@@ -124,7 +123,6 @@ export const useCreateEditor = (value: any) => {
             [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' }),
             [VideoPlugin.key]: MediaVideoElement,
           })
-      ),
     },
     plugins: [
       ...editorPlugins,
