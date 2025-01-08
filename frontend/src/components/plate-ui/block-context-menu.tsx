@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { unsetNodes } from '@udecode/plate-common';
@@ -16,6 +16,22 @@ import {
   BlockMenuPlugin,
   BlockSelectionPlugin,
 } from '@udecode/plate-selection/react';
+import {
+  Trash2,
+  Files,
+  RefreshCw,
+  IndentIncrease,
+  IndentDecrease,
+  AlignCenterIcon,
+  AlignJustifyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  PilcrowIcon,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  QuoteIcon,
+} from 'lucide-react';
 
 import { useIsTouchDevice } from '@/hooks/use-is-touch-device';
 
@@ -54,7 +70,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   );
 
   const handleAlign = useCallback(
-    (align: 'center' | 'left' | 'right') => {
+    (align: 'center' | 'left' | 'right' | 'justify') => {
       editor
         .getTransforms(BlockSelectionPlugin)
         .blockSelection.setNodes({ align });
@@ -113,6 +129,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
               focusEditor(editor);
             }}
           >
+            <Trash2 className="mr-2" size={16} />
             Delete
           </ContextMenuItem>
           <ContextMenuItem
@@ -124,31 +141,32 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 );
             }}
           >
+            <Files className="mr-2" size={16} />
             Duplicate
             {/* <ContextMenuShortcut>Ctrl + D</ContextMenuShortcut> */}
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
+            <ContextMenuSubTrigger><RefreshCw className="mr-2" size={16} />Turn into</ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
               <ContextMenuItem
                 onClick={() => handleTurnInto(ParagraphPlugin.key)}
               >
-                Paragraph
+                <PilcrowIcon className="mr-2" size={16} />Paragraph
               </ContextMenuItem>
 
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h1)}>
-                Heading 1
+                <Heading1Icon  className="mr-2" size={16} />Heading 1
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h2)}>
-                Heading 2
+                <Heading2Icon className="mr-2" size={16} />Heading 2
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h3)}>
-                Heading 3
+                <Heading3Icon className="mr-2" size={16} />Heading 3
               </ContextMenuItem>
               <ContextMenuItem
                 onClick={() => handleTurnInto(BlockquotePlugin.key)}
               >
-                Blockquote
+                <QuoteIcon className="mr-2" size={16} />Blockquote
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
@@ -162,7 +180,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(1)
             }
           >
-            Indent
+            <IndentIncrease className="mr-2" size={16} />Indent
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() =>
@@ -171,19 +189,25 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(-1)
             }
           >
+            <IndentDecrease className="mr-2" size={16} />
             Outdent
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
+            <ContextMenuSubTrigger>
+              <AlignLeftIcon className="mr-2" size={16} />Align
+            </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
+              <ContextMenuItem onClick={() => handleAlign('justify')}>
+                <AlignJustifyIcon className="mr-2" size={16} />justify
+              </ContextMenuItem>
               <ContextMenuItem onClick={() => handleAlign('left')}>
-                Left
+                <AlignLeftIcon className="mr-2" size={16} />Left
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleAlign('center')}>
-                Center
+                <AlignCenterIcon className="mr-2" size={16} />Center
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleAlign('right')}>
-                Right
+                <AlignRightIcon className="mr-2" size={16} />Right
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>

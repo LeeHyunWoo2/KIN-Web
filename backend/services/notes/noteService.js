@@ -11,7 +11,7 @@ exports.createNote = async (userId, title, content, category, tags) => {
   const note = new Note({
     user_id: userId,
     title,
-    content,
+    content: Buffer.from(content),
     category,
     tags,
   });
@@ -20,6 +20,10 @@ exports.createNote = async (userId, title, content, category, tags) => {
 
 // 노트 업데이트
 exports.updateNote = async (filter, updates) => {
+  // content를 업데이트할 때 Buffer로 변환 필요
+  if (updates.content) {
+    updates.content = Buffer.from(updates.content);
+  }
   return Note.findOneAndUpdate(
       filter,
       { ...updates, updated_at: Date.now() },
