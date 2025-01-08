@@ -126,10 +126,10 @@ export default function IntroContent() {
         </section>
 
 
-        <footer className="border-t py-8">
+        <footer className="border-t py-8  ">
           <div
-              className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 이현우. All rights reserved.</p>
+              className="container h-8 mx-auto px-4 text-end font-medium text-[14px] text-muted-foreground">
+            <p>&copy; 2024 LeeHyunWoo. All rights reserved.</p>
           </div>
         </footer>
       </div>
