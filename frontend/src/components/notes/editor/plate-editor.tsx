@@ -35,6 +35,7 @@ export default function PlateEditor({ onChange, addToDeleteQueue }: PlateEditorP
         console.log('삭제발생')
         console.log(operation)
         // TODO : 삭제만 골라서 파악하는 로직 구성했으니 이어서 uploadthing 삭제 대기열 만들면 됨 (아래 JSON참조)
+        // https://github.com/pingdotgg/uploadthing/blob/49c06869d6dbc050e4b739c5e4bcb659faa07d12/packages/uploadthing/src/helper-functions.ts
         // https://docs.slatejs.org/api/operations#base-operation operation 종류
         /* {
     "type": "remove_node",
