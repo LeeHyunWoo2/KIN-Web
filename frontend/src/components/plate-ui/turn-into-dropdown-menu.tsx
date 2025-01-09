@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 
 import {
+  STRUCTURAL_TYPES,
   getBlockType,
   setBlockType,
 } from '@/components/notes/editor/transforms';
@@ -119,6 +120,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const value = useSelectionFragmentProp({
     defaultValue: ParagraphPlugin.key,
     getProp: (node) => getBlockType(node as any),
+    structuralTypes: STRUCTURAL_TYPES,
   });
   const selectedItem = React.useMemo(
     () =>
@@ -130,7 +132,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
-      <DropdownMenuTrigger className="min-w-[120px]" asChild>
+      <DropdownMenuTrigger asChild>
         <ToolbarButton pressed={openState.open} tooltip="Turn into" isDropdown>
           {selectedItem.label}
         </ToolbarButton>
@@ -138,20 +140,23 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
 
       <DropdownMenuContent
         className="ignore-click-outside/toolbar min-w-0"
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          focusEditor(editor);
+        }}
         align="start"
       >
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(type) => {
             setBlockType(editor, type);
-            focusEditor(editor);
           }}
           label="Turn into"
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (
             <DropdownMenuRadioItem
               key={itemValue}
-              className="min-w-[170px]"
+              className="min-w-[180px]"
               value={itemValue}
             >
               {icon}

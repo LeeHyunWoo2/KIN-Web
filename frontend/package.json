@@ -136,6 +136,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "postcss": "^8.4.49",
     "tailwindcss": "^3.4.1"
   }
 }

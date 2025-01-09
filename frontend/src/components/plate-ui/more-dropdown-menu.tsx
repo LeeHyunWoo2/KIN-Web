@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
@@ -66,7 +67,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           >
             <SuperscriptIcon />
             Superscript
-            {/* (Ctrl+,) */}
+            {/* (⌘+,) */}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => {
@@ -79,7 +80,7 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
           >
             <SubscriptIcon />
             Subscript
-            {/* (Ctrl+.) */}
+            {/* (⌘+.) */}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
