@@ -27,11 +27,6 @@ import { IndentListPlugin } from '@udecode/plate-indent-list/react';
 import { insertColumnGroup, toggleColumnGroup } from '@udecode/plate-layout';
 import { ColumnItemPlugin, ColumnPlugin } from '@udecode/plate-layout/react';
 import { LinkPlugin, triggerFloatingLink } from '@udecode/plate-link/react';
-import { insertEquation, insertInlineEquation } from '@udecode/plate-math';
-import {
-  EquationPlugin,
-  InlineEquationPlugin,
-} from '@udecode/plate-math/react';
 import {
   insertAudioPlaceholder,
   insertFilePlaceholder,
@@ -84,7 +79,6 @@ const insertBlockMap: Record<
       insertAudioPlaceholder(editor, { select: true }),
   [CalloutPlugin.key]: (editor) => insertCallout(editor, { select: true }),
   [CodeBlockPlugin.key]: (editor) => insertCodeBlock(editor, { select: true }),
-  [EquationPlugin.key]: (editor) => insertEquation(editor, { select: true }),
   [FilePlugin.key]: (editor) => insertFilePlaceholder(editor, { select: true }),
   [INDENT_LIST_KEYS.todo]: insertList,
   [ImagePlugin.key]: (editor) =>
@@ -110,8 +104,6 @@ const insertInlineMap: Record<
     (editor: PlateEditor, type: string) => void
 > = {
   [DatePlugin.key]: (editor) => insertDate(editor, { select: true }),
-  [InlineEquationPlugin.key]: (editor) =>
-      insertInlineEquation(editor, '', { select: true }),
   [LinkPlugin.key]: (editor) => triggerFloatingLink(editor, { focused: true }),
 };
 
@@ -131,7 +123,6 @@ export const insertBlock = (editor: PlateEditor, type: string) => {
         select: true,
       });
     }
-
     removeEmptyPreviousBlock(editor);
   });
 };

@@ -73,7 +73,6 @@
     "@udecode/plate-link": "^41.0.0",
     "@udecode/plate-list": "^40.0.0",
     "@udecode/plate-markdown": "^41.0.0",
-    "@udecode/plate-math": "^41.0.11",
     "@udecode/plate-media": "^41.0.0",
     "@udecode/plate-node-id": "^41.0.0",
     "@udecode/plate-placeholder": "^8.3.0",

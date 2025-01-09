@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
@@ -54,6 +54,9 @@ export default function NoteDisplay() {
   const [localPayload, setLocalPayload] = useState({});
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
+  // 노트의 파일 노드 삭제 대기열
+  const deleteQueue = useRef([]);
+
 
   //  자동 저장 함수 (디바운스)
   const saveChanges = useCallback(
@@ -103,6 +106,11 @@ export default function NoteDisplay() {
     setIsNotSaved(true);     // 변경사항 플래그 설정
   };
 
+  const handleAddToDeleteQueue = (fileUrl) => {
+    if (!fileUrl) return; // URL이 없는 경우 무시
+    deleteQueue.current = [...deleteQueue.current, fileUrl]; // 삭제 대기열에 추가
+    console.log(deleteQueue.current); // 디버깅용 콘솔
+  };
 
   const handleCategorySelect = (category) => {
     if (category._id !== selectedNoteState.category._id) {
@@ -279,7 +287,7 @@ export default function NoteDisplay() {
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
                data-registry="plate">
-            <PlateEditor onChange={handleEditorChange}/>
+            <PlateEditor onChange={handleEditorChange} addToDeleteQueue={handleAddToDeleteQueue}/>
           </div>
         </div>
       </div>
