@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {Textarea} from '@/components/ui/textarea';
 import {useAtom, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
@@ -36,7 +35,6 @@ import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
 import PlateEditor from "@/components/notes/editor/plate-editor";
 
-
 const produce = require("immer").produce;
 
 export default function NoteDisplay() {
@@ -54,8 +52,7 @@ export default function NoteDisplay() {
   const [localPayload, setLocalPayload] = useState({});
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
-  // 노트의 파일 노드 삭제 대기열
-  const deleteQueue = useRef([]);
+  const [uploadedFiles, setUploadedFiles] = useState(selectedNoteState.uploadedFiles); // 초기 값 동기화
 
 
   //  자동 저장 함수 (디바운스)
@@ -92,25 +89,56 @@ export default function NoteDisplay() {
 
 // PlateEditor의 변경사항을 처리
   const handleEditorChange = (newContent) => {
+    console.log("뉴컨텐츠 ", newContent); // 에디터에서 변경된 내용
+    console.log("파일상태", uploadedFiles); // 변경 전 uploadedFiles
     // 현재 선택된 노트의 content 업데이트
     setSelectedNoteState((prev) => ({
       ...prev,
       content: newContent, // JSON 데이터를 content에 그대로 저장
+      uploadedFiles,
     }));
     // localPayload 업데이트
     setLocalPayload((prevPayload) => ({
       ...prevPayload,
       content: newContent, // 서버에 전송할 변경 내용
+      uploadedFiles,
     }));
     setIsInitialLoad(false); // 초기 로드를 완료한 상태로 설정
     setIsNotSaved(true);     // 변경사항 플래그 설정
   };
 
-  const handleAddToDeleteQueue = (fileUrl) => {
-    if (!fileUrl) return; // URL이 없는 경우 무시
-    deleteQueue.current = [...deleteQueue.current, fileUrl]; // 삭제 대기열에 추가
-    console.log(deleteQueue.current); // 디버깅용 콘솔
-  };
+  // PlateEditor에서 전달받은 파일 변경 이벤트 처리
+  const handleUploadedFilesChange = useCallback(({ action, url }) => {
+    setUploadedFiles((prev) => {
+      if (action === 'add') {
+        if (prev.includes(url)) {
+          // 중복 방지
+          return prev;
+        }
+        return [...prev, url];
+      }
+      if (action === 'remove') {
+        if (!prev.includes(url)) {
+          // 유효성 검사
+          return prev;
+        }
+        return prev.filter((file) => file !== url);
+      }
+      return prev;
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("[NoteDisplay] Updated uploadedFiles:", uploadedFiles);
+  }, [uploadedFiles]);
+
+  // selectedNoteState가 변경될 때 uploadedFiles 상태도 동기화
+  useEffect(() => {
+    if (selectedNoteState.uploadedFiles && selectedNoteState.uploadedFiles !== uploadedFiles) {
+      setUploadedFiles(selectedNoteState.uploadedFiles);
+    }
+  }, [selectedNoteState.uploadedFiles]);
+
 
   const handleCategorySelect = (category) => {
     if (category._id !== selectedNoteState.category._id) {
@@ -287,7 +315,7 @@ export default function NoteDisplay() {
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
                data-registry="plate">
-            <PlateEditor onChange={handleEditorChange} addToDeleteQueue={handleAddToDeleteQueue}/>
+            <PlateEditor onChange={handleEditorChange} onUploadedFilesChange={handleUploadedFilesChange}/>
           </div>
         </div>
       </div>

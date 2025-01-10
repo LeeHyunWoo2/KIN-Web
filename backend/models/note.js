@@ -14,6 +14,10 @@ const NoteSchema = new mongoose.Schema({
     ref: 'User', // 작성자 참조
     required: true,
   },
+  uploadedFiles:{
+    type:[String],
+    default:[],
+  },
   category: {
     _id: {
       type: mongoose.Schema.Types.ObjectId,

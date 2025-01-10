@@ -57,9 +57,6 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
   req.session.userId = String(req.user.id);
   const provider = req.params.provider;
 
-  console.log('추가연동 라우트 진입')
-  console.log(provider);
-
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(providers[provider].strategy, {
       scope: providers[provider].scope,
