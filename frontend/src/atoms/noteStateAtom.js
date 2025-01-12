@@ -28,6 +28,8 @@ export const defaultNoteStateAtom ={
   uploadedFiles:[]         // 해당 노트에 업로드된 파일 url
 }
 
+export const selectedNoteUploadFilesAtom = atom([]);
+
 // 통합된 노트 상태
 export const selectedNoteStateAtom = atom(defaultNoteStateAtom);
 

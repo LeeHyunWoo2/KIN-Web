@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {useAtom, useSetAtom} from 'jotai';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
   noteEventAtom,
   saveNoteChangesAtom,
-  selectedNoteStateAtom
+  selectedNoteStateAtom, selectedNoteUploadFilesAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
@@ -52,7 +52,7 @@ export default function NoteDisplay() {
   const [localPayload, setLocalPayload] = useState({});
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
-  const [uploadedFiles, setUploadedFiles] = useState(selectedNoteState.uploadedFiles); // 초기 값 동기화
+  const uploadedFiles = useAtomValue(selectedNoteUploadFilesAtom);
 
 
   //  자동 저장 함수 (디바운스)
@@ -64,13 +64,14 @@ export default function NoteDisplay() {
             payload: [{ // 배열 형태로 전달
               id: selectedNoteState._id,
               ...localPayload,
+              uploadedFiles: uploadedFiles,
             }],
           });
           setIsNotSaved(false);
           setLocalPayload({}); // 저장 후 로컬 상태 초기화
         }
       }, 1500),
-      [localPayload, setNoteEvent, isInitialLoad, isNotSaved]
+      [localPayload, setNoteEvent, isInitialLoad, isNotSaved, uploadedFiles]
   );
 
   const handleTitleChange = (e) => {
@@ -89,55 +90,19 @@ export default function NoteDisplay() {
 
 // PlateEditor의 변경사항을 처리
   const handleEditorChange = (newContent) => {
-    console.log("뉴컨텐츠 ", newContent); // 에디터에서 변경된 내용
-    console.log("파일상태", uploadedFiles); // 변경 전 uploadedFiles
     // 현재 선택된 노트의 content 업데이트
     setSelectedNoteState((prev) => ({
       ...prev,
       content: newContent, // JSON 데이터를 content에 그대로 저장
-      uploadedFiles,
     }));
     // localPayload 업데이트
     setLocalPayload((prevPayload) => ({
       ...prevPayload,
       content: newContent, // 서버에 전송할 변경 내용
-      uploadedFiles,
     }));
     setIsInitialLoad(false); // 초기 로드를 완료한 상태로 설정
     setIsNotSaved(true);     // 변경사항 플래그 설정
   };
-
-  // PlateEditor에서 전달받은 파일 변경 이벤트 처리
-  const handleUploadedFilesChange = useCallback(({ action, url }) => {
-    setUploadedFiles((prev) => {
-      if (action === 'add') {
-        if (prev.includes(url)) {
-          // 중복 방지
-          return prev;
-        }
-        return [...prev, url];
-      }
-      if (action === 'remove') {
-        if (!prev.includes(url)) {
-          // 유효성 검사
-          return prev;
-        }
-        return prev.filter((file) => file !== url);
-      }
-      return prev;
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log("[NoteDisplay] Updated uploadedFiles:", uploadedFiles);
-  }, [uploadedFiles]);
-
-  // selectedNoteState가 변경될 때 uploadedFiles 상태도 동기화
-  useEffect(() => {
-    if (selectedNoteState.uploadedFiles && selectedNoteState.uploadedFiles !== uploadedFiles) {
-      setUploadedFiles(selectedNoteState.uploadedFiles);
-    }
-  }, [selectedNoteState.uploadedFiles]);
 
 
   const handleCategorySelect = (category) => {
@@ -315,7 +280,7 @@ export default function NoteDisplay() {
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
                data-registry="plate">
-            <PlateEditor onChange={handleEditorChange} onUploadedFilesChange={handleUploadedFilesChange}/>
+            <PlateEditor onChange={handleEditorChange}/>
           </div>
         </div>
       </div>

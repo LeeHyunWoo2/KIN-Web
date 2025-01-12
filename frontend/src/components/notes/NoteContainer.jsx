@@ -12,9 +12,9 @@ import {Separator} from "@/components/ui/separator";
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
-  noteCountAtom,
+  noteCountAtom, noteEventAtom,
   noteListAtom,
-  selectedNoteStateAtom
+  selectedNoteStateAtom, selectedNoteUploadFilesAtom
 } from "@/atoms/noteStateAtom";
 import {
   initializeCategoriesAtom,
@@ -42,6 +42,8 @@ export default function NoteContainer({ defaultLayout }) {
   const filteredNotes = useAtomValue(filteredNotesAtom);
   const isTrashed = useAtomValue(isTrashedAtom);
   const category = useAtomValue(selectedCategoryNameAtom);
+  const setSelectedNoteUploadFiles = useSetAtom(selectedNoteUploadFilesAtom);
+  const [, setNoteEvent] = useAtom(noteEventAtom);
 
   // 로딩 상태 관리
   const [layout, setLayout] = useState(() => {
@@ -87,6 +89,15 @@ export default function NoteContainer({ defaultLayout }) {
     return '전체보기';
   };
 
+  const clearTrash = () => {
+    const targetTrash = notes.filter(note => note.is_trashed).map(note => note._id);
+    setNoteEvent({
+      type: 'DELETE',
+      payload: targetTrash,
+    });
+    router.push('/notes?view=trash', undefined, { shallow: true });
+  }
+
   useEffect(() => {
     initializeNotes(); // 노트 데이터 초기화
     initializeCategories(); // 카테고리 데이터 초기화
@@ -103,14 +114,16 @@ export default function NoteContainer({ defaultLayout }) {
     if (id) {
       const selectedNote = notes.find((note) => note._id === id);
       if (selectedNote) {
-        // 전역 상태 업데이트
+        // 선택된 노트를 전역 상태로 설정
         setSelectedNoteState((prev) => ({ ...prev, ...selectedNote }));
         // 화면에 표시될 데이터 변경 -> 렌더링이 데이터보다 먼저 작동해서 화면 깜빡이던거 방지됨
+        setSelectedNoteUploadFiles(selectedNote.uploadedFiles || []);
       }
     } else {
       setSelectedNoteState(defaultNoteStateAtom);
+      setSelectedNoteUploadFiles([]);
     }
-  }, [id, notes, setSelectedNoteState]);
+  }, [id, notes, setSelectedNoteState, setSelectedNoteUploadFiles]);
 
 
 
@@ -121,13 +134,28 @@ export default function NoteContainer({ defaultLayout }) {
               <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([23, 80])}>
                 {getListTitle()}
               </h1>
-              { !onReload ? (
-              <Button variant="outline"  className="flex flex-1 min-w-[77px] max-w-fit" onClick={handleOnReload}>Reload</Button>
-            ) : (
-              <Button variant="outline"  className="flex flex-1 min-w-[77px] max-w-fit" disabled>
-                <Loader2 className="animate-spin" />
-              </Button>
-              )}
+              {!isTrashed ? (
+                  !onReload ? (
+                      <Button variant="outline"
+                              className="flex flex-1 min-w-[77px] max-w-fit"
+                              onClick={handleOnReload}>Reload</Button>
+                  ) : (
+                      <Button variant="outline"
+                              className="flex flex-1 min-w-[77px] max-w-fit"
+                              disabled>
+                        <Loader2 className="animate-spin"/>
+                      </Button>
+                  )
+              ) : (
+                  <>
+                  <Button variant="outline"
+                          className="flex flex-1 min-w-[77px] max-w-fit"
+                  onClick={clearTrash}>
+                    휴지통 비우기
+                  </Button>
+                  </>
+              )
+              }
             </div>
             <Separator />
             <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
