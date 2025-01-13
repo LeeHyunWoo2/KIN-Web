@@ -96,6 +96,10 @@ export default function NoteContainer({ defaultLayout }) {
       payload: targetTrash,
     });
     router.push('/notes?view=trash', undefined, { shallow: true });
+    // 라우팅 했다가 되돌아왔을때 중복실행을 막기 위해 noteEventAtom 상태 초기화
+    setTimeout(() => {
+      setNoteEvent(null);
+    }, 0);
   }
 
   useEffect(() => {
@@ -111,13 +115,18 @@ export default function NoteContainer({ defaultLayout }) {
   }, [notes]);
 
   useEffect(() => {
+    // 노트를 선택할 경우 작동
     if (id) {
+      if(!notes.length) return; // 노트가 준비된다음 실행
       const selectedNote = notes.find((note) => note._id === id);
       if (selectedNote) {
         // 선택된 노트를 전역 상태로 설정
         setSelectedNoteState((prev) => ({ ...prev, ...selectedNote }));
         // 화면에 표시될 데이터 변경 -> 렌더링이 데이터보다 먼저 작동해서 화면 깜빡이던거 방지됨
         setSelectedNoteUploadFiles(selectedNote.uploadedFiles || []);
+      } else {
+        // 없는 글 이거나, 본인의 글이 아니면 url을 기본상태로 돌려놓음
+        router.push('/notes', undefined, {shallow: true});
       }
     } else {
       setSelectedNoteState(defaultNoteStateAtom);

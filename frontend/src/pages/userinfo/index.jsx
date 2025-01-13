@@ -1,12 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import HeaderLayout from "@/components/HeaderLayout";
-import {
-  getUserProfile,
-  updateUserProfile,
-  linkSocialAccount,
-  unlinkSocialAccount, deleteUserProfile
-} from "@/services/user/authService";
-import withAuth from "@/lib/hoc/withAuth";
+'use client'
+
+import React, {useEffect, useState} from 'react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -15,18 +12,33 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import Image from "next/image";
-import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
-import {useRouter} from "next/router";
-import {toast} from "sonner";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Pencil } from 'lucide-react'
+import Image from "next/image"
+import HeaderLayout from "@/components/HeaderLayout";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {useRouter} from "next/router";
+import {
+  deleteUserProfile,
+  getUserProfile,
+  linkSocialAccount, unlinkSocialAccount,
+  updateUserProfile
+} from "@/services/user/authService";
+import {toast} from "sonner";
+import withAuth from "@/lib/hoc/withAuth";
+import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";
 
 function UserInfoPage() {
   const router = useRouter();
@@ -37,10 +49,10 @@ function UserInfoPage() {
     createdAt: '',
     socialAccounts: [],
   });
-
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [inputUrl, setInputUrl] = useState('');
 
   // 사용자 정보 불러오기 함수
   const fetchUserInfo = async () => {
@@ -65,6 +77,24 @@ function UserInfoPage() {
       router.replace("/userinfo", undefined, {shallow: true});
     }
   }, [router.query]);
+
+  const handleAvatarChange = () => {
+    if (!inputUrl) {
+      alert('URL을 입력해주세요.');
+      return;
+    }
+    const img = new window.Image();
+    img.onload = () => {
+      // 이미지 로드 성공 시 avatarUrl 갱신
+      setAvatarUrl(inputUrl);
+      alert('프로필 사진이 업데이트되었습니다.');
+    };
+    img.onerror = () => {
+      // 이미지 로드 실패 시 사용자에게 알림
+      alert('유효하지 않은 이미지 URL입니다. 다시 확인해주세요.');
+    };
+    img.src = inputUrl; // 입력한 URL로 로드 시도
+  };
 
   // 소셜 계정 연동 상태 확인 함수
   const getSocialAccountStatus = (provider) => {
@@ -116,158 +146,243 @@ function UserInfoPage() {
   }
 
   return (
-      <div
-          className="p-6 m-10 border bg-white rounded-lg shadow-md max-w-lg mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">내 정보</h2>
+      <div className="container max-w-6xl mx-auto py-10">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">내 정보</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex">
+              <div className="flex-1 space-y-8 pr-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <img
+                      src={userInfo.profileIcon}
+                      alt="프로필 아이콘"
+                      className="w-24 h-24 rounded-full mx-auto"
+                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="h-9 rounded-md px-3 ">
+                        프로필 사진 변경
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>프로필 사진 변경</DialogTitle>
+                        <DialogDescription>
+                          등록할 프로필 URL을 입력해주세요.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Input
+                              type="text"
+                              placeholder="이미지 URL 입력"
+                              className="col-span-3"
+                              value={inputUrl}
+                              onChange={(e) => setInputUrl(
+                                  e.target.value)} // URL 입력값 업데이트
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button onClick={handleAvatarChange}>변경하기</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">계정 유형:</label>
-          <p className="text-gray-600">
-            {isLocalAccount() ? '이메일 계정' : '소셜 계정'}
-          </p>
-          {isLocalAccount() ? '' : <ChangeToLocalAccount/>}
-        </div>
-
-        <div className="mb-4">
-          <img
-              src={userInfo.profileIcon}
-              alt="Profile Icon"
-              className="w-24 h-24 rounded-full mx-auto"
-          />
-          <button className="mt-2 text-blue-500">프로필 사진 변경</button>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">이메일:</label>
-          <p className="text-gray-600">{userInfo.email}</p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">이름:</label>
-          {isEditingName ? (
-              <div>
-                <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    className="border p-1 w-full"
-                />
-                <button onClick={handleNameUpdate}
-                        className="text-blue-500 mr-2">저장
-                </button>
-                <button onClick={() => setIsEditingName(false)}
-                        className="text-gray-500">취소
-                </button>
-              </div>
-          ) : (
-              <div>
-                <p className="text-gray-600">{userInfo.name}</p>
-                <button onClick={() => {
-                  setNewName(userInfo.name);
-                  setIsEditingName(true);
-                }}
-                        className="text-blue-500">이름 변경
-                </button>
-              </div>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">계정 생성일:</label>
-          <p className="text-gray-600">{new Date(
-              userInfo.createdAt).toLocaleDateString()}</p>
-        </div>
-
-
-        <div className="flex flex-col items-center gap-4 mt-10">
-          {["google", "kakao", "naver"].map((provider) => {
-            const isLinked = getSocialAccountStatus(provider) !== "미연동";
-            const socialStatus = getSocialAccountStatus(provider);
-
-            return (
-                <Card key={provider}
-                      className="w-[350px] flex flex-col space-y-1.5">
-                  <CardContent className="flex justify-between p-3">
-                    <div className="flex">
-                      <Image src={providerIconPath(provider)} priority={true}
-                             alt={`${provider} logo`} className="mr-3"
-                             width={36} height={36}/>
-
-                      <h3 className="font-semibold  flex items-center min-w-10">
-                        {provider === "google" ? "구글" : provider === "kakao"
-                            ? "카카오" : "네이버"}
-                      </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <div className="space-y-2">
+                      <Label>계정 유형</Label>
+                      <div className="flex items-center space-x-2">
+                        {isLocalAccount() ? (
+                            <>
+                              <span className="text-muted-foreground">이메일 계정</span>
+                              <Badge variant="secondary">기본</Badge>
+                            </>
+                        ) : (
+                            <>
+                              <span className="text-muted-foreground">소셜 계정</span>
+                              <Badge variant="outline">소셜</Badge>
+                              {isLocalAccount() ? '' : <ChangeToLocalAccount/>}
+                            </>
+                        )}
+                      </div>
                     </div>
-                    {socialStatus === "미연동" ? <div
-                            className=" inline-flex items-center rounded-full border px-3 text-sm font-semibold border-transparent bg-red-100 text-red-500">미연동</div>
-                        : <div
-                            className=" inline-flex items-center rounded-full border px-3 text-sm font-semibold border-transparent bg-blue-100 text-blue-500">연결됨</div>}
-                    {isLinked ? (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                                disabled={isLocalAccount() === false}>연동 해제
+                    <div className="space-y-2 mr-4">
+                      <Label>계정 생성일</Label>
+                      <div className="text-muted-foreground">
+                        {new Date(userInfo.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>이메일</Label>
+                    <div className="text-muted-foreground">{userInfo.email}</div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>이름</Label>
+                    <div className="flex items-center space-x-2">
+                      <div className="relative max-w-[200px]">
+                        <Input
+                            value={isEditingName ? newName : userInfo.name}
+                            onChange={(e) => setNewName(e.target.value)}
+                            readOnly={!isEditingName}
+                            className={isEditingName ? "" : "text-muted-foreground bg-gray-50 focus-visible:ring-0"}
+                        />
+                        {!isEditingName && (
+                            <>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                      onClick={() => {
+                                        setIsEditingName(true)
+                                        setNewName(userInfo.name)
+                                      }}
+                                      className="absolute right-2 top-1/2 -translate-y-1/2 text-foreground transition-colors duration-200 hover:bg-zinc-200 rounded-sm p-1"
+                                  >
+                                    <Pencil className="h-4 w-4"/>
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="text-[13px] mb-2">
+                                  닉네임 변경
+                                </TooltipContent>
+                              </Tooltip>
+                            </>
+                        )}
+                      </div>
+                      {isEditingName && (
+                          <>
+                            <Button onClick={handleNameUpdate} size="sm">
+                              적용
                             </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>{`${provider} 계정을 연동 해제하시겠습니까?`}</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                이 계정을 연동 해제하면 더 이상 {provider}를 통해 로그인할 수 없습니다.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <Button onClick={() => handleSocialAccountToggle(
-                                  provider)}>연동 해제</Button>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                    ) : (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                                className={isLocalAccount() ? "opacity-100"
-                                    : "opacity-50"}
-                                onClick={isLocalAccount()
-                                    ? () => handleSocialAccountToggle(provider)
-                                    : null}>연동하기</Button>
-                          </TooltipTrigger>
-                          <TooltipContent>추가 연동은 일반계정에서 가능합니다.</TooltipContent>
-                        </Tooltip>
-                    )}
-                  </CardContent>
-                </Card>
-            );
-          })}
-        </div>
-        <div className="flex justify-end mt-10">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">회원탈퇴</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>회원 탈퇴를 진행 하시겠습니까?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  탈퇴 시 모든 정보가 삭제되며, 복구가 불가능 합니다.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel
-                    className="bg-blue-500 text-white">Cancel</AlertDialogCancel>
-                <Button variant="secondary" onClick={deleteUserProfile}>탈퇴
-                  진행</Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+                            <Button variant="outline" onClick={() => setIsEditingName(false)} size="sm">
+                              취소
+                            </Button>
+                          </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-px bg-border"/>
+
+              <div className="flex-1 space-y-8 pl-6">
+                <div className="space-y-4">
+                  <h3 className="font-semibold">소셜 계정 연동</h3>
+
+                  <div className="flex flex-col items-center gap-4 mt-10">
+                    {["google", "kakao", "naver"].map((provider) => {
+                      const isLinked = getSocialAccountStatus(provider)
+                          !== "미연동";
+                      const socialStatus = getSocialAccountStatus(provider);
+
+                      return (
+                          <Card key={provider}
+                                className="w-[400px] flex flex-col">
+                            <CardContent className="flex justify-between p-3">
+                              <div className="flex items-center">
+                                <Image src={providerIconPath(provider)}
+                                       priority={true}
+                                       alt={`${provider} logo`} className="mr-3"
+                                       width={30} height={30}/>
+
+                                <h3 className="font-semibold  flex items-center min-w-10">
+                                  {provider === "google" ? "구글" : provider
+                                  === "kakao"
+                                      ? "카카오" : "네이버"}
+                                </h3>
+                              </div>
+                              <div className="flex items-center space-x-4">
+                                {socialStatus === "미연동" ? <div
+                                        className=" inline-flex items-center min-h-7 rounded-full border px-3 text-sm font-semibold border-transparent bg-red-100 text-red-500">미연동</div>
+                                    : <div
+                                        className=" inline-flex items-center rounded-full border px-3 text-sm font-semibold border-transparent bg-blue-100 text-blue-500">연결됨</div>}
+                                {isLinked ? (
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                            disabled={isLocalAccount()
+                                                === false}>연동
+                                          해제
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>{`${provider} 계정을 연동 해제하시겠습니까?`}</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            이 계정을 연동 해제하면 더 이상 {provider}를 통해
+                                            로그인할
+                                            수 없습니다.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <Button
+                                              onClick={() => handleSocialAccountToggle(
+                                                  provider)}>연동 해제</Button>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                ) : (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                            className={isLocalAccount()
+                                                ? "opacity-100"
+                                                : "opacity-50"}
+                                            onClick={isLocalAccount()
+                                                ? () => handleSocialAccountToggle(
+                                                    provider)
+                                                : null}>연동하기</Button>
+                                      </TooltipTrigger>
+                                      {!isLocalAccount() && (
+                                          <TooltipContent>추가 연동은 일반계정에서
+                                            가능합니다.</TooltipContent>)}
+                                    </Tooltip>
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex justify-end pt-16">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                          className="bg-background text-destructive shadow-none hover:text-accent hover:bg-destructive">회원탈퇴</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>회원 탈퇴를 진행하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          탈퇴 시 모든 정보가 삭제되며, 복구가 불가능합니다.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                            className="bg-blue-500 text-white">취소</AlertDialogCancel>
+                        <Button variant="secondary" onClick={deleteUserProfile}>탈퇴
+                          진행</Button>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-  );
+  )
 }
 
 UserInfoPage.getLayout = function getLayout(page) {
   return <HeaderLayout>{page}</HeaderLayout>;
 }
-
 export default withAuth(UserInfoPage);

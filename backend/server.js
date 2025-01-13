@@ -86,7 +86,8 @@ app.use(
         'Referer',
         'User-Agent',
         'X-CSRF-Token',
-        'X-Requested-With'
+        'X-Requested-With',
+        'x-skip-interceptor'
       ], // 허용할 헤더
       credentials: true, // 쿠키를 포함한 요청 허용
     })

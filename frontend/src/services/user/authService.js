@@ -99,8 +99,7 @@ export const deleteUserProfile = async () => {
       return window.location.reload();
     }
   }
-  localStorage.removeItem('userInfo');
-  window.location.href = '/login';
+  await logoutUser();
 };
 
 // 소셜 계정 연동

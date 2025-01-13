@@ -96,7 +96,6 @@ export function FixedToolbarButtons() {
                       </ToolbarGroup>
 
                       <ToolbarGroup>
-                        <InsertDropdownMenu/>
                         <TurnIntoDropdownMenu/>
                         <FontSizeToolbarButton/>
                       </ToolbarGroup>
@@ -160,6 +159,7 @@ export function FixedToolbarButtons() {
                 {value === "menu2" && (
                     <>
                       <ToolbarGroup>
+                        <InsertDropdownMenu/>
                         <LinkToolbarButton/>
                         <TableDropdownMenu/>
                       </ToolbarGroup>

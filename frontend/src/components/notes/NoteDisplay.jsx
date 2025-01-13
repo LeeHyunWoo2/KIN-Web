@@ -69,6 +69,9 @@ export default function NoteDisplay() {
           });
           setIsNotSaved(false);
           setLocalPayload({}); // 저장 후 로컬 상태 초기화
+          setTimeout(() => {
+            setNoteEvent(null);
+          }, 0);
         }
       }, 1500),
       [localPayload, setNoteEvent, isInitialLoad, isNotSaved, uploadedFiles]

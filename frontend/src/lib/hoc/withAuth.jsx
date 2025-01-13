@@ -15,11 +15,11 @@ import { Button } from "@/components/ui/button";
 import apiClient from "@/lib/apiClient";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
+import {logoutUser} from "@/services/user/authService";
 
 
 const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
-    const router = useRouter();
     const auth = useAtomValue(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
     const [isLoading, setIsLoading] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
@@ -35,7 +35,11 @@ const withAuth = (WrappedComponent) => {
       // 인증 체크 함수
       const checkAuth = async () => {
         try {
-          const response = await apiClient.get('/auth/check-session');
+          const response = await apiClient.get('/auth/check-session',{
+            headers: {
+              'x-skip-interceptor' : true, // 확인버튼 누르기도 전에 리다이렉트 발생으로 인해 따로 플래그 추가
+            }
+          });
           if (response.status !== 200) {
             setShowAlert(true);
           }
@@ -47,9 +51,11 @@ const withAuth = (WrappedComponent) => {
       checkAuth();
     }, [auth]);
 
-    const handleRedirect = () => {
-      setShowAlert(false);
-      router.push('/login');
+    const handleAlertClose = async (isOpen) => {
+      if (!isOpen) {
+        // AlertDialog가 닫힐 때 logoutUser 호출
+        await logoutUser();
+      }
     };
 
     if (isLoading) {
@@ -60,7 +66,11 @@ const withAuth = (WrappedComponent) => {
         <>
           {auth ? <WrappedComponent {...props} /> : null}
           {showAlert && (
-              <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+              <AlertDialog open={showAlert} onOpenChange={(open) => {
+                setShowAlert(open);
+                handleAlertClose(open);
+              }
+              }>
                 <AlertDialogPortal >
                   <AlertDialogOverlay />
                   <AlertDialogContent className="max-w-md">
@@ -72,7 +82,7 @@ const withAuth = (WrappedComponent) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogAction asChild>
-                        <Button onClick={handleRedirect}>확인</Button>
+                        <Button>확인</Button>
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

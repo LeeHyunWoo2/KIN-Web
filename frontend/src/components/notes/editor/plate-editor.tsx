@@ -54,8 +54,6 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
 
     // 최종적으로 파일 상태를 업데이트 (최신 상태 기준)
     if (addedFiles.length > 0 || removedFiles.length > 0) {
-      console.log("Added Files:", addedFiles);
-      console.log("Removed Files:", removedFiles);
       // @ts-ignore
       setUploadedFiles((prev: any) => {
         // 최종 업데이트된 파일 리스트 계산

@@ -82,6 +82,9 @@ export default function NoteList({notes}) {
       setSelectedNoteState(defaultNoteStateAtom);
       router.push(`/notes`, undefined, { shallow: true }); // 휴지통으로 이동 후
     }
+    setTimeout(() => {
+      setNoteEvent(null);
+    }, 0);
   };
 
   return (

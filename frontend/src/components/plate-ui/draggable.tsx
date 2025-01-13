@@ -17,7 +17,6 @@ import {
   usePath,
 } from '@udecode/plate-common/react';
 import { useDraggable, useDropLine } from '@udecode/plate-dnd';
-import { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
 import { ColumnItemPlugin, ColumnPlugin } from '@udecode/plate-layout/react';
 import {
@@ -189,7 +188,6 @@ const Gutter = React.forwardRef<
         isNodeType([
           ImagePlugin.key,
           MediaEmbedPlugin.key,
-          ExcalidrawPlugin.key,
           TogglePlugin.key,
           ColumnPlugin.key,
         ]) && 'py-0',
