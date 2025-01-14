@@ -24,23 +24,20 @@ export const setupInterceptors = () => {
           originalRequest._interceptorProcessed = true;
 
           // 401 에러 처리: 토큰 만료 시 재발급 요청
-          if (error.response && error.response.status === 401) {
+          if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true; // 반복 요청 방지
-            await refreshToken(); // authService의 토큰 갱신 로직 호출
-            return apiClient(originalRequest); // 갱신된 토큰으로 원래 요청 재실행
-          } else if (error.response && error.response.status === 419) {
-            // 419 에러 처리: 세션 만료 시 추가 로직 처리 (필요 시 구현)
-            originalRequest._retry = true; // 반복 요청 방지
-            // 필요한 로직 추가 가능
-          } else {
+
+              await refreshToken(); // authService의 토큰 갱신 로직 호출
+              return apiClient(originalRequest); // 갱신된 토큰으로 원래 요청 재실행
+
+          }
             // 기타 에러 처리
-            if (error.response.status !== 404) {
+            if (error.response.status !== 404 && error.response.status !== 401) {
               const errorMessage = error.response?.data?.message
                   || "오류가 발생했습니다.";
               toast.error(errorMessage);
             }
           }
-        }
         return Promise.reject(error);
       }
   );

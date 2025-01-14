@@ -16,6 +16,7 @@ import {
   ItalicIcon,
   StrikethroughIcon,
   UnderlineIcon,
+  WandSparklesIcon,
 } from 'lucide-react';
 
 import { LinkToolbarButton } from './link-toolbar-button';
@@ -34,32 +35,32 @@ export function FloatingToolbarButtons() {
           <ToolbarGroup>
             <TurnIntoDropdownMenu />
 
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (Ctrl+B)">
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
               <BoldIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={ItalicPlugin.key}
-              tooltip="Italic (Ctrl+I)"
+              tooltip="Italic (⌘+I)"
             >
               <ItalicIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={UnderlinePlugin.key}
-              tooltip="Underline (Ctrl+U)"
+              tooltip="Underline (⌘+U)"
             >
               <UnderlineIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={StrikethroughPlugin.key}
-              tooltip="Strikethrough (Ctrl+Shift+M)"
+              tooltip="Strikethrough (⌘+⇧+M)"
             >
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (Ctrl+E)">
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
               <Code2Icon />
             </MarkToolbarButton>
 
@@ -67,11 +68,10 @@ export function FloatingToolbarButtons() {
           </ToolbarGroup>
         </>
       )}
-      {!readOnly &&
+
       <ToolbarGroup>
-         <MoreDropdownMenu />
+        {!readOnly && <MoreDropdownMenu />}
       </ToolbarGroup>
-      }
     </>
   );
 }

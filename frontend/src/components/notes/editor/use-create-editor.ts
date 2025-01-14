@@ -20,7 +20,6 @@ import {
   usePlateEditor,
 } from '@udecode/plate-common/react';
 import { DatePlugin } from '@udecode/plate-date/react';
-import { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
 import { TocPlugin } from '@udecode/plate-heading/react';
 import { HighlightPlugin } from '@udecode/plate-highlight/react';
@@ -54,7 +53,6 @@ import { CodeSyntaxLeaf } from '@/components/plate-ui/code-syntax-leaf';
 import { ColumnElement } from '@/components/plate-ui/column-element';
 import { ColumnGroupElement } from '@/components/plate-ui/column-group-element';
 import { DateElement } from '@/components/plate-ui/date-element';
-import { ExcalidrawElement } from '@/components/plate-ui/excalidraw-element';
 import { HeadingElement } from '@/components/plate-ui/heading-element';
 import { HighlightLeaf } from '@/components/plate-ui/highlight-leaf';
 import { HrElement } from '@/components/plate-ui/hr-element';
@@ -77,12 +75,11 @@ import { TableElement } from '@/components/plate-ui/table-element';
 import { TableRowElement } from '@/components/plate-ui/table-row-element';
 import { TocElement } from '@/components/plate-ui/toc-element';
 import { ToggleElement } from '@/components/plate-ui/toggle-element';
-import { withDraggables } from '@/components/plate-ui/with-draggables';
 
 export const useCreateEditor = (value: any) => {
   return usePlateEditor({
     override: {
-      components: withDraggables(
+      components:
           withPlaceholders({
             [AudioPlugin.key]: MediaAudioElement,
             [BlockquotePlugin.key]: BlockquoteElement,
@@ -94,7 +91,6 @@ export const useCreateEditor = (value: any) => {
             [ColumnItemPlugin.key]: ColumnElement,
             [ColumnPlugin.key]: ColumnGroupElement,
             [DatePlugin.key]: DateElement,
-            [ExcalidrawPlugin.key]: ExcalidrawElement,
             [FilePlugin.key]: MediaFileElement,
             [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: 'h1' }),
             [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: 'h2' }),
@@ -124,7 +120,6 @@ export const useCreateEditor = (value: any) => {
             [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' }),
             [VideoPlugin.key]: MediaVideoElement,
           })
-      ),
     },
     plugins: [
       ...editorPlugins,

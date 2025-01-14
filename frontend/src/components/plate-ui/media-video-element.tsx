@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player';
 
 import { cn, withRef } from '@udecode/cn';
 import { useEditorMounted, withHOC } from '@udecode/plate-common/react';
-import { useDraggable, useDraggableState } from '@udecode/plate-dnd';
+import { useDraggable } from '@udecode/plate-dnd';
 import { parseTwitterUrl, parseVideoUrl } from '@udecode/plate-media';
 import { useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableStore } from '@udecode/plate-resizable';
@@ -37,16 +37,14 @@ export const MediaVideoElement = withHOC(
 
       const isEditorMounted = useEditorMounted();
 
-      const state = useDraggableState({ element: props.element });
-      const { isDragging } = state;
-      const { handleRef } = useDraggable(state);
+      const isTweet = true;
+
+      const { isDragging, handleRef } = useDraggable({
+        element: props.element,
+      });
 
       return (
-        <PlateElement
-          ref={ref}
-          className={cn('relative py-2.5', className)}
-          {...props}
-        >
+        <PlateElement ref={ref} className={cn(className, 'py-2.5')} {...props}>
           <figure
             className="relative m-0 cursor-default"
             contentEditable={false}
@@ -56,8 +54,8 @@ export const MediaVideoElement = withHOC(
               align={align}
               options={{
                 align,
-                maxWidth: '100%',
-                minWidth: 100,
+                maxWidth: isTweet ? 550 : '100%',
+                minWidth: isTweet ? 300 : 100,
                 readOnly,
               }}
             >

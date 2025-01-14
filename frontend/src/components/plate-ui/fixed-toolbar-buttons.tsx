@@ -15,7 +15,6 @@ import {
   FontColorPlugin,
 } from '@udecode/plate-font/react';
 import {HighlightPlugin} from '@udecode/plate-highlight/react';
-import {ListStyleType} from '@udecode/plate-indent-list';
 import {
   AudioPlugin,
   FilePlugin,
@@ -39,8 +38,12 @@ import {MoreDropdownMenu} from '@/components/plate-ui/more-dropdown-menu';
 import {AlignDropdownMenu} from './align-dropdown-menu';
 import {ColorDropdownMenu} from './color-dropdown-menu';
 import {ExportToolbarButton} from './export-toolbar-button';
+import {FontSizeToolbarButton} from './font-size-toolbar-button';
 import {RedoToolbarButton, UndoToolbarButton} from './history-toolbar-button';
-import {IndentListToolbarButton} from './indent-list-toolbar-button';
+import {
+  BulletedIndentListToolbarButton,
+  NumberedIndentListToolbarButton,
+} from './indent-list-toolbar-button';
 import {IndentTodoToolbarButton} from './indent-todo-toolbar-button';
 import {IndentToolbarButton} from './indent-toolbar-button';
 import {InsertDropdownMenu} from './insert-dropdown-menu';
@@ -54,35 +57,27 @@ import {TableDropdownMenu} from './table-dropdown-menu';
 import {ToggleToolbarButton} from './toggle-toolbar-button';
 import {ToolbarGroup} from './toolbar';
 import {TurnIntoDropdownMenu} from './turn-into-dropdown-menu';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '../ui/select';
 import {Separator} from "@/components/plate-ui/separator";
+import {Button} from "@/components/plate-ui/button";
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
   const [value, setValue] = useState("menu1");
 
-  const menu = { menu1: "서식", menu2: "삽입"}
+  const menu: Record<string, string> = {menu1: "서식", menu2: "삽입"}
 
   return (
       <>
-        <div className="flex max-w-50 overflow-x-auto"  style={{
+        <div className="flex max-w-50 overflow-x-auto" style={{
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(200, 200, 200, 0.5) transparent',
         }}>
           {!readOnly && (
               <>
-                <Select value={value} onValueChange={setValue}>
-                  <SelectTrigger className="h-7">
-                    <SelectValue>
-                      {menu[value]}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="menu1">서식</SelectItem>
-                    <SelectItem value="menu2">삽입</SelectItem>
-                  </SelectContent>
-                </Select>
-
+                <Button onClick={() => setValue(value === "menu1" ? "menu2" : "menu1")}
+                variant="outline">
+                  메뉴 전환
+                </Button>
                 <div className="mx-1.5">
                   <Separator orientation="vertical"/>
                 </div>
@@ -93,32 +88,46 @@ export function FixedToolbarButtons() {
                 </ToolbarGroup>
 
                 {value === "menu1" && (
-
                     <>
                       <ToolbarGroup>
-                        <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (Ctrl+B)">
+                        <ExportToolbarButton>
+                          <ArrowUpToLineIcon/>
+                        </ExportToolbarButton>
+                      </ToolbarGroup>
+
+                      <ToolbarGroup>
+                        <TurnIntoDropdownMenu/>
+                        <FontSizeToolbarButton/>
+                      </ToolbarGroup>
+
+                      <ToolbarGroup>
+                        <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
                           <BoldIcon/>
                         </MarkToolbarButton>
 
                         <MarkToolbarButton
                             nodeType={ItalicPlugin.key}
-                            tooltip="Italic (Ctrl+I)"
+                            tooltip="Italic (⌘+I)"
                         >
                           <ItalicIcon/>
                         </MarkToolbarButton>
 
                         <MarkToolbarButton
                             nodeType={UnderlinePlugin.key}
-                            tooltip="Underline (Ctrl+U)"
+                            tooltip="Underline (⌘+U)"
                         >
                           <UnderlineIcon/>
                         </MarkToolbarButton>
 
                         <MarkToolbarButton
                             nodeType={StrikethroughPlugin.key}
-                            tooltip="Strikethrough (Ctrl+Shift+M)"
+                            tooltip="Strikethrough (⌘+⇧+M)"
                         >
                           <StrikethroughIcon/>
+                        </MarkToolbarButton>
+
+                        <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
+                          <Code2Icon/>
                         </MarkToolbarButton>
 
                         <ColorDropdownMenu
@@ -134,18 +143,32 @@ export function FixedToolbarButtons() {
                         >
                           <PaintBucketIcon/>
                         </ColorDropdownMenu>
-
-                        <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (Ctrl+E)">
-                          <Code2Icon/>
-                        </MarkToolbarButton>
                       </ToolbarGroup>
 
                       <ToolbarGroup>
                         <AlignDropdownMenu/>
-                        <IndentListToolbarButton nodeType={ListStyleType.Disc}/>
-                        <IndentListToolbarButton nodeType={ListStyleType.Decimal}/>
+
+                        <NumberedIndentListToolbarButton/>
+                        <BulletedIndentListToolbarButton/>
                         <IndentTodoToolbarButton/>
                         <ToggleToolbarButton/>
+                      </ToolbarGroup>
+                    </>
+                )}
+
+                {value === "menu2" && (
+                    <>
+                      <ToolbarGroup>
+                        <InsertDropdownMenu/>
+                        <LinkToolbarButton/>
+                        <TableDropdownMenu/>
+                      </ToolbarGroup>
+
+                      <ToolbarGroup>
+                        <MediaToolbarButton nodeType={ImagePlugin.key}/>
+                        <MediaToolbarButton nodeType={VideoPlugin.key}/>
+                        <MediaToolbarButton nodeType={AudioPlugin.key}/>
+                        <MediaToolbarButton nodeType={FilePlugin.key}/>
                       </ToolbarGroup>
 
                       <ToolbarGroup>
@@ -155,50 +178,21 @@ export function FixedToolbarButtons() {
                       </ToolbarGroup>
 
                       <ToolbarGroup>
-                        <TurnIntoDropdownMenu/>
-                      </ToolbarGroup>
-                    </>
-                )}
-
-                {value === "menu2" && (
-                    <>
-                      <ToolbarGroup>
                         <MoreDropdownMenu/>
-                        <InsertDropdownMenu/>
-                      </ToolbarGroup>
-                      <Separator orientation="vertical"/>
-                      <ToolbarGroup>
-                        <LinkToolbarButton/>
-                        <TableDropdownMenu/>
-                      </ToolbarGroup>
-                      <ToolbarGroup>
-                      <MediaToolbarButton nodeType={ImagePlugin.key}/>
-                      <MediaToolbarButton nodeType={VideoPlugin.key}/>
-                      <MediaToolbarButton nodeType={AudioPlugin.key}/>
-                      <MediaToolbarButton nodeType={FilePlugin.key}/>
-                    </ToolbarGroup>
-
-                      <ToolbarGroup>
-                        <ExportToolbarButton>
-                          <ArrowUpToLineIcon/>
-                        </ExportToolbarButton>
                       </ToolbarGroup>
                     </>
                 )}
               </>
           )}
-
         </div>
         <>
-
-            <ToolbarGroup>
-              <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="하이라이트">
-                <HighlighterIcon/>
-              </MarkToolbarButton>
-              <Separator orientation="vertical"/>
-              <ModeDropdownMenu/>
-            </ToolbarGroup>
-
+          <ToolbarGroup>
+            <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="하이라이트">
+              <HighlighterIcon/>
+            </MarkToolbarButton>
+            <Separator orientation="vertical"/>
+            <ModeDropdownMenu/>
+          </ToolbarGroup>
         </>
       </>
   );

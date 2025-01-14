@@ -1,12 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {Textarea} from '@/components/ui/textarea';
-import {useAtom, useSetAtom} from 'jotai';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
   noteEventAtom,
   saveNoteChangesAtom,
-  selectedNoteStateAtom
+  selectedNoteStateAtom, selectedNoteUploadFilesAtom
 } from '@/atoms/noteStateAtom';
 import debounce from 'lodash/debounce';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
@@ -36,7 +35,6 @@ import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
 import PlateEditor from "@/components/notes/editor/plate-editor";
 
-
 const produce = require("immer").produce;
 
 export default function NoteDisplay() {
@@ -54,6 +52,8 @@ export default function NoteDisplay() {
   const [localPayload, setLocalPayload] = useState({});
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
+  const uploadedFiles = useAtomValue(selectedNoteUploadFilesAtom);
+
 
   //  자동 저장 함수 (디바운스)
   const saveChanges = useCallback(
@@ -64,13 +64,17 @@ export default function NoteDisplay() {
             payload: [{ // 배열 형태로 전달
               id: selectedNoteState._id,
               ...localPayload,
+              uploadedFiles: uploadedFiles,
             }],
           });
           setIsNotSaved(false);
           setLocalPayload({}); // 저장 후 로컬 상태 초기화
+          setTimeout(() => {
+            setNoteEvent(null);
+          }, 0);
         }
       }, 1500),
-      [localPayload, setNoteEvent, isInitialLoad, isNotSaved]
+      [localPayload, setNoteEvent, isInitialLoad, isNotSaved, uploadedFiles]
   );
 
   const handleTitleChange = (e) => {

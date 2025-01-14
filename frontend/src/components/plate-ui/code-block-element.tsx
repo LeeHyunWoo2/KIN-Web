@@ -8,17 +8,16 @@ import { useCodeBlockElementState } from '@udecode/plate-code-block/react';
 import { CodeBlockCombobox } from './code-block-combobox';
 import { PlateElement } from './plate-element';
 
-
-
 export const CodeBlockElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
     const { element } = props;
+
     const state = useCodeBlockElementState({ element });
 
     return (
       <PlateElement
         ref={ref}
-        className={cn('relative py-1', state.className, className)}
+        className={cn(className, 'py-1', state.className)}
         {...props}
       >
         <pre className="overflow-x-auto rounded-md bg-muted px-6 py-8 font-mono text-sm leading-[normal] [tab-size:2]">

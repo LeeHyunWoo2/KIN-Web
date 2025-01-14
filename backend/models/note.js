@@ -6,13 +6,17 @@ const NoteSchema = new mongoose.Schema({
     default: '',
   },
   content: {
-    type: String,
-    default: '',
+    type: Buffer, // 바이너리 데이터를 저장하는 Buffer 타입 필드
+    default: Buffer.alloc(0), // 빈 Buffer 를 기본값으로 설정
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // 작성자 참조
     required: true,
+  },
+  uploadedFiles:{
+    type:[String],
+    default:[],
   },
   category: {
     _id: {

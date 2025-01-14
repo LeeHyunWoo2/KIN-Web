@@ -12,13 +12,8 @@ const configureLinkingStrategies = (passport) => {
     passReqToCallback: true,
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('구글 연동 전략');
       const providerId = profile.id;
       const user = await User.findById(req.session.userId);
-      console.log('유저이름')
-      console.log(user)
-      console.log(providerId)
-      console.log(req.session)
 
       if (user) {
         user.socialAccounts.push({
@@ -27,7 +22,6 @@ const configureLinkingStrategies = (passport) => {
           socialRefreshToken: refreshToken,
         });
         await user.save();
-        console.log('연동됨');
         return done(null, user);
       }
       return done(new Error);

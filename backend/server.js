@@ -10,7 +10,7 @@ const { createErrorResponse } = require('./middleware/errorHandler');
 const https = require('https');
 const fs = require('fs');
 const session = require("express-session");
-const RedisStore = require('connect-redis').default; // redis를 express-session에 연동
+const RedisStore = require('connect-redis').default;
 const redisClient = require('./config/redis');
 const logger = require("./middleware/logger");
 const rateLimit = require("express-rate-limit");
@@ -18,8 +18,11 @@ const helmet = require('helmet');
 const compression = require('compression');
 const schedule = require('node-schedule');
 const { backupDatabase } = require('./services/notes/backupService');
-const WebSocket = require('ws'); // WebSocket 모듈
-const { getStatus } = require('./services/admin/statusService'); // 상태 정보 서비스
+const WebSocket = require('ws');
+const { getStatus } = require('./services/admin/statusService');
+const mongoSanitize = require('express-mongo-sanitize'); // NoSQL 인젝션 보호
+const xss = require('xss-clean'); // XSS 공격 방어
+const hpp = require('hpp'); // 중복 파라미터 공격 방지
 
 // 라우터 불러오기
 const authRoutes = require('./routes/user/authRoutes');
@@ -43,6 +46,7 @@ connectDB();
 // morgan 미들웨어
 app.use(logger);
 
+// Helmet: 보안 헤더 설정
 app.use(
     helmet({
       contentSecurityPolicy: false, // 필요시 설정
@@ -71,7 +75,7 @@ app.use(bodyParser.json());
 
 app.use(
     cors({
-      origin: [ process.env.FRONTEND_URL, process.env.NEXT_PUBLIC_API_URL ],
+      origin: [process.env.FRONTEND_URL, process.env.NEXT_PUBLIC_API_URL],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 허용할 HTTP 메서드
       allowedHeaders: [
         'Content-Type',
@@ -82,13 +86,13 @@ app.use(
         'Referer',
         'User-Agent',
         'X-CSRF-Token',
-        'X-Requested-With'
+        'X-Requested-With',
+        'x-skip-interceptor'
       ], // 허용할 헤더
       credentials: true, // 쿠키를 포함한 요청 허용
     })
 );
 app.options('*', cors()); // CORS 사전요청 허용
-
 
 // express-session 설정 + redis
 app.use(
@@ -109,10 +113,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Rate Limit: 요청 제한
 const globalLimiter = rateLimit({
-  validate: {trustProxy: false}, // 프록시 검사 끄기, 클라우드 플레어 때문에 켬
+  validate: {trustProxy: false}, // 프록시 검사 끄기, 클라우드플레어 때문에 켬
   windowMs: 10 * 60 * 1000,
-  max: 1500, // IP당 1000 요청
+  max: 1500, // IP당 1500 요청
   message: "요청 횟수를 초과했습니다.",
 });
 
@@ -131,6 +136,11 @@ app.use(globalLimiter); // 전역 요청 제한
 
 app.use('/auth', apiLimiter, authRoutes); // 좀 더 빡세게 제한
 app.use('/email', apiLimiter, emailRoutes);
+
+// 신규 추가된 보안 미들웨어
+app.use(hpp()); // HTTP Parameter Pollution 방지
+app.use(xss()); // XSS 공격 방어
+app.use(mongoSanitize()); // MongoDB 주입 공격 방지
 
 // 3. 라우터 설정
 app.use('/user', userRoutes);

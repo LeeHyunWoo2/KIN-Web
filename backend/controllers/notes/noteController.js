@@ -8,6 +8,8 @@ exports.getNotes = async (req, res) => {
   try {
     const userId = req.user.id; // 인증된 사용자 ID
     const notes = await noteService.getNotes(userId);
+
+    // content 필드는 바이너리 데이터라서 Buffer 타입이지만, 반환할때 node.js 에서 자동으로 base64로 변환함
     res.status(200).json(notes);
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "노트를 불러오던 중 오류가 발생했습니다.");

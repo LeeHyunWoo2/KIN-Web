@@ -20,11 +20,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.4.1",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
     "googleapis": "^144.0.0",
     "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.3",
@@ -35,7 +37,8 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-kakao": "^1.0.1",
     "passport-naver": "^1.0.6",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

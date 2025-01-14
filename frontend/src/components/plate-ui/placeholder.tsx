@@ -41,7 +41,7 @@ export const withPlaceholders = (components: any) =>
     {
       key: ParagraphPlugin.key,
       hideOnBlur: true,
-      placeholder: '내용을 입력하세요',
+      placeholder: 'Type a paragraph',
       query: {
         maxLevel: 1,
       },
@@ -49,6 +49,6 @@ export const withPlaceholders = (components: any) =>
     {
       key: HEADING_KEYS.h1,
       hideOnBlur: false,
-      placeholder: '새 페이지',
+      placeholder: 'Untitled',
     },
   ]);

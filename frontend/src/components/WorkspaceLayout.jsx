@@ -64,7 +64,7 @@ import {logoutUser} from "@/services/user/authService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom, useAtomValue} from "jotai";
-import {noteEventAtom, selectedNoteStateAtom} from '@/atoms/noteStateAtom';
+import {noteEventAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
 import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
@@ -242,7 +242,6 @@ const handleLogout = async () => {
 };
 
 function Page({children}) {
-  const selectedNoteState = useAtomValue(selectedNoteStateAtom);
   const [, setNoteEvent] = useAtom(noteEventAtom);
   const auth = useAtomValue(authAtom);
   const [userInfo, setUserInfo] = useState({
@@ -267,8 +266,11 @@ function Page({children}) {
           ],
         }
       });
-    }
-    ;
+    };
+    // 라우팅 했다가 되돌아왔을때 중복실행을 막기 위해 noteEventAtom 상태 초기화
+    setTimeout(() => {
+      setNoteEvent(null);
+    }, 0); // 이 딜레이를 안넣으면 이벤트 자체가 안됨
   };
 
   useEffect(() => {
@@ -459,7 +461,6 @@ function NavActions({
         <Button variant="ghost">
           <Settings/>
         </Button>
-        {/* <SettingsDialog/>*/}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <Tooltip>
             <TooltipTrigger asChild>

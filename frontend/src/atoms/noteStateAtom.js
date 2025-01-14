@@ -24,8 +24,11 @@ export const defaultNoteStateAtom ={
   is_locked: false,         // 잠금 여부
   is_pinned: false,         // 상단 고정 여부
   is_trashed: false,        // 휴지통 여부
-  trashedAt: null           // 휴지통에 들어간 시각
+  trashedAt: null,           // 휴지통에 들어간 시각
+  uploadedFiles:[]         // 해당 노트에 업로드된 파일 url
 }
+
+export const selectedNoteUploadFilesAtom = atom([]);
 
 // 통합된 노트 상태
 export const selectedNoteStateAtom = atom(defaultNoteStateAtom);

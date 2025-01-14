@@ -101,7 +101,7 @@ const verifyRefreshToken = async (refreshToken) => {
     return decodedData; // 검증된 토큰 반환
   } catch (error) {
     console.error('Refresh Token 검증 실패:', error.message);
-    const customError = new Error('로그인이 필요합니다.');
+    const customError = new Error('세션이 만료되었습니다.');
     customError.status = 419;
     throw customError;
   }

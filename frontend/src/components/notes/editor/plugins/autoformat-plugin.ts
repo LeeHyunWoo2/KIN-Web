@@ -7,7 +7,6 @@ import {
   autoformatArrow,
   autoformatLegal,
   autoformatLegalHtml,
-  autoformatMath,
   autoformatPunctuation,
   autoformatSmartQuotes,
 } from '@udecode/plate-autoformat';
@@ -266,7 +265,6 @@ export const autoformatPlugin = AutoformatPlugin.configure({
       ...autoformatLegal,
       ...autoformatLegalHtml,
       ...autoformatArrow,
-      ...autoformatMath,
       ...autoformatIndentLists,
     ],
   },
