@@ -68,6 +68,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 2. 기본 미들웨어 설정
+app.options('*', cors()); // CORS 사전요청 허용
 app.use(compression()); // 압축
 app.use(express.json()); // JSON 파싱
 app.use(cookieParser());
@@ -92,7 +93,6 @@ app.use(
       credentials: true, // 쿠키를 포함한 요청 허용
     })
 );
-app.options('*', cors()); // CORS 사전요청 허용
 
 // express-session 설정 + redis
 app.use(
