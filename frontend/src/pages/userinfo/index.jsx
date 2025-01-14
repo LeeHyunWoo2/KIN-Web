@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  AlertDialog,
+  AlertDialog, AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -16,15 +16,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { Pencil } from 'lucide-react'
 import Image from "next/image"
 import HeaderLayout from "@/components/HeaderLayout";
@@ -52,7 +43,20 @@ function UserInfoPage() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [inputUrl, setInputUrl] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('/placeholder.svg'); // 현재 프로필 사진
+  const [inputUrl, setInputUrl] = useState(''); // URL 입력값
+  const [previewUrl, setPreviewUrl] = useState(''); // 성공적으로 검증된 URL (미리보기용)
+  const [isApplyDisabled, setIsApplyDisabled] = useState(true); // 적용 버튼 활성화 여부
+  const [errorText, setErrorText] = useState(''); // 오류 메시지 표시용
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const resetModalState = () => {
+    setModalOpen(false);
+    setInputUrl('');
+    setPreviewUrl('');
+    setIsApplyDisabled(true);
+    setErrorText('');
+  }
 
   // 사용자 정보 불러오기 함수
   const fetchUserInfo = async () => {
@@ -78,22 +82,24 @@ function UserInfoPage() {
     }
   }, [router.query]);
 
-  const handleAvatarChange = () => {
+  // 유효성 검사 및 미리보기 로직
+  const handleUrlCheck = () => {
+    setErrorText(''); // 기존 경고 텍스트 초기화
     if (!inputUrl) {
-      alert('URL을 입력해주세요.');
+      setErrorText('URL을 입력해주세요.');
       return;
     }
     const img = new window.Image();
     img.onload = () => {
-      // 이미지 로드 성공 시 avatarUrl 갱신
-      setAvatarUrl(inputUrl);
-      alert('프로필 사진이 업데이트되었습니다.');
+      setPreviewUrl(inputUrl); // 미리보기 URL 설정
+      setIsApplyDisabled(false); // 적용 버튼 활성화
+      setErrorText(''); // 오류 텍스트 제거
     };
     img.onerror = () => {
-      // 이미지 로드 실패 시 사용자에게 알림
-      alert('유효하지 않은 이미지 URL입니다. 다시 확인해주세요.');
+      setErrorText('유효하지 않은 이미지 URL입니다. 다시 확인해주세요.');
+      setIsApplyDisabled(true); // 적용 버튼 비활성화
     };
-    img.src = inputUrl; // 입력한 URL로 로드 시도
+    img.src = inputUrl;
   };
 
   // 소셜 계정 연동 상태 확인 함수
@@ -124,6 +130,15 @@ function UserInfoPage() {
     }
   };
 
+  const handleProfileIconUpdate = async () => {
+    try{
+      if(userInfo.profileIcon !== inputUrl){
+        await updateUserProfile({profileIcon : inputUrl});
+        resetModalState();
+      }
+    } catch (error) {}
+  }
+
   // 소셜 계정 연동 or 해제 함수
   const handleSocialAccountToggle = async (provider) => {
     try {
@@ -146,7 +161,7 @@ function UserInfoPage() {
   }
 
   return (
-      <div className="container max-w-6xl mx-auto py-10">
+      <div className="container grid items-center max-h-[80vh] h-screen max-w-5xl mx-auto py-10">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">내 정보</CardTitle>
@@ -160,42 +175,74 @@ function UserInfoPage() {
                       alt="프로필 아이콘"
                       className="w-24 h-24 rounded-full mx-auto"
                   />
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="h-9 rounded-md px-3 ">
-                        프로필 사진 변경
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>프로필 사진 변경</DialogTitle>
-                        <DialogDescription>
-                          등록할 프로필 URL을 입력해주세요.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Input
-                              type="text"
-                              placeholder="이미지 URL 입력"
-                              className="col-span-3"
-                              value={inputUrl}
-                              onChange={(e) => setInputUrl(
-                                  e.target.value)} // URL 입력값 업데이트
-                          />
-                        </div>
+                <AlertDialog
+                    onOpenChange={(open) => {
+                      setModalOpen(open)
+                      if (!open) {
+                        resetModalState();
+                      }
+                    }
+                    }
+                >
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      프로필 사진 변경
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="sm:max-w-[425px]">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>프로필 사진 변경</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        새로운 프로필 사진의 URL을 입력해주세요.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="flex justify-center">
+                        {!previewUrl ?(
+                        <img
+                            src={userInfo.profileIcon}
+                            alt="프로필 이미지"
+                            className="w-24 h-24 rounded-full mx-auto"
+                        />
+                        ) : (
+                            <img
+                                src={previewUrl}
+                                alt="미리보기"
+                                className="w-24 h-24 rounded-full mx-auto"
+                            />
+                        )}
                       </div>
-                      <DialogFooter>
-                        <Button onClick={handleAvatarChange}>변경하기</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                      <div className="flex items-center gap-4">
+                        <Input
+                            id="profileUrl"
+                            type="text"
+                            value={inputUrl}
+                            onChange={(e) => setInputUrl(e.target.value)}
+                            placeholder="이미지 URL을 입력하세요"
+                        />
+                        <Button size="sm" onClick={handleUrlCheck}>
+                          확인
+                        </Button>
+                      {errorText && <p className="absolute text-sm text-red-500 ml-1" style={{marginTop: "70px"}}>{errorText}</p>}
+                      </div>
+                    </div>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>취소</AlertDialogCancel>
+                      <Button
+                          onClick={handleProfileIconUpdate}
+                          disabled={isApplyDisabled}
+                      >
+                        적용
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <div className="space-y-2">
-                      <Label>계정 유형</Label>
+                    <Label>계정 유형</Label>
                       <div className="flex items-center space-x-2">
                         {isLocalAccount() ? (
                             <>

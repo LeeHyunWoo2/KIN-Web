@@ -4,6 +4,7 @@ import {Triangle} from "lucide-react";
 import Link from "next/link";
 import {authAtom} from "@/atoms/userState";
 import {useAtomValue} from "jotai";
+import {Icons} from '@/components/icons'
 
 export default function HeaderLayout({children}) {
   const auth = useAtomValue(authAtom); // Jotai를 사용하여 인증 상태 읽기 및 설정
@@ -37,8 +38,13 @@ export default function HeaderLayout({children}) {
                     관리자 대시보드
                   </Button>
                 </Link>
-                )}
+            )}
           </>
+          <div className="flex-grow"/>
+          <a rel="noopener noreferrer" target="_blank"
+             href='https://github.com/LeeHyunWoo2/KIN-Web'>
+              <Icons.gitHub className="mr-2 h-5 w-5"/>
+          </a>
         </header>
         {children}
       </>

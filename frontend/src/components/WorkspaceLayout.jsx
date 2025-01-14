@@ -461,7 +461,6 @@ function NavActions({
         <Button variant="ghost">
           <Settings/>
         </Button>
-        {/* <SettingsDialog/>*/}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <Tooltip>
             <TooltipTrigger asChild>
