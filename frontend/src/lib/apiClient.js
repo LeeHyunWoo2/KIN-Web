@@ -2,9 +2,10 @@ import axios from "axios";
 import https from 'https';
 
 const agent = new https.Agent({
-  cert: process.env.CLIENT_CERT, // 인증서
-  key: process.env.CLIENT_KEY,   // 개인 키
+  cert: process.env.CLIENT_CERT.replace(/\\n/g, '\n'), // 인증서 줄바꿈 복원
+  key: process.env.CLIENT_KEY.replace(/\\n/g, '\n'),   // 개인 키 줄바꿈 복원
 });
+
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL, // API의 기본 URL 설정 (NEXT_PUBLIC 이 붙어야 외부에 노출됨)
