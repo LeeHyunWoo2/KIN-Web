@@ -1,8 +1,14 @@
-// 기본 axios 인스턴스 설정
 import axios from "axios";
+import https from 'https';
+
+const agent = new https.Agent({
+  cert: process.env.CLIENT_CERT, // 인증서
+  key: process.env.CLIENT_KEY,   // 개인 키
+});
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // API의 기본 URL 설정 (NEXT_PUBLIC 이 붙어야 클라이언트에서 접근가능)
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // API의 기본 URL 설정 (NEXT_PUBLIC 이 붙어야 외부에 노출됨)
+  httpsAgent: agent,
   headers: {
     'Content-Type': 'application/json', // 요청 헤더에 JSON 타입 설정
   },
