@@ -87,15 +87,12 @@ app.use(
         'User-Agent',
         'X-CSRF-Token',
         'X-Requested-With',
-        'x-skip-interceptor',
-        'x-api-key',
+        'x-skip-interceptor'
       ], // 허용할 헤더
       credentials: true, // 쿠키를 포함한 요청 허용
     })
 );
-
 app.options('*', cors()); // CORS 사전요청 허용
-
 
 // express-session 설정 + redis
 app.use(
