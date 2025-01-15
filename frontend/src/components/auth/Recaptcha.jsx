@@ -8,7 +8,7 @@ const Recaptcha = ({ onVerify, siteKey }) => {
   return (
       <div>
         <ReCAPTCHA
-            sitekey={siteKey || process.env.RECAPTCHA_SITE_KEY}
+            sitekey={siteKey || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
             onChange={handleCaptchaChange}
         />
       </div>
