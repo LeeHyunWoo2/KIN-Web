@@ -46,8 +46,6 @@ exports.deleteTag = async (req, res) => {
     const { tagId } = req.params;
     const { noteIds } = req.body; // 클라이언트에서 전달한 noteIds
 
-    console.log(noteIds);
-
     const deletedTag = await tagService.deleteTag(req.user.id, tagId, noteIds);
     if (!deletedTag) {
       return res.status(404).json({ message: "해당 태그를 찾을 수 없습니다." });

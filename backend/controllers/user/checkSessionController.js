@@ -4,13 +4,16 @@ const redisClient = require('../../config/redis');
 // 세션이 유효한지 검증 (일반 사용자용)
 const checkSession = async (req, res) => {
   try {
-    const skipInterceptor = req.headers['x-skip-interceptor'];
+    // const skipInterceptor = req.headers['x-skip-interceptor'];
     const user = req.user;
-    if (!user && skipInterceptor) {
+    if (!user) {
+      return res.status(401).json();
+    }
+/*    if (!user && skipInterceptor) {
         return res.status(419).json({message: '로그인이 필요한 페이지 입니다.'});
     } else if (!user) {
       return res.status(401).json();
-    }
+    }*/
     res.status(200).json({ user });
   } catch (error) {
     console.error('세션 검증 실패:', error.message);
