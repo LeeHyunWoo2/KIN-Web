@@ -3,7 +3,7 @@ import apiClient from "@/lib/apiClient";
 // 토큰 갱신 함수
 export const refreshToken = async () => {
   try {
-    const { data } = await apiClient.post('/auth/refresh-token');
+    await apiClient.post('/auth/refresh-token');
   } catch (error) {
     // 토큰 갱신 실패 시 로그아웃 처리
     await logoutUser();
@@ -115,9 +115,9 @@ export const unlinkSocialAccount = async (provider) => {
 };
 
 // 로그아웃 API (토큰 제거)
-export const logoutUser = async () => {
+export const logoutUser = () => {
   try {
-    await apiClient.post('/auth/logout', {});
+    apiClient.post('/auth/logout', {});
     localStorage.removeItem('auth');
     localStorage.removeItem('userInfo');
     window.location.href = '/login';

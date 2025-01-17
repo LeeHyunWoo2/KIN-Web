@@ -14,7 +14,7 @@ const LoginSuccess = () => {
         const user = await getPublicProfile(); // 공개 데이터 API 호출
         await setAuth(user.role)
         if (user.role === 'admin') {
-          await router.push('/admin');
+          window.location.href = '/admin';
         } else {
           await router.push('/notes'); // Notes 페이지로 이동
         }
