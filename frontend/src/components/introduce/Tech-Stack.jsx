@@ -18,10 +18,8 @@ const technologies = {
     { name: "Axios", description: "Promise 기반 HTTP 클라이언트", icon: "axios" , url: "https://axios-http.com/"},
   ],
   frontend_etc: [
-    {name: "frontend_etc_sample 1", description: "sample 1", url: ""},
-    {name: "frontend_etc_sample 2", description: "sample 2", url: ""},
-    {name: "frontend_etc_sample 3", description: "sample 3", url: ""},
-    {name: "frontend_etc_sample 4", description: "sample 4", url: ""},
+    {name: "uploadthing", description: "", url: ""},
+    {name: "lodash", description: "", url: ""},
   ],
   backend: [
     { name: "Node.js", description: "JavaScript 런타임 환경", icon: "nodejs" , url: "https://nodejs.org/"},
@@ -34,10 +32,11 @@ const technologies = {
     { name: "WebSocket", description: "실시간 통신 프로토콜", icon: "webSocket", url: "https://github.com/websockets/ws"},
   ],
   backend_etc: [
-    {name: "backend_etc_sample 1", description: "sample 1", url: ""},
-    {name: "backend_etc_sample 2", description: "sample 2", url: ""},
-    {name: "backend_etc_sample 3", description: "sample 3", url: ""},
-    {name: "backend_etc_sample 4", description: "sample 4", url: ""},
+    {name: "hellmet", description: "", url: ""},
+    {name: "bcryptjs", description: "", url: ""},
+    {name: "dotenv", description: "", url: ""},
+    {name: "nodemailer", description: "", url: ""},
+    {name: "OAuth2.0", description: "", url: ""},
   ],
   deployment: [
     { name: "Vercel", description: "프론트엔드 배포 플랫폼", icon: "vercel" , url: "https://vercel.com/"},
