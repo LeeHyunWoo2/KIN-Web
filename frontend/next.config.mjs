@@ -3,10 +3,10 @@ const nextConfig = {
   reactStrictMode: false,
   async rewrites() {
     return [
-      {
+/*      {
         "source": "/api/proxy/:path*",
         "destination": process.env.API_BACKEND_URL + "/:path*"
-      },
+      },*/
       {
         source: '/login',
         destination: '/_authentication/login',
