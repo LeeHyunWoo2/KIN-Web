@@ -5,6 +5,10 @@ export default async function handler(req, res) {
   const { path } = req.query; // 클라이언트로부터 전달된 경로
   const method = req.method; // 요청 방식
 
+  console.log('Request Method:', req.method); // 메서드 확인
+  console.log('Request Path:', req.url);
+  console.log('Request Body:', req.body);
+
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
     const headers = {
@@ -26,6 +30,7 @@ export default async function handler(req, res) {
       url: `${backendUrl}/${path.join("/")}`, // 백엔드로 전달할 URL 생성
       data: req.body || {}, // 요청 본문 전달
       headers,
+      host: undefined,
       withCredentials: true, // 쿠키 포함
     });
 
