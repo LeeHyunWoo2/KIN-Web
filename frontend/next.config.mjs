@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         "source": "/api/proxy/:path*",
-        "destination": process.env.API_BACKEND_URL + "/:path*"
+        "destination": `${process.env.API_BACKEND_URL}/:path*`
       },
       {
         source: '/login',
