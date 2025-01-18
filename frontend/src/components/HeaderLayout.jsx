@@ -33,11 +33,11 @@ export default function HeaderLayout({children}) {
                 </Link>
             )}
             {auth === 'admin' && (
-                <Link href="/admin">
+                <a href="/admin">
                   <Button variant="outline">
                     관리자 대시보드
                   </Button>
-                </Link>
+                </a>
             )}
           </>
           <div className="flex-grow"/>

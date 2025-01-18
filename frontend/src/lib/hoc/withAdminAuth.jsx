@@ -18,7 +18,7 @@ const withAdminAuth = (WrappedComponent) => {
       // 관리자 인증 상태 체크
       const checkAdminAuth = async () => {
         try {
-          const token = await apiClient.post('/auth/refresh-token');
+          const token = await apiClient.post('/auth/refresh-token',{});
           if (token.status !== 200) {
             setHasAccess(false);
             return;

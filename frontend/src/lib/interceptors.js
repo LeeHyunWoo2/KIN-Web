@@ -4,7 +4,15 @@ import {toast} from "sonner";
 
 export const setupInterceptors = () => {
   apiClient.interceptors.response.use(
-      (response) => {
+      (config) => {
+        // HTTP 메서드가 post, put, patch이며, config.data가 undefined인 경우 빈 객체 추가
+        // 이게 없을 경우 next.js 의 API 라우트에서 예기치못한 문제를 발생시킴
+        if (['post', 'put', 'patch'].includes(config.method) && !config.data) {
+          config.data = {}; // 빈 객체 추가
+        }
+        return config;
+      },
+  (response) => {
         // 중복 요청 방지
         if (!response.config._interceptorProcessed) {
           response.config._interceptorProcessed = true;
@@ -29,7 +37,8 @@ export const setupInterceptors = () => {
 
               await refreshToken(); // authService의 토큰 갱신 로직 호출
               return apiClient(originalRequest); // 갱신된 토큰으로 원래 요청 재실행
-
+          } else if (error.response && error.response.status === 419){
+            originalRequest._retry = true;
           }
             // 기타 에러 처리
             if (error.response.status !== 404 && error.response.status !== 401) {

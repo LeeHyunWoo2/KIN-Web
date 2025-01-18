@@ -360,12 +360,12 @@ function Page({children}) {
                       <DropdownMenuSeparator/>
                       <DropdownMenuGroup>
                         {auth === 'admin' ? (
-                        <Link href="/admin">
+                        <a href="/admin">
                           <DropdownMenuItem>
                             <CircleGauge />
                             관리자 대시보드
                           </DropdownMenuItem>
-                        </Link>
+                        </a>
                         ) : (
                         <DropdownMenuItem disabled>
                           <BadgeCheck/>
