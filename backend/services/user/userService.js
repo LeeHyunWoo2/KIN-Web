@@ -214,14 +214,12 @@ const addLocalAccount = async (userId, id, email, password) => {
 // 회원 탈퇴
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
-  console.log(user)
   if (!user) {
     throw new Error;
   }
 
   for (const account of user.socialAccounts) {
     if (account.provider !== 'local') {
-      console.log(account.provider)
       const accessToken = await tokenService.generateOAuthToken(user,
           account.provider);
       await revokeSocialAccess(account.provider, accessToken);
