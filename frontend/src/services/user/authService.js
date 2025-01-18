@@ -104,7 +104,7 @@ export const deleteUserProfile = async () => {
 
 // 소셜 계정 연동
 export const linkSocialAccount = async (provider) => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/social/link/${provider}`;
+  window.location.href = await apiClient.get(`/social/link/${provider}`);
 };
 
 // 소셜 계정 연동 해제

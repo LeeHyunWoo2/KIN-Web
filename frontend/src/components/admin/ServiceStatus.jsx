@@ -269,9 +269,12 @@ export function ServiceStatus() {
                 </CardTitle>
                   <Tooltip>
                     <TooltipTrigger>
-                    <Button variant="outline" className="ml-2"
+                    <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md
+                     text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring
+                      disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 ml-2
+                      border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
                             onClick={() => setIsSampleData(isSampleData => !isSampleData)}
-                    >샘플 데이터 모드 {isSampleData ? '끄기' : '켜기'}</Button>
+                    >샘플 데이터 모드 {isSampleData ? '끄기' : '켜기'}</div>
                     </TooltipTrigger>
                     <TooltipContent className="text-sm">
                     서버의 활동이 없거나, 서버가 윈도우 환경일 경우 값이 0입니다.<br/>
