@@ -52,5 +52,6 @@ const skipLog = (req) => {
 
 // morgan 미들웨어 생성
 const logger = morgan(logFormat, { skip: skipLog });
+// const logger = morgan(logFormat, {});
 
 module.exports = logger;
