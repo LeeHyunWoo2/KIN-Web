@@ -5,11 +5,5 @@
       "source": "/api/proxy/:path*",
       "destination": "/api/:path*"
     }
-  ],
-  "build": {
-    "env": {
-      "API_BACKEND_URL": "https://api.noteapp.org"
-    }
-  },
-  "routes": []
+  ]
 }
