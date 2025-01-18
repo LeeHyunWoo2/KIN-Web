@@ -58,7 +58,7 @@ export default function AuthenticationPage() {
 
   const handleSocialLogin = (provider) => {
     // 통합된 소셜 로그인 URL 생성
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
+    const url = apiClient.get(`/social/${provider}`);
 
     if (url) {
       window.location.href = url; // 소셜 로그인 URL로 리다이렉트
