@@ -4,22 +4,22 @@ export default async function handler(req, res) {
   const backendUrl = process.env.API_BACKEND_URL; // 백엔드 API URL
   const { path } = req.query; // 클라이언트로부터 전달된 경로
   const method = req.method; // 요청 방식
-
+  
+// sec-ch-ua에서 브라우저 이름만 추출하는 함수
+  function extractBrowserName(userAgentString) {
+    const regex = /"([^"]+)"/; // 큰따옴표 안의 첫 번째 값을 추출
+    const match = userAgentString.match(regex); // 정규식과 매칭
+    return match ? match[1] : "Unknown";
+  }
+  
   // Vercel 로그로 확인할 콘솔
-  console.log('본문 크기 :', req.headers["content-length"]);
-  console.log('OS :', req.headers["sec-ch-ua-platform"]);
-  console.log('브라우저 :', req.headers["sec-ch-ua"]);
-  console.log('국가 :', req.headers["cf-ipcountry"]);
-  console.log('IP :', req.headers["cf-connecting-ip"]);
+  console.log('content-length :', req.headers["content-length"]);
+  console.log('sec-ch-ua-platform :', req.headers["sec-ch-ua-platform"]);
+  console.log('sec-ch-ua :', extractBrowserName(req.headers["sec-ch-ua"]));
+  console.log('cf-ipcountry :', req.headers["cf-ipcountry"]);
+  console.log('cf-connecting-ip :', req.headers["cf-connecting-ip"]);
 
-  console.log(
-      `
-      "content-length : ${req.headers["content-length"]}",
-      "sec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}",
-      "sec-ch-ua : ${req.headers["sec-ch-ua"]}",
-      "cf-ipcountry : ${req.headers["cf-ipcountry"]}",
-      "cf-connecting-ip : ${req.headers["cf-connecting-ip"]}"
-      `);
+  console.log(`"content-length : ${req.headers["content-length"]}"\n"sec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}"\n"sec-ch-ua : ${extractBrowserName(req.headers["sec-ch-ua"])}"\n"cf-ipcountry : ${req.headers["cf-ipcountry"]}"\n"cf-connecting-ip : ${req.headers["cf-connecting-ip"]}"`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
