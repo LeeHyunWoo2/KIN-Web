@@ -5,9 +5,21 @@ export default async function handler(req, res) {
   const { path } = req.query; // 클라이언트로부터 전달된 경로
   const method = req.method; // 요청 방식
 
-  console.log('Request Method:', req.method); // 메서드 확인
+  // Vercel 로그로 확인할 콘솔
+  console.log('Request Method:', req.method);
   console.log('Request Path:', req.url);
   console.log('Request Body:', req.body);
+  console.log('Request Headers:', req.headers["x-forwarded-for"] || req.connection.remoteAddress);
+
+  // 요청 기본 정보 로깅
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    url: req.url,
+    ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+    headers: req.headers,
+    body: req.body,
+  }));
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
