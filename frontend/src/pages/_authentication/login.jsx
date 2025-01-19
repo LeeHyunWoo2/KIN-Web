@@ -56,15 +56,17 @@ export default function Dashboard() {
     if (!id || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
     } else {
-      const credentials = {id, password, rememberMe};
-      const tokens = await loginUser(credentials);
-      if (tokens) {
         setIsLoginLoading(true);
         setTimeout(() => {
           setIsLoginLoading(false); // 로딩 상태 해제
         }, 5000);
+      const credentials = {id, password, rememberMe};
+      const tokens = await loginUser(credentials);
+      if (tokens) {
         // 로그인 성공 시 loginSuccess로 리다이렉트
         await router.push("/loginSuccess");
+      } else {
+        setIsLoginLoading(false);
       }
     }
   };
