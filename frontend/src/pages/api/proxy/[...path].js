@@ -6,20 +6,18 @@ export default async function handler(req, res) {
   const method = req.method; // 요청 방식
 
   // Vercel 로그로 확인할 콘솔
-  console.log('Request Method:', req.method);
-  console.log('Request Path:', req.url);
-  console.log('Request Body:', req.body);
-  console.log('Request Headers:', req.headers["x-forwarded-for"] || req.connection.remoteAddress);
+  console.log('본문 크기 :', req.headers["content-length"]);
+  console.log('OS :', req.headers["sec-ch-ua-platform"]);
+  console.log('브라우저 :', req.headers["sec-ch-ua"]);
+  console.log('국가 :', req.headers["cf-ipcountry"]);
+  console.log('IP :', req.headers["cf-connecting-ip"]);
 
-  // 요청 기본 정보 로깅
-  console.log(JSON.stringify({
-    timestamp: new Date().toISOString(),
-    method: req.method,
-    url: req.url,
-    ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress,
-    headers: req.headers,
-    body: req.body,
-  }));
+  console.log(
+      `"본문 크기 : ${req.headers["content-length"]}",
+      "OS : ${req.headers["sec-ch-ua-platform"]}",
+      "브라우저 : ${req.headers["sec-ch-ua"]}",
+      "국가 : ${req.headers["cf-ipcountry"]}",
+      "IP : ${req.headers["cf-connecting-ip"]}"`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
@@ -29,7 +27,7 @@ export default async function handler(req, res) {
     };
 
 /*    if (req.headers["x-skip-interceptor"]) {
-      console.log("💡 x-skip-interceptor 전달 확인:", req.headers["x-skip-interceptor"]);
+      console.log("x-skip-interceptor 확인:", req.headers["x-skip-interceptor"]);
       headers["x-skip-interceptor"] = req.headers["x-skip-interceptor"];
     }*/
 
