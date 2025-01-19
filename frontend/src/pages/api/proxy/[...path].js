@@ -13,11 +13,13 @@ export default async function handler(req, res) {
   console.log('IP :', req.headers["cf-connecting-ip"]);
 
   console.log(
-      `"본문 크기 : ${req.headers["content-length"]}",
-      "OS : ${req.headers["sec-ch-ua-platform"]}",
-      "브라우저 : ${req.headers["sec-ch-ua"]}",
-      "국가 : ${req.headers["cf-ipcountry"]}",
-      "IP : ${req.headers["cf-connecting-ip"]}"`);
+      `
+      "content-length : ${req.headers["content-length"]}",
+      "sec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}",
+      "sec-ch-ua : ${req.headers["sec-ch-ua"]}",
+      "cf-ipcountry : ${req.headers["cf-ipcountry"]}",
+      "cf-connecting-ip : ${req.headers["cf-connecting-ip"]}"
+      `);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
