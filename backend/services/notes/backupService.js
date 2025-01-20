@@ -129,7 +129,7 @@ const backupDatabase = async () => {
 
   try {
     console.log('백업용 MongoDB 연결 성공');
-    const date = new Date(Date.now() + 9*60*60*1000)
+    const date = new Date(Date.now())
     .toISOString()
     .replace(/T/, '_') // 날짜와 시간을 구분
     .replace(/:/g, '-') // 윈도우 이슈로 ':'을 '-'로 교체
