@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [incorrectValue , setIncorrectValue] = useState(false);
 
+
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
     if (auth !== undefined) {
