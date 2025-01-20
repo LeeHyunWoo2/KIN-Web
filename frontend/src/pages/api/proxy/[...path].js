@@ -2,12 +2,18 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   const backendUrl = process.env.API_BACKEND_URL; // 백엔드 API URL
-  const { path } = req.query; // 클라이언트로부터 전달된 경로
+  const { path, ...query } = req.query; // path 외의 쿼리스트링 추출
   const method = req.method; // 요청 방식
 
-  console.log('Request Method:', req.method); // 메서드 확인
-  console.log('Request Path:', req.url);
-  console.log('Request Body:', req.body);
+// sec-ch-ua에서 브라우저 이름만 추출하는 함수
+  function extractBrowserName(userAgentString) {
+    const regex = /"([^"]+)"/; // 큰따옴표 안의 첫 번째 값을 추출
+    const match = userAgentString.match(regex); // 정규식과 매칭
+    return match ? match[1] : "Unknown";
+  }
+
+  // Vercel 로그로 확인할 콘솔
+  console.log(`content-length : ${req.headers["content-length"]}\nsec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}\nsec-ch-ua : ${extractBrowserName(req.headers["sec-ch-ua"])}\ncf-ipcountry : ${req.headers["cf-ipcountry"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
@@ -17,17 +23,21 @@ export default async function handler(req, res) {
     };
 
 /*    if (req.headers["x-skip-interceptor"]) {
-      console.log("💡 x-skip-interceptor 전달 확인:", req.headers["x-skip-interceptor"]);
+      console.log("x-skip-interceptor 확인:", req.headers["x-skip-interceptor"]);
       headers["x-skip-interceptor"] = req.headers["x-skip-interceptor"];
     }*/
 
     // host 등 불필요한 헤더 제거
     delete headers.host;
 
+    // query string을 URL에 추가
+    const queryString = new URLSearchParams(query).toString(); // 쿼리스트링 변환
+    const url = `${backendUrl}/${path.join("/")}${queryString ? `?${queryString}` : ""}`; // URL 생성
+
     // axios 백엔드 요청
     const response = await axios({
       method,
-      url: `${backendUrl}/${path.join("/")}`, // 백엔드로 전달할 URL 생성
+      url,
       data: req.body || {}, // 요청 본문 전달
       headers,
       host: undefined,

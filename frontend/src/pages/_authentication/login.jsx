@@ -14,6 +14,7 @@ import * as React from "react";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
 import {Card, CardContent} from "@/components/ui/card";
+import {Loader2} from "lucide-react";
 
 export default function Dashboard() {
   const [id, setId] = useState("");
@@ -24,6 +25,8 @@ export default function Dashboard() {
   const auth = useAtomValue(authAtom);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState('');
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [incorrectValue , setIncorrectValue] = useState(false);
 
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
@@ -53,12 +56,20 @@ export default function Dashboard() {
 
     if (!id || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
+      setIncorrectValue(false);
     } else {
+        setIsLoginLoading(true);
+        setTimeout(() => {
+          setIsLoginLoading(false); // 로딩 상태 해제
+        }, 5000);
       const credentials = {id, password, rememberMe};
       const tokens = await loginUser(credentials);
       if (tokens) {
         // 로그인 성공 시 loginSuccess로 리다이렉트
         await router.push("/loginSuccess");
+      } else {
+        setIncorrectValue(true);
+        setIsLoginLoading(false);
       }
     }
   };
@@ -90,7 +101,16 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
           ) : (
-              <div className="mx-auto grid w-[350px] gap-6">
+              <div
+                  className={`mx-auto grid w-[350px] gap-6 relative ${
+                      isLoginLoading ? "opacity-50 pointer-events-none" : ""
+                  }`}
+              >
+                {isLoginLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 z-10">
+                      <Loader2 className="animate-spin" /> {/* 로딩 아이콘 */}
+                    </div>
+                )}
                 <div className="grid gap-2 text-center">
                   <h1 className="text-3xl font-bold">로그인</h1>
                 </div>
@@ -131,6 +151,9 @@ export default function Dashboard() {
                     {isCapsLockOn && (
                         <span
                             className="text-red-500 text-sm text-muted-foreground">Caps Lock 이 활성화 되어있습니다!</span>
+                    )}
+                    {incorrectValue && (
+                        <span className="text-red-500 text-sm text-muted-foreground">아이디 혹은 비밀번호를 다시 입력해주세요.</span>
                     )}
                   </div>
                   <div className="flex ml-auto">

@@ -78,6 +78,7 @@ export default function AuthenticationPage() {
   // 필수 필드들이 모두 채워졌는지 확인하는 함수
   const isFormValid = () => {
     const {id, name, email, password, passwordConfirm, termsAgreed} = formData;
+    console.log({ id, name, email, password, passwordConfirm, termsAgreed });
     if (page === 1) {
       return termsAgreed;
     } else if (page === 2) {
