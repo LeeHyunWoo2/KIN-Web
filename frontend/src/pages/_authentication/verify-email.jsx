@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import apiClient from "@/lib/apiClient";
 
@@ -17,13 +17,17 @@ export default function VerifyEmailPage() {
         const response = await apiClient.get(`/email/verify-email?token=${token}`);
         setMessage(response.data.message || "이메일 인증이 완료되었습니다. 탭을 닫으셔도 좋습니다.");
         // 인증 상태를 로컬스토리지에 저장
-        localStorage.setItem("emailVerified", "true");
+        localStorage.setItem('emailVerifiedData', JSON.stringify(
+            {
+              emailVerified: true,
+              email: response.data.email,
+            }
+        ));
       } catch (error) {
         // 만료된 토큰 등등의 상황일땐 아무것도 저장하지 않음
-        setMessage(error.response?.data?.message || "이메일 인증에 실패했습니다.");
+        setMessage(error.response?.data?.message || "이메일 인증에 실패했습니다. 다시 시도해주세요.");
       }
     };
-
     if (token) verifyEmail();
   }, [token]);
 
