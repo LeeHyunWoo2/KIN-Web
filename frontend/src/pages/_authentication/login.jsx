@@ -66,7 +66,9 @@ export default function Dashboard() {
       const credentials = {id, password, rememberMe};
       const tokens = await loginUser(credentials);
       if (tokens) {
-        // 로그인 성공 시 loginSuccess로 리다이렉트
+        // 로그인 성공 시 상태를 초기화하고 loginSuccess로 리다이렉트
+        setId("");
+        setPassword("");
         await router.push("/loginSuccess");
       } else {
         setIncorrectValue(true);
@@ -129,6 +131,7 @@ export default function Dashboard() {
                         required
                         value={id}
                         onChange={(e) => setId(e.target.value)} // 상태 업데이트
+                        autoComplete="off"
                     />
                   </div>
                   <div className="grid gap-2">

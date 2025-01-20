@@ -32,9 +32,12 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
 import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
-import {MailOpen, Check, Loader2} from "lucide-react"
+import {Check, Loader2, MailOpen} from "lucide-react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
+import {ValidationSchemas} from "@/lib/validationSchemas";
+
+// TODO : 가입 성공시 토스트 jotai 전역상태를 트리거로 구현하기
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -48,6 +51,8 @@ export default function AuthenticationPage() {
   const [count, setCount] = useState();
   const [isTimedOut, setIsTimedOut] = useState(false);
   const [isOverlayActive, setIsOverlayActive] = useState(false);
+  const [errors, setErrors] = useState({});
+
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -58,7 +63,7 @@ export default function AuthenticationPage() {
 
   const handleSocialLogin = (provider) => {
     // 통합된 소셜 로그인 URL 생성
-    const url = apiClient.get(`/social/${provider}`);
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
 
     if (url) {
       window.location.href = url; // 소셜 로그인 URL로 리다이렉트
@@ -93,12 +98,47 @@ export default function AuthenticationPage() {
     }
   };
 
+  // 유효성 검사 함수
+  const validateForm = (formData) => {
+    const { success, error } = ValidationSchemas.safeParse(formData);
+    if (success) {
+      return { isValid: true, errors: {} };
+    }
+    // 에러 메시지를 필드별로 정리
+    const errors = error.issues.reduce((acc, issue) => {
+      acc[issue.path[0]] = issue.message;
+      return acc;
+    }, {});
+    return { isValid: false, errors };
+  };
+
   const [recaptchaToken, setRecaptchaToken] = useState("");
   const handleCaptchaChange = (token) => {
     setRecaptchaToken(token);
   };
 
   const checkDuplicateEmail = async () => {
+
+    // 이메일 전송 재요청은 10초가 지난 이후부터 가능
+    if(count && 290 < count){
+      setMessage("잠시 후 요청해주세요. (4:50 부터 가능)")
+      return
+    }
+
+    const finalFormData = {email: email};
+
+    // 유효성 검증 수행
+    const { errors: validationErrors } = validateForm(finalFormData);
+
+    // 이메일 필드에서만 성공 여부 확인
+    const isEmailValid = !validationErrors.email;
+    if (!isEmailValid) {
+      setErrors({ email: validationErrors.email });
+      return;
+    }
+
+    setErrors((prevErrors) => ({...prevErrors, email: undefined}));
+
     const inputData = {
       input: email,
       inputType: "email",
@@ -118,10 +158,12 @@ export default function AuthenticationPage() {
       const response = await apiClient.post("/email/send-verification-email", {
         email,
       });
+      localStorage.setItem("currentEmail", email);
       setIsEmailSent(true);
       setCount(300);
       setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");
     } catch (error) {
+      setIsEmailSent(false);
       setMessage(error.response?.data?.message || "이메일 전송에 실패했습니다.");
     } finally {
       setIsSending(false); // 전송 완료 후 상태 초기화
@@ -137,14 +179,35 @@ export default function AuthenticationPage() {
 
   // 모든 필드를 처리하는 handleChange 함수
   const handleChange = (e) => {
-    const {name, value, type, checked} = e.target;
+    const { name, value, type, checked } = e.target;
+    const updatedValue = type === "checkbox" ? checked : value;
     if (name === "email") {
-      setEmail(value); // 이메일 상태 업데이트
+      setEmail(value); // 이메일 상태 업데이트 (이메일인증)
     }
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value, // 체크박스와 일반 필드 처리
-    });
+    // 데이터 업데이트
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: updatedValue,
+    }));
+  };
+
+  const handleOpenDialog = (e) => {
+    e.preventDefault();
+
+    const finalFormData = {...formData, email: email, emailVerified:emailVerified};
+
+    // 유효성 검증 수행
+    const { isValid, errors: validationErrors } = validateForm(finalFormData);
+
+    // 오류 메시지 상태 업데이트 (email 필드만 제외)
+    setErrors(Object.fromEntries(
+        Object.entries(validationErrors).filter(([key]) => key !== 'email')));
+
+    if (!isValid) {
+      return;
+    }
+    // 유효성 검사를 통과한 경우 Dialog 출력
+    setIsOverlayActive(true);
   };
 
   const formatTime = time => {
@@ -169,10 +232,12 @@ export default function AuthenticationPage() {
   // 이메일 인증 주기적으로 체크
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const isVerified = localStorage.getItem("emailVerified");
-      if (isVerified === "true") {
+      const certStatus = JSON.parse(localStorage.getItem("emailVerifiedData"));
+      if (certStatus === null) return;
+      if (certStatus.emailVerified === true && certStatus.email === email) {
         setEmailVerified(true); // 상태 업데이트
-        localStorage.removeItem("emailVerified"); // 로컬스토리지 정리
+        localStorage.removeItem("emailVerifiedData"); // 로컬스토리지 정리
+        localStorage.removeItem("currentEmail")
         clearInterval(intervalId); // 인터벌 중지
       }
     }, 1000);
@@ -188,6 +253,16 @@ export default function AuthenticationPage() {
         // 리캡차 성공 시 회원가입 요청
         formData.email = email;
         await registerUser(formData);
+        setFormData({
+          id: '',
+          name: '',
+          email: '',
+          password: '',
+          passwordConfirm: '',
+          termsAgreed: false,
+          marketingConsent: false,
+        })
+        setToastMessage("가입이 완료되었습니다!");
         router.push('/login');
       } else {
         setErrorMessage('리캡차 인증 실패');
@@ -302,7 +377,17 @@ export default function AuthenticationPage() {
               {page === 1 && (
                   <Card className="max-w-sm mx-auto">
                     <CardHeader>
-                      <CardTitle className="text-xl">Sign Up</CardTitle>
+                      <CardTitle className="text-xl">Sign Up<Button className="ml-5 text-sm" onClick={()=>(
+                         setFormData({
+                        id: 'testinput',
+                        name: '테스트맨',
+                        email: 'triaxis159@gmail.com',
+                        password: 'Qweasd!23',
+                        passwordConfirm: 'Qweasd!23',
+                        termsAgreed: true,
+                        marketingConsent: false,
+                      }, setEmail('triaxis159@gmail.com'), setPage(2), setEmailVerified(true))
+                      )} variant="outline" size="sm">테스트 버튼</Button></CardTitle>
                       <CardDescription>
                         Enter your information to create an account
                       </CardDescription>
@@ -402,7 +487,6 @@ export default function AuthenticationPage() {
                   </Card>
               )}
 
-
               {page === 2 && (
                   <Card className="max-w-sm mx-auto">
                     <CardHeader>
@@ -423,6 +507,7 @@ export default function AuthenticationPage() {
                               placeholder="kln123"
                               required
                           />
+                          {errors.id && <p className="text-red-500 text-sm mt-1">{errors.id}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="Nickname">Name or Nickname</Label>
@@ -434,6 +519,7 @@ export default function AuthenticationPage() {
                               placeholder="John Doe"
                               required
                           />
+                          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="email">Email</Label>
@@ -447,6 +533,8 @@ export default function AuthenticationPage() {
                               readOnly={emailVerified === true}
                               required
                           />
+                          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                          {errors.emailVerified && <p className="text-red-500 text-sm mt-1">{errors.emailVerified}</p>}
                           <Button
                               variant="outline"
                               onClick={checkDuplicateEmail}
@@ -499,6 +587,7 @@ export default function AuthenticationPage() {
                               placeholder="8자 이상 영어 대소문자, 숫자, 특수문자"
                               required
                           />
+                          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
@@ -511,6 +600,7 @@ export default function AuthenticationPage() {
                               placeholder="password"
                               required
                           />
+                          {errors.passwordConfirm && <p className="text-red-500 text-sm mt-1">{errors.passwordConfirm}</p>}
                         </div>
 
                         {isOverlayActive && (
@@ -529,8 +619,9 @@ export default function AuthenticationPage() {
                         )}
 
                         <Dialog modal={false}
-                                onOpenChange={(isOpen) => {
-                                  if (isOpen) {
+                                open={isOverlayActive}
+                                onOpenChange={(isOverlayActive) => {
+                                  if (isOverlayActive) {
                                     setIsOverlayActive(true);
                                   } else {
                                     setRecaptchaToken("");
@@ -539,7 +630,7 @@ export default function AuthenticationPage() {
                                 }}
                         >
                           <DialogTrigger asChild>
-                            <Button className="w-full">가입하기</Button>
+                            <Button className="w-full" onClick={handleOpenDialog}>가입하기</Button>
                           </DialogTrigger>
                           <DialogContent
                               onInteractOutside={(e) => {
