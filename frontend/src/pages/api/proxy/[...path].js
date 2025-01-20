@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   const backendUrl = process.env.API_BACKEND_URL; // 백엔드 API URL
-  const { path } = req.query; // 클라이언트로부터 전달된 경로
+  const { path, ...query } = req.query; // path 외의 쿼리스트링 추출
   const method = req.method; // 요청 방식
 
 // sec-ch-ua에서 브라우저 이름만 추출하는 함수
@@ -30,10 +30,14 @@ export default async function handler(req, res) {
     // host 등 불필요한 헤더 제거
     delete headers.host;
 
+    // query string을 URL에 추가
+    const queryString = new URLSearchParams(query).toString(); // 쿼리스트링 변환
+    const url = `${backendUrl}/${path.join("/")}${queryString ? `?${queryString}` : ""}`; // URL 생성
+
     // axios 백엔드 요청
     const response = await axios({
       method,
-      url: `${backendUrl}/${path.join("/")}`, // 백엔드로 전달할 URL 생성
+      url,
       data: req.body || {}, // 요청 본문 전달
       headers,
       host: undefined,

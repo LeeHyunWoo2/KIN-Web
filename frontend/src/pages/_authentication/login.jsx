@@ -26,6 +26,8 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState('');
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [incorrectValue , setIncorrectValue] = useState(false);
+
 
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
@@ -55,6 +57,7 @@ export default function Dashboard() {
 
     if (!id || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
+      setIncorrectValue(false);
     } else {
         setIsLoginLoading(true);
         setTimeout(() => {
@@ -66,6 +69,7 @@ export default function Dashboard() {
         // 로그인 성공 시 loginSuccess로 리다이렉트
         await router.push("/loginSuccess");
       } else {
+        setIncorrectValue(true);
         setIsLoginLoading(false);
       }
     }
@@ -148,6 +152,9 @@ export default function Dashboard() {
                     {isCapsLockOn && (
                         <span
                             className="text-red-500 text-sm text-muted-foreground">Caps Lock 이 활성화 되어있습니다!</span>
+                    )}
+                    {incorrectValue && (
+                        <span className="text-red-500 text-sm text-muted-foreground">아이디 혹은 비밀번호를 다시 입력해주세요.</span>
                     )}
                   </div>
                   <div className="flex ml-auto">
