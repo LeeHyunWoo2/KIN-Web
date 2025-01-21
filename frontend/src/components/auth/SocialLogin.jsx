@@ -3,7 +3,7 @@ import Image from "next/image";
 const SocialLogin = () => {
   const handleSocialLogin = (provider) => {
     // 통합된 소셜 로그인 URL 생성
-    const url = `https://noteapp.org/api/proxy/social/${provider}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
 
     if (url) {
       window.location.href = url; // 소셜 로그인 URL로 리다이렉트
