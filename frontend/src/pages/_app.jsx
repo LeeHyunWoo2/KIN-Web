@@ -57,7 +57,7 @@ function App({Component, pageProps}) {
         <TooltipProvider delayDuration={0}>
           <Component {...pageProps} />
         </TooltipProvider>
-        <Toaster richColors position="bottom-right"/>
+        <Toaster expand={true} richColors position="bottom-center" offset="70px"/>
       </>
   );
 }

@@ -92,6 +92,7 @@ const addLocalAccountController = async (req, res) => {
 };
 
 // 회원 탈퇴
+// TODO: Redis에서 로그아웃과 동일하게 데이터 삭제 필요
 const deleteUserController = async (req, res) => {
   try {
     // 테스트 계정 ID 배열

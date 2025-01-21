@@ -99,12 +99,19 @@ export const deleteUserProfile = async () => {
       return window.location.reload();
     }
   }
-  await logoutUser();
+  await apiClient.post('/auth/logout', {});
+  localStorage.removeItem('auth');
+  localStorage.removeItem('userInfo');
+  window.location.href = `/login?success=${encodeURIComponent('탈퇴가 완료되었습니다.')}`;
 };
 
 // 소셜 계정 연동
 export const linkSocialAccount = async (provider) => {
-  window.location.href = await apiClient.get(`/social/link/${provider}`);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/social/link/${provider}`;
+  if (url) {
+    window.location.href = url;
+  }
+
 };
 
 // 소셜 계정 연동 해제
@@ -115,9 +122,9 @@ export const unlinkSocialAccount = async (provider) => {
 };
 
 // 로그아웃 API (토큰 제거)
-export const logoutUser = () => {
+export const logoutUser = async () => {
   try {
-    apiClient.post('/auth/logout', {});
+    await apiClient.post('/auth/logout', {});
     localStorage.removeItem('auth');
     localStorage.removeItem('userInfo');
     window.location.href = '/login';

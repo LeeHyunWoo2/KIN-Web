@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../../models/user');
 const tokenService = require('./tokenService');
+const req = require("express/lib/request");
 
 // 1. 회원가입 (로컬 계정 생성)
 const registerUser = async ({ id, email, password, name, phone, marketingConsent }) => {

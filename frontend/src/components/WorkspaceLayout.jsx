@@ -66,12 +66,12 @@ import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom, useAtomValue} from "jotai";
 import {noteEventAtom} from '@/atoms/noteStateAtom';
 import {ListView, TrashFilter} from '@/components/notes/FilterComponents';
-import {router} from "next/client";
 import TagManagerModal from "@/components/notes/TagManagement";
 import TutorialButton from "@/components/notes/TutorialButton";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {authAtom} from "@/atoms/userState";
+import {useRouter} from "next/router";
 
 const data = {
   navMain: [
@@ -242,6 +242,7 @@ const handleLogout = async () => {
 };
 
 function Page({children}) {
+  const router = useRouter();
   const [, setNoteEvent] = useAtom(noteEventAtom);
   const auth = useAtomValue(authAtom);
   const [userInfo, setUserInfo] = useState({

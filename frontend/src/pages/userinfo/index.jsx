@@ -43,12 +43,12 @@ function UserInfoPage() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [avatarUrl, setAvatarUrl] = useState('/placeholder.svg'); // 현재 프로필 사진
   const [inputUrl, setInputUrl] = useState(''); // URL 입력값
   const [previewUrl, setPreviewUrl] = useState(''); // 성공적으로 검증된 URL (미리보기용)
   const [isApplyDisabled, setIsApplyDisabled] = useState(true); // 적용 버튼 활성화 여부
   const [errorText, setErrorText] = useState(''); // 오류 메시지 표시용
   const [modalOpen, setModalOpen] = useState(false);
+  const [successChangeIcon, setSuccessChangeIcon] = useState(false);
 
   const resetModalState = () => {
     setModalOpen(false);
@@ -85,6 +85,7 @@ function UserInfoPage() {
   // 유효성 검사 및 미리보기 로직
   const handleUrlCheck = () => {
     setErrorText(''); // 기존 경고 텍스트 초기화
+    setSuccessChangeIcon(false)
     if (!inputUrl) {
       setErrorText('URL을 입력해주세요.');
       return;
@@ -134,7 +135,11 @@ function UserInfoPage() {
     try{
       if(userInfo.profileIcon !== inputUrl){
         await updateUserProfile({profileIcon : inputUrl});
-        resetModalState();
+        setUserInfo((prev) => ({
+          ...prev,
+          profileIcon: inputUrl,
+        }));
+        setSuccessChangeIcon(true);
       }
     } catch (error) {}
   }
@@ -191,7 +196,7 @@ function UserInfoPage() {
                   </AlertDialogTrigger>
                   <AlertDialogContent className="sm:max-w-[425px]">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>프로필 사진 변경</AlertDialogTitle>
+                      <AlertDialogTitle>프로필 사진 변경<Button  className="ml-5 text-sm" size="sm"  variant="outline" onClick={() => setInputUrl('https://avatars.githubusercontent.com/u/172452920?v=4')}>샘플 URL</Button></AlertDialogTitle>
                       <AlertDialogDescription>
                         새로운 프로필 사진의 URL을 입력해주세요.
                       </AlertDialogDescription>
@@ -220,14 +225,15 @@ function UserInfoPage() {
                             onChange={(e) => setInputUrl(e.target.value)}
                             placeholder="이미지 URL을 입력하세요"
                         />
-                        <Button size="sm" onClick={handleUrlCheck}>
+                        <Button size="sm" onClick={handleUrlCheck} disabled={inputUrl === '' || inputUrl === previewUrl}>
                           확인
                         </Button>
                       {errorText && <p className="absolute text-sm text-red-500 ml-1" style={{marginTop: "70px"}}>{errorText}</p>}
+                      {successChangeIcon && (<p className="absolute text-sm text-green-500 ml-1" style={{marginTop: "70px"}}>변경 완료!</p>)}
                       </div>
                     </div>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>취소</AlertDialogCancel>
+                      <AlertDialogCancel>닫기</AlertDialogCancel>
                       <Button
                           onClick={handleProfileIconUpdate}
                           disabled={isApplyDisabled}
