@@ -13,7 +13,7 @@ const configureLinkingStrategies = (passport) => {
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
       const providerId = profile.id;
-      const user = await User.findById(req.session.userId);
+      const user = await User.findById(req.user.id);
 
       if (user) {
         user.socialAccounts.push({
@@ -40,7 +40,7 @@ const configureLinkingStrategies = (passport) => {
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
       const providerId = profile.id;
-      const user = await User.findById(req.session.userId);
+      const user = await User.findById(req.user.id);
 
       if (user) {
         user.socialAccounts.push({
@@ -66,7 +66,7 @@ const configureLinkingStrategies = (passport) => {
   }, async (req, accessToken, refreshToken, profile, done) => {
     try {
       const providerId = profile.id;
-      const user = await User.findById(req.session.userId);
+      const user = await User.findById(req.user.id);
 
       if (user) {
         user.socialAccounts.push({

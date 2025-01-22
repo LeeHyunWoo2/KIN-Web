@@ -1,5 +1,7 @@
 const userService = require('../../services/user/userService');
 const {createErrorResponse} = require("../../middleware/errorHandler");
+const jwt = require("jsonwebtoken");
+const tokenService = require("../../services/user/tokenService");
 
 // 공개프로필 데이터
 const getUserPublicProfileController = async (req, res) => {
@@ -92,9 +94,20 @@ const addLocalAccountController = async (req, res) => {
 };
 
 // 회원 탈퇴
-// TODO: Redis에서 로그아웃과 동일하게 데이터 삭제 필요
 const deleteUserController = async (req, res) => {
   try {
+    const { accessToken, refreshToken } = req.cookies;
+
+    if (refreshToken) {
+      // 리프레시 토큰이 있으면 Redis에서 삭제 (만료 여부 상관없이 삭제)
+      const decoded = await jwt.decode(refreshToken);// 검증 대신 디코딩만
+      await tokenService.deleteRefreshTokenFromRedis(decoded.id);
+    }
+
+    if (accessToken) {
+      // 액세스 토큰이 있으면 블랙리스트에 추가
+      await tokenService.invalidateAccessToken(accessToken);
+    }
     // 테스트 계정 ID 배열
     const testAccountIds = ['672ae1ad9595d29f7bfbf34a', '672ae28b9595d29f7bfbf353'];
     if (testAccountIds.includes(req.user.id)){
