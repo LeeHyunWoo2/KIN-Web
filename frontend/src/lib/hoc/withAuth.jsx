@@ -35,7 +35,7 @@ const withAuth = (WrappedComponent) => {
       // 인증 체크 함수
       const checkAuth = async () => {
         try {
-          const response = await apiClient.get('/auth/check-session',{
+          const response = await apiClient.get('/auth/session',{
             headers: {
               // 'x-skip-interceptor' : true, // 확인버튼 누르기도 전에 리다이렉트 발생으로 인해 따로 플래그 추가
             }

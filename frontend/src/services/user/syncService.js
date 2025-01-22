@@ -37,7 +37,7 @@ export async function SynchronizeWithServer(currentTime) {
   const db = await initDB();
   try {
     // 서버에 활동 시간 업데이트 요청
-    await apiClient.put("/sync/activity", { currentTime });
+    await apiClient.put("/sync", { currentTime });
 
     // 로컬 PouchDB의 user 문서에 저장
     await saveUserActivityTime(db, currentTime);
@@ -51,7 +51,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
   const db = await initDB();
   try {
     // 서버에서 마지막 활동 시간 조회
-    const response = await apiClient.get("/sync/activity");
+    const response = await apiClient.get("/sync");
     const convertedServerLastActivity = new Date(response.data.lastActivity).getTime();
     await deleteExpiredNotes(); // 30일 자동 삭제 진행
 

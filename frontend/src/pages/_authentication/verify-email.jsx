@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await apiClient.get(`/email/verify-email?token=${token}`);
+        const response = await apiClient.get(`/email?token=${token}`);
         setMessage(response.data.message || "이메일 인증이 완료되었습니다. 탭을 닫으셔도 좋습니다.");
         // 인증 상태를 로컬스토리지에 저장
         localStorage.setItem('emailVerifiedData', JSON.stringify(

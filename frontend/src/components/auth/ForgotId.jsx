@@ -42,7 +42,7 @@ export default function ForgotId({setId}) {
   const sendVerificationEmail = async (email) => {
     setIsSending(true);
     try {
-      const response = await apiClient.post("/email/send-verification-email", {
+      const response = await apiClient.post("/email", {
         email,
       });
       setIsEmailSent(true);

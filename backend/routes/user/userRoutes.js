@@ -5,25 +5,25 @@ const { getUserInfoController, updateUserInfoController, addLocalAccountControll
 const authenticateUser = require('../../middleware/user/authenticateUser');
 const router = express.Router();
 
-// 공개 프로필 데이터 조회
-router.get('/public-profile', authenticateUser, getUserPublicProfileController)
+// 공개 프로필
+router.get('/', authenticateUser, getUserPublicProfileController)
 
-// 사용자 정보 조회
-router.get('/profile', authenticateUser, getUserInfoController);
+// 비공개 데이터 포함 데이터 (내정보보기)
+router.post('/', authenticateUser, getUserInfoController);
 
-// 사용자 정보 조회 (아이디찾기, 비밀번호 찾기, 이메일중복 전용)
-router.post('/profile/findUserByInput',  getUserByInputController);
+// 사용자 정보 찾기 (아이디/비밀번호 찾기 + 이메일 중복체크)
+router.post('/find',  getUserByInputController);
 
 // 사용자 정보 수정
-router.put('/profile', authenticateUser, updateUserInfoController);
+router.put('/', authenticateUser, updateUserInfoController);
 
-// 사용자 정보 수정(비로그인 비밀번호 변경)
-router.put('/profile/changePassword', resetPasswordController);
+// 비밀번호 변경(비밀번호 찾기)
+router.put('/password', resetPasswordController);
 
-// 로컬 계정 추가 (소셜 Only 유저용 기능)
-router.post('/add-local', authenticateUser, addLocalAccountController);
+// 소셜 계정 -> 일반 계정 전환
+router.post('/change-local', authenticateUser, addLocalAccountController);
 
 // 회원 탈퇴
-router.delete('/profile', authenticateUser, deleteUserController);
+router.delete('/', authenticateUser, deleteUserController);
 
 module.exports = router;
