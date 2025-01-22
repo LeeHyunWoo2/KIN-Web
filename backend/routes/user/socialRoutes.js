@@ -61,7 +61,6 @@ router.get('/:provider/callback', (req, res, next) => {
 
 // 추가 연동 라우트 설정
 router.get('/link/:provider', authenticateUser, (req, res, next) => {
-  req.session.userId = String(req.user.id);
   const provider = req.params.provider;
 
   if (['google', 'kakao', 'naver'].includes(provider)) {
