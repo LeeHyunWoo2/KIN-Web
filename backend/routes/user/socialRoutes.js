@@ -33,6 +33,13 @@ router.get('/:provider/callback', (req, res, next) => {
   const provider = req.params.provider;
   passport.authenticate(provider, { session: false }, async (error, user) => {
     if (error || !user) {
+      // 소셜 로그인을 시도할때 소셜 연동이 되진 않았으나,
+      // 동일한 이메일로 로컬 아이디를 가입한 상황이 발생할경우(매우 특수케이스)
+      if(error.code === 11000){
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/login?error=${encodeURIComponent(
+                "해당 이메일로 가입된 일반계정이 있습니다.")}`);
+      }
       return res.redirect(`${process.env.FRONTEND_URL}/login`); // 로그인 실패 시 리다이렉트
     }
 
@@ -40,8 +47,8 @@ router.get('/:provider/callback', (req, res, next) => {
       // 토큰 발급
       const tokens = await tokenService.generateTokens(user);
       // 토큰을 HTTP-Only 쿠키로 설정
-      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
-      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
+      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge, domain: 'noteapp.org' });
+      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge, domain: 'noteapp.org' });
 
       // 로그인 성공 후 리다이렉트
       return res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);

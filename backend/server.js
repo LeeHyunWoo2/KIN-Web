@@ -87,6 +87,7 @@ app.use(
         'User-Agent',
         'X-CSRF-Token',
         'X-Requested-With',
+        'cf-connecting-ip',
         /*'x-skip-interceptor',*/
         'x-api-key'
       ], // 허용할 헤더

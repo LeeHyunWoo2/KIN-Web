@@ -30,9 +30,10 @@ export default function ChangeToLocalAccount() {
         </AlertDialogTrigger>
         <AlertDialogContent className="sm:max-w-[455px]">
           <AlertDialogHeader>
-            <AlertDialogTitle>일반 계정 전환</AlertDialogTitle>
+            <AlertDialogTitle>일반 계정 전환 (추후 개발 예정)</AlertDialogTitle>
             <AlertDialogDescription>
-              우선 이메일 중복 확인을 진행 합니다.
+              {page === 0 && ('이메일 중복 확인을 진행 합니다.')}
+              {page === 1 && ('생성하실 일반 계정 정보를 입력해주세요.')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {page === 0 && (

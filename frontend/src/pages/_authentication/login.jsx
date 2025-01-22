@@ -6,7 +6,6 @@ import {Label} from "@/components/ui/label"
 import SocialLogin from "@/components/auth/SocialLogin";
 import {loginUser, logoutUser} from "@/services/user/authService";
 import {useEffect, useState} from "react";
-import {router} from "next/client";
 import {toast} from "sonner";
 import {Checkbox} from "@/components/ui/checkbox";
 import ForgotComponent from "@/components/auth/ForgotComponent"
@@ -15,8 +14,10 @@ import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
 import {Card, CardContent} from "@/components/ui/card";
 import {Loader2} from "lucide-react";
+import {useRouter} from "next/router";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -39,6 +40,18 @@ export default function Dashboard() {
       setUserInfo(userInfo);
     }
   }, [auth]);
+
+  useEffect(() => {
+    const {error, success} = router.query;
+    if (error) {
+      toast.error(decodeURIComponent(error));
+      // 토스트 보여주고나서 URL에서 쿼리 제거
+      router.replace("/login", undefined, {shallow: true});
+    } else if (router.query.success) {
+      toast.success(decodeURIComponent(success));
+      router.replace("/login", undefined, {shallow: true});
+    }
+  }, [router.query]);
 
   if (isLoading) {
     return null;
@@ -157,7 +170,8 @@ export default function Dashboard() {
                             className="text-red-500 text-sm text-muted-foreground">Caps Lock 이 활성화 되어있습니다!</span>
                     )}
                     {incorrectValue && (
-                        <span className="text-red-500 text-sm text-muted-foreground">아이디 혹은 비밀번호를 다시 입력해주세요.</span>
+                        <span
+                            className="text-red-500 text-sm text-muted-foreground">아이디 혹은 비밀번호를 다시 입력해주세요.</span>
                     )}
                   </div>
                   <div className="flex ml-auto">
@@ -178,6 +192,10 @@ export default function Dashboard() {
                   >
                     로그인
                   </Button>
+{/*                  <Button variant="outline" onClick={() => (router.push(
+                      `/login?success=${encodeURIComponent(
+                          '테스트토스트')}`))}>토스트 테스트 버튼
+                  </Button>*/}
                   <div>
                     <Button
                         variant="outline"

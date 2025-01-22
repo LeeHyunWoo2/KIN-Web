@@ -37,7 +37,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
 import {ValidationSchemas} from "@/lib/validationSchemas";
 
-// TODO : 가입 성공시 토스트 jotai 전역상태를 트리거로 구현하기
+// TODO : 가입 성공시 토스트 구현하기
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -53,6 +53,12 @@ export default function AuthenticationPage() {
   const [isOverlayActive, setIsOverlayActive] = useState(false);
   const [errors, setErrors] = useState({});
 
+    useEffect(() => {
+      const currentEmail = localStorage.getItem("currentEmail");
+      if (currentEmail) {
+        localStorage.removeItem("currentEmail");
+      }
+    }, []);
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -262,8 +268,8 @@ export default function AuthenticationPage() {
           termsAgreed: false,
           marketingConsent: false,
         })
-        setToastMessage("가입이 완료되었습니다!");
-        router.push('/login');
+        await router.push(`/login?success=${encodeURIComponent(
+            `${formData.name} 님 가입을 환영합니다`)}`);
       } else {
         setErrorMessage('리캡차 인증 실패');
       }
@@ -381,12 +387,12 @@ export default function AuthenticationPage() {
                          setFormData({
                         id: 'testinput',
                         name: '테스트맨',
-                        email: 'triaxis159@gmail.com',
+                        email: 'testman@example.com',
                         password: 'Qweasd!23',
                         passwordConfirm: 'Qweasd!23',
                         termsAgreed: true,
                         marketingConsent: false,
-                      }, setEmail('triaxis159@gmail.com'), setPage(2), setEmailVerified(true))
+                      }, setEmail('testman@example.com'), setPage(2), setEmailVerified(true))
                       )} variant="outline" size="sm">테스트 버튼</Button></CardTitle>
                       <CardDescription>
                         Enter your information to create an account

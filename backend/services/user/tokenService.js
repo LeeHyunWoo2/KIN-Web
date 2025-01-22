@@ -191,7 +191,9 @@ const saveRefreshTokenToRedis = async (userId, refreshToken, ttl, rememberMe) =>
 };
 
 const deleteRefreshTokenFromRedis = async (userId) => {
-  await redisClient.del(`refreshToken:${userId}`, `publicProfile:${userId}`);
+  // 원래 한줄로 처리했으나, 간헐적으로 타이밍 문제로 지워지지 않는 경우가 생겨 나눠 작업하도록 변경
+  await redisClient.del(`refreshToken:${userId}`);
+  await redisClient.del(`publicProfile:${userId}`);
 };
 
 // TODO : 관리자는 리프레시 토큰도 함께 폐기하는 로직 만들기

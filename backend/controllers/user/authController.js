@@ -5,6 +5,7 @@ const axios = require("axios");
 const setCookie = require("../../utils/setCookie");
 const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const jwt = require('jsonwebtoken');
+const req = require("express/lib/request");
 
 // 1. 회원가입
 const registerController = async (req, res) => {
@@ -25,8 +26,10 @@ const registerController = async (req, res) => {
 const loginController = async (req, res) => {
   try {
     const { id, password, rememberMe } = req.body;
+   // const user_ip = req.headers['cf-connecting-ip'] || '127.0.0.1';
 
     // 로그인 로직을 서비스에서 처리하고, 사용자와 토큰 반환
+   // const { user, tokens } = await authService.loginUser(id, password, rememberMe, user_ip);
     const { user, tokens } = await authService.loginUser(id, password, rememberMe);
 
     // 쿠키에 JWT와 리프레시 토큰 설정
@@ -43,8 +46,7 @@ const loginController = async (req, res) => {
 // 3. 로그아웃
 const logoutController = async (req, res) => {
   try {
-    const { refreshToken } = req.cookies;
-    const accessToken = req.cookies.accessToken;
+    const { accessToken, refreshToken } = req.cookies;
 
     if (refreshToken) {
       // 리프레시 토큰이 있으면 Redis에서 삭제 (만료 여부 상관없이 삭제)

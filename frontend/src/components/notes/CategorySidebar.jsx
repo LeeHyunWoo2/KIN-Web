@@ -56,9 +56,11 @@ import {
   defaultNoteStateAtom,
   selectedNoteStateAtom
 } from "@/atoms/noteStateAtom";
-import {router} from "next/client";
+import {useRouter} from "next/router";
+
 
 function CategoryItem({category}) {
+  const router = useRouter();
   const categories = useAtomValue(categoryListAtom); // 카테고리 구조 상태
   const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
