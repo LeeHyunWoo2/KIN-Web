@@ -103,8 +103,8 @@ const deleteUserController = async (req, res) => {
       throw customError;
     }
     await userService.deleteUserById(req.user.id);
-    res.clearCookie('accessToken', { httpOnly: true });
-    res.clearCookie('refreshToken', { httpOnly: true });
+    res.clearCookie('accessToken', { httpOnly: true,  domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined  });
+    res.clearCookie('refreshToken', { httpOnly: true,  domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined  });
     res.status(200).json();
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "회원 탈퇴 중 오류가 발생했습니다.");
