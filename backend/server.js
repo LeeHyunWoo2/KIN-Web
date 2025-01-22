@@ -148,7 +148,7 @@ app.use(mongoSanitize()); // MongoDB 주입 공격 방지
 app.use('/user', userRoutes);
 app.use('/social', socialRoutes);
 app.use('/notes', noteRoutes);
-app.use('/category', categoryRoutes);
+app.use('/categories', categoryRoutes);
 app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
 
@@ -166,7 +166,7 @@ app.get('/', (req, res) => {
 
 
 // 서버 타임
-app.get("/api/server-time", (req, res) => {
+app.get("/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
 });
 

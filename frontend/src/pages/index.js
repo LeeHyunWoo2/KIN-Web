@@ -1,7 +1,5 @@
 import HeaderLayout from "@/components/HeaderLayout"
-import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {LogIn} from "lucide-react";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
 import {useRouter} from "next/router";

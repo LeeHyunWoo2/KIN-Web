@@ -91,7 +91,7 @@ export default function ForgotPassword() {
     setIsSending(true);
     setEmail(email);
     try {
-      const response = await apiClient.post("/email/send-verification-email", {
+      const response = await apiClient.post("/email", {
         email,
       });
       setIsEmailSent(true);

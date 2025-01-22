@@ -37,8 +37,6 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
 import {ValidationSchemas} from "@/lib/validationSchemas";
 
-// TODO : 가입 성공시 토스트 구현하기
-
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
   const [page, setPage] = useState(0);
@@ -89,7 +87,6 @@ export default function AuthenticationPage() {
   // 필수 필드들이 모두 채워졌는지 확인하는 함수
   const isFormValid = () => {
     const {id, name, email, password, passwordConfirm, termsAgreed} = formData;
-    console.log({ id, name, email, password, passwordConfirm, termsAgreed });
     if (page === 1) {
       return termsAgreed;
     } else if (page === 2) {
@@ -161,7 +158,7 @@ export default function AuthenticationPage() {
   const handleSendVerificationEmail = async () => {
     setIsSending(true); // 전송 중 상태 활성화
     try {
-      const response = await apiClient.post("/email/send-verification-email", {
+      const response = await apiClient.post("/email", {
         email,
       });
       localStorage.setItem("currentEmail", email);
@@ -252,7 +249,7 @@ export default function AuthenticationPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await apiClient.post('/auth/verify-recaptcha', {
+      const response = await apiClient.post('/auth/recaptcha', {
         token: recaptchaToken,
       });
       if (response.status === 200) {

@@ -12,7 +12,6 @@ const sendVerificationEmail = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-  console.log(req.headers.referer)
   const {token} = req.query;
   try {
     const email = await emailService.verifyEmailToken(token);

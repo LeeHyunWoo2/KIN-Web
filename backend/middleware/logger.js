@@ -44,7 +44,7 @@ const logFormat = ':time / :method :url [:status] query: :query body: :body :err
 
 // 기본적으로 로그를 제외할 요청 경로 검증 (예외 처리)
 const skipLog = (req) => {
-  const excludedPaths = ['/category', '/tags', '/api/server-time', '/sync/activity', '/auth/check-session'];
+  const excludedPaths = ['/categories', '/tags', '/server-time', '/sync', '/auth/session'];
   const fullPath = req.originalUrl.split('?')[0];
   // GET, OPTIONS 메서드에 대해 특정 경로만 로깅 제외
   return (req.method === 'GET' || req.method === 'OPTIONS') && excludedPaths.includes(fullPath);

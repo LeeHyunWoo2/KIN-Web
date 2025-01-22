@@ -3,7 +3,7 @@ const authenticateUser = require("../../middleware/user/authenticateUser");
 const tagController = require("../../controllers/notes/tagController");
 const router = express.Router();
 
-// 태그 조회
+// 태그 리스트
 router.get('/', authenticateUser, tagController.getTags);
 
 // 태그 생성

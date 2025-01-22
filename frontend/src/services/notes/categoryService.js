@@ -8,7 +8,7 @@ export const getCategories = async (forceReload = false) => {
 
   if (forceReload) {
     // 서버에서 카테고리 데이터 가져오기
-    const response = await apiClient.get("/category", {
+    const response = await apiClient.get("/categories", {
       headers: { "cache-control": "no-cache" },
     });
     const loadedCategories = response.data;
@@ -34,7 +34,7 @@ export const getCategories = async (forceReload = false) => {
 
 // 카테고리 생성
 export const createCategory = async (categoryData) => {
-  const response = await apiClient.post("/category", categoryData);
+  const response = await apiClient.post("/categories", categoryData);
   const newCategory = response.data;
 
   const db = await initDB();
@@ -45,7 +45,7 @@ export const createCategory = async (categoryData) => {
 
 // 카테고리 업데이트
 export const updateCategory = async (categoryId, updatedData) => {
-  const response = await apiClient.put(`/category/${categoryId}`, updatedData);
+  const response = await apiClient.put(`/categories/${categoryId}`, updatedData);
   const updatedCategory = response.data;
 
   const db = await initDB();
@@ -73,7 +73,7 @@ export const deleteCategory = async (categoryId, categories) => {
   .map((note) => note._id);
 
   // 서버에 삭제 요청
-  const response = await apiClient.delete("/category", {
+  const response = await apiClient.delete("/categories", {
     data: {
       categoryIds: categoryIdsToDelete,
       noteIds: noteIdsToDelete,

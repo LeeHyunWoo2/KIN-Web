@@ -5,7 +5,7 @@ import { compressContent, decompressContent } from '@/lib/notes/noteCompressor';
 
 // 서버 시간 가져오기
 async function getServerTime() {
-  const response = await apiClient.get("/api/server-time");
+  const response = await apiClient.get("/server-time");
   return new Date(response.data.serverTime);
 }
 

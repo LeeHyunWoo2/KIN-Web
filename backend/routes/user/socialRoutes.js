@@ -59,7 +59,7 @@ router.get('/:provider/callback', (req, res, next) => {
 });
 
 
-// 추가 연동 라우트 설정
+// 일반 계정에 소셜 계정 추가 연동
 router.get('/link/:provider', authenticateUser, (req, res, next) => {
   const provider = req.params.provider;
 
@@ -89,6 +89,6 @@ router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
 
 
 // 소셜 계정 연동 해제
-router.delete('/unlink/:provider', authenticateUser, unlinkSocialAccount);
+router.delete('/:provider', authenticateUser, unlinkSocialAccount);
 
 module.exports = router;
