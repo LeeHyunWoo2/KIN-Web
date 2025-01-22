@@ -60,8 +60,8 @@ const logoutController = async (req, res) => {
     }
 
     // 모든 로그인 관련 쿠키 삭제
-    res.clearCookie('accessToken', { httpOnly: true });
-    res.clearCookie('refreshToken', { httpOnly: true });
+    res.clearCookie('accessToken', { httpOnly: true, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
+    res.clearCookie('refreshToken', { httpOnly: true, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
 
     res.status(200).json();
   } catch (error) {
