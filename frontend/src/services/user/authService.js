@@ -30,7 +30,7 @@ export const loginUser = async (credentials) => {
 // 공개 프로필 데이터 요청 API
 export const getPublicProfile = async () => {
   try {
-    const { data } = await apiClient.get('/user');
+    const { data } = await apiClient.get('/user',{});
     localStorage.setItem('userInfo', JSON.stringify({
       name: data.name,
       email: data.email,
