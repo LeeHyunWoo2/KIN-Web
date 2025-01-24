@@ -3,7 +3,7 @@ import apiClient from "@/lib/apiClient";
 // 토큰 갱신 함수
 export const refreshToken = async () => {
   try {
-    await apiClient.post('/auth/refresh');
+    await apiClient.post('/auth/refresh',{});
   } catch (error) {
     // 토큰 갱신 실패 시 로그아웃 처리
     await logoutUser();

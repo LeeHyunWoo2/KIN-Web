@@ -1,5 +1,6 @@
 const tokenService = require('../../services/user/tokenService');
 const redisClient = require('../../config/redis');
+const {createErrorResponse} = require("../../middleware/errorHandler");
 
 // 세션이 유효한지 검증 (일반 사용자용)
 const checkSession = async (req, res) => {
@@ -16,8 +17,8 @@ const checkSession = async (req, res) => {
     }*/
     res.status(200).json({ user });
   } catch (error) {
-    console.error('세션 검증 실패:', error.message);
-    res.status(500).json({ message: '세션 확인 중 오류가 발생했습니다.' });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "세션 확인 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 

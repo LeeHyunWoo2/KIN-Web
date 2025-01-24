@@ -13,7 +13,9 @@ export default async function handler(req, res) {
   }
 
   // Vercel 로그로 확인할 콘솔
-  console.log(`content-length : ${req.headers["content-length"]}\nsec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}\nsec-ch-ua : ${extractBrowserName(req.headers["sec-ch-ua"])}\ncf-ipcountry : ${req.headers["cf-ipcountry"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
+  console.log(
+      `content-length : ${req.headers["content-length"]}\nsec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}\nsec-ch-ua : ${extractBrowserName(
+          req.headers["sec-ch-ua"])}\ncf-ipcountry : ${req.headers["cf-ipcountry"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
@@ -38,7 +40,7 @@ export default async function handler(req, res) {
     const response = await axios({
       method,
       url,
-      data: req.body || {}, // 요청 본문 전달
+      data: req.body,
       headers,
       host: undefined,
       withCredentials: true, // 쿠키 포함

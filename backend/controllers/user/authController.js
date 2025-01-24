@@ -65,8 +65,8 @@ const logoutController = async (req, res) => {
 
     res.status(200).json();
   } catch (error) {
-    console.error('로그아웃 중 오류:', error.message);
-    res.status(500).json({ message: '로그아웃 중 오류가 발생했습니다.' });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로그아웃 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -118,7 +118,8 @@ const recaptchaController = async (req, res) => {
     }
     res.status(200).send();
   } catch (error) {
-    res.status(500).send({ message: '리캡차 검증 중 오류 발생', error });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "리캡차 검증 중 오류 발생");
+    res.status(statusCode).json({ message });
   }
 };
 
