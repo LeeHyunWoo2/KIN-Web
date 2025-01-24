@@ -46,7 +46,6 @@
     "@udecode/cn": "^40.2.8",
     "@udecode/plate-alignment": "^41.0.0",
     "@udecode/plate-autoformat": "^41.0.0",
-    "@udecode/plate-basic-elements": "^40.2.6",
     "@udecode/plate-basic-marks": "^41.0.0",
     "@udecode/plate-block-quote": "^41.0.0",
     "@udecode/plate-break": "^41.0.0",
@@ -74,13 +73,11 @@
     "@udecode/plate-markdown": "^41.0.0",
     "@udecode/plate-media": "^41.0.0",
     "@udecode/plate-node-id": "^41.0.0",
-    "@udecode/plate-placeholder": "^8.3.0",
     "@udecode/plate-reset-node": "^41.0.0",
     "@udecode/plate-resizable": "^41.0.0",
     "@udecode/plate-select": "^41.0.0",
     "@udecode/plate-selection": "^41.0.8",
     "@udecode/plate-slash-command": "^41.0.0",
-    "@udecode/plate-tabbable": "^40.0.0",
     "@udecode/plate-table": "^41.0.9",
     "@udecode/plate-toggle": "^41.0.0",
     "@udecode/plate-trailing-block": "^41.0.0",
@@ -102,7 +99,7 @@
     "next-themes": "^0.3.0",
     "nprogress": "^0.2.0",
     "pdf-lib": "^1.17.1",
-    "pouchdb": "^9.0.0",
+    "pouchdb": "^9.0.0lass-",
     "pouchdb-find": "^9.0.0",
     "pouchdb-upsert": "^2.2.0",
     "prismjs": "^1.29.0",
@@ -127,14 +124,13 @@
     "tailwind-merge": "^2.5.4",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.7.2",
     "uploadthing": "^7.4.0",
     "use-file-picker": "^2.1.2",
     "vaul": "^1.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.7.3"
   }
 }

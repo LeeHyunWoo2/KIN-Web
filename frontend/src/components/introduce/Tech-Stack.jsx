@@ -16,10 +16,14 @@ const technologies = {
     { name: "Plate.js", description: "Slate.js 기반 텍스트 에디터", icon: "platejs" , url: "https://platejs.org/"},
     { name: "PouchDB", description: "클라이언트 측 NoSQL 데이터베이스", icon: "pouchDB" , url: "https://pouchdb.com/"},
     { name: "Axios", description: "Promise 기반 HTTP 클라이언트", icon: "axios" , url: "https://axios-http.com/"},
+    {name: "Uploadthing", description: "미디어 시스템 핵심 클라우드 스토리지", url: "https://uploadthing.com/"},
   ],
   frontend_etc: [
-    {name: "uploadthing", description: "", url: ""},
-    {name: "lodash", description: "", url: ""},
+    { name: "Zod", description: "스키마 유효성 검증 라이브러리", url: "https://zod.dev/" },
+    { name: "Framer Motion", description: "React를 위한 애니메이션 라이브러리", url: "https://www.framer.com/motion/" },
+    { name: "Recharts", description: "React 기반의 데이터 시각화 라이브러리", url: "https://recharts.org/" },
+    { name: "Immer", description: "불변성 관리를 돕는 라이브러리", url: "https://immerjs.github.io/immer/" },
+    { name: "Date-fns", description: "효율적인 날짜 및 시간 유틸리티", url: "https://date-fns.org/" },
   ],
   backend: [
     { name: "Node.js", description: "JavaScript 런타임 환경", icon: "nodejs" , url: "https://nodejs.org/"},
@@ -32,11 +36,13 @@ const technologies = {
     { name: "WebSocket", description: "실시간 통신 프로토콜", icon: "webSocket", url: "https://github.com/websockets/ws"},
   ],
   backend_etc: [
-    {name: "hellmet", description: "", url: ""},
-    {name: "bcryptjs", description: "", url: ""},
-    {name: "dotenv", description: "", url: ""},
-    {name: "nodemailer", description: "", url: ""},
-    {name: "OAuth2.0", description: "", url: ""},
+    { name: "Helmet", description: "HTTP 헤더를 설정해 보안을 강화하는 미들웨어", url: "https://helmetjs.github.io/" },
+    { name: "Bcryptjs", description: "비밀번호 암호화 및 해싱 라이브러리", url: "https://github.com/dcodeIO/bcrypt.js/" },
+    { name: "Dotenv", description: "환경 변수 관리 라이브러리", url: "https://github.com/motdotla/dotenv" },
+    { name: "Nodemailer", description: "이메일 전송을 위한 Node.js 라이브러리", url: "https://nodemailer.com/" },
+    { name: "OAuth2.0", description: "인증 및 권한 부여를 위한 프로토콜", url: "https://oauth.net/2/" },
+    { name: "Morgan", description: "HTTP 요청 로깅 미들웨어", url: "https://github.com/expressjs/morgan" },
+    { name: "Express Rate Limit", description: "API 요청 속도 제한 미들웨어", url: "https://github.com/express-rate-limit/express-rate-limit" },
   ],
   deployment: [
     { name: "Vercel", description: "프론트엔드 배포 플랫폼", icon: "vercel" , url: "https://vercel.com/"},
@@ -103,12 +109,15 @@ export default function TechStack() {
                       {technologies.frontend_etc.map((tech) => (
                           <div key={tech.name}
                                className="p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <h4 className="font-medium">{tech.name}</h4>
-                            </div>
-                            <p className="text-sm text-gray-600">{tech.description}</p>
+                            <a href={tech.url} target="_blank" rel="noreferrer"
+                               className="block">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <h4 className="font-medium">{tech.name}</h4>
+                              </div>
+                              <p className="text-sm text-gray-600">{tech.description}</p>
+                            </a>
                           </div>
-                      ))}
+                        ))}
                     </motion.div>
                 )}
                 </AnimatePresence>
@@ -158,12 +167,15 @@ export default function TechStack() {
                       {technologies.backend_etc.map((tech) => (
                           <div key={tech.name}
                                className="p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <h4 className="font-medium">{tech.name}</h4>
-                            </div>
-                            <p className="text-sm text-gray-600">{tech.description}</p>
+                            <a href={tech.url} target="_blank" rel="noreferrer"
+                               className="block">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <h4 className="font-medium">{tech.name}</h4>
+                              </div>
+                              <p className="text-sm text-gray-600">{tech.description}</p>
+                            </a>
                           </div>
-                      ))}
+                        ))}
                     </motion.div>
                 )}
                 </AnimatePresence>
