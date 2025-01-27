@@ -22,7 +22,7 @@ export function filterNotes(notes, { category, categories, tags, searchTerm, sor
     return filteredNotes.filter(note => note.is_trashed);
   }
 
-  // TODO: 이상하게 else 하면 작동안함 나중에 분석해보기
+  // TODO: 이상하게 위의 if 아래를 else로 둘러싸면 작동안함 나중에 분석해보기
   filteredNotes = filteredNotes.filter(note => note.is_trashed === false);
 
   // 카테고리 필터링

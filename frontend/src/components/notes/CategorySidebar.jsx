@@ -3,7 +3,8 @@ import {useAtomValue, useSetAtom} from 'jotai';
 import {
   categoryListAtom,
   categoryTreeAtom,
-  selectedCategoryAtom, selectedCategoryNameAtom
+  selectedCategoryAtom,
+  selectedCategoryNameAtom
 } from '@/atoms/filterAtoms';
 import {
   SidebarContent,
@@ -57,7 +58,6 @@ import {
   selectedNoteStateAtom
 } from "@/atoms/noteStateAtom";
 import {useRouter} from "next/router";
-
 
 function CategoryItem({category}) {
   const router = useRouter();
@@ -133,8 +133,7 @@ function CategoryItem({category}) {
 
   const hasChildren = category.children && category.children.length > 0;
   // className={hasChildren ? "main-style" : "sub-style"} 이런식으로 사용 예정
-
-
+  
 // 삭제
   const handleDeleteCategory = async (categoryId) => {
     try {
@@ -152,6 +151,11 @@ function CategoryItem({category}) {
     }
   };
 
+  useEffect(() => {
+    if (isRenameCategoryPopoverOpen) {
+      setRenamedCategoryName(category.name);
+    }
+  }, [isRenameCategoryPopoverOpen]);
 
   return (
       <Collapsible
@@ -261,7 +265,10 @@ function CategoryItem({category}) {
 
             {/* 이름 변경 팝오버 */}
             <Popover open={isRenameCategoryPopoverOpen}
-                     onOpenChange={setIsRenameCategoryPopoverOpen}>
+                     onOpenChange={(open) => {
+                       setIsRenameCategoryPopoverOpen(open);
+                       setRenamedCategoryName(category.name);
+                     }}>
               <PopoverTrigger asChild>
                 <span className="hidden"/>
               </PopoverTrigger>
