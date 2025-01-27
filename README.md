@@ -8,8 +8,9 @@
 <table>
 <tr>
 <td>
-KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 기반의 노트 관리 웹 애플리케이션으로, 
 
+KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 기반의 노트 관리 웹 애플리케이션으로, 
+  
 검색어, 카테고리 및 태그 등 강력한 필터링을 제공하며, 프라이빗 앱에 걸맞는 보안을 제공합니다.
 </td>
 </tr>
@@ -424,7 +425,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 
 ## 향후 계획
-
 -
 
 <p align="right"><a href="#목차">🔼목록으로 이동</a></p>
