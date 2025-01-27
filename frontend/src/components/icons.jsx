@@ -280,4 +280,7 @@ export const logos = {
             fill="#fff"/>
       </svg>
   ),
+  uploadthing: (props) => (
+      <img src="https://uploadthing.com/favicon.ico" {...props}/>
+  )
 }

@@ -10,7 +10,8 @@ const getUserPublicProfileController = async (req, res) => {
     const publicProfile = await userService.getUserPublicProfile(userId);
     res.status(200).json(publicProfile);
   } catch (error) {
-    res.status(500).json({ message: '프로필 조회 실패', error: error.message });
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "프로필 조회 실패");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -46,6 +47,7 @@ const getUserByInputController = async (req, res) => {
       res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
     }
   } catch (error){
+    // 못 찾은게 서버측에서는 에러지만 로직상으로는 없는게 확인된것(성공)이기 때문에 에러가 아니라 200을 반환하고 플래그생성
     res.status(200).json({signal: 'user_not_found'});
   }
 }

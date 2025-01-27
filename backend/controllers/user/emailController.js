@@ -1,4 +1,5 @@
 const emailService = require('../../services/user/emailService');
+const {createErrorResponse} = require("../../middleware/errorHandler");
 
 const sendVerificationEmail = async (req, res) => {
   const {email} = req.body;
@@ -7,7 +8,8 @@ const sendVerificationEmail = async (req, res) => {
     await emailService.sendVerificationEmail(email);
     res.status(200).send({message: '이메일 인증 링크가 전송되었습니다.'});
   } catch (error) {
-    res.status(500).send({message: '이메일 전송 실패', error: error.message});
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "이메일 전송 실패");
+    res.status(statusCode).json({ message });
   }
 };
 
