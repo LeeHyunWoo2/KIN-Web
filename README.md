@@ -18,9 +18,6 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
 <br>
 
 ## <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 16" fill="none" stroke="#ec2222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-of-contents" style="transform: scaleX(-1);"><path d="M16 12H3"/><path d="M16 18H3"/><path d="M16 6H3"/><path d="M21 12h.01"/><path d="M21 18h.01"/><path d="M21 6h.01"/></svg> 목차
-<table>
-<tr>
-<td>
 
 - [바로가기](#바로가기)
 - [미리보기](#-미리보기)
@@ -33,10 +30,6 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
 - [문제 해결 과정](#문제-해결-과정)
 - [향후 계획](#향후-계획)
 - [License](#license)
-
-</td>
-</tr>
-</table>
 
 <br>
 
