@@ -6,37 +6,42 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { StarIcon } from 'lucide-react'
 import FeatureTabs from "@/components/introduce/FeatureTabs";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import TechStack from "@/components/introduce/Tech-Stack";
 import * as React from "react";
+import {ArrowRightIcon} from "@radix-ui/react-icons";
 
 
-export default function IntroContent() {
+export default function IntroContent({auth}) {
+
+  const handleStarter = () => {
+    if (auth) {
+      window.location.href = "/notes";
+    } else {
+      window.location.href = "/login"
+    }
+  }
+
   return (
       <div className="flex flex-col">
         <section className="container mx-auto px-4 py-20 text-center">
           <Badge variant="secondary" className="mb-4">
-            Introducing Keep Idea Note
+            Keep Idea Note
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
-            노트 앱 소개
-            <br/>
-            샘플 제목
+            잊기 전에 메모했나요?
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-[600px] mx-auto">
-            2~3 문장 정도의 소개 문구<br/>
-            2~3 문장 정도의 소개 문구
+            어디서나 손쉽게 기록할 수 있습니다.<br/>
+            강력한 필터링으로 필요한 노트를 빠르게 찾아내세요.
           </p>
           <div className="flex gap-4 justify-center mb-8">
-            <Button size="lg">버튼1</Button>
-            <Button size="lg" variant="outline">버튼2</Button>
-          </div>
-          <div
-              className="flex items-center justify-center gap-2 text-muted-foreground">
-            <StarIcon className="h-5 w-5 text-yellow-400"/>
-            <span>예제 문구</span>
+            <Button size="lg" effect="expandIcon"
+                    icon={ArrowRightIcon} iconPlacement="right"
+                    className="transition-all duration-300 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2"
+                    onClick={handleStarter}
+            >바로 시작하기</Button>
           </div>
         </section>
 
