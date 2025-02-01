@@ -30,7 +30,7 @@ export default function IntroContent({auth}) {
             Keep Idea Note
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
-            잊기 전에 메모했나요?
+            잊기 전에 메모하세요
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-[600px] mx-auto">
             어디서나 손쉽게 기록할 수 있습니다.<br/>

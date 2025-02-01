@@ -75,15 +75,15 @@ export default function TagManagerModal() {
             <Tag/> 태그 관리
           </SidebarMenuButton>
         </AlertDialogTrigger>
+          <AlertDialogContent className="overflow-hidden">
         <motion.div
             key={page}
             initial={page === 0 ? false : {x: 50, opacity: 0}}
             animate={{x: 0, opacity: 1}}
             exit={{x: -50, opacity: 0}}
-            transition={{duration: 0.3}}
+            transition={{duration: 0.2}}
         >
-              <AlertDialogContent>
-          {page == 0 && (
+          {page === 0 && (
               <>
                 <AlertDialogHeader className="mb-4">
                   <AlertDialogTitle
@@ -151,27 +151,30 @@ export default function TagManagerModal() {
                 </div>
               </>
           )}
-          {page == 1 && (
+          {page === 1 && (
               <>
                 <AlertDialogHeader>
                   <AlertDialogTitle>태그 삭제</AlertDialogTitle>
                   <AlertDialogDescription>
-                    이 태그를 삭제하면 관련된 모든 노트에서 해당 태그가 제거됩니다. 삭제를 진행하시겠습니까?
+                    이 태그를 삭제하면 관련된 모든 노트에서 해당 태그가 제거됩니다.<br/>
+                    삭제를 진행하시겠습니까?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <button onClick={confirmDeleteTag} className="btn-danger">삭제
-                  </button>
-                  <button onClick={() => {
+                  <Button onClick={confirmDeleteTag} variant="destructive">삭제
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
                     setPage(0)
                     setTargetTagId(null)
                   }}>취소
-                  </button>
+                  </Button>
                 </AlertDialogFooter>
                 </>
           )}
-              </AlertDialogContent>
         </motion.div>
+        </AlertDialogContent>
       </AlertDialog>
 );
 }

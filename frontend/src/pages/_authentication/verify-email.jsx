@@ -15,7 +15,7 @@ export default function VerifyEmailPage() {
     const verifyEmail = async () => {
       try {
         const response = await apiClient.get(`/email?token=${token}`);
-        setMessage(response.data.message || "이메일 인증이 완료되었습니다. 탭을 닫으셔도 좋습니다.");
+        setMessage(response.data.message || "이메일 인증이 완료되었습니다. 기존 회원가입 화면을 확인해주세요.");
         // 인증 상태를 로컬스토리지에 저장
         localStorage.setItem('emailVerifiedData', JSON.stringify(
             {
