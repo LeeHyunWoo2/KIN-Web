@@ -2,22 +2,12 @@ import HeaderLayout from "@/components/HeaderLayout"
 import {Button} from "@/components/ui/button";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
-import {useRouter} from "next/router";
 import {Icons} from "@/components/icons";
 import * as React from "react";
 import IntroContent from "@/components/introduce/IntroComponent";
 
 export default function Home() {
-  const router = useRouter();
   const auth = useAtomValue(authAtom);
-
-  const handleStarter = () => {
-    if (auth) {
-      router.push("/notes");
-    } else {
-      router.push("/login");
-    }
-  }
 
   return (
       <>
@@ -55,7 +45,7 @@ export default function Home() {
             </Button>
           </a>
         </div>
-        <IntroContent/>
+        <IntroContent auth={auth} />
       </>
   );
 }

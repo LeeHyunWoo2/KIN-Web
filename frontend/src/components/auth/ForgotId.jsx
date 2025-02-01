@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import apiClient from "@/lib/apiClient";
 import { getUserProfileByInput } from "@/services/user/authService";
-import {ValidationSchemas} from "@/lib/validationSchemas";
+import {EmailSchema, ValidationSchemas} from "@/lib/validationSchemas";
 
 
 export default function ForgotId({setId}) {
@@ -55,10 +55,6 @@ export default function ForgotId({setId}) {
     }
   };
 
-  const emailSchema = ValidationSchemas.pick({
-    email: true,
-  })
-
   // emailVerified가 true가 되면 사용자 정보 가져오기
   const fetchUserId = async () => {
     if (email === "") {
@@ -66,7 +62,7 @@ export default function ForgotId({setId}) {
       return;
     }
 
-    const validation = emailSchema.safeParse({email});
+    const validation = EmailSchema.safeParse({email:email});
     if (!validation.success) {
       setMessage(validation.error.errors[0].message);
       return;

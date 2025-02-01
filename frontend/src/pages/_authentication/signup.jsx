@@ -35,7 +35,11 @@ import apiClient from "@/lib/apiClient";
 import {Check, Loader2, MailOpen} from "lucide-react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
-import {ValidationSchemas} from "@/lib/validationSchemas";
+import {
+  EmailSchema,
+  IdSchema,
+  ValidationSchemas
+} from "@/lib/validationSchemas";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -43,7 +47,8 @@ export default function AuthenticationPage() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({id: "", email: ""});
+  const [idVerified, setIdVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [isSending, setIsSending] = useState(false); // 이메일 전송 중 상태
   const [count, setCount] = useState();
@@ -76,6 +81,7 @@ export default function AuthenticationPage() {
 
   const [formData, setFormData] = useState({
     id: '',
+    idVerified: false,
     name: '',
     email: '',
     password: '',
@@ -86,12 +92,13 @@ export default function AuthenticationPage() {
 
   // 필수 필드들이 모두 채워졌는지 확인하는 함수
   const isFormValid = () => {
-    const {id, name, email, password, passwordConfirm, termsAgreed} = formData;
+    const {id, idVerified,name, email, password, passwordConfirm, termsAgreed} = formData;
     if (page === 1) {
       return termsAgreed;
     } else if (page === 2) {
       return (
           id &&
+          idVerified &&
           name &&
           email &&
           password &&
@@ -120,23 +127,44 @@ export default function AuthenticationPage() {
     setRecaptchaToken(token);
   };
 
-  const checkDuplicateEmail = async () => {
+  // 아이디 중복 확인
+  const checkDuplicateId = async () => {
+    const validation = IdSchema.safeParse(formData.id);
+    if (!validation.success) {
+      setErrors((prevErrors) => ({...prevErrors, idVerified : undefined, id: validation.error.errors[0].message}));
+      setMessage({ id : ""})
+      return;
+    }
 
+    const inputData = {
+      input: formData.id,
+      inputType: "id",
+    }
+
+    const response = await getUserProfileByInput(inputData);
+    if (response.signal === 'user_not_found') {
+      setIdVerified(true);
+      setErrors((prevErrors) => ({...prevErrors, id: undefined, idVerified: undefined}));
+      setMessage({ id : "사용 가능한 아이디 입니다."})
+    } else {
+      setIdVerified(false);
+      setErrors((prevErrors) => ({...prevErrors, id: undefined}));
+      setMessage({ id : "이미 존재하는 아이디 입니다." })
+    }
+  }
+
+  // 이메일 중복 확인
+  const checkDuplicateEmail = async () => {
     // 이메일 전송 재요청은 10초가 지난 이후부터 가능
     if(count && 290 < count){
-      setMessage("잠시 후 요청해주세요. (4:50 부터 가능)")
+      setMessage({ email : "잠시 후 요청해주세요. (4:50 부터 가능)"})
       return
     }
 
-    const finalFormData = {email: email};
-
     // 유효성 검증 수행
-    const { errors: validationErrors } = validateForm(finalFormData);
-
-    // 이메일 필드에서만 성공 여부 확인
-    const isEmailValid = !validationErrors.email;
-    if (!isEmailValid) {
-      setErrors({ email: validationErrors.email });
+    const validation = EmailSchema.safeParse({email:email});
+    if (!validation.success) {
+      setErrors((prevErrors) => ({...prevErrors, emailVerified:undefined, email: validation.error.errors[0].message}));
       return;
     }
 
@@ -146,12 +174,13 @@ export default function AuthenticationPage() {
       input: email,
       inputType: "email",
     }
+
     const response = await getUserProfileByInput(inputData);
     if (response.signal === 'user_not_found') {
       await handleSendVerificationEmail();
     } else {
       setIsEmailSent(false);
-      return setMessage("이미 가입된 이메일 입니다.");
+      return setMessage({ email : "이미 가입된 이메일 입니다."});
     }
   }
 
@@ -164,16 +193,14 @@ export default function AuthenticationPage() {
       localStorage.setItem("currentEmail", email);
       setIsEmailSent(true);
       setCount(300);
-      setMessage(response.data.message || "이메일이 전송되었습니다. 확인해주세요.");
+      setMessage({ email : response.data.message || "이메일이 전송되었습니다. 확인해주세요."});
     } catch (error) {
       setIsEmailSent(false);
-      setMessage(error.response?.data?.message || "이메일 전송에 실패했습니다.");
+      setMessage({ email : error.response?.data?.message || "이메일 전송에 실패했습니다."});
     } finally {
       setIsSending(false); // 전송 완료 후 상태 초기화
     }
   };
-
-  const [errorMessage, setErrorMessage] = useState('');
 
   // formData가 변경될 때마다 유효성 검사를 수행하고 버튼 상태 업데이트
   useEffect(() => {
@@ -197,14 +224,13 @@ export default function AuthenticationPage() {
   const handleOpenDialog = (e) => {
     e.preventDefault();
 
-    const finalFormData = {...formData, email: email, emailVerified:emailVerified};
+    const finalFormData = {...formData, emailVerified:emailVerified, idVerified:idVerified};
 
     // 유효성 검증 수행
     const { isValid, errors: validationErrors } = validateForm(finalFormData);
 
-    // 오류 메시지 상태 업데이트 (email 필드만 제외)
-    setErrors(Object.fromEntries(
-        Object.entries(validationErrors).filter(([key]) => key !== 'email')));
+    // 오류 메시지 상태 업데이트
+    setErrors(validationErrors);
 
     if (!isValid) {
       return;
@@ -258,8 +284,10 @@ export default function AuthenticationPage() {
         await registerUser(formData);
         setFormData({
           id: '',
+          idVerified: false,
           name: '',
           email: '',
+          emailVerified: false,
           password: '',
           passwordConfirm: '',
           termsAgreed: false,
@@ -268,10 +296,10 @@ export default function AuthenticationPage() {
         await router.push(`/login?success=${encodeURIComponent(
             `${formData.name} 님 가입을 환영합니다`)}`);
       } else {
-        setErrorMessage('리캡차 인증 실패');
+        // setErrorMessage('리캡차 인증 실패');
       }
     } catch (error) {
-      setErrorMessage('회원가입 실패');
+      // setErrorMessage('회원가입 실패');
     }
   };
 
@@ -385,6 +413,7 @@ export default function AuthenticationPage() {
                         id: 'testinput',
                         name: '테스트맨',
                         email: 'testman@example.com',
+                        emailVerified: true,
                         password: 'Qweasd!23',
                         passwordConfirm: 'Qweasd!23',
                         termsAgreed: true,
@@ -502,15 +531,34 @@ export default function AuthenticationPage() {
                       <div className="grid gap-4">
                         <div className="grid gap-2">
                           <Label htmlFor="id">ID</Label>
-                          <Input
-                              type="text"
-                              name="id"
-                              value={formData.id}
-                              onChange={handleChange}
-                              placeholder="kln123"
-                              required
-                          />
+                          <div className="flex items-center gap-1">
+                            <div className="flex-[2.5]">
+                              <Input
+                                  type="text"
+                                  name="id"
+                                  value={formData.id}
+                                  onChange={handleChange}
+                                  placeholder="example123"
+                                  required
+                              />
+                            </div>
+                            <div className="flex">
+                              <Button
+                                  variant="outline"
+                                  className="w-full"
+                                  onClick={checkDuplicateId}
+                                  disabled={!formData.id}
+                              >
+                                중복확인
+                              </Button>
+                            </div>
+                          </div>
+                          {message.id && <p
+                              className={`text-sm mt-1 ${idVerified
+                                  ? 'text-green-500'
+                                  : 'text-red-500'}`}>{message.id}</p>}
                           {errors.id && <p className="text-red-500 text-sm mt-1">{errors.id}</p>}
+                          {errors.idVerified && <p className="text-red-500 text-sm mt-1">{errors.idVerified}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="Nickname">Name or Nickname</Label>
@@ -566,10 +614,10 @@ export default function AuthenticationPage() {
                           </Button>
                           <div className="text-sm text-muted-foreground">
                             {isEmailSent && !emailVerified && count !== 0 && (
-                                <p className="text-green-500">{message}</p>
+                                <p className="text-green-500">{message.email}</p>
                             )}
-                            {!isEmailSent && message && (
-                                <p className="text-red-500">{message}</p>
+                            {!isEmailSent && message.email && (
+                                <p className="text-red-500">{message.email}</p>
                             )}
                             {isTimedOut && count === 0 && (
                                 <p className="text-red-500">시간 초과. 다시
