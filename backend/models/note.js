@@ -42,6 +42,11 @@ const NoteSchema = new mongoose.Schema({
     ],
     default: [], // 태그가 없는 경우 빈 배열
   },
+  mode: {
+    type: String,
+    enum: ["editor", "text"],
+    default: "editor", // 기본값 에디터 모드
+  },
   created_at: {
     type: Date,
     default: Date.now,

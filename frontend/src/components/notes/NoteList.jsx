@@ -7,16 +7,17 @@ import {ko} from "date-fns/locale";
 import {format} from "date-fns";
 import {
   ContextMenu,
-  ContextMenuContent, ContextMenuItem,
+  ContextMenuContent,
+  ContextMenuItem,
   ContextMenuTrigger
 } from "@/components/ui/context-menu";
 import {useAtom, useSetAtom} from "jotai/index";
 import {
   defaultNoteStateAtom,
   noteEventAtom,
-  saveNoteChangesAtom, selectedNoteStateAtom
+  saveNoteChangesAtom,
+  selectedNoteStateAtom
 } from "@/atoms/noteStateAtom";
-
 
 export default function NoteList({notes}) {
   const router = useRouter();
@@ -108,6 +109,7 @@ export default function NoteList({notes}) {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div className="font-semibold">
+                        {note.mode === 'text' && <span className="text-sm text-muted">📜</span>}
                         {note.title}
                       </div>
                       {note.is_pinned && (<span
@@ -116,7 +118,7 @@ export default function NoteList({notes}) {
                   </div>
                 </div>
                 <div className="line-clamp-2 text-xs text-muted-foreground">
-                  {extractContentText(note.content)}
+                  {note.mode === 'editor' ? extractContentText(note.content) : note.content}
                 </div>
                 {note.tags.length ? (
                     <div className="flex items-center gap-2">

@@ -66,8 +66,6 @@ export default function TagManagerModal() {
     }
   }
 
-  // TODO : dialog 컴포넌트 ForgotPassword에 있는것처럼 변경하기
-
   return (
       <AlertDialog>
         <AlertDialogTrigger asChild>

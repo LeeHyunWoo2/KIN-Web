@@ -5,27 +5,20 @@ import {
   ArrowDown,
   ArrowUp,
   BadgeCheck,
-  Bell,
-  BookOpen,
-  Bot,
   ChevronRight,
   ClipboardList,
   Copy,
   CornerUpLeft,
   CornerUpRight,
   FileText,
-  Frame,
   GalleryVerticalEnd,
   LineChart,
   Link as LinkIcon,
   LogOut,
-  Map,
   Menu,
-  PieChart,
   Settings,
   Settings2,
   SquarePen,
-  SquareTerminal,
   Trash,
   Trash2,
   UserRoundCog,
@@ -74,109 +67,6 @@ import {authAtom} from "@/atoms/userState";
 import {useRouter} from "next/router";
 
 const data = {
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
   actions: [
     [
       {
@@ -252,20 +142,26 @@ function Page({children}) {
   });
 
   const isMobile = useIsMobile();
+  const [newNotePopoverOpen, setNewNotePopoverOpen] = useState(false);
 
-  const handleNewNote = () => {
+  const handleNewNote = (mode) => {
+    let content = '';
+    if (mode === 'editor'){
+      content = [{
+        children: [{ text: '' }],
+        type: 'p',
+      }]
+    } else if (mode === 'text'){
+      content = ''
+    }
     {
       setNoteEvent({
         type: 'ADD',
         payload: {
           title: '새 페이지',
-          content: [
-            {
-              children: [{ text: '' }],
-              type: 'p',
-            },
-          ],
-        }
+          content: content,
+          mode: mode,
+        },
       });
     };
     // 라우팅 했다가 되돌아왔을때 중복실행을 막기 위해 noteEventAtom 상태 초기화
@@ -385,13 +281,22 @@ function Page({children}) {
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenu className="cursor-pointer">
+              <Popover open={newNotePopoverOpen} onOpenChange={setNewNotePopoverOpen}>
+                <PopoverTrigger asChild>
               <div className="step1">
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={handleNewNote}>
+                  <SidebarMenuButton>
                     <SquarePen/> 새 노트
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </div>
+                </PopoverTrigger>
+                <PopoverContent>
+                  모드 선택
+                  <Button variant="outline" className="ml-5 min-w-20" onClick={() => handleNewNote('editor')}>에디터</Button>
+                  <Button variant="outline" className="ml-3 min-w-20" onClick={() => handleNewNote('text')}>텍스트</Button>
+                </PopoverContent>
+              </Popover>
               <SidebarMenuItem>
                 <TagManagerModal/>
               </SidebarMenuItem>

@@ -7,13 +7,14 @@ exports.getNotes = async (userId) => {
 };
 
 // 노트 생성
-exports.createNote = async (userId, title, content, category, tags) => {
+exports.createNote = async (userId, title, content, category, tags, mode) => {
   const note = new Note({
     user_id: userId,
     title,
     content: Buffer.from(content),
     category,
     tags,
+    mode,
   });
   return await note.save();
 };

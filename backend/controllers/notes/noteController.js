@@ -20,10 +20,10 @@ exports.getNotes = async (req, res) => {
 // 노트 생성
 exports.createNote = async (req, res) => {
   try {
-    const { title, content, category, tags } = req.body;
+    const { title, content, category, tags, mode } = req.body;
     const userId = new ObjectId(req.user.id); // 컨트롤러에서 변환
 
-    const note = await noteService.createNote(userId, title, content, category, tags);
+    const note = await noteService.createNote(userId, title, content, category, tags, mode);
 
     res.status(201).json(note);
   } catch (error) {
