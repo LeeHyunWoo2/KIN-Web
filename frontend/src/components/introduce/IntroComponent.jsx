@@ -1,17 +1,18 @@
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
+import {Icons} from "@/components/icons";
+import {Badge} from "@/components/ui/badge"
 import FeatureTabs from "@/components/introduce/FeatureTabs";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import TechStack from "@/components/introduce/Tech-Stack";
 import * as React from "react";
 import {ArrowRightIcon} from "@radix-ui/react-icons";
-
+import {SquareCheckBig} from "lucide-react";
 
 export default function IntroContent({auth}) {
 
@@ -24,30 +25,48 @@ export default function IntroContent({auth}) {
   }
 
   return (
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-10">
         <section className="container mx-auto px-4 py-20 text-center">
           <Badge variant="secondary" className="mb-4">
             Keep Idea Note
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+          {/*<Badge variant="secondary" className="mb-4">
+            이 웹 사이트는 취업용 포트폴리오를 목적으로 제작되었습니다.
+          </Badge>*/}
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-8">
             잊기 전에 메모하세요
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-[600px] mx-auto">
+          <p className="text-lg text-muted-foreground mb-12 max-w-[600px] mx-auto">
             어디서나 손쉽게 기록할 수 있습니다.<br/>
             강력한 필터링으로 필요한 노트를 빠르게 찾아내세요.
           </p>
-          <div className="flex gap-4 justify-center mb-8">
-            <Button size="lg" effect="expandIcon"
-                    icon={ArrowRightIcon} iconPlacement="right"
-                    className="transition-all duration-300 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2"
-                    onClick={handleStarter}
-            >바로 시작하기</Button>
+          <div className="flex gap-4 justify-center">
+            <div className="flex flex-col-2 gap-4">
+              <Button effect="expandIcon"
+                      icon={ArrowRightIcon} iconPlacement="right"
+                      className="flex transition-all duration-300 hover:ring-2 hover:ring-blue-500 hover:ring-offset-2 hover:bg-blue-500 bg-blue-500"
+                      onClick={handleStarter}
+                      size="slg"
+              >
+                <SquareCheckBig strokeWidth={2.25} className="mr-3" />
+                바로 시작하기</Button>
+              <a rel="noopener noreferrer" target="_blank"
+                 href='https://github.com/LeeHyunWoo2/KIN-Web'>
+                <Button
+                    variant="outline"
+                    className="flex transition-all duration-300 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2"
+                    size="slg"
+                >
+                  <Icons.gitHub className="mr-2"/>
+                  개발자 GitHub
+                </Button>
+              </a>
+            </div>
           </div>
         </section>
 
         {/*주요 기능 사진, gif*/}
         <FeatureTabs/>
-
         <TechStack/>
 
         <section className="bg-slate-50 py-20">

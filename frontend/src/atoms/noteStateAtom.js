@@ -15,6 +15,7 @@ export const defaultNoteStateAtom ={
   _id: null,                 // 노트 ID
   title: '',                   // 노트 제목
   content: '',              // 노트 내용
+  mode: '', // "editor", "text" 두가지 모드가 있음.
   category: {               // 카테고리 정보
     _id: null,
     name: null

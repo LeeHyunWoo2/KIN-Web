@@ -65,6 +65,7 @@ export default function NoteDisplay() {
               id: selectedNoteState._id,
               ...localPayload,
               uploadedFiles: uploadedFiles,
+              mode: selectedNoteState.mode,
             }],
           });
           setIsNotSaved(false);
@@ -283,7 +284,15 @@ export default function NoteDisplay() {
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
                data-registry="plate">
-            <PlateEditor onChange={handleEditorChange}/>
+            {selectedNoteState.mode === "editor" ? (
+                <PlateEditor onChange={handleEditorChange}/>
+            ) : (
+                <textarea
+                    className="w-full h-full p-3 border rounded-md"
+                    value={selectedNoteState.content}
+                    onChange={(e) => handleEditorChange(e.target.value)}
+                />
+            )}
           </div>
         </div>
       </div>

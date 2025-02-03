@@ -3,7 +3,7 @@ import { initDB } from "@/lib/notes/initDB";
 import { deleteExpiredNotes, getNotes } from "@/services/notes/noteService";
 import { getCategories } from "@/services/notes/categoryService";
 import { getTags } from "@/services/notes/tagService";
-import {decompressContent} from "@/lib/notes/noteCompressor";
+import {getDecompressor} from "@/lib/notes/noteCompressor";
 
 // 유저 활동 시각을 PouchDB의 user 문서에 저장
 async function saveUserActivityTime(db, currentTime) {
@@ -62,7 +62,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
       // 복원
       const decompressedNotes = notes.map((note) => ({
         ...note,
-        content: decompressContent(note.content),
+        content: getDecompressor(note.mode)(note.content),
       }))
 
       // 서버 데이터를 로컬 DB에 저장
@@ -73,9 +73,6 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
       return { decompressedNotes, categories, tags }; // 동기화된 데이터 반환
     } else {
       // forceReload가 false라면 개별 요청
-
-      // TODO : 현재 forceReload 가 false인 checkAndSyncOnFirstLoad 함수 호출은 없음.
-      //  프로젝트 확장 후 갱신 최적화 필요, 동기화쪽 로직 전체적으로 개선이 많이 필요함
 
       // 1. 활동 시간을 비교하기 위해 서버 API 호출
       const syncResponse = await apiClient.get("/sync");
@@ -121,34 +118,3 @@ async function saveDataToLocalDB(type, data, db) {
     await db.put({ ...item, type, _id: item._id || item.id });
   }
 }
-
-
-// // 첫 접속 시 서버와 클라이언트 활동 시간을 비교하여 동기화 결정
-// export async function checkAndSyncOnFirstLoad(forceReload = false) {
-//   const db = await initDB();
-//   try {
-//     // 서버에서 마지막 활동 시간 조회
-//     const response = await apiClient.get("/sync");
-//     const convertedServerLastActivity = new Date(response.data.lastActivity).getTime();
-//     await deleteExpiredNotes(); // 30일 자동 삭제 진행
-//
-//     // 클라이언트의 마지막 동기화 시점
-//     const clientLastActivity = await getClientLastActivity(db);
-//
-//     // 활동 시간 비교 후 서버 시간이 더 최신이거나, 강제 요청 발생 시 동기화 진행
-
-//     if (convertedServerLastActivity > clientLastActivity || forceReload) {
-//       // 노트, 카테고리, 태그 동기화
-//       const notes = await getNotes(true);
-//       const categories = await getCategories(true);
-//       const tags = await getTags(true);
-//
-//       // 동기화된 데이터를 반환
-//       return { notes, categories, tags };
-//     }
-//     return null; // 동기화 필요 없으면 null
-//   } catch (error) {
-//     console.error("동기화 과정 중 오류:", error);
-//     return null;
-//   }
-// }

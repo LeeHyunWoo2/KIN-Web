@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {motion, AnimatePresence} from "framer-motion"
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Card, CardContent, CardHeader} from "@/components/ui/card"
@@ -55,19 +55,56 @@ export default function FeatureTabs() {
     },
   ]
 
-  const [activeFeature, setActiveFeature] = useState(features[0].id)
+  const [activeFeature, setActiveFeature] = useState(features[0].id) // 현재 탭
+  const [isAutoSwitch, setIsAutoSwitch] = useState(true); // 자동 전환 상태
+  const tabsRef = useRef(null) // 탭 참조
+  const [isVisible, setIsVisible] = useState(false) // 유저가 탭을 보고 있는지
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsVisible(entry.isIntersecting)
+        },
+        { threshold: 0.2 } // 20% 이상 보인다면 보는중으로 간주
+    )
+    if (tabsRef.current) {
+      observer.observe(tabsRef.current)
+    }
+    return () => {
+      if (tabsRef.current) observer.unobserve(tabsRef.current)
+    }
+  }, [])
+
+  // 자동 전환 동작
+  useEffect(() => {
+    if (!isAutoSwitch || !isVisible) return // 자동 전환 상태가 꺼지거나 탭이 화면 밖에 있으면 중단
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => {
+        const currentIndex = features.findIndex((feature) => feature.id === prev)
+        const nextIndex = (currentIndex + 1) % features.length
+        return features[nextIndex].id
+      })
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [isAutoSwitch, features])
+
+  // 탭 클릭 시 자동 전환 비활성화
+  const handleTabClick = (id) => {
+    setActiveFeature(id)
+    setIsAutoSwitch(false) // 클릭하면 자동 전환 멈춤
+  }
 
   return (
       <div className="w-full max-w-[1150px] mx-auto mb-16">
-        <div className="flex items-center space-x-2">
-          <Tabs defaultValue="equation" className="w-full">
+        <div className="flex items-center space-x-2" ref={tabsRef}>
+          <Tabs value={activeFeature} className="w-full">
             <TabsList className="flex min-w-fit min-h-12  space-x-8 bg-background" aria-label="Tab list">
               {features.map((feature) => (
                   <TabsTrigger
                       key={feature.id}
                       value={feature.id}
                       className="flex items-center gap-2 text-base font-medium text-foreground hover:bg-muted data-[state=active]:bg-muted"
-                      onClick={() => setActiveFeature(feature.id)}
+                      onClick={() => handleTabClick(feature.id)}
                   >
                     {feature.icon}
                     {feature.title}
