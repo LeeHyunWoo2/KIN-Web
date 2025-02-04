@@ -13,6 +13,7 @@ import TechStack from "@/components/introduce/Tech-Stack";
 import * as React from "react";
 import {ArrowRightIcon} from "@radix-ui/react-icons";
 import {SquareCheckBig} from "lucide-react";
+import Checkbox from "@/components/ui/Check";
 
 export default function IntroContent({auth}) {
 

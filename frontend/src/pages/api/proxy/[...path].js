@@ -5,29 +5,17 @@ export default async function handler(req, res) {
   const { path, ...query } = req.query; // 클라이언트로부터 전달된 경로
   const method = req.method; // 요청 방식
 
-// sec-ch-ua에서 브라우저 이름만 추출하는 함수
-  function extractBrowserName(userAgentString) {
-    const regex = /"([^"]+)"/; // 큰따옴표 안의 첫 번째 값을 추출
-    const match = userAgentString.match(regex); // 정규식과 매칭
-    return match ? match[1] : "Unknown";
-  }
-
-  // Vercel 로그로 확인할 콘솔
+  // Vercel 로그로 확인할 콘솔, (Vercel 에서 표시되지 않는 것만 작성)
   console.log(
-      `content-length : ${req.headers["content-length"]}\nsec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}\nsec-ch-ua : ${extractBrowserName(
-          req.headers["sec-ch-ua"])}\ncf-ipcountry : ${req.headers["cf-ipcountry"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
+      `content-length : ${req.headers["content-length"]}\n
+      cf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
     const headers = {
-      ...req.headers, // 기본적으로 클라이언트 헤더 전달
+      ...req.headers,
       "x-api-key": process.env.CLOUDFLARE_API_TOKEN, // api 보안용 커스텀 헤더
     };
-
-/*    if (req.headers["x-skip-interceptor"]) {
-      console.log("x-skip-interceptor 확인:", req.headers["x-skip-interceptor"]);
-      headers["x-skip-interceptor"] = req.headers["x-skip-interceptor"];
-    }*/
 
     // host 등 불필요한 헤더 제거
     delete headers.host;

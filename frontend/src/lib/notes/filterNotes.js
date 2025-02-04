@@ -56,8 +56,8 @@ export function filterNotes(notes, { category, categories, tags, searchTerm, sor
   }
 
   // 정렬
-  if (sortBy === 'date') {
-    filteredNotes.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  if (sortBy === 'created_date') { // updated_date 도 만들것
+    filteredNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   } else if (sortBy === 'title') {
     filteredNotes.sort((a, b) => a.title.localeCompare(b.title));
   }
@@ -86,7 +86,7 @@ export const resetFiltersAtom = atom(null, (get, set) => {
   set(selectedCategoryNameAtom, null);
   set(selectedTagsAtom, []);
   set(searchTermAtom, '');
-  set(sortByAtom, 'date');
+  set(sortByAtom, 'created_date');
   set(isLockedAtom, false);
   set(isTrashedAtom, false);
 });
