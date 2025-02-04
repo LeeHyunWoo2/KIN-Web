@@ -34,6 +34,8 @@ import {
 import TagSelector from './TagSelector'
 import {Badge} from "@/components/ui/badge";
 import PlateEditor from "@/components/notes/editor/plate-editor";
+import CheckAnimation from "@/components/ui/Check";
+import {Spinner} from "@/components/plate-ui/spinner";
 
 const produce = require("immer").produce;
 
@@ -44,21 +46,23 @@ export default function NoteDisplay() {
       selectedNoteStateAtom);
   const [categoryTree] = useAtom(categoryTreeAtom);
 
-  // 노트의 초기 로딩 여부 확인 (노트 누르자마자 자동저장 시작하는거 방지)
+  // 노트의 초기 로딩 여부 확인
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  // 변경사항을 체크하는 플래그 (자동저장 및 탈주방지 작동 여부)
+
+  // 변경사항을 체크하는 플래그 (자동저장 및 저장중 이탈방지 작동 여부)
   const [isNotSaved, setIsNotSaved] = useState(false);
+
   // 서버 저장 호출용 페이로드 (변경사항만 따로 저장하는 용도, 디바운스 O)
   const [localPayload, setLocalPayload] = useState({});
+
   // 제목, 내용 이외 변경사항 저장용 (디바운스 X)
   const saveNoteChanges = useSetAtom(saveNoteChangesAtom);
   const uploadedFiles = useAtomValue(selectedNoteUploadFilesAtom);
 
-
   //  자동 저장 함수 (디바운스)
   const saveChanges = useCallback(
       debounce(() => {
-        if (selectedNoteState && !isInitialLoad && isNotSaved) { // 초기 로딩이 아닐 때만 저장
+        if (selectedNoteState && isNotSaved) {
           setNoteEvent({
             type: 'UPDATE', // UPDATE 이벤트 발생
             payload: [{ // 배열 형태로 전달
@@ -75,8 +79,13 @@ export default function NoteDisplay() {
           }, 0);
         }
       }, 1500),
-      [localPayload, setNoteEvent, isInitialLoad, isNotSaved, uploadedFiles]
+      [localPayload, setNoteEvent, isNotSaved, uploadedFiles]
   );
+
+  useEffect(() => {
+    // 노트의 id가 변경됨을 감지하면 초기로드 플래그를 true로 변경함
+    setIsInitialLoad(true);
+  }, [selectedNoteState._id])
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -104,7 +113,7 @@ export default function NoteDisplay() {
       ...prevPayload,
       content: newContent, // 서버에 전송할 변경 내용
     }));
-    setIsInitialLoad(false); // 초기 로드를 완료한 상태로 설정
+    setIsInitialLoad(false);
     setIsNotSaved(true);     // 변경사항 플래그 설정
   };
 
@@ -173,23 +182,44 @@ export default function NoteDisplay() {
     return () => saveChanges.cancel();
   }, [saveChanges]);
 
-  // 페이지 이탈 방지용 경고 설정
+  // 이탈 방지용 경고 설정
   useEffect(() => {
     if (isNotSaved) {  // 변경 사항이 저장되지 않은 경우 경고
       const handleBeforeUnload = (e) => {
         e.preventDefault();
         e.returnValue = '';
       };
+
+      const onRouteChangeStart = () => {
+        if (isNotSaved) {
+          const confirmationMessage = "저장되지 않은 변경 사항이 있습니다. 계속하시겠습니까?";
+          if (!window.confirm(confirmationMessage)) {
+            router.events.emit('routeChangeError');
+            throw ("라우팅 취소됨 (오류가 아니라 정상작동 입니다.)");
+          } else {
+            setLocalPayload({}); // 로컬 페이로드를 초기화해야 다른 노트에 저장사항이 덮어씌워지지 않음
+            setIsNotSaved(false);
+          }
+        }
+      };
+
+      // 브라우저 이탈 방지
       window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => window.removeEventListener('beforeunload',
-          handleBeforeUnload);
+
+      // URL 변경 시 경고
+      router.events.on('routeChangeStart', onRouteChangeStart);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        router.events.off('routeChangeStart', onRouteChangeStart);
+      };
     }
-  }, [isNotSaved]);
+  }, [isNotSaved, router.events]);
 
   return (
       <div className="flex flex-col h-full">
-        <div className="flex p-1">
-          <div className="flex items-center gap-2">
+        <div className="flex p-1 mt-1">
+          <div className="flex items-center ml-2 gap-2">
             {categoryTree.length ? (
                 <Menubar>
                   <MenubarMenu>
@@ -220,18 +250,23 @@ export default function NoteDisplay() {
           <TagSelector/>
           <Separator orientation="vertical" className="mx-3 "/>
           <div className="flex items-center gap-1">
-          <Tags className="mr-1" size={20}/>
+          <Tags className="mr-1" size={24}/>
             {selectedNoteState.tags.length !== 0 && (
                 <>
                   {selectedNoteState.tags.map((tag) =>
                       <Badge key={tag._id} variant="secondary2"
-                             className="mr-2 text-sm"> {tag.name}</Badge>
+                             className="mr-2 text-sm cursor-pointer"> {tag.name}</Badge>
                   )}
                 </>
             )}
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            {!isInitialLoad && (isNotSaved ? (
+            <Spinner className="size-5" />
+            ):(
+            <CheckAnimation/>
+            ))}
             <Separator orientation="vertical" className="mx-3 h-6"/>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -270,16 +305,15 @@ export default function NoteDisplay() {
                       <Undo2/>)}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동'
-                  : '복구하기'}</TooltipContent>
+              <TooltipContent>{!selectedNoteState.is_trashed ? '휴지통으로 이동' : '복구하기'}</TooltipContent>
             </Tooltip>
             <Separator orientation="vertical" className="mx-1 h-6"/>
           </div>
         </div>
-        <Input
+        <input
             value={selectedNoteState.title}
             onChange={handleTitleChange} // 뭔가 바뀌면 호출
-            className="text-xl font-semibold mt-1 mx-3 w-auto"
+            className="w-auto px-3 py-1 border rounded-md shadow-sm outline-none text-xl font-semibold mt-1 mx-3"
         />
         <div className="flex flex-col flex-1 p-3 relative">
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
@@ -288,7 +322,7 @@ export default function NoteDisplay() {
                 <PlateEditor onChange={handleEditorChange}/>
             ) : (
                 <textarea
-                    className="w-full h-full p-3 border rounded-md"
+                    className="w-full h-full p-3 border rounded-md shadow-sm outline-none resize-none"
                     value={selectedNoteState.content}
                     onChange={(e) => handleEditorChange(e.target.value)}
                 />

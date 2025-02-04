@@ -23,7 +23,7 @@ import {
 import {useEffect} from "react";
 
 
-export default function FancyMultiSelect() {
+export default function TagSelector() {
   const inputRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState([]);

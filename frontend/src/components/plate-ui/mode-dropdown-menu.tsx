@@ -36,13 +36,11 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
     editing: (
       <>
         <Pen />
-        <span className="hidden lg:inline">Editing</span>
       </>
     ),
     viewing: (
       <>
         <Eye />
-        <span className="hidden lg:inline">Viewing</span>
       </>
     ),
   };
@@ -52,14 +50,14 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
       <DropdownMenuTrigger asChild>
         <ToolbarButton
           pressed={openState.open}
-          tooltip="Editing mode"
+          tooltip="모드 선택"
           isDropdown
         >
           {item[value]}
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="min-w-[180px]" align="start">
+      <DropdownMenuContent className="min-w-[125px]" align="start">
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(newValue) => {
@@ -80,10 +78,12 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
         >
           <DropdownMenuRadioItem value="editing">
             {item.editing}
+            편집모드
           </DropdownMenuRadioItem>
 
           <DropdownMenuRadioItem value="viewing">
             {item.viewing}
+            읽기모드
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

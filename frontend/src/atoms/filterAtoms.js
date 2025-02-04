@@ -8,6 +8,6 @@ export const selectedCategoryNameAtom = atom(null); // 선택된 카테고리 �
 export const tagListAtom = atom([]); // 전체 태그
 export const selectedTagsAtom = atom([]); // 선택된 태그들
 export const searchTermAtom = atom(''); // 검색어
-export const sortByAtom = atom('date'); // 정렬 기준 (기본값: 날짜)
+export const sortByAtom = atom('created_date'); // 정렬 기준 (기본값: 작성일)
 export const isLockedAtom = atom(false); // 잠금 상태 필터
 export const isTrashedAtom = atom(false); // 휴지통 상태
