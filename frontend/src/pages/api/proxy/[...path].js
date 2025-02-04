@@ -16,7 +16,9 @@ export default async function handler(req, res) {
   console.log(
       `content-length : ${req.headers["content-length"]}\nsec-ch-ua-platform : ${req.headers["sec-ch-ua-platform"]}\nsec-ch-ua : ${extractBrowserName(
           req.headers["sec-ch-ua"])}\ncf-ipcountry : ${req.headers["cf-ipcountry"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
-
+  
+console.log(req.headers);
+  
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합
     const headers = {
