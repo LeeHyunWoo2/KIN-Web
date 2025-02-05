@@ -47,7 +47,7 @@ const skipLog = (req) => {
   const excludedPaths = ['/categories', '/tags', '/server-time', '/sync', '/auth/session'];
   const fullPath = req.originalUrl.split('?')[0];
   // GET, OPTIONS 메서드에 대해 특정 경로만 로깅 제외
-  return (req.method === 'GET' || req.method === 'OPTIONS') && excludedPaths.includes(fullPath);
+  return (req.method === 'GET' || req.method === 'OPTIONS') && excludedPaths.includes(fullPath)|| (req.method === 'POST' && fullPath === '/notes');
 };
 
 // morgan 미들웨어 생성

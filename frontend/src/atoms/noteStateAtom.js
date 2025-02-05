@@ -21,6 +21,7 @@ export const defaultNoteStateAtom ={
     name: null
   },
   tags: [],                 // 태그 배열
+  created_at: new Date(),   // 작성시각
   updated_at: new Date(),   // 수정 시각
   is_locked: false,         // 잠금 여부
   is_pinned: false,         // 상단 고정 여부
