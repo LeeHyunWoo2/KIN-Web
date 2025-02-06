@@ -23,41 +23,32 @@ export const setupInterceptors = () => {
       async (error) => {
         const originalRequest = error.config; // 원래 요청 객체
 
-        // 401 에러 처리 - 액세스 토큰 만료로 refreshToken 함수 호출
+        // 401 에러 발생 시 세션 갱신 함수 호출
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true; // 중복 재요청 방지 플래그 설정
 
           if (isRefreshing) {
-            //  리프레시 토큰 요청이 진행 중일 경우 대기열에 추가
+            //  갱신 요청이 진행 중일 경우 대기열에 추가
             return new Promise((resolve, reject) => {
               failedRequests.push({ resolve, reject });
             })
-            .then((token) => {
-              originalRequest.headers.Authorization = `Bearer ${token}`;
-              return apiClient(originalRequest); // 완료된 이후 원래 요청 재실행
-            })
-            .catch((error) => {
-              return Promise.reject(error);
-            });
+            .then(() => apiClient(originalRequest)) // 원래 요청 재실행
+            .catch((error) => Promise.reject(error));
           }
           // 진행 중이 아니라면 갱신 요청 시작
           isRefreshing = true;
-          return new Promise(async (resolve, reject) => {
-            try {
-              await refreshToken(); // refreshToken 함수 호출
-
-              // 모든 요청 처리
-              failedRequests.forEach((prom) => prom.resolve());
-              failedRequests = []; // 대기열 초기화
-              resolve(apiClient(originalRequest)); // 원래 요청 재실행
-            } catch (error) {
-              failedRequests.forEach((prom) => prom.reject(error)); // 실패한 요청 모두 종료
-              failedRequests = []; // 대기열 초기화
-              reject(error); // 에러 전달
-            } finally {
-              isRefreshing = false; // 요청 완료 후 상태 초기화
-            }
-          });
+          try {
+            await refreshToken(); // 갱신 요청
+            failedRequests.forEach((prom) => prom.resolve()); // 모든 요청 재실행
+            failedRequests = [];
+            return apiClient(originalRequest);
+          } catch (error) {
+            failedRequests.forEach((prom) => prom.reject(error));
+            failedRequests = [];
+            return Promise.reject(error);
+          } finally {
+            isRefreshing = false;
+          }
         }
 
         // 기타 에러 처리 (401 외)

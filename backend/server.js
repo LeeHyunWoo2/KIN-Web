@@ -1,3 +1,12 @@
+process.on('uncaughtException', (err) => {
+  console.error('[에러] Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[에러] Unhandled Rejection:', reason);
+});
+
+
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -34,6 +43,8 @@ const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
 const emailRoutes = require('./routes/user/emailRoutes');
 const os = require("os");
+
+
 
 const app = express();
 initializePassport(passport);
@@ -170,16 +181,7 @@ app.get("/server-time", (req, res) => {
   res.json({ serverTime: new Date().toISOString() });
 });
 
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  // process.exit(1);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection:', reason);
-});
-
-// 4. 전역 에러 처리
+// 4. 전역 에러 포맷팅
 app.use((err, req, res, next) => {
   const { statusCode, message } = createErrorResponse(err.status || 500, err.message || "서버에서 오류가 발생했습니다.");
   res.status(statusCode).json({ message, code: statusCode });
