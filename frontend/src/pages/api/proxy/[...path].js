@@ -17,11 +17,6 @@ export default async function handler(req, res) {
       "x-api-key": process.env.CLOUDFLARE_API_TOKEN, // api 보안용 커스텀 헤더
     };
 
-/*    if (req.headers["x-skip-interceptor"]) {
-      console.log("x-skip-interceptor 확인:", req.headers["x-skip-interceptor"]);
-      headers["x-skip-interceptor"] = req.headers["x-skip-interceptor"];
-    }*/
-
     // host 등 불필요한 헤더 제거
     delete headers.host;
 
