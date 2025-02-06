@@ -428,8 +428,6 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
 <br>
 
----
-
 <details>
  <summary><h2> 🚀 이슈 1 + 2 : Before vs After (전후 비교)</h2></summary>
 
