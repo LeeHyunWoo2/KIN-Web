@@ -182,7 +182,7 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
 
 ## 이슈 해결 과정
 
-> 오류 해결뿐만 아니라, 최적화, 설계 개선, 트레이드오프 분석 등 기능을 재검토하며 겪은 고민과 선택을 기록합니다.   
+> 오류 해결뿐만 아니라, 최적화, 설계 개선, 트레이드오프 분석 등 여러가지 고민과 선택을 기록합니다.   
 > 단순한 구현을 넘어 더 나은 코드와 시스템을 만들기 위한 과정을 담았습니다.
 
 <br>
@@ -430,7 +430,8 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
 ---
 
-## 🚀 이슈 1 + 2 : Before vs After (전후 비교)
+<details>
+ <summary><h2> 🚀 이슈 1 + 2 : Before vs After (전후 비교)</h2></summary>
 
 > Before / After (user 요청 이후 부분부터 측정)
 >
@@ -491,10 +492,12 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 - 상태보존이 불가능한 서버리스 구조에서는 **클라이언트 측에서** 상태를 잘 관리하는 것이 필수였다.
 - 동시 요청이 많아질 경우 서버 부하를 줄이는 전략이 필요함.
 
+</details>
+
 <br>
 
 <details>
-  <summary><h3> ⛔ 이슈 2: HttpOnly 쿠키로 강화된 보안이 소셜 로그인 흐름에 미친 제약</h3></summary>
+  <summary><h3> ⛔ 이슈 3: HttpOnly 쿠키로 강화된 보안이 소셜 로그인 흐름에 미친 제약</h3></summary>
 
 ### 📝 **상황 설명**:
 
@@ -625,7 +628,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
 <details>
 
-<summary><h3> ⛔ 이슈 3: 돌발적인 데이터베이스 접근 실패</h3></summary>
+<summary><h3> ⛔ 이슈 4: 돌발적인 데이터베이스 접근 실패</h3></summary>
 
 ### 📝 **상황 설명**:
 - 클라이언트에서 로그인 요청을 보냈을 때 백엔드에서 상태 코드가 반환되지 않고, 비정상적으로 서버가 종료됨.
