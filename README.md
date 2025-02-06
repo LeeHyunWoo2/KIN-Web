@@ -188,6 +188,7 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
 <br>
 
 <details>
+
 <summary><h3> ⛔ 이슈1 : 중복 요청과 토큰 갱신 문제</h3></summary>
 
 ### 📝**상황 설명:**
@@ -571,6 +572,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
     - 모든 로그인(일반, 소셜)이 `/loginSuccess` 페이지를 거치도록 통합.
     - 클라이언트는 해당 페이지에서 `getPublicProfile` API를 통해 쿠키 기반 인증 정보를 요청함.
 
+  
 3. **소셜 로그인 리다이렉트 최적화**: [socialRoutes](https://github.com/LeeHyunWoo2/KIN-Web/blob/6a6fb61125bcb10aa6130769d1a33b0781957498/backend/routes/user/socialRoutes.js#L48)
    ```javascript
     // 토큰 발급
@@ -590,6 +592,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
     - 이를 통해 프론트엔드에서 **로그인 방식별로 분기 처리를 할 필요가 없음.**
 
 5. **세션 검증 미들웨어를 거치도록 설계**:
+
     - 유저 데이터 요청 과정에서 토큰 갱신에 사용되던 세션 검증 미들웨어[authenticateUser](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/authenticateUser.js)를 통과하도록 조정함.
     - 이 과정에서 Redis를 통한 세션 검증 및 토큰 블랙리스트 확인이 이루어짐. 
     - 결과적으로, 세션이 유효한 사용자만 로그인 상태를 유지할 수 있도록 보안이 더욱 강화됨.
@@ -621,6 +624,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 <br>
 
 <details>
+
 <summary><h3> ⛔ 이슈 3: 돌발적인 데이터베이스 접근 실패</h3></summary>
 
 ### 📝 **상황 설명**:
@@ -733,7 +737,10 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
 - 또한 Morgan 을 통해 기본적인 요청의 흐름을 파악할 수 있게 되었다.
 
----
+
+### 💡 배운 점:
+- 굉장히 간단하고 어처구니 없어보일 수 있는 사례일 수 있으나, DB 접속이 안된다는 상황에서 집 인터넷 공인 IP 변경을 유추해내는게 가능한 경우는 흔치 않을겁니다. 제가 어떤 환경에서 어떤걸 사용하고 구성했는지 명확하게 이해하고 있었기 때문에 큰 고생을 하지 않았고, 자신감과 확신을 얻는 좋은 경험이 되었습니다.
+- 로깅의 중요성. 데이터와 로직의 흐름을 확인할 수 있어야 빠르고 정확하게 대응이 가능하다는점을 배웠습니다.
 
 ### 💡 배운 점:
 - 내가 무엇을, 어떤 환경에서 개발하는것인지 명확하게 이해하고 있었기 때문에 큰 고생을 하지 않았고, 자신감과 확신을 얻는 좋은 경험이 되었습니다.
@@ -760,7 +767,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 
     - 상세 예제
 
----
+1.
 
 ### 🔍 원인 분석:
 
