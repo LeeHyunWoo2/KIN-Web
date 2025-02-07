@@ -1,3 +1,5 @@
+"use client"
+
 import { useAtom } from "jotai";
 import { tutorialActiveAtom, tutorialSkippedAtom } from "@/atoms/userState";
 import {Lightbulb} from "lucide-react";

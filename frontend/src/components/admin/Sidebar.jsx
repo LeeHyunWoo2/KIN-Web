@@ -1,3 +1,5 @@
+"use client"
+
 import { Users, BarChart2, Settings, MessageSquare, Activity } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 

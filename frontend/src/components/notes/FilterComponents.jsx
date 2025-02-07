@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {isTrashedAtom, searchTermAtom} from '@/atoms/filterAtoms';

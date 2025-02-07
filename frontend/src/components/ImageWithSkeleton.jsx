@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton"; // Shadcn Skeleton 컴포넌트 임포트
 

@@ -1,3 +1,5 @@
+"use client"
+
 import zlib from 'zlib';
 
 // mode 필드에 따라서 알맞은 압축, 해제 함수 호출, 별도의 모드가 추가로 생긴다면 switch로 변경하기

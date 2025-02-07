@@ -1,3 +1,5 @@
+"use client"
+
 import { atom } from "jotai";
 
 // 비밀번호 찾기용 상태 atoms

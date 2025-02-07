@@ -5,23 +5,23 @@ const nextConfig = {
     return [
       {
         source: '/login',
-        destination: '/_authentication/login',
+        destination: '/auth/login',
       },
       {
         source: '/signup',
-        destination: '/_authentication/signup',
+        destination: '/auth/signup',
       },
       {
         source: '/loginSuccess',
-        destination: '/_authentication/loginSuccess',
+        destination: '/auth/loginSuccess',
       },
       {
         source: '/verify-email',
-        destination: '/_authentication/verify-email',
+        destination: '/auth/verify-email',
       },
       {
         source: '/privacy-policy',
-        destination: '/_authentication/privacy-policy',
+        destination: '/auth/privacy-policy',
       },
     ];
   },

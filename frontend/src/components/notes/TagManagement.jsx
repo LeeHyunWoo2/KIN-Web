@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState} from "react";
 import {Tag} from 'lucide-react';
 import {SidebarGroupLabel, SidebarMenuButton} from "@/components/ui/sidebar";

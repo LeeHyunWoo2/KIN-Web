@@ -1,8 +1,10 @@
+"use client"
+
 import {useEffect, useState} from 'react';
 import apiClient from '@/lib/apiClient';
 import {useAtomValue} from 'jotai';
 import {authAtom} from '@/atoms/userState';
-import PageNotFound from '@/pages/404'; // 404 페이지 컴포넌트
+import PageNotFound from '@/app/not-found'; // 404 페이지 컴포넌트
 
 const withAdminAuth = (WrappedComponent) => {
   const AdminAuthenticatedComponent = (props) => {

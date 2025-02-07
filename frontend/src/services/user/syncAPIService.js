@@ -1,3 +1,5 @@
+"use client"
+
 import apiClient from "@/lib/apiClient";
 import { initDB } from "@/lib/notes/initDB";
 import { deleteExpiredNotes, getNotes } from "@/services/notes/noteAPIService";

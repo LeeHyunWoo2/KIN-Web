@@ -1,10 +1,12 @@
+"use client"
+
 import {useRouter} from 'next/router';
 import {useEffect} from 'react';
 import {getPublicProfile} from '@/services/user/authAPIService';
 import {authAtom} from "@/atoms/userState";
 import {useSetAtom} from "jotai";
 
-const LoginSuccess = () => {
+const Page = () => {
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
 
@@ -29,4 +31,4 @@ const LoginSuccess = () => {
   return null;
 };
 
-export default LoginSuccess;
+export default Page;

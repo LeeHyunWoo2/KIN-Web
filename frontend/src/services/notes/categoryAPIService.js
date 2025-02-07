@@ -1,3 +1,5 @@
+"use client"
+
 import { initDB } from "@/lib/notes/initDB";
 import { getChildCategoryIds } from "@/lib/notes/categoryUtils";
 import apiClient from "@/lib/apiClient";

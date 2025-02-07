@@ -1,3 +1,5 @@
+"use client"
+
 import {useRouter} from "next/router";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {cn} from "@/lib/utils";

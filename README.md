@@ -546,10 +546,10 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 ### 🛠️ 해결 방안:
 1. **로그인 로직의 역할 분리**:
    - 최대한 일관성을 위해 각 로직을 백엔드에서 쿠키발급 및 반환까지만 진행하도록 변경
-   - 이후 '**로그인 성공 처리**'를 별도로 수행하는 페이지(`LoginSuccess`)에서 상태 동기화 진행
-   - 즉, **로그인은 티켓 발급**, 프로필 로딩 및 페이지 이동은 `LoginSuccess` 에서 처리
+   - 이후 '**로그인 성공 처리**'를 별도로 수행하는 페이지(`Page`)에서 상태 동기화 진행
+   - 즉, **로그인은 티켓 발급**, 프로필 로딩 및 페이지 이동은 `Page` 에서 처리
 
-2. **공통 로그인 성공 페이지(`LoginSuccess`) 도입**: [loginSuccess.jsx](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/loginSuccess.jsx)
+2. **공통 로그인 성공 페이지(`Page`) 도입**: [loginSuccess](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/app/auth/loginSuccess/page.jsx)
     ```jsx
       useEffect(() => {
         const syncProfile = async () => {

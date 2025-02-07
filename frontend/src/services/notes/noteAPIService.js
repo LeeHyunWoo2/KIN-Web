@@ -1,3 +1,5 @@
+"use client"
+
 import { initDB } from "@/lib/notes/initDB";
 import apiClient from "@/lib/apiClient";
 import { getCompressor, getDecompressor} from '@/lib/notes/noteCompressor';

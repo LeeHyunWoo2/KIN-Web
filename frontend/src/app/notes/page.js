@@ -1,3 +1,5 @@
+"use client"
+
 import WorkspaceLayout from "@/components/WorkspaceLayout"
 import NoteContainer from "@/components/notes/NoteContainer";
 import {useAtom} from "jotai";

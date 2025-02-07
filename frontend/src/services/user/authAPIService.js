@@ -1,3 +1,5 @@
+"use client"
+
 import apiClient from "@/lib/apiClient";
 
 // 토큰 갱신 함수

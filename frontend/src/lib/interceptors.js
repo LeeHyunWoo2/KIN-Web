@@ -1,3 +1,5 @@
+"use client"
+
 import apiClient from "@/lib/apiClient";
 import {refreshToken} from "@/services/user/authAPIService";
 import {toast} from "sonner";

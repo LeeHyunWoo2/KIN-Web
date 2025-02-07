@@ -1,3 +1,5 @@
+"use client"
+
 import React, {useEffect, useState} from 'react';
 import {Loader2, Search} from "lucide-react";
 import {useRouter} from 'next/router';

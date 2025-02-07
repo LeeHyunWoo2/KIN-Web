@@ -1,3 +1,5 @@
+"use client"
+
 import { useAtom } from "jotai";
 import Joyride, {ACTIONS, EVENTS} from "react-joyride";
 import { tutorialActiveAtom, tutorialSkippedAtom } from "@/atoms/userState";

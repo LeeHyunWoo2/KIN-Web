@@ -1,3 +1,5 @@
+"use client"
+
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Recaptcha = ({ onVerify, siteKey }) => {

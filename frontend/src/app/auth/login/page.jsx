@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import HeaderLayout from "@/components/HeaderLayout";
 import {Button} from "@/components/ui/button"

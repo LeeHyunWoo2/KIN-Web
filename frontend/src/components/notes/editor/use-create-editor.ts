@@ -1,3 +1,5 @@
+"use client"
+
 import { withProps } from '@udecode/cn';
 import {
   BoldPlugin,

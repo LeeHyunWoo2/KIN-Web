@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react'
 import { UserManagement } from '@/components/admin/UserManagement'
 import { Statistics } from '@/components/admin/Statistics'

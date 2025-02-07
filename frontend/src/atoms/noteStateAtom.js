@@ -1,3 +1,5 @@
+"use client"
+
 import { atom } from 'jotai';
 
 // 제목 내용 제외하고 디바운스 없이 바로바로 변경할 필드용 함수

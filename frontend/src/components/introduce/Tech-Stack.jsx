@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Code2, Server, Cloud } from 'lucide-react'
 import {logos} from "@/components/icons"

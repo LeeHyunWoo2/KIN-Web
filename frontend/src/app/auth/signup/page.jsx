@@ -1,3 +1,4 @@
+
 'use client'
 
 import Link from "next/link";
@@ -34,7 +35,7 @@ import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
 import {Check, Loader2, MailOpen} from "lucide-react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import PrivacyPolicy from "@/pages/_authentication/privacy-policy";
+import Page from "@/app/auth/privacy-policy/page";
 import {
   EmailSchema,
   IdSchema,
@@ -445,7 +446,7 @@ export default function AuthenticationPage() {
                             fugiat nulla pariatur. Excepteur sint occaecat
                             cupidatat non proident, sunt in culpa qui officia
                             deserunt mollit anim id est laborum.
-                            <PrivacyPolicy/>
+                            <Page/>
                           </ScrollArea>
                         </div>
                       </div>

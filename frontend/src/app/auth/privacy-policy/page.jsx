@@ -1,9 +1,11 @@
+"use client"
+
 import HeaderLayout from "@/components/HeaderLayout";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import * as React from "react";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 
-export default function PrivacyPolicy() {
+export default function Page() {
   return (
       <Tabs defaultValue="kr" className="max-w-2xl mx-auto mt-5 mb-5" >
           <TabsList className="grid w-full grid-cols-2 min-h-10 mb-5">
@@ -221,6 +223,6 @@ export default function PrivacyPolicy() {
       </Tabs>
   );
 }
-PrivacyPolicy.getLayout = function getLayout(page) {
+Page.getLayout = function getLayout(page) {
   return <HeaderLayout>{page}</HeaderLayout>
 }
