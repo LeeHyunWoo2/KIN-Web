@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router';
 import {useEffect} from 'react';
-import {getPublicProfile} from '@/services/user/authService';
+import {getPublicProfile} from '@/services/user/authAPIService';
 import {authAtom} from "@/atoms/userState";
 import {useSetAtom} from "jotai";
 

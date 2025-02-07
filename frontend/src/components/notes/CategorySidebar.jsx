@@ -40,7 +40,7 @@ import {
   createCategory,
   deleteCategory,
   updateCategory
-} from "@/services/notes/categoryService";
+} from "@/services/notes/categoryAPIService";
 import {
   DropdownMenu,
   DropdownMenuContent,

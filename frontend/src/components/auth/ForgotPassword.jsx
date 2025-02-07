@@ -27,7 +27,7 @@ import apiClient  from "@/lib/apiClient";
 import {
   changePassword,
   getUserProfileByInput
-} from "@/services/user/authService";
+} from "@/services/user/authAPIService";
 import {ValidationSchemas} from "@/lib/validationSchemas";
 import {useEffect, useState} from "react";
 

@@ -22,7 +22,7 @@ import { Check, Loader2, MailOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import apiClient from "@/lib/apiClient";
-import { getUserProfileByInput } from "@/services/user/authService";
+import { getUserProfileByInput } from "@/services/user/authAPIService";
 import {EmailSchema, ValidationSchemas} from "@/lib/validationSchemas";
 
 

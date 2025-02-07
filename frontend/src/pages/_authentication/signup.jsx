@@ -26,7 +26,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input";
-import {getUserProfileByInput, registerUser} from '@/services/user/authService'
+import {getUserProfileByInput, registerUser} from '@/services/user/authAPIService'
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";

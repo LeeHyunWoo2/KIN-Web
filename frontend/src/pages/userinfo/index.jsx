@@ -26,7 +26,7 @@ import {
   getUserProfile,
   linkSocialAccount, unlinkSocialAccount,
   updateUserProfile
-} from "@/services/user/authService";
+} from "@/services/user/authAPIService";
 import {toast} from "sonner";
 import withAuth from "@/lib/hoc/withAuth";
 import ChangeToLocalAccount from "@/components/userinfo/changeToLocalAccount";

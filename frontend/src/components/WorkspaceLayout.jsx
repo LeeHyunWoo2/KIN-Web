@@ -53,7 +53,7 @@ import {
 } from "@/components/ui/sidebar"
 import {Button} from "@/components/ui/button"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
-import {logoutUser} from "@/services/user/authService";
+import {logoutUser} from "@/services/user/authAPIService";
 import withAuth from "@/lib/hoc/withAuth";
 import CategorySidebar from "@/components/notes/CategorySidebar";
 import {useAtom, useAtomValue} from "jotai";

@@ -162,7 +162,7 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
     　   　   │   └─ 📂userinfo
     　   　   ├─ 📂hooks
     　   　   ├─ 📂lib
-    　   　   │   ├─ 📂hoc📂       # 고차 컴포넌트 (인증 필요 페이지에 사용)
+    　   　   │   ├─ 📂hoc📂       # 고차 컴포넌트
     　   　   │   └─ 📂notes
     　   　   ├─ 📂pages          # 웹 페이지 구성
     　   　   │   ├─ 📂_authentication

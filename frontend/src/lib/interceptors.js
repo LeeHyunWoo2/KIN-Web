@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import {refreshToken} from "@/services/user/authService";
+import {refreshToken} from "@/services/user/authAPIService";
 import {toast} from "sonner";
 
 let isRefreshing = false; // refreshToken 요청 중인지 확인하는 플래그 (401)
