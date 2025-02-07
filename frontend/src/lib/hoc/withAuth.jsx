@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import apiClient from "@/lib/apiClient";
 import {useAtomValue} from "jotai";
 import {authAtom} from "@/atoms/userState";
-import {logoutUser} from "@/services/user/authService";
+import {logoutUser} from "@/services/user/authAPIService";
 
 
 const withAuth = (WrappedComponent) => {

@@ -4,7 +4,7 @@ import {SidebarGroupLabel, SidebarMenuButton} from "@/components/ui/sidebar";
 import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Input} from "@/components/ui/input";
-import {createTag, deleteTag} from "@/services/notes/tagService";
+import {createTag, deleteTag} from "@/services/notes/tagAPIService";
 import {useAtomValue} from "jotai";
 import {initializeNotesAtom, initializeTagsAtom} from "@/lib/notes/noteState";
 import {tagListAtom} from "@/atoms/filterAtoms";

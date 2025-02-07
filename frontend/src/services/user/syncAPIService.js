@@ -1,8 +1,8 @@
 import apiClient from "@/lib/apiClient";
 import { initDB } from "@/lib/notes/initDB";
-import { deleteExpiredNotes, getNotes } from "@/services/notes/noteService";
-import { getCategories } from "@/services/notes/categoryService";
-import { getTags } from "@/services/notes/tagService";
+import { deleteExpiredNotes, getNotes } from "@/services/notes/noteAPIService";
+import { getCategories } from "@/services/notes/categoryAPIService";
+import { getTags } from "@/services/notes/tagAPIService";
 import {getDecompressor} from "@/lib/notes/noteCompressor";
 
 // 유저 활동 시각을 PouchDB의 user 문서에 저장

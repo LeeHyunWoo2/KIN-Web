@@ -4,13 +4,13 @@ import {
   noteEventAtom,
   selectedNoteAtom
 } from '@/atoms/noteStateAtom';
-import { createNote, getNotes, updateNote, deleteNote } from '@/services/notes/noteService';
+import { createNote, getNotes, updateNote, deleteNote } from '@/services/notes/noteAPIService';
 import debounce from "lodash/debounce";
-import {SynchronizeWithServer} from "@/services/user/syncService";
+import {SynchronizeWithServer} from "@/services/user/syncAPIService";
 import {router} from "next/client";
 import {categoryListAtom, tagListAtom} from "@/atoms/filterAtoms";
-import {getCategories} from "@/services/notes/categoryService";
-import {getTags} from "@/services/notes/tagService";
+import {getCategories} from "@/services/notes/categoryAPIService";
+import {getTags} from "@/services/notes/tagAPIService";
 
 
 const debouncedSynchronize = debounce(async () => {

@@ -21,7 +21,7 @@ import {
   initializeNotesAtom, initializeTagsAtom
 } from "@/lib/notes/noteState";
 import {Button} from "@/components/ui/button";
-import {checkAndSyncOnFirstLoad} from "@/services/user/syncService";
+import {checkAndSyncOnFirstLoad} from "@/services/user/syncAPIService";
 import {filteredNotesAtom} from "@/lib/notes/filterNotes";
 import {
   isTrashedAtom,

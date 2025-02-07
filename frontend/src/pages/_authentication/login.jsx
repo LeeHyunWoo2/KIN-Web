@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import SocialLogin from "@/components/auth/SocialLogin";
-import {loginUser, logoutUser} from "@/services/user/authService";
+import {loginUser, logoutUser} from "@/services/user/authAPIService";
 import {useEffect, useState} from "react";
 import {toast} from "sonner";
 import {Checkbox} from "@/components/ui/checkbox";
