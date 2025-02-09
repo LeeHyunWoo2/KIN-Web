@@ -96,6 +96,8 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.453.0",
     "next": "15.0.1",
+    "nextra": "^3.1.0-canary.1",
+    "nextra-theme-docs": "^3.1.0-canary.1",
     "next-themes": "^0.3.0",
     "nprogress": "^0.2.0",
     "pdf-lib": "^1.17.1",
