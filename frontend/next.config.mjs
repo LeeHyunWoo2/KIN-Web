@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
+import nextra from 'nextra';
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.jsx',
+});
+
 const nextConfig = {
   reactStrictMode: false,
   async rewrites() {
@@ -49,4 +56,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextra(nextConfig);

@@ -152,10 +152,14 @@ export default function IntroContent({auth}) {
 
 
         <footer className="border-t py-8  ">
-          <div
-              className="container h-8 mx-auto px-4 text-end font-medium text-[14px] text-muted-foreground">
-            <p>&copy; 2024 LeeHyunWoo. All rights reserved.</p>
-          </div>
+        <div
+            className="container mx-auto px-4 text-end font-medium text-[14px] text-muted-foreground">
+        © {new Date().getFullYear()} {' '}
+          <a href="https://github.com/LeeHyunWoo2" target="_blank"
+             rel="noopener noreferrer">
+          LeeHyunWoo. All rights reserved.
+        </a>
+      </div>
         </footer>
       </div>
   )
