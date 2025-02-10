@@ -1,6 +1,7 @@
 import React from 'react'
-import { useConfig } from 'nextra-theme-docs'
+import {useConfig, useThemeConfig} from 'nextra-theme-docs'
 import HeaderButtons from "@/components/HeaderButtons";
+import getGitIssueUrl from "@/lib/docsCustomFeedback"
 
 const config = {
   head() {
@@ -38,6 +39,21 @@ const config = {
   sidebar: {
     toggleButton: false,
   },
+  editLink: false,
+  feedback:{
+    content: <span className="text-sm font-semibold">문의 또는 피드백 →</span>,
+    useLink() {
+      const themeConfig = useThemeConfig();
+      return getGitIssueUrl({
+        labels: themeConfig.feedback.labels,
+        repository: themeConfig.docsRepositoryBase,
+        title: ""
+      });
+    }
+  },
 }
+
+// 커스터마이징 할거면 여기 참고
+// D:\workspace\KIN-Web\frontend\node_modules\nextra-theme-docs\dist\index.js
 
 export default config
