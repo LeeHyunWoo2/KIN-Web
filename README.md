@@ -341,24 +341,23 @@ if (error.response && error.response.status === 401 && !originalRequest._retry) 
 ### **1. 서버 구현 (`/sync/all` API 추가)**
 
 ```jsx
-const noteController = require('../../controllers/notes/noteController');
-const categoryController = require('../../controllers/notes/categoryController');
-const tagController = require('../../controllers/notes/tagController');
-const { getLastActivity } = require("../../services/user/syncService");
-
+// 통합 데이터 반환
 exports.syncAllController = async (req, res) => {
   try {
-    const lastActivity = await getLastActivity(req.user.id);
+    const userId = req.user.id;
+
+    // 데이터 동시 조회
     const [notes, categories, tags] = await Promise.all([
-      noteController.getNotesForSync(req.user.id),
-      categoryController.getCategoriesForSync(req.user.id),
-      tagController.getTagsForSync(req.user.id),
+      getNotes(userId),
+      getCategories(userId),
+      getTags(userId),
     ]);
 
-    res.json({ lastActivity, notes, categories, tags });
+    res.json({notes, categories, tags});
   } catch (error) {
-    console.error("syncAllController Error:", error);
-    res.status(500).json({ message: "데이터를 가져오는 중 오류가 발생했습니다." });
+    const { statusCode, message }
+        = createErrorResponse(error.status || 500, error.message || "데이터를 가져오는 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -366,41 +365,60 @@ exports.syncAllController = async (req, res) => {
 
 ### **2. 클라이언트 구현 (`checkAndSyncOnFirstLoad` 함수 개선)**
 
-```jsx
+```js
 export async function checkAndSyncOnFirstLoad(forceReload = false) {
   let db = await initDB();
-
   try {
     if (forceReload) {
-      console.log("Force reload enabled. Clearing and syncing all data...");
-      await db.destroy();
-      db = await initDB();
-      const response = await apiClient.get("/sync/all");
+      await db.destroy(); // 기존 데이터베이스 제거
+      db = await initDB(); // 새 데이터베이스 초기화
+
+      // forceReload가 활성화된 경우 통합 API 호출
+      const response = await apiClient.get("/sync/all"); // 통합된 데이터 요청
       const { notes, categories, tags } = response.data;
-      await saveDataToLocalDB("note", notes, db);
+
+      // 복원
+      const decompressedNotes = notes.map((note) => ({
+        ...note,
+        content: getDecompressor(note.mode)(note.content),
+      }))
+
+      // 서버 데이터를 로컬 DB에 저장
+      await saveDataToLocalDB("note", decompressedNotes, db);
       await saveDataToLocalDB("category", categories, db);
       await saveDataToLocalDB("tag", tags, db);
-      return { notes, categories, tags };
+
+      return { decompressedNotes, categories, tags }; // 동기화된 데이터 반환
     } else {
-      console.log("Normal sync mode enabled.");
+      // forceReload가 false라면 개별 요청
+
+      // 1. 활동 시간을 비교하기 위해 서버 API 호출
       const syncResponse = await apiClient.get("/sync");
-      const serverLastActivity = new Date(syncResponse.data.lastActivity).getTime();
+      const convertedServerLastActivity = new Date(syncResponse.data.lastActivity).getTime();
       const clientLastActivity = await getClientLastActivity(db);
-      if (serverLastActivity > clientLastActivity) {
+
+      // 2. 서버 시간과 클라이언트 마지막 활동 시간 비교
+      if (convertedServerLastActivity > clientLastActivity) {
+        // 새로운 데이터 요청 (3개의 개별 API 요청)
         const [notes, categories, tags] = await Promise.all([
           getNotes(true),
           getCategories(true),
-          getTags(true),
+          getTags(true)
         ]);
+
+        // 로컬 데이터 업데이트
         await saveDataToLocalDB("note", notes, db);
         await saveDataToLocalDB("category", categories, db);
         await saveDataToLocalDB("tag", tags, db);
-        return { notes, categories, tags };
+
+        return { notes, categories, tags }; // 동기화된 데이터 반환
       }
+
+      // 3. 동기화 필요 없을 시 null 반환
       return null;
     }
   } catch (error) {
-    console.error("Error during syncing:", error);
+    console.error(error);
     return null;
   }
 }

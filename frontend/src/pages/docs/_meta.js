@@ -1,15 +1,37 @@
+import Separator from "@/components/docs/Separator";
+
 export default {
-  index: "Introduction",
-  another: "Another Page",
-  advanced: "Advanced (A Folder)",
-  about: {
-    title: "About",
-    type: "page"
+  'Introduction': {
+    title: (
+        <Separator>
+          Introduction
+        </Separator>
+    ),
+    type: 'separator'
   },
-  contact: {
-    title: "Contact ↗",
-    type: "page",
-    href: "https://github.com/LeeHyunWoo2/KIN-Web",
-    newWindow: true
-  }
+  index: "프로젝트 소개",
+  about: "About",
+  techStack: "Tech Stack",
+  architecture: "Architecture",
+  details: "Details",
+  'Features': {
+    title: (
+        <Separator>
+          Features
+        </Separator>
+    ),
+    type: 'separator'
+  },
+  auth: "Auth",
+  notes: "Notes",
+  'Insights':{
+    title: (
+        <Separator>
+          Insights
+        </Separator>
+    ),
+    type: 'separator',
+  },
+  issues: "Issues",
+  etc: "Extras",
 }

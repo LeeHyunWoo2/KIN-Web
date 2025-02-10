@@ -1,7 +1,23 @@
 import React from 'react'
+import { useConfig } from 'nextra-theme-docs'
+import HeaderButtons from "@/components/HeaderButtons";
 
 const config = {
-  logo: <span>My Project</span>,
+  head() {
+    const config = useConfig()
+    const title = `${config.title} - Keep Idea Note`
+    return (
+        <>
+          <title>{title}</title>
+        </>
+    )
+  },
+  logo: (
+      <div className="flex items-center gap-6">
+        <HeaderButtons/>
+      </div>
+  ),
+  logoLink: false,
   search: {
     placeholder: '검색어를 입력하세요.',
   },
@@ -21,7 +37,7 @@ const config = {
   },
   sidebar: {
     toggleButton: false,
-  }
+  },
 }
 
 export default config

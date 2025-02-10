@@ -1,6 +1,6 @@
 export default {
   docs: {
-    title: "Docs",
+    title: "문서",
     type: "page",
   }
 }
