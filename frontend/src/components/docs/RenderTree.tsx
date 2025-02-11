@@ -6,7 +6,7 @@ import frontendTree from "./frontend-structure.json";
 function RenderTree({ tree }) {
   if (tree.type === "folder") {
     return (
-        <Folder name={tree.name}>
+        <Folder name={tree.name} defaultOpen={tree.defaultOpen}>
           {tree.children.map((child, index) => (
               <RenderTree key={index} tree={child} />
           ))}

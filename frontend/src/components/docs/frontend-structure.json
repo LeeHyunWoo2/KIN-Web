@@ -1,51 +1,12 @@
 {
   "name": "frontend",
   "type": "folder",
+  "defaultOpen": true,
   "children": [
-    {
-      "name": ".env",
-      "type": "file"
-    },
-    {
-      "name": "components.json",
-      "type": "file"
-    },
-    {
-      "name": "jsconfig.json",
-      "type": "file"
-    },
-    {
-      "name": "next-env.d.ts",
-      "type": "file"
-    },
-    {
-      "name": "next.config.mjs",
-      "type": "file"
-    },
-    {
-      "name": "package-lock.json",
-      "type": "file"
-    },
-    {
-      "name": "package.json",
-      "type": "file"
-    },
-    {
-      "name": "postcss.config.mjs",
-      "type": "file"
-    },
     {
       "name": "public",
       "type": "folder",
       "children": [
-        {
-          "name": "favicon.ico",
-          "type": "file"
-        },
-        {
-          "name": "file.svg",
-          "type": "file"
-        },
         {
           "name": "fonts",
           "type": "folder",
@@ -60,10 +21,6 @@
           "name": "images",
           "type": "folder",
           "children": [
-            {
-              "name": "categoryTutorial.PNG",
-              "type": "file"
-            },
             {
               "name": "demo",
               "type": "folder",
@@ -145,8 +102,20 @@
                   "type": "file"
                 }
               ]
+            },
+            {
+              "name": "categoryTutorial.PNG",
+              "type": "file"
             }
           ]
+        },
+        {
+          "name": "favicon.ico",
+          "type": "file"
+        },
+        {
+          "name": "file.svg",
+          "type": "file"
         },
         {
           "name": "placeholder-user.jpg",
@@ -161,10 +130,6 @@
           "type": "file"
         }
       ]
-    },
-    {
-      "name": "robots.txt",
-      "type": "file"
     },
     {
       "name": "src",
@@ -265,11 +230,19 @@
               "type": "folder",
               "children": [
                 {
+                  "name": "backend-structure.json",
+                  "type": "file"
+                },
+                {
                   "name": "Dynamic-FileTree.tsx",
                   "type": "file"
                 },
                 {
                   "name": "FileTree.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "frontend-structure.json",
                   "type": "file"
                 },
                 {
@@ -285,22 +258,6 @@
                   "type": "file"
                 }
               ]
-            },
-            {
-              "name": "HeaderButtons.jsx",
-              "type": "file"
-            },
-            {
-              "name": "HeaderLayout.jsx",
-              "type": "file"
-            },
-            {
-              "name": "icons.jsx",
-              "type": "file"
-            },
-            {
-              "name": "ImageWithSkeleton.jsx",
-              "type": "file"
             },
             {
               "name": "introduce",
@@ -337,21 +294,9 @@
               "type": "folder",
               "children": [
                 {
-                  "name": "CategorySidebar.jsx",
-                  "type": "file"
-                },
-                {
                   "name": "editor",
                   "type": "folder",
                   "children": [
-                    {
-                      "name": "plate-editor.tsx",
-                      "type": "file"
-                    },
-                    {
-                      "name": "plate-types.ts",
-                      "type": "file"
-                    },
                     {
                       "name": "plugins",
                       "type": "folder",
@@ -439,6 +384,14 @@
                       ]
                     },
                     {
+                      "name": "plate-editor.tsx",
+                      "type": "file"
+                    },
+                    {
+                      "name": "plate-types.ts",
+                      "type": "file"
+                    },
+                    {
                       "name": "transforms.ts",
                       "type": "file"
                     },
@@ -447,6 +400,10 @@
                       "type": "file"
                     }
                   ]
+                },
+                {
+                  "name": "CategorySidebar.jsx",
+                  "type": "file"
                 },
                 {
                   "name": "FilterComponents.jsx",
@@ -1149,6 +1106,22 @@
               ]
             },
             {
+              "name": "HeaderButtons.jsx",
+              "type": "file"
+            },
+            {
+              "name": "HeaderLayout.jsx",
+              "type": "file"
+            },
+            {
+              "name": "icons.jsx",
+              "type": "file"
+            },
+            {
+              "name": "ImageWithSkeleton.jsx",
+              "type": "file"
+            },
+            {
               "name": "WorkspaceLayout.jsx",
               "type": "file"
             }
@@ -1177,14 +1150,6 @@
           "type": "folder",
           "children": [
             {
-              "name": "apiClient.js",
-              "type": "file"
-            },
-            {
-              "name": "docsCustomFeedback.ts",
-              "type": "file"
-            },
-            {
               "name": "hoc",
               "type": "folder",
               "children": [
@@ -1197,10 +1162,6 @@
                   "type": "file"
                 }
               ]
-            },
-            {
-              "name": "interceptors.js",
-              "type": "file"
             },
             {
               "name": "notes",
@@ -1229,6 +1190,18 @@
               ]
             },
             {
+              "name": "apiClient.js",
+              "type": "file"
+            },
+            {
+              "name": "docsCustomFeedback.ts",
+              "type": "file"
+            },
+            {
+              "name": "interceptors.js",
+              "type": "file"
+            },
+            {
               "name": "uploadthing.ts",
               "type": "file"
             },
@@ -1247,8 +1220,30 @@
           "type": "folder",
           "children": [
             {
-              "name": "404.jsx",
-              "type": "file"
+              "name": "_authentication",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "login.jsx",
+                  "type": "file"
+                },
+                {
+                  "name": "loginSuccess.jsx",
+                  "type": "file"
+                },
+                {
+                  "name": "privacy-policy.jsx",
+                  "type": "file"
+                },
+                {
+                  "name": "signup.jsx",
+                  "type": "file"
+                },
+                {
+                  "name": "verify-email.jsx",
+                  "type": "file"
+                }
+              ]
             },
             {
               "name": "admin",
@@ -1285,23 +1280,15 @@
               "type": "folder",
               "children": [
                 {
-                  "name": "about.mdx",
-                  "type": "file"
-                },
-                {
-                  "name": "architecture.mdx",
-                  "type": "file"
-                },
-                {
                   "name": "auth",
                   "type": "folder",
                   "children": [
                     {
-                      "name": "index.mdx",
+                      "name": "_meta.js",
                       "type": "file"
                     },
                     {
-                      "name": "_meta.js",
+                      "name": "index.mdx",
                       "type": "file"
                     }
                   ]
@@ -1311,11 +1298,11 @@
                   "type": "folder",
                   "children": [
                     {
-                      "name": "index.mdx",
+                      "name": "_meta.js",
                       "type": "file"
                     },
                     {
-                      "name": "_meta.js",
+                      "name": "index.mdx",
                       "type": "file"
                     }
                   ]
@@ -1325,41 +1312,37 @@
                   "type": "folder",
                   "children": [
                     {
+                      "name": "_meta.js",
+                      "type": "file"
+                    },
+                    {
                       "name": "futurePlans.mdx",
                       "type": "file"
                     },
                     {
                       "name": "index.mdx",
                       "type": "file"
-                    },
-                    {
-                      "name": "_meta.js",
-                      "type": "file"
                     }
                   ]
-                },
-                {
-                  "name": "file-structure.json",
-                  "type": "file"
-                },
-                {
-                  "name": "index.mdx",
-                  "type": "file"
                 },
                 {
                   "name": "issues",
                   "type": "folder",
                   "children": [
                     {
+                      "name": "_meta.js",
+                      "type": "file"
+                    },
+                    {
                       "name": "index.mdx",
                       "type": "file"
                     },
                     {
-                      "name": "issue1.mdx",
+                      "name": "issue1_2_result.mdx",
                       "type": "file"
                     },
                     {
-                      "name": "issue1_2_result.mdx",
+                      "name": "issue1.mdx",
                       "type": "file"
                     },
                     {
@@ -1373,44 +1356,48 @@
                     {
                       "name": "issue4.mdx",
                       "type": "file"
-                    },
-                    {
-                      "name": "_meta.js",
-                      "type": "file"
                     }
                   ]
-                },
-                {
-                  "name": "mermaidExample.mdx",
-                  "type": "file"
                 },
                 {
                   "name": "notes",
                   "type": "folder",
                   "children": [
                     {
-                      "name": "index.mdx",
+                      "name": "_meta.js",
                       "type": "file"
                     },
                     {
-                      "name": "_meta.js",
+                      "name": "index.mdx",
                       "type": "file"
                     }
                   ]
                 },
                 {
-                  "name": "techStack.mdx",
+                  "name": "_meta.js",
                   "type": "file"
                 },
                 {
-                  "name": "_meta.js",
+                  "name": "about.mdx",
+                  "type": "file"
+                },
+                {
+                  "name": "architecture.mdx",
+                  "type": "file"
+                },
+                {
+                  "name": "index.mdx",
+                  "type": "file"
+                },
+                {
+                  "name": "mermaidExample.mdx",
+                  "type": "file"
+                },
+                {
+                  "name": "techStack.mdx",
                   "type": "file"
                 }
               ]
-            },
-            {
-              "name": "index.js",
-              "type": "file"
             },
             {
               "name": "notes",
@@ -1437,37 +1424,19 @@
               "type": "file"
             },
             {
-              "name": "_authentication",
-              "type": "folder",
-              "children": [
-                {
-                  "name": "login.jsx",
-                  "type": "file"
-                },
-                {
-                  "name": "loginSuccess.jsx",
-                  "type": "file"
-                },
-                {
-                  "name": "privacy-policy.jsx",
-                  "type": "file"
-                },
-                {
-                  "name": "signup.jsx",
-                  "type": "file"
-                },
-                {
-                  "name": "verify-email.jsx",
-                  "type": "file"
-                }
-              ]
-            },
-            {
               "name": "_document.js",
               "type": "file"
             },
             {
               "name": "_meta.js",
+              "type": "file"
+            },
+            {
+              "name": "404.jsx",
+              "type": "file"
+            },
+            {
+              "name": "index.js",
               "type": "file"
             }
           ]
@@ -1525,6 +1494,42 @@
           ]
         }
       ]
+    },
+    {
+      "name": ".env",
+      "type": "file"
+    },
+    {
+      "name": "components.json",
+      "type": "file"
+    },
+    {
+      "name": "jsconfig.json",
+      "type": "file"
+    },
+    {
+      "name": "next-env.d.ts",
+      "type": "file"
+    },
+    {
+      "name": "next.config.mjs",
+      "type": "file"
+    },
+    {
+      "name": "package-lock.json",
+      "type": "file"
+    },
+    {
+      "name": "package.json",
+      "type": "file"
+    },
+    {
+      "name": "postcss.config.mjs",
+      "type": "file"
+    },
+    {
+      "name": "robots.txt",
+      "type": "file"
     },
     {
       "name": "tailwind.config.js",

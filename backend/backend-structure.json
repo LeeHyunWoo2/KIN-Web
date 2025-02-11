@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "type": "folder",
-  "defaultOpen": true,
   "children": [
     {
       "name": "config",
@@ -267,6 +266,14 @@
     },
     {
       "name": ".env",
+      "type": "file"
+    },
+    {
+      "name": "generateFileTree 실행.bat",
+      "type": "file"
+    },
+    {
+      "name": "generateFileTree.js",
       "type": "file"
     },
     {
