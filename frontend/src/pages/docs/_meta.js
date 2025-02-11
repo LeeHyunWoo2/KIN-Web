@@ -10,10 +10,11 @@ export default {
     type: 'separator'
   },
   index: "프로젝트 소개",
-  about: "About",
-  techStack: "Tech Stack",
-  architecture: "Architecture",
+  about: "나를 담은 프로젝트",
+  techStack: "기술 스택",
+  architecture: "프로젝트 구조 및 아키텍처",
   details: "Details",
+  mermaidExample: "Mermaid Example",
   'Features': {
     title: (
         <Separator>

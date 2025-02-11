@@ -1,5 +1,95 @@
+import DocsImage from '../../components/docs/Image';
+import arcImage from '../../../public/images/docs/architecture.png';
+import arcDiagram from '../../../public/images/docs/architecture-diagram.svg';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
+import RenderTreeComponent from "../../components/docs/RenderTree";
+
 # 프로젝트 구조 및 아키텍처
 
   - **백엔드, 프론트엔드 디렉토리 구조**
   - 데이터 흐름 설명 (예: 클라이언트 → 서버 → DB 요청 처리)
   - 인프라 구성도 (Oracle Cloud, Vercel, Cloudflare 등)
+
+<Tabs defaultValue="image" className="mt-8">
+  <TabsList>
+    <TabsTrigger className="text-[15px] font-semibold" value="image">이미지</TabsTrigger>
+    <TabsTrigger className="text-[15px] font-semibold" value="diagram">다이어그램</TabsTrigger>
+  </TabsList>
+  <TabsContent value="image">
+    <DocsImage src={arcImage}/>
+  </TabsContent>
+  <TabsContent value="diagram">
+    <DocsImage src={arcDiagram}/>
+  </TabsContent>
+</Tabs>
+
+
+
+
+```
+/KIN-Web
+    ├─ /backend
+    │   ├─ /config
+    │   ├─ /controllers
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   ├─ /middleware
+    │   │   └─ /user
+    │   ├─ /models
+    │   ├─ /routes
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   ├─ /services
+    │   │   ├─ /admin
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   └─ /utils
+    └─ /frontend
+        ├─ /public
+        │   ├─ /fonts
+        │   └─ /images
+        │       ├─ /demo
+        │       ├─ /docs
+        │       └─ /loginlogo
+        └─ /src
+            ├─ /atoms
+            ├─ /components
+            │   ├─ /admin
+            │   ├─ /auth
+            │   ├─ /docs
+            │   ├─ /introduce
+            │   ├─ /notes
+            │   │   └─ /editor
+            │   │       └─ /plugins
+            │   ├─ /plate-ui
+            │   ├─ /ui
+            │   └─ /userinfo
+            ├─ /hooks
+            ├─ /lib
+            │   ├─ /hoc
+            │   └─ /notes
+            ├─ /pages
+            │   ├─ /_authentication
+            │   ├─ /admin
+            │   ├─ /api
+            │   │   └─ /proxy
+            │   ├─ /docs
+            │   │   ├─ /auth
+            │   │   ├─ /details
+            │   │   ├─ /etc
+            │   │   ├─ /issues
+            │   │   └─ /notes
+            │   ├─ /notes
+            │   └─ /userinfo
+            ├─ /services
+            │   ├─ /notes
+            │   └─ /user
+            └─ /styles
+```
+
+<div className="flex my-5 justify-center grid-cols-3 gap-3">
+  <RenderTreeComponent/>
+</div>
+<div className="flex justify-center">
+  <span className="text-lg font-semibold">디렉토리 + 파일 구조 (누르면 열림)</span>
+</div>
