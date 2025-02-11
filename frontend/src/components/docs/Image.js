@@ -1,14 +1,24 @@
 import Image from 'next/image';
 
-const DocsImage = ({style, ...props}) => {
+const DocsImage = ({style, src, alt}) => {
+
+  const handleOpenNewTab = (e) => {
+    e.preventDefault();
+    window.open(src.src, '_blank');
+  };
+
   return (
+
       <Image
-          {...props}
+          src={src}
+          alt={alt || "image"}
           style={{
             border: '2px solid grey',
             borderRadius: '8px',
+            cursor: 'pointer',
             ...(style || {}),
           }}
+          onClick={handleOpenNewTab} target="_blank" rel="noopenner noreferrer"
       />
   )
 };

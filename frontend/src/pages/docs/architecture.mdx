@@ -1,5 +1,388 @@
+import DocsImage from '../../components/docs/Image';
+import arcImage from '../../../public/images/docs/architecture.png';
+import arcDiagram from '../../../public/images/docs/architecture-diagram.svg';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
+import FileTree, {Folder, File} from "../../components/docs/FileTree";
+import fileTreeData from "./file-structure.json";
+import RenderTreeComponent from "../../components/docs/RenderTree";
+
 # 프로젝트 구조 및 아키텍처
 
   - **백엔드, 프론트엔드 디렉토리 구조**
   - 데이터 흐름 설명 (예: 클라이언트 → 서버 → DB 요청 처리)
   - 인프라 구성도 (Oracle Cloud, Vercel, Cloudflare 등)
+
+<Tabs defaultValue="image" className="mt-8">
+  <TabsList>
+    <TabsTrigger className="text-[15px] font-semibold" value="image">이미지</TabsTrigger>
+    <TabsTrigger className="text-[15px] font-semibold" value="diagram">다이어그램</TabsTrigger>
+  </TabsList>
+  <TabsContent value="image">
+    <DocsImage src={arcImage}/>
+  </TabsContent>
+  <TabsContent value="diagram">
+    <DocsImage src={arcDiagram}/>
+  </TabsContent>
+</Tabs>
+
+
+<RenderTreeComponent/>
+
+
+```
+/KIN-Web
+    ├─ /backend
+    │   ├─ /config
+    │   ├─ /controllers
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   ├─ /middleware
+    │   │   └─ /user
+    │   ├─ /models
+    │   ├─ /routes
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   ├─ /services
+    │   │   ├─ /admin
+    │   │   ├─ /notes
+    │   │   └─ /user
+    │   └─ /utils
+    └─ /frontend
+        ├─ /public
+        │   ├─ /fonts
+        │   └─ /images
+        │       ├─ /demo
+        │       ├─ /docs
+        │       └─ /loginlogo
+        └─ /src
+            ├─ /atoms
+            ├─ /components
+            │   ├─ /admin
+            │   ├─ /auth
+            │   ├─ /docs
+            │   ├─ /introduce
+            │   ├─ /notes
+            │   │   └─ /editor
+            │   │       └─ /plugins
+            │   ├─ /plate-ui
+            │   ├─ /ui
+            │   └─ /userinfo
+            ├─ /hooks
+            ├─ /lib
+            │   ├─ /hoc
+            │   └─ /notes
+            ├─ /pages
+            │   ├─ /_authentication
+            │   ├─ /admin
+            │   ├─ /api
+            │   │   └─ /proxy
+            │   ├─ /docs
+            │   │   ├─ /auth
+            │   │   ├─ /details
+            │   │   ├─ /etc
+            │   │   ├─ /issues
+            │   │   └─ /notes
+            │   ├─ /notes
+            │   └─ /userinfo
+            ├─ /services
+            │   ├─ /notes
+            │   └─ /user
+            └─ /styles
+```
+
+<div className="flex my-5 justify-center grid-cols-3 gap-3">
+  <FileTree>
+    <Folder name="KIN-Web" label="Project Root" defaultOpen={true}>
+      <File name="license" label="LICENSE"/>
+      <File name="readme" label="README.md"/>
+    </Folder>
+  </FileTree>
+  <FileTree>
+    <Folder name="backend" label="/backend" defaultOpen={true}>
+      <Folder name="config" label="/config">
+        <File name="cookie.js" label="cookie.js"/>
+        <File name="db.js" label="db.js"/>
+        <File name="passport.js" label="passport.js"/>
+        <File name="redis.js" label="redis.js"/>
+      </Folder>
+      <Folder name="controllers" label="/controllers">
+        <Folder name="notes" label="/notes">
+          <File name="categoryController.js" label="categoryController.js"/>
+          <File name="noteController.js" label="noteController.js"/>
+          <File name="tagController.js" label="tagController.js"/>
+        </Folder>
+        <Folder name="user" label="/user">
+          <File name="authController.js" label="authController.js"/>
+          <File name="checkSessionController.js" label="checkSessionController.js"/>
+          <File name="emailController.js" label="emailController.js"/>
+          <File name="socialController.js" label="socialController.js"/>
+          <File name="syncController.js" label="syncController.js"/>
+          <File name="userController.js" label="userController.js"/>
+        </Folder>
+      </Folder>
+      <Folder name="middleware" label="/middleware">
+        <Folder name="user" label="/user">
+          <File name="authenticateUser.js" label="authenticateUser.js"/>
+          <File name="validateUser.js" label="validateUser.js"/>
+        </Folder>
+        <File name="errorHandler.js" label="errorHandler.js"/>
+        <File name="logger.js" label="logger.js"/>
+      </Folder>
+      <Folder name="models" label="/models">
+        <File name="category.js" label="category.js"/>
+        <File name="note.js" label="note.js"/>
+        <File name="tag.js" label="tag.js"/>
+        <File name="user.js" label="user.js"/>
+      </Folder>
+      <Folder name="routes" label="/routes">
+        <Folder name="notes" label="/notes">
+          <File name="categoryRoutes.js" label="categoryRoutes.js"/>
+          <File name="noteRoutes.js" label="noteRoutes.js"/>
+          <File name="tagRoutes.js" label="tagRoutes.js"/>
+        </Folder>
+        <Folder name="user" label="/user">
+          <File name="authRoutes.js" label="authRoutes.js"/>
+          <File name="emailRoutes.js" label="emailRoutes.js"/>
+          <File name="socialRoutes.js" label="socialRoutes.js"/>
+          <File name="syncRoutes.js" label="syncRoutes.js"/>
+          <File name="userRoutes.js" label="userRoutes.js"/>
+        </Folder>
+      </Folder>
+      <Folder name="services" label="/services">
+        <Folder name="admin" label="/admin">
+          <File name="statusService.js" label="statusService.js"/>
+        </Folder>
+        <Folder name="notes" label="/notes">
+          <File name="backupService.js" label="backupService.js"/>
+          <File name="categoryService.js" label="categoryService.js"/>
+          <File name="noteService.js" label="noteService.js"/>
+          <File name="tagService.js" label="tagService.js"/>
+        </Folder>
+        <Folder name="user" label="/user">
+          <File name="authService.js" label="authService.js"/>
+          <File name="emailService.js" label="emailService.js"/>
+          <File name="linkSocialService.js" label="linkSocialService.js"/>
+          <File name="socialAuthService.js" label="socialAuthService.js"/>
+          <File name="socialService.js" label="socialService.js"/>
+          <File name="syncService.js" label="syncService.js"/>
+          <File name="tokenService.js" label="tokenService.js"/>
+          <File name="userService.js" label="userService.js"/>
+        </Folder>
+      </Folder>
+      <Folder name="utils" label="/utils">
+        <File name="setCookie.js" label="setCookie.js"/>
+      </Folder>
+      <File name="server.js" label="server.js"/>
+      <File name="package.json" label="package.json"/>
+      <File name="package-lock.json" label="package-lock.json"/>
+    </Folder>
+  </FileTree>
+  <FileTree>
+    <Folder name="frontend" label="/frontend" defaultOpen={true}>
+      <Folder name="public" label="/public">
+        <Folder name="fonts" label="/fonts">
+          <File name="PretendardVariable.woff2" label="PretendardVariable.woff2"/>
+        </Folder>
+        <Folder name="images" label="/images">
+          <Folder name="demo" label="/demo">
+            <File name="프로젝트 미리보기 이미지 파일" label="프로젝트 미리보기 이미지 파일"/>
+          </Folder>
+          <Folder name="loginlogo" label="/loginlogo">
+            <File name="google-login.png" label="google-login.png"/>
+            <File name="kakao-login.png" label="kakao-login.png"/>
+            <File name="naver-login.png" label="naver-login.png"/>
+          </Folder>
+          <File name="categoryTutorial.PNG" label="categoryTutorial.PNG"/>
+        </Folder>
+        <File name="favicon.ico" label="favicon.ico"/>
+        <File name="file.svg" label="file.svg"/>
+        <File name="placeholder-user.jpg" label="placeholder-user.jpg"/>
+        <File name="placeholder.svg" label="placeholder.svg"/>
+        <File name="vercel.svg" label="vercel.svg"/>
+      </Folder>
+      <Folder name="src" label="/src">
+        <Folder name="atoms" label="/atoms">
+          <File name="filterAtoms.js" label="filterAtoms.js"/>
+          <File name="forgotAtoms.js" label="forgotAtoms.js"/>
+          <File name="noteStateAtom.js" label="noteStateAtom.js"/>
+          <File name="userState.js" label="userState.js"/>
+        </Folder>
+        <Folder name="components" label="/components">
+          <Folder name="admin" label="/admin">
+            <File name="Feedback.jsx" label="Feedback.jsx"/>
+            <File name="NoticeAndSettings.jsx" label="NoticeAndSettings.jsx"/>
+            <File name="OverviewStats.jsx" label="OverviewStats.jsx"/>
+            <File name="ServiceStatus.jsx" label="ServiceStatus.jsx"/>
+            <File name="Sidebar.jsx" label="Sidebar.jsx"/>
+            <File name="Statistics.jsx" label="Statistics.jsx"/>
+            <File name="UserActivity.jsx" label="UserActivity.jsx"/>
+            <File name="UserManagement.jsx" label="UserManagement.jsx"/>
+          </Folder>
+          <Folder name="auth" label="/auth">
+            <File name="ForgotComponent.jsx" label="ForgotComponent.jsx"/>
+            <File name="ForgotId.jsx" label="ForgotId.jsx"/>
+            <File name="ForgotPassword.jsx" label="ForgotPassword.jsx"/>
+            <File name="Recaptcha.jsx" label="Recaptcha.jsx"/>
+            <File name="SocialLogin.jsx" label="SocialLogin.jsx"/>
+          </Folder>
+          <Folder name="introduce" label="/introduce">
+            <File name="FeatureTabs.jsx" label="FeatureTabs.jsx"/>
+            <File name="IntroComponent.jsx" label="IntroComponent.jsx"/>
+            <File name="Tech-Stack.jsx" label="Tech-Stack.jsx"/>
+          </Folder>
+          <Folder name="notes" label="/notes">
+            <File name="CategorySidebar.jsx" label="CategorySidebar.jsx"/>
+            <File name="FilterComponents.jsx" label="FilterComponents.jsx"/>
+            <File name="NoteContainer.jsx" label="NoteContainer.jsx"/>
+            <File name="NoteDisplay.jsx" label="NoteDisplay.jsx"/>
+            <File name="NoteList.jsx" label="NoteList.jsx"/>
+            <File name="TagManagement.jsx" label="TagManagement.jsx"/>
+            <File name="TagSelector.jsx" label="TagSelector.jsx"/>
+            <File name="Tutorial.jsx" label="Tutorial.jsx"/>
+            <File name="TutorialButton.jsx" label="TutorialButton.jsx"/>
+            <Folder name="editor" label="/editor">
+              <File name="plate-editor.tsx" label="plate-editor.tsx"/>
+              <File name="plate-types.ts" label="plate-types.ts"/>
+              <Folder name="plugins" label="/plugins">
+                <File name="Plate Editor 플러그인 파일 20개" label="Plate Editor 플러그인 파일 20개"/>
+              </Folder>
+              <File name="transforms.ts" label="transforms.ts"/>
+              <File name="use-create-editor.ts" label="use-create-editor.ts"/>
+            </Folder>
+          </Folder>
+          <Folder name="plate-ui" label="/plate-ui">
+            <File name="Plate Editor 컴포넌트 파일 112개" label="Plate Editor 컴포넌트 파일 112개"/>
+          </Folder>
+          <Folder name="ui" label="/ui">
+            <File name="UI 컴포넌트 파일 49개" label="UI 컴포넌트 파일 49개"/>
+          </Folder>
+          <Folder name="userinfo" label="/userinfo">
+            <File name="changeToLocalAccount.jsx" label="changeToLocalAccount.jsx"/>
+          </Folder>
+          <File name="HeaderButtons.jsx" label="HeaderButtons.jsx"/>
+          <File name="HeaderLayout.jsx" label="HeaderLayout.jsx"/>
+          <File name="icons.jsx" label="icons.jsx"/>
+          <File name="ImageWithSkeleton.jsx" label="ImageWithSkeleton.jsx"/>
+          <File name="WorkspaceLayout.jsx" label="WorkspaceLayout.jsx"/>
+        </Folder>
+        <Folder name="hooks" label="/hooks">
+          <File name="use-is-touch-device.ts" label="use-is-touch-device.ts"/>
+          <File name="use-mobile.jsx" label="use-mobile.jsx"/>
+          <File name="use-toast.jsx" label="use-toast.jsx"/>
+        </Folder>
+        <Folder name="lib" label="/lib">
+          <File name="apiClient.js" label="apiClient.js"/>
+          <Folder name="hoc" label="/hoc">
+            <File name="withAdminAuth.jsx" label="withAdminAuth.jsx"/>
+            <File name="withAuth.jsx" label="withAuth.jsx"/>
+          </Folder>
+          <File name="interceptors.js" label="interceptors.js"/>
+          <Folder name="notes" label="/notes">
+            <File name="categoryUtils.js" label="categoryUtils.js"/>
+            <File name="filterNotes.js" label="filterNotes.js"/>
+            <File name="initDB.js" label="initDB.js"/>
+            <File name="noteCompressor.js" label="noteCompressor.js"/>
+            <File name="noteState.js" label="noteState.js"/>
+          </Folder>
+          <File name="uploadthing.ts" label="uploadthing.ts"/>
+          <File name="utils.js" label="utils.js"/>
+          <File name="validationSchemas.js" label="validationSchemas.js"/>
+        </Folder>
+        <Folder name="pages" label="/pages">
+          <File name="404.jsx" label="404.jsx"/>
+          <File name="_app.jsx" label="_app.jsx"/>
+          <Folder name="_authentication" label="/_authentication">
+            <File name="login.jsx" label="login.jsx"/>
+            <File name="loginSuccess.jsx" label="loginSuccess.jsx"/>
+            <File name="privacy-policy.jsx" label="privacy-policy.jsx"/>
+            <File name="signup.jsx" label="signup.jsx"/>
+            <File name="verify-email.jsx" label="verify-email.jsx"/>
+          </Folder>
+          <File name="_document.js" label="_document.js"/>
+          <File name="_meta.js" label="_meta.js"/>
+          <Folder name="admin" label="/admin">
+            <File name="index.jsx" label="index.jsx"/>
+          </Folder>
+          <Folder name="api" label="/api">
+            <Folder name="proxy" label="/proxy">
+              <File name="[...path].js" label="[...path].js"/>
+            </Folder>
+            <File name="uploadthing.tsx" label="uploadthing.tsx"/>
+          </Folder>
+          <Folder name="docs" label="/docs">
+            <File name="_meta.js" label="_meta.js"/>
+            <File name="about.mdx" label="about.mdx"/>
+            <File name="architecture.mdx" label="architecture.mdx"/>
+            <Folder name="auth" label="/auth">
+              <File name="_meta.js" label="_meta.js"/>
+              <File name="index.mdx" label="index.mdx"/>
+            </Folder>
+            <Folder name="details" label="/details">
+              <File name="_meta.js" label="_meta.js"/>
+              <File name="index.mdx" label="index.mdx"/>
+            </Folder>
+            <Folder name="etc" label="/etc">
+              <File name="_meta.js" label="_meta.js"/>
+              <File name="futurePlans.mdx" label="futurePlans.mdx"/>
+              <File name="index.mdx" label="index.mdx"/>
+            </Folder>
+            <File name="index.mdx" label="index.mdx"/>
+            <Folder name="issues" label="/issues">
+              <File name="_meta.js" label="_meta.js"/>
+              <File name="index.mdx" label="index.mdx"/>
+              <File name="issue1.mdx" label="issue1.mdx"/>
+              <File name="issue1_2_result.mdx" label="issue1_2_result.mdx"/>
+              <File name="issue2.mdx" label="issue2.mdx"/>
+              <File name="issue3.mdx" label="issue3.mdx"/>
+              <File name="issue4.mdx" label="issue4.mdx"/>
+            </Folder>
+            <File name="mermaidExample.mdx" label="mermaidExample.mdx"/>
+            <Folder name="notes" label="/notes">
+              <File name="_meta.js" label="_meta.js"/>
+              <File name="index.mdx" label="index.mdx"/>
+            </Folder>
+            <File name="techStack.mdx" label="techStack.mdx"/>
+          </Folder>
+          <File name="index.js" label="index.js"/>
+          <Folder name="notes" label="/notes">
+            <File name="index.js" label="index.js"/>
+          </Folder>
+          <Folder name="userinfo" label="/userinfo">
+            <File name="index.jsx" label="index.jsx"/>
+          </Folder>
+        </Folder>
+        <Folder name="services" label="/services">
+          <Folder name="notes" label="/notes">
+            <File name="categoryAPIService.js" label="categoryAPIService.js"/>
+            <File name="noteAPIService.js" label="noteAPIService.js"/>
+            <File name="tagAPIService.js" label="tagAPIService.js"/>
+          </Folder>
+          <Folder name="user" label="/user">
+            <File name="authAPIService.js" label="authAPIService.js"/>
+            <File name="syncAPIService.js" label="syncAPIService.js"/>
+          </Folder>
+        </Folder>
+        <Folder name="styles" label="/styles">
+          <File name="code-block-element.css" label="code-block-element.css"/>
+          <File name="globals.css" label="globals.css"/>
+        </Folder>
+      </Folder>
+      <File name=".env" label=".env"/>
+      <File name="components.json" label="components.json"/>
+      <File name="jsconfig.json" label="jsconfig.json"/>
+      <File name="next.config.mjs" label="next.config.mjs"/>
+      <File name="next-env.d.ts" label="next-env.d.ts"/>
+      <File name="package.json" label="package.json"/>
+      <File name="package-lock.json" label="package-lock.json"/>
+      <File name="postcss.config.mjs" label="postcss.config.mjs"/>
+      <File name="robots.txt" label="robots.txt"/>
+      <File name="tailwind.config.js" label="tailwind.config.js"/>
+      <File name="theme.config.jsx" label="theme.config.jsx"/>
+      <File name="tsconfig.json" label="tsconfig.json"/>
+      <File name="vercel.json" label="vercel.json"/>
+    </Folder>
+  </FileTree>
+</div>
+<div className="flex justify-center">
+  <span className="text-lg font-semibold">디렉토리 + 파일 구조 (누르면 열림)</span>
+</div>

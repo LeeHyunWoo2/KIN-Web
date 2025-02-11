@@ -2,6 +2,7 @@ import React from 'react'
 import {useConfig, useThemeConfig} from 'nextra-theme-docs'
 import HeaderButtons from "@/components/HeaderButtons";
 import getGitIssueUrl from "@/lib/docsCustomFeedback"
+import {jsx as jsx5} from "react/jsx-runtime";
 
 const config = {
   head() {
@@ -21,6 +22,7 @@ const config = {
   logoLink: false,
   search: {
     placeholder: '검색어를 입력하세요.',
+    emptyResult: /* @__PURE__ */ jsx5("span", { className: "_block _select-none _p-8 _text-center _text-sm _text-gray-400", children: "결과가 없습니다." }),
   },
   project: {
     link: 'https://github.com/LeeHyunWoo2/KIN-Web',
@@ -39,9 +41,17 @@ const config = {
   sidebar: {
     toggleButton: false,
   },
+  toc:{
+    backToTop: (
+        <span className="text-[15px]">
+        Scroll to top
+        </span>
+    ),
+    title: "목차"
+  },
   editLink: false,
   feedback:{
-    content: <span className="text-sm font-semibold">문의 또는 피드백 →</span>,
+    content: <span className="text-sm">문의 또는 피드백 →</span>,
     useLink() {
       const themeConfig = useThemeConfig();
       return getGitIssueUrl({
@@ -50,6 +60,16 @@ const config = {
         title: ""
       });
     }
+  },
+  mdxComponent: {
+    wrapper: (props) => {
+      try {
+        return <div {...props} />;
+      } catch (error) {
+        console.error('🚨 MDX 렌더링 오류:', error);
+        return <div style={{ color: 'red' }}>⚠️ MDX 렌더링 오류 발생! 확인 후 수정해주세요.</div>;
+      }
+    },
   },
 }
 
