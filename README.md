@@ -35,6 +35,8 @@ KIN - Keep Idea Note는 개인적 필요에 의해서 시작된 Rich TextEditor 
 
 ##  바로가기
 👉 [KIN Noteapp 바로가기](https://noteapp.org)
+👉 [KIN Noteapp Docs 보러가기](https://noteapp.org/docs)
+
 
 <br>
 
