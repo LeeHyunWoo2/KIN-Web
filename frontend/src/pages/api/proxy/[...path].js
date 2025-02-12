@@ -7,8 +7,7 @@ export default async function handler(req, res) {
 
   // Vercel 로그로 확인할 콘솔, (Vercel 에서 표시되지 않는 것만 작성)
   console.log(
-      `content-length : ${req.headers["content-length"]}\n
-      cf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
+      `content-length : ${req.headers["content-length"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합

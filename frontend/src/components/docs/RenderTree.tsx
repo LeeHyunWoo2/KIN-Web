@@ -23,7 +23,7 @@ function RenderTree({ tree }) {
 
 export default function RenderTreeComponent() {
   return (
-      <div className="flex justify-center my-4 gap-4">
+      <div className="flex justify-center my-4 gap-2">
         <FileTree>
           <RenderTree tree={backendTree} />
         </FileTree>

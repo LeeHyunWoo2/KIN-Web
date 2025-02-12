@@ -1,125 +1,125 @@
-import DocsImage from '../../../components/docs/Image';
-import Image from 'next/image';
-import errorHandler from '../../../../public/images/docs/global_error_handler.PNG';
-
-## ⛔ 이슈 4: 돌발적인 데이터베이스 접근 실패
+# ⛔ 이슈 4: 강화된 보안이 소셜 로그인 흐름에 미친 제약
 
 ### 📝 상황 설명
-- 클라이언트에서 로그인 요청을 보냈을 때 백엔드에서 상태 코드가 반환되지 않고, 비정상적으로 서버가 종료됨.
-- 백엔드 서버 로그:
-  - `/auth/login`의 POST 요청 후, **<u>상태 코드나 에러 메시지 없이</u>** 앱 충돌 발생.
-  - Nodemon 로그: `app crashed - waiting for file changes before starting...` (단순히 크래시가 발생했다고만 표기됨)
-- 이 문제는 **정상작동 테스트 확인 후** 컴퓨터를 종료하고, 외출을 하고 돌아와서 발생했다.
-- 주어진 힌트가 너무나도 부족한 상황.
+
+- 소셜 로그인 후 유저 데이터가 클라이언트에 전달되지 않음 → 클라이언트 상태 동기화 실패
+- <span className="text-blue-600 font-semibold">일반 로그인은 정상 작동하므로</span>, 로그인 로직 자체가 아니라 소셜 로그인 방식의 차이에서 문제가 발생했다고 판단됨.
 
 ---
 
-### 🔍 원인 분석
+### 🔍 원인과 제약 분석
 
-1. **중단점 찾기**
+1. **소셜 로그인과 일반 로그인은 무슨 차이가 있는가?**
 
-```javascript filename="authController.js" {4, 6, 9, 11} copy
-    const loginController = async (req, res) => {
-      try {
-        const { id, password } = req.body;
-        console.log('테스트1');
-        const { user, tokens } = await authService.loginUser(id, password);
-        console.log('테스트2');
-        setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
-        setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
-        console.log('테스트3');
-        res.status(200).json({ user });
-        console.log('테스트4');
-      } catch (error) {
-        const { statusCode, message }
-           = createErrorResponse(error.status || 500, error.message || "로그인 중 오류가 발생했습니다.");
-        res.status(statusCode).json({ message });
-      }
-    };
+- SPA인 이 앱 특성상 대부분의 로직이 JSON 응답 기반으로 동작하며, 일반 로그인 역시 JSON 응답을 통해 데이터를 전달받는 구조로 설계되었다.
+- **소셜 로그인**은 `OAuth` 프로토콜을 사용하며, 보안상 **리다이렉트 방식**으로 작동한다. [socialRoutes](https://github.com/LeeHyunWoo2/KIN-Web/blob/6a6fb61125bcb10aa6130769d1a33b0781957498/backend/routes/user/socialRoutes.js#L54)
+- **테스트**:
+  - ✔️ 테스트 : 소셜 로그인 응답을 `res.status(200).json({user})` 으로 변경
+  - ❌ 실패 : `Passport`의 소셜 인증전략은 리다이렉트를 강제하고 있음. JSON 응답을 받으면 화면에 JSON이 출력되고 로직이 멈추는 현상이 발생함.
+  - 💡 결론 : **리다이렉트 방식은 유지해야 하며, 별도의 데이터 전달 방식이 필요**
+- 리다이렉트 구조에서 백엔드 -> 클라이언트로 전달되는 유저 데이터를 안전하게 전달할 방법으로 떠오른건 세가지다.
+  1. 쿠키 데이터 추출
+  2. URL 쿼리 스트링
+  3. 커스텀 HTTP Header
+
+2. **프로젝트 보안정책에 따른 제약**
+1. **HTTPS와 HttpOnly 쿠키의 제한**:
+- 보안 정책상 **HttpOnly 쿠키**를 사용하여 **클라이언트에서 쿠키 접근 불가**
+- 결과적으로 클라이언트에서 **쿠키 기반 세션을 바로 확인할 수 없음**
+
+2. **URL 쿼리 기반 데이터 전달의 보안 문제**:
+- URL에 유저 데이터를 포함할 경우 **브라우저 기록 및 네트워크 요청 로그에 노출 위험**
+- `encodeURIComponent`로 보호해도 **기본적인 보안 취약점이 해소되지 않음**
+
+3. **커스텀 HTTP 헤더 활용**
+- 브라우저 정책상, 보안 설정에 따라 **일부 쿠키 또는 헤더 접근 제한 가능성**
+- DNS 및 방화벽을 담당하는 Cloudflare 에서 WAF 규칙을 추가해야 하는데, 무료플랜의 규칙 갯수 제한 때문에 생략 (...)
+
+3. **유지보수와 확장성 문제**
+- **소셜 로그인 후 계정 연동 문제**: 기존 일반 로그인 계정에 **소셜 계정을 추가 연동**한 경우, **동일한 유저 데이터라도 인증 방식이 다르면 세션 중복 가능성** 존재.
+- **프론트엔드 로직의 복잡성 증가**: 소셜 로그인 후 클라이언트에서 상태 동기화 과정이 다를 경우, 로그인 이후의 UI 흐름이 불안정할 가능성이 있음.
+
+4. **정리** : 원인이 무엇인지는 쉽게 발견했으나, 해결방안이 굉장히 까다로운 상황이다.
+    1. 일반 로그인과 소셜 로그인의 서로 다른 응답 방식을 유지해야 함.
+    2. 보안 정책을 준수해야 함.
+    3. 가능한 로그인 로직에 일관성이 있어야 함.
+
+---
+
+### 🛠️ 해결 방안
+1. **로그인 로직의 역할 분리**
+- 최대한 일관성을 위해 각 로직을 백엔드에서 쿠키발급 및 반환까지만 진행하도록 변경
+- 이후 '**로그인 성공 처리**'를 별도로 수행하는 페이지(`LoginSuccess`)에서 상태 동기화 진행
+- 즉, **로그인은 티켓 발급**, 프로필 로딩 및 페이지 이동은 `LoginSuccess` 에서 처리
+
+2. **공통 로그인 성공 페이지(`LoginSuccess`) 도입**
+ ```jsx filename="loginSuccess.jsx" copy
+   useEffect(() => {
+     const syncProfile = async () => {
+       try {
+         const user = await getPublicProfile(); // 공개 데이터 API 호출
+         await setAuth(user.role)
+         if (user.role === 'admin') {
+           window.location.href = '/admin';
+         } else {
+           await router.push('/notes'); // Notes 페이지로 이동
+         }
+       } catch (error) {
+         console.error('프로필 동기화 실패:', error);
+         await router.push('/login'); // 실패 시 로그인 페이지로 리다이렉트
+       }
+     };
+     syncProfile();
+   }, []); // 이 페이지의 컴포넌트가 처음 마운트될때 작동
 ```
+ - [코드 링크](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/loginSuccess.jsx)
+ - 모든 로그인(일반, 소셜)이 `/loginSuccess` 페이지를 거치도록 통합.
+ - 클라이언트는 해당 페이지에서 `getPublicProfile` API를 통해 쿠키 기반 인증 정보를 요청함.
 
- - 힌트가 너무 없기 때문에 **로직이 어디서 멈췄는지** 부터 확인해야 한다. 따라서 `loginController`에 더미 로그를 추가
- - 결과: `테스트1`까지만 출력됨. `authService.loginUser`에서 실행이 중단된 것으로 보임.
 
-2. **의심 영역 좁히기**
- - **서비스 로직 점검**
-- `authService.loginUser`는 MongoDB와 상호작용하는 코드임을 확인. [authService](https://github.com/LeeHyunWoo2/KIN-Web/blob/91d4f3990e491488c4032d4aa65e016fcc7aadb1/backend/services/user/authService.js#L44)
-- **정상 작동 코드 그대로 구동했다는 가정 하에** 해당 함수에서 문제가 발생할 가능성이 있는 원인은 <u>단순한 연결 실패</u> 정도로 추측됨.
-- 일반적으로 예상되는 연결 실패 시나리오는 이 정도로 예상된다.
-  1. 개발환경의 인터넷 연결이 끊김
-  2. DB가 셧다운됨
-  3. DB 로그인에 실패함
-  4. 로컬 환경의 IP가 차단됨
+3. **소셜 로그인 리다이렉트 최적화**
+```js filename="socialRoutes.js" {8} copy
+ // 토큰 발급
+ const tokens = await tokenService.generateTokens(user);
+   // 토큰을 HTTP-Only 쿠키로 설정
+    setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
+    setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
 
- - **데이터베이스 연결 상태 점검**
-- ✔️ 개발 환경의 인터넷은 정상적으로 연결되어 있음을 확인 -> 1번 제외
-- ✔️ 배포중인 서버에서 테스트해본 결과 정상 작동을 확인. 따라서 개발 환경의 **접근 권한 문제**로 추리영역을 좁혀나감 -> 2번 제외
-- ✔️ 배포와 로컬 두 환경이 **동일한 환경변수를 통해** 접속하고 있음. -> 3번 제외
-- ❌ 남은 후보는 4번. **IP차단**의 가능성이 매우 높아짐.
-- 💡 또한 증상이 **자리를 비운 이후에** 컴퓨터 부팅을 해보니 발생했다는 부분도 중요 단서.
+   // 로그인 성공 페이지로 리다이렉트하며 별도의 쿼리를 작성하지 않음
+   res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
+```
+ - [코드 링크](https://github.com/LeeHyunWoo2/KIN-Web/blob/6a6fb61125bcb10aa6130769d1a33b0781957498/backend/routes/user/socialRoutes.js#L48)
+ - 백엔드에서는 소셜 로그인이 성공하면 JWT 토큰을 발급 및 쿠키 설정 후 `/loginSuccess`로 리다이렉트함
+ - 클라이언트는 이 **HttpOnly 쿠키** 를 데이터 요청 API에 활용하게 됨.
 
-3. **원인 확인**
-- 보안을 위해 클라우드 MongoDB 특정 IP만 접근을 허용하는 **화이트리스트**를 설정해 놓았음.
-- 개발 환경 즉, 집의 인터넷은 통신사 공인 유동 IP를 사용중임
-- 외출 후 컴퓨터를 부팅하고 확인해보니 안된다? -> 외출하고 온 사이에 집 인터넷 공인 IP가 변경되어 화이트리스트에서 제외된것.
-- 로컬 환경에서 MongoDB에 연결을 시도했으나, IP 차단으로 인해 연결 실패 → 서비스 로직이 중단됨.
+4. **일반 로그인 흐름 통합**
+ - 일반 로그인 성공 후에도 `/loginSuccess` 페이지로 이동하게 만들어, 소셜 로그인과 동일한 데이터 동기화 흐름 유지.
+ - 이를 통해 프론트엔드에서 **로그인 방식별로 분기 처리를 할 필요가 없음.**
+
+5. **세션 검증 미들웨어를 거치도록 설계**
+
+ - 유저 데이터 요청 과정에서 토큰 갱신에 사용되던 세션 검증 미들웨어 [authenticateUser](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/authenticateUser.js) 를 통과하도록 조정함.
+ - 이 과정에서 Redis를 통한 세션 검증 및 토큰 블랙리스트 확인이 이루어짐.
+ - 결과적으로, 세션이 유효한 사용자만 로그인 상태를 유지할 수 있도록 보안이 더욱 강화됨.
 
 ---
 
-### 🛠️ 해결 방안:
+### ✅ 결과
+- **JSON 기반 일반 로그인과 리다이렉트 기반 소셜 로그인을 동일한 흐름으로 처리 가능**
+  - 일반 로그인도 로그인 성공 페이지로 이동하므로, 인증 후 데이터를 가져오는 방식이 일관됨.
+  - 클라이언트 측에서는 로그인 성공 페이지를 공통으로 처리하면 됨.
 
-1. **클라우드 MongoDB 화이트리스트 갱신**
-- 새로 변경된 IP를 MongoDB 클라우드 대시보드의 화이트리스트에 추가. 이것만으로 문제 자체는 해결된다.
-- 이 문제는 어렵지 않게 원인을 찾고, 해결 방안도 간단했지만, 문제가 발생했을 때 **너무나도 단서가 없었다는 점**에서 로깅에 개선이 필요함을 느꼈다.
+- **보안 강화**
+  - URL에 데이터를 노출하지 않고, `HttpOnly` 쿠키 정책을 유지하며 데이터를 안전하게 동기화.
+  - 기존 로그인은 로그인 성공 -> 토큰 발급 후 즉시 사용하는 구조였지만, 이 방식은 토큰 발급 이후 **추가 검증**까지 거쳐야 로그인 성공으로 인정됨
 
-2. **전역 uncaught 에러 핸들러 추가**
-```javascript filename="server.js" copy
-process.on('uncaughtException', (err) => {
-    console.error('[에러] Uncaught Exception:', err);
-});
+- **일관성 확보 및 유지보수성 향상**
+  - 기존에는 서로 다르게 동작했지만, 이제는 `/loginSuccess` 로 향하는 동작까지만 행하기 때문에, 추후 **새로운 인증방식을 추가하더라도 일관된 구조를 유지**할 수 있음.
+  - 클라이언트의 상태관리, 세션 등 모든 로직이 동일한 타이밍에 작동하기 때문에 원활하게 확장 가능
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('[에러] Unhandled Rejection:', reason);
-});
-   ```
-
-- 이 핸들러를 통해 로직 내에서 미처 탐지하지 못한 Exception, promise reject가 발생해도 확인이 가능하다.
-
-3. **로깅 라이브러리 및 필터 추가**
-```javascript filename="logger.js" copy
-// 커스텀 토큰 생성: query, errorMessage
-morgan.token('query', (req) => JSON.stringify(req.query || {}));
-morgan.token('errorMessage', (req, res) => {
-    return res.statusCode >= 400 ? `Error: ${res.statusMessage || 'Unknown error'}` : '';
-});
-
-// 로그 포맷 정의
-const logFormat = ':time / :method :url [:status] query: :query body: :body :errorMessage';
-   ```
-- Morgan 로깅 미들웨어를 도입, 설정 파일 작성.
-- [코드 링크](https://github.com/LeeHyunWoo2/KIN-Web/blob/91d4f3990e491488c4032d4aa65e016fcc7aadb1/backend/middleware/logger.js#L37)
-
-<br/>
-
-  ---
-
-  ### ✅ 결과
-
-  - 화이트리스트 갱신 후 테스트 결과, 로그인 요청이 정상적으로 처리되고 서버도 안정적으로 동작함.
-
-<br/>
-
-<DocsImage src={errorHandler} alt="logs"/>
-
-  - (동일한 에러를 발생시켜본 결과, **IP that isn't whitelisted** 라고 명시되는것을 확인할 수 있다.)
-  - 또한 Morgan 을 통해 기본적인 요청의 흐름을 파악할 수 있게 되었다.
-
+---
 
 ### 💡 배운 점
-  - 내가 무엇을, 어떤 환경에서 개발하는것인지 명확하게 이해하고 있었기 때문에 큰 고생을 하지 않았고, 자신감과 확신을 얻는 좋은 경험이 되었습니다.
-  - 로깅의 중요성. 데이터와 로직의 흐름을 확인할 수 있어야 빠르고 정확하게 대응이 가능하다는점을 배웠습니다.
-
-<br/>
-> 겉으로는 단순하고 예사롭게 보일 수 있는 사례일지라도,<br/>
-> 데이터베이스 접속 문제 상황에서 곧바로 인터넷의 공인 IP 변경 가능성을 추론하는 신입 개발자는 흔치 않을 것입니다.<br/>
-> 이는 저의 문제 해결 능력과 판단력의 강점을 잘 보여주는 부분이라고 생각합니다.
+1. 로직의 일관성을 유지할수록 유지보수성이 크게 향상된다.
+2. 제약이 발생했을 때 자신이 뭘 만드는지 <u>**확실하게 이해하고 있어야**</u>  헤쳐나갈 수 있다.
+3. 보안 정책이 강화될수록 개발 과정도 복잡해지므로 균형을 맞춰야 한다.

@@ -12,9 +12,19 @@ export default {
   index: "프로젝트 소개",
   about: "나를 담은 프로젝트",
   techStack: "기술 스택",
-  architecture: "프로젝트 구조 및 아키텍처",
-  details: "Details",
-  mermaidExample: "Mermaid Example",
+  structure: "프로젝트 디렉토리 구조",
+  'Fundamental': {
+    title: (
+        <Separator>
+          Fundamentals
+        </Separator>
+    ),
+    type: 'separator'
+  },
+  architecture: "Architecture",
+  frontend: "Frontend",
+  backend: "Backend",
+  security: "Security",
   'Features': {
     title: (
         <Separator>

@@ -1,59 +1,35 @@
-import DocsImage from '../../components/docs/Image';
-import arcImage from '../../../public/images/docs/architecture.png';
-import arcDiagram from '../../../public/images/docs/architecture-diagram.svg';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
 import RenderTreeComponent from "../../components/docs/RenderTree";
 
-# 프로젝트 구조 및 아키텍처
-
-  - **백엔드, 프론트엔드 디렉토리 구조**
-  - 데이터 흐름 설명 (예: 클라이언트 → 서버 → DB 요청 처리)
-  - 인프라 구성도 (Oracle Cloud, Vercel, Cloudflare 등)
-
-<Tabs defaultValue="image" className="mt-8">
-  <TabsList>
-    <TabsTrigger className="text-[15px] font-semibold" value="image">이미지</TabsTrigger>
-    <TabsTrigger className="text-[15px] font-semibold" value="diagram">다이어그램</TabsTrigger>
-  </TabsList>
-  <TabsContent value="image">
-    <DocsImage src={arcImage}/>
-  </TabsContent>
-  <TabsContent value="diagram">
-    <DocsImage src={arcDiagram}/>
-  </TabsContent>
-</Tabs>
-
-
-
+# 프로젝트 디렉토리 구조
 
 ```
 /KIN-Web
     ├─ /backend
-    │   ├─ /config
-    │   ├─ /controllers
+    │   ├─ /config              # 각종 환경 설정
+    │   ├─ /controllers         # API 요청 처리
     │   │   ├─ /notes
     │   │   └─ /user
-    │   ├─ /middleware
+    │   ├─ /middleware          # 세션 유효성 검사 및 로깅, 에러 핸들러
     │   │   └─ /user
-    │   ├─ /models
-    │   ├─ /routes
+    │   ├─ /models              # 데이터베이스 모델
+    │   ├─ /routes              # 라우트 정의
     │   │   ├─ /notes
     │   │   └─ /user
-    │   ├─ /services
+    │   ├─ /services            # 비즈니스 로직
     │   │   ├─ /admin
     │   │   ├─ /notes
     │   │   └─ /user
-    │   └─ /utils
+    │   └─ /utils               # 유틸리티 함수
     └─ /frontend
-        ├─ /public
+        ├─ /public              # 정적 리소스 파일
         │   ├─ /fonts
         │   └─ /images
         │       ├─ /demo
         │       ├─ /docs
         │       └─ /loginlogo
         └─ /src
-            ├─ /atoms
-            ├─ /components
+            ├─ /atoms           # 전역 상태 관리
+            ├─ /components      # 재사용 가능한 컴포넌트
             │   ├─ /admin
             │   ├─ /auth
             │   ├─ /docs
@@ -66,9 +42,9 @@ import RenderTreeComponent from "../../components/docs/RenderTree";
             │   └─ /userinfo
             ├─ /hooks
             ├─ /lib
-            │   ├─ /hoc
+            │   ├─ /hoc          # 고차 컴포넌트
             │   └─ /notes
-            ├─ /pages
+            ├─ /pages            # 웹 페이지 구성
             │   ├─ /_authentication
             │   ├─ /admin
             │   ├─ /api
@@ -81,10 +57,10 @@ import RenderTreeComponent from "../../components/docs/RenderTree";
             │   │   └─ /notes
             │   ├─ /notes
             │   └─ /userinfo
-            ├─ /services
+            ├─ /services         # API 호출 및 서비스 로직
             │   ├─ /notes
             │   └─ /user
-            └─ /styles
+            └─ /styles           # 글로벌 스타일 파일
 ```
 
 <div className="flex my-5 justify-center grid-cols-3 gap-3">

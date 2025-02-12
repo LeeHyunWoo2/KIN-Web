@@ -1,0 +1,31 @@
+import DocsImage from '../../../components/docs/Image';
+import arcImage from '../../../../public/images/docs/architecture.png';
+import arcDiagram from '../../../../public/images/docs/architecture-diagram.svg';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../../components/ui/tabs";
+
+# 아키텍처 개요
+
+<Tabs defaultValue="image" className="mt-8">
+  <div className="flex">
+  <TabsList className="border">
+    <TabsTrigger className="text-[15px] font-semibold min-w-24" value="image">이미지</TabsTrigger>
+    <TabsTrigger className="text-[15px] font-semibold min-w-24" value="diagram">다이어그램</TabsTrigger>
+  </TabsList>
+    <span className="flex items-center ml-4 text-xl font-semibold">
+    👈 탭 전환
+    </span>
+  </div>
+  <TabsContent value="image">
+    <DocsImage src={arcImage}/>
+  </TabsContent>
+  <TabsContent value="diagram">
+    <DocsImage src={arcDiagram}/>
+  </TabsContent>
+</Tabs>
+
+<br/>
+<span className="flex justify-center">각 인프라간의 관계를 표현하는 이미지와 다이어그램</span>
+<br/>
+
+  - 해당 앱을 서비스하기 위해 구성한 모든 인프라가 Cloud 환경에서 동작합니다.
+  - 이 카테고리의 이후 문서는 각 인프라의 간단한 소개와, 선택한 이유, 주요 데이터 흐름을 정리합니다.
