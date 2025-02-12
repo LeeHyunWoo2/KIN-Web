@@ -22,9 +22,9 @@ export default {
     type: 'separator'
   },
   architecture: "Architecture",
-  frontend: "Frontend",
-  backend: "Backend",
-  security: "Security",
+  frontend: {title: "Frontend", display: "hidden"},
+  backend: {title:"Backend", display: "hidden"},
+  security: {title:"Security", display: "hidden"},
   'Features': {
     title: (
         <Separator>
@@ -33,8 +33,8 @@ export default {
     ),
     type: 'separator'
   },
-  auth: "Auth",
-  notes: "Notes",
+  auth: {title: "Auth", display: "hidden"},
+  notes: {title: "Notes", display: "hidden"},
   'Insights':{
     title: (
         <Separator>
@@ -44,5 +44,5 @@ export default {
     type: 'separator',
   },
   issues: "Issues",
-  etc: "Extras",
+  etc: {title: "Extras", display: "hidden"},
 }
