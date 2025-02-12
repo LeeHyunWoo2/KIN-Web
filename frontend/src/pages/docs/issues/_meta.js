@@ -7,5 +7,4 @@ export default {
   issue4 : "강화된 보안에 의한 제약",
   issue5 : "로그인 성공 후 로그인 실패",
   issue6 : "환경 차이에 의한 쿠키 유실",
-  issue7 : "",
 }
