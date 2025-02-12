@@ -31,7 +31,7 @@ export default function HeaderButtons({auth}) {
         {isReady && (
             <>
               {auth ? (
-                  <Link href="/notes">
+                  <a href="/notes">
                     <Label className={cn(
                         "font-semibold text-[15px] cursor-pointer",
                         isActive("/notes") ? "text-foreground underline"
@@ -40,9 +40,10 @@ export default function HeaderButtons({auth}) {
                            aria-label="Notes">
                       Notes
                     </Label>
-                  </Link>
+                  </a>
               ) : (
-                  <Link href="/login">
+                  // 라우팅을 사용하면 클라우드 플레어 관리 챌린지가 스킵되기 때문에 a 태그 사용
+                  <a href="/login">
                     <Label className={cn(
                         "font-semibold text-[15px] cursor-pointer",
                         isActive("/login") ? "text-foreground underline"
@@ -51,7 +52,7 @@ export default function HeaderButtons({auth}) {
                            aria-label="Login">
                       Login
                     </Label>
-                  </Link>
+                  </a>
               )}
               {auth === 'admin' && (
                   <a href="/admin">
