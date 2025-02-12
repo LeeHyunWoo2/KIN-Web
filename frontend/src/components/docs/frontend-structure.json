@@ -1390,10 +1390,6 @@
                   "type": "file"
                 },
                 {
-                  "name": "mermaidExample.mdx",
-                  "type": "file"
-                },
-                {
                   "name": "techStack.mdx",
                   "type": "file"
                 }

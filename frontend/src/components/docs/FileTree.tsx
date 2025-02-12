@@ -36,7 +36,7 @@ function useIndent() {
 function Tree({ children }: { children: ReactNode }): ReactElement {
   return (
       <div className={cn("flex")}>
-        <ul className="border list-none !p-4 !py-1 !m-0 min-w-[280px]">{children}</ul>
+        <ul className="border list-none !p-4 !py-1 !m-0 min-w-[200px]">{children}</ul>
       </div>
   )
 }

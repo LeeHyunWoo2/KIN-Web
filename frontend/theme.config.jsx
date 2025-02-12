@@ -3,6 +3,8 @@ import {useConfig, useThemeConfig} from 'nextra-theme-docs'
 import HeaderButtons from "@/components/HeaderButtons";
 import getGitIssueUrl from "@/lib/docsCustomFeedback"
 import {jsx as jsx5} from "react/jsx-runtime";
+import {authAtom} from "@/atoms/userState";
+import {useAtomValue} from "jotai";
 
 const config = {
   head() {
@@ -14,11 +16,14 @@ const config = {
         </>
     )
   },
-  logo: (
+  logo: () => {
+    const auth = useAtomValue(authAtom);
+    return (
       <div className="flex items-center gap-6">
-        <HeaderButtons/>
+        <HeaderButtons auth={auth}/>
       </div>
-  ),
+    )
+  },
   logoLink: false,
   search: {
     placeholder: '검색어를 입력하세요.',
@@ -66,8 +71,8 @@ const config = {
       try {
         return <div {...props} />;
       } catch (error) {
-        console.error('🚨 MDX 렌더링 오류:', error);
-        return <div style={{ color: 'red' }}>⚠️ MDX 렌더링 오류 발생! 확인 후 수정해주세요.</div>;
+        console.error('MDX 렌더링 오류:', error);
+        return <div style={{ color: 'red' }}>MDX 문법 오류.</div>;
       }
     },
   },
