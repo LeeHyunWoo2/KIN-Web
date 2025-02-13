@@ -99,7 +99,7 @@ app.use(
         'X-CSRF-Token',
         'X-Requested-With',
         'cf-connecting-ip',
-        /*'x-skip-interceptor',*/
+        'x-skip-interceptor',
         'x-api-key'
       ], // 허용할 헤더
       credentials: true, // 쿠키를 포함한 요청 허용

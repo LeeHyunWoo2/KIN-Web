@@ -66,16 +66,6 @@ const config = {
       });
     }
   },
-  mdxComponent: {
-    wrapper: (props) => {
-      try {
-        return <div {...props} />;
-      } catch (error) {
-        console.error('MDX 렌더링 오류:', error);
-        return <div style={{ color: 'red' }}>MDX 문법 오류.</div>;
-      }
-    },
-  },
 }
 
 // 커스터마이징 할거면 여기 참고
