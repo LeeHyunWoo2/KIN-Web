@@ -5,21 +5,21 @@ const cache = new Map(); // 메모리 캐시 (token => { user, expires })
 const authenticateUser = async (req, res, next) => {
   try {
     const token = req.cookies.accessToken; // 쿠키에서 액세스 토큰 추출
-    /*const skipInterceptor = req.headers['x-skip-interceptor'] || false;*/
+    const skipInterceptor = req.headers['x-skip-interceptor'] || false;
 
     if (!token) {
-/*      if (skipInterceptor) {
+      if (skipInterceptor) {
         // withAuth에서 요청한 경우엔 checkSessionController로 넘김
         req.user = null;
         return next();
-      }*/
+      }
       return res.status(401).json();
     }
 
     // 블랙리스트 확인
     const isInvalidated = await redisClient.get(`blacklist:${token}`);
     if (isInvalidated) {
-      return res.status(401).json({ message: '이미 로그아웃된 유저입니다.' });
+      return res.status(401).json({ message: 'Access denied.' });
     }
 
     // 캐시 확인
@@ -38,11 +38,11 @@ const authenticateUser = async (req, res, next) => {
     req.user = user; // 요청 데이터에 유저 정보 추가
     next(); // 다음 미들웨어 이동
   } catch (error) {
-/*    const skipInterceptor = req.headers['x-skip-interceptor'] || false;
+    const skipInterceptor = req.headers['x-skip-interceptor'] || false;
     if (skipInterceptor) {
       req.user = null;
       return next();
-    }*/
+    }
     return res.status(401).json();
   }
 };

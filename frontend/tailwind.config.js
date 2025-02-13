@@ -96,11 +96,29 @@ module.exports = {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+				rainbowPing: {
+					'0%': {
+						transform: 'scale(1)',
+						opacity: '1',
+						backgroundColor: '#ff0000',
+					},
+					'16.66%': { backgroundColor: '#ff7f00' },
+					'33.33%': { backgroundColor: '#ffff00' },
+					'50%': { backgroundColor: '#00ff00' },
+					'66.66%': { backgroundColor: '#0000ff' },
+					'83.33%': { backgroundColor: '#4b0082' },
+					'100%': {
+						transform: 'scale(1.4, 1.9)',
+						opacity: '0',
+						backgroundColor: '#8b00ff',
+					},
+				},
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+				rainbowPing: 'rainbowPing 1s infinite',
   		},
   		screens: {
   			'main-hover': {

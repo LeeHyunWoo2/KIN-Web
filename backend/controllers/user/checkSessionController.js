@@ -5,16 +5,13 @@ const {createErrorResponse} = require("../../middleware/errorHandler");
 // 세션이 유효한지 검증 (일반 사용자용)
 const checkSession = async (req, res) => {
   try {
-    // const skipInterceptor = req.headers['x-skip-interceptor'];
+    const skipInterceptor = req.headers['x-skip-interceptor'];
     const user = req.user;
-    if (!user) {
-      return res.status(401).json();
-    }
-/*    if (!user && skipInterceptor) {
+    if (!user && skipInterceptor) {
         return res.status(419).json({message: '로그인이 필요한 페이지 입니다.'});
     } else if (!user) {
       return res.status(401).json();
-    }*/
+    }
     res.status(200).json({ user });
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "세션 확인 중 오류가 발생했습니다.");

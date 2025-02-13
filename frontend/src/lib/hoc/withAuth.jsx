@@ -37,7 +37,7 @@ const withAuth = (WrappedComponent) => {
         try {
           const response = await apiClient.get('/auth/session',{
             headers: {
-              // 'x-skip-interceptor' : true, // 확인버튼 누르기도 전에 리다이렉트 발생으로 인해 따로 플래그 추가
+              'x-skip-interceptor' : true, // 확인버튼 누르기도 전에 리다이렉트 발생으로 인해 따로 플래그 추가
             }
           });
           if (response.status !== 200) {
@@ -73,7 +73,7 @@ const withAuth = (WrappedComponent) => {
               }>
                 <AlertDialogPortal >
                   <AlertDialogOverlay />
-                  <AlertDialogContent className="max-w-md">
+                  <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>로그인 후 이용하실 수 있습니다.</AlertDialogTitle>
                       <AlertDialogDescription>
