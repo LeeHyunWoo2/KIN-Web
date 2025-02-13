@@ -12,10 +12,11 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import TechStack from "@/components/introduce/Tech-Stack";
 import * as React from "react";
 import {ArrowRightIcon} from "@radix-ui/react-icons";
-import {SquareCheckBig} from "lucide-react";
-import Checkbox from "@/components/ui/Check";
+import {SquareCheckBig, Info} from "lucide-react";
+import {useState} from "react";
 
 export default function IntroContent({auth}) {
+  const [isGuided, setIsGuided] = useState(false)
 
   const handleStarter = () => {
     if (auth) {
@@ -24,6 +25,10 @@ export default function IntroContent({auth}) {
       window.location.href = "/login"
     }
   }
+
+  const handleGuideCheck = () => {
+    setIsGuided(!isGuided);
+  };
 
   return (
       <div className="flex flex-col mt-10">
@@ -63,6 +68,19 @@ export default function IntroContent({auth}) {
                 </Button>
               </a>
             </div>
+          </div>
+          <div className="flex justify-center mt-10">
+              <button
+                  className={`relative h-14 rounded-md px-4 text-lg font-semibold bg-teal-500 hover:bg-teal-600 
+                 text-primary-foreground shadow inline-flex items-center justify-center gap-2 
+                 whitespace-nowrap transition-colors before:absolute before:inset-0
+                  before:z-[-1] before:rounded-md ${
+                      isGuided ? "" : "before:animate-rainbowPing"
+                  }`}
+                  onClick={handleGuideCheck}
+              >
+                <Info size={24} strokeWidth={2.25} />뭐부터 봐야 하나요?
+              </button>
           </div>
         </section>
 

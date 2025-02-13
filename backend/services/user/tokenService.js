@@ -72,14 +72,14 @@ const verifyRefreshToken = async (refreshToken) => {
 
     // Redis에 저장된 토큰과 비교
     if (!storedToken.token || storedToken.token !== refreshToken) {
-      throw new Error('유효하지 않은 Refresh Token입니다.');
+      throw new Error('Access denied.');
     }
 
     // Redis의 TTL 확인
     let existingTokenTTL = await redisClient.ttl(`refreshToken:${userId}`);
 
     if (existingTokenTTL < 0) {
-      throw new Error('리프레시 토큰 만료')
+      throw new Error('Access denied.')
 
       // 자동로그인 유저의 리프레시 토큰의 만료가 3일 미만일경우
       // REMEMBER_RENEW_REFRESH_TTL_LIMIT = 259200초 = 3일
@@ -100,8 +100,8 @@ const verifyRefreshToken = async (refreshToken) => {
 
     return decodedData; // 검증된 토큰 반환
   } catch (error) {
-    console.error('Refresh Token 검증 실패:', error.message);
-    const customError = new Error('세션이 만료되었습니다.');
+    console.error(error.message);
+    const customError = new Error('Access denied.');
     customError.status = 419;
     throw customError;
   }
