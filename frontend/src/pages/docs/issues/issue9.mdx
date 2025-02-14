@@ -56,8 +56,6 @@ router.get('/session', authenticateUser, checkSession);
         }
         setIsLoading(false);
       };
-      checkAuth();
-    }, [auth]);
 ```
 
 2. **백엔드 `authenticateUser` 미들웨어 수정**

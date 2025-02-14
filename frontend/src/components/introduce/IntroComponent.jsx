@@ -69,7 +69,7 @@ export default function IntroContent({auth}) {
               </a>
             </div>
           </div>
-          <div className="flex justify-center mt-10">
+{/*          <div className="flex justify-center mt-10">
               <button
                   className={`relative h-14 rounded-md px-4 text-lg font-semibold bg-teal-500 hover:bg-teal-600 
                  text-primary-foreground shadow inline-flex items-center justify-center gap-2 
@@ -81,7 +81,7 @@ export default function IntroContent({auth}) {
               >
                 <Info size={24} strokeWidth={2.25} />뭐부터 봐야 하나요?
               </button>
-          </div>
+          </div>*/}
         </section>
 
         {/*주요 기능 사진, gif*/}

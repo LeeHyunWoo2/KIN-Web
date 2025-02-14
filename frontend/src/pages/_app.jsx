@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import NProgress from 'nprogress';
@@ -17,6 +17,13 @@ function App({Component, pageProps}) {
   const getLayout = Component.getLayout || ((page) => page);
   const router = useRouter();
   const [auth, setAuth] = useAtom(authAtom);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
 
   // 페이지 로드 시 localStorage와 authAtom 동기화
   useEffect(() => {
@@ -55,9 +62,15 @@ function App({Component, pageProps}) {
           <title>Keep Idea Note</title>
         </Head>
         <TooltipProvider delayDuration={0}>
-          <Component {...pageProps} />
+          <div style={{
+            opacity: fontsLoaded ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out"
+          }}>
+            <Component {...pageProps} />
+          </div>
         </TooltipProvider>
-        <Toaster expand={true} richColors position="bottom-center" offset="70px"/>
+        <Toaster expand={true} richColors position="bottom-center"
+                 offset="70px"/>
       </>
   );
 }
