@@ -22,7 +22,7 @@ export default {
     type: 'separator'
   },
   architecture: "Architecture",
-  frontend: {title: "Frontend", display: "hidden"},
+  frontend: "Frontend",
   backend: {title:"Backend", display: "hidden"},
   security: {title:"Security", display: "hidden"},
   'Features': {

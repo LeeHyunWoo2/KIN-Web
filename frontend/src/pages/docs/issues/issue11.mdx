@@ -1,0 +1,132 @@
+import BeforeAfter from "../../../components/docs/BeforeAfter";
+import fontUXBefore from "../../../../public/images/docs/fontUXbefore.gif"
+import fontUXAfter from "../../../../public/images/docs/fontUXafter.gif"
+import fontSizeBefore from "../../../../public/images/docs/폰트 최적화 전.PNG"
+import fontSizeAfter from "../../../../public/images/docs/폰트 최적화 후.PNG"
+
+# 🚀 폰트 최적화 및 UX 개선
+
+### 📝 상황 설명
+
+생각보다 큰 폰트 파일의 영향
+
+처음에는 **폰트를 직접 `public/fonts/`에 넣고 제공**하고 있었다.
+그런데 **Vercel 에서 트래픽 통계를 보니까, 폰트 다운로드가 대부분의 트래픽을 차지했다.**
+브라우저 네트워크 탭에서도 **2MB 가까운 단일 `.woff2` 파일을 다운로드하는 걸 확인**.<br/>
+게다가 라우팅을 제외한 방법으로(첫 접속, 새로고침, href 등) <span className="text-red-500 font-semibold">페이지에  접근할때마다</span> 다운로드한다!!!
+
+>  **"폰트 하나가 이렇게 무겁다고?"**
+
+웹사이트 최적화를 고민하던 중, Pretendard가 공식적으로 제공하는 [**가변 다이나믹 서브셋**](https://github.com/orioncactus/pretendard?tab=readme-ov-file#%EA%B0%80%EB%B3%80-%EB%8B%A4%EC%9D%B4%EB%82%98%EB%AF%B9-%EC%84%9C%EB%B8%8C%EC%85%8B)을 알게 됐다.<br/>
+처음엔 복잡하니까 통합본을 받아서 사용했는데, 이게 좋은 선택은 아니라는건 알고 있었지만 용량이 이렇게 클줄은 몰랐다.<br/>
+
+---
+
+### 🛠️ 해결 과정
+가변 다이나믹 서브셋 적용
+
+**기존 방식:**
+- `public/fonts/PretendardVariable.woff2` (2MB)
+- 정적 파일 제공 → **모든 사용자에게 전체 폰트 다운로드 발생**
+- 캐싱이 되긴 했지만, **초기 로딩 속도 저하**
+- 매번 불필요한 폰트를 제공하는 방식이 유저, 프론트엔드 서버, Cloudflare 모두에게 좋지 못한 방식
+
+**변경 후:**
+- Pretendard 공식 **가변 다이나믹 서브셋 적용**
+- 기존 `global.css` 에서 폰트 변수 코드를 제외한 폰트관련 설정 제거, `_document.js`에서 **CDN을 통해 폰트 로드**
+- 각 페이지에서 **필요한 글자만 다운로드** → **폰트 로딩 속도 상승 및 데이터 대폭 절감**
+
+```js filename="_document.js"
+      <Head>
+        <link rel="stylesheet" as="style" crossOrigin="anonymous"
+              href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9
+                        /dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
+      </Head>
+```
+
+---
+
+<span className="text-xl font-semibold">추가적인 UX 최적화</span> - 폰트 로드까지 화면 숨기기
+
+폰트 최적화 이후에도, **아주 짧은 순간 글자가 바뀌면서 레이아웃이 살짝 흔들리는 문제가 발생**<br/>
+폰트 로드의 속도가 굉장히 빠르기 때문에 **사용자 입장에서는 화면이 깜빡이면서 흔들리는걸로 보일것임.**
+
+폰트 로드가 끝나야 페이지에 접근이 가능하게 할까? 생각해봤으나, 그건 별로 좋지 못한것같았다.
+
+그 대신 **폰트가 완전히 로드될 때까지 `opacity: 0` 상태**,
+폰트가 준비되면 **부드럽게 `opacity: 1`로 전환하는 방식**을 추가함.
+
+폰트는 Nextjs의 route.push 와 같은 라우팅을 사용할 경우 로드된 상태로 페이지가 바뀌기 때문에<br/>이 페이드인 효과는 페이지를 다시 로드하는 상황에서만 작동한다.
+
+
+✅ **수정 후**
+```jsx filename="_app.jsx"
+import { useEffect, useState } from "react";
+
+function App({ Component, pageProps }) {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  return (
+    <div style={{ opacity: fontsLoaded ? 1 : 0, transition: "opacity 0.3s ease-in-out" }}>
+      <Component {...pageProps} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+ 이제 페이지가 폰트까지 완전히 로드된 후에야 화면이 나타나고, **레이아웃이 흔들리는 문제도 해결될것이다!**
+
+---
+
+### ✅ 결과
+
+<BeforeAfter
+    beforeSrc={fontSizeBefore}
+    afterSrc={fontSizeAfter}
+    beforeAlt="Before"
+    afterAlt="After"
+/>
+
+   - 좌측(Before): 모든 규격, 글자를 담은 폰트파일을 그대로 다운로드.
+   - 우측(After): 페이지에서 필요한 폰트만 가져옴.
+
+### 📊 성능 비교
+
+|  | **Before** | **After** |
+| --- | --- | --- |
+| 용량 | 2MB | 평균 200KB 후반 |
+| 총 소요 시간 | 1.18초 | 0.79초 |
+| 성능 향상 | - | 약 1.5배 빠름 |
+
+-> **서버 부하 감소** (프론트엔드 서버에서 정적리소스로 폰트를 제공하지 않고, CDN 이 제공하게 됨)
+
+<br/>
+<br/>
+
+<BeforeAfter
+    beforeSrc={fontUXBefore}
+    afterSrc={fontUXAfter}
+    beforeAlt="Before"
+    afterAlt="After"
+/>
+> After 사진 프레임이 끊긴다... 직접 이 자리에서 새로고침을 눌러 확인하는걸 추천한다.
+<br/>
+
+4. 페이지 로딩 시 폰트까지 완전히 준비된 후 화면 표시 → **부드러운 UI 전환으로 부자연스러움을 줄임**
+    - 깜빡임 뿐만 아니라, 폰트 차이로 인해 레이아웃 위치가 흔들리는 현상도 같이 해결되었다!
+
+
+---
+
+### 💬 후기
+- 웹 성능 최적화에서는 "보이지 않는 비용"도 중요하다.
+- 폰트 같은 정적 리소스도 네트워크에 큰 영향을 줄 수 있다.
+- 나중에 생각해보니 원래 한글 자체가 문자 용량이 크다... 폰트도 당연히 용량이 클수밖에....
