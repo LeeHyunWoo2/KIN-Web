@@ -64,7 +64,7 @@ function App({Component, pageProps}) {
         <TooltipProvider delayDuration={0}>
           <div style={{
             opacity: fontsLoaded ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out"
+            transition: "opacity 0.5s ease-in-out"
           }}>
             <Component {...pageProps} />
           </div>

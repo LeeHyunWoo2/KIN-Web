@@ -1,4 +1,4 @@
-import { ToggleDocsImage } from "../../../components/docs/Image";
+import {DocsImage, ToggleDocsImage} from "../../../components/docs/Image";
 import staticSrcImg  from "../../../../public/images/docs/static-src-fail.PNG"
 import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log.png"
 
@@ -6,8 +6,11 @@ import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log
 
 ### 📝 **상황 설명**
 
-<div className="mt-4">
-  <ToggleDocsImage src={staticSrcImg}/>
+<div className="flex my-10 gap-3 justify-around">
+  <div className="flex items-center">
+    <ToggleDocsImage className="h-14 text-base" src={staticSrcImg} label="상황 스크린샷"/>
+  </div>
+  <DocsImage src={staticSrcImgLog}/>
 </div>
 
 - 페이지를 처음 방문하면 스타일과 스크립트가 적용되지 않으며, **브라우저 콘솔에서 MIME Type 오류가 발생**함.
@@ -23,8 +26,8 @@ import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log
      - 즉, 처음 방문하는 사용자의 경우 `_next/static/*` 경로의 js/css 파일이 브라우저에서 로드되지 않음.
 
 2. **관리형 챌린지를 통과한 후에는 정상적으로 로드됨**
-     - 클라우드플레어 챌린지가 한 번 통과된 IP는 일정 시간 동안 신뢰할 수 있는 사용자로 인식되므로, 이후 요청은 정상적으로 처리됨.
-     - 결과적으로, **같은 페이지라도 "처음 방문 시"와 "관리형 챌린지 통과 후"의 동작이 다르게 나타남**.
+     - 클라우드플레어 챌린지가 통과된 IP는 일정 시간 동안 신뢰할 수 있는 사용자로 인식되므로, 이후 요청은 정상적으로 처리됨.
+     - 결과적으로, **같은 페이지라도 "처음 방문 시" 와 "관리형 챌린지 통과 후"의 동작이 다르게 나타남**.
 
 ---
 
@@ -36,19 +39,22 @@ import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log
 2. **Next.js `next.config.mjs`에 `_next/static/*` 경로 관련 헤더 설정 추가**
      - Cloudflare를 거치지 않는 다른 환경에서도 안정적으로 동작하도록 `Cache-Control` 설정을 추가.
 
-```js
-   async headers() {
-     return [
-       {
-         source: "/_next/static/:path*",
-         headers: [
-           { key: "Access-Control-Allow-Origin", value: "https://noteapp.org" },
-           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-         ],
-       },
-     ];
-   },
-
+```js filename="next.config.mjs"
+  const nextConfig = {
+    async headers() {
+      return [
+        {
+          source: "/:path*", // 모든 경로 적용 (정적 파일 포함)
+          headers: [
+            {
+              key: "Access-Control-Allow-Origin",
+              value: "https://noteapp.org", // 브라우저 요청에 대해 자신의 도메인만 허용
+            },
+          ],
+        },
+      ];
+    }
+  };
 ```
 
 
@@ -64,11 +70,11 @@ import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log
 
 ### 💡 **배운 점**
 
-1. **"보안 정책을 변경할 때, 보안과 UX의 균형을 고려해야 한다."**
+1. **보안 정책을 변경할 때, 보안과 UX의 균형을 고려해야 한다.**
     - 챌린지를 적용할 때, **API 요청이 없는 페이지라도 정적 리소스가 영향을 받을 수 있음**을 확인함.
 
-2. **"Cloudflare 및 Next.js의 정적 리소스 로딩 방식에 대한 이해가 필요하다."**
+2. **Cloudflare 및 Next.js의 정적 리소스 로딩 방식에 대한 이해가 필요하다.**
     - Cloudflare의 보안 설정이 Next.js의 `_next/static/*` 경로를 어떻게 처리하는지 직접 확인해보면서, 보안 정책이 웹사이트 동작 방식에 미치는 영향을 경험함.
 
-3. **"빠르게 원인을 파악하는 능력은 경험에서 나온다."**
-    - MIME Type 오류만 보고 CORS 문제나 Next.js의 빌드 문제로 착각할 수도 있었지만,<br/>"관리형 챌린지 적용 범위 변경"과 "Next.js의 `_next/static/*` 차단" 간의 관계를 빠르게 캐치한 것이 핵심이었다.
+3. **빠르게 원인을 파악하는 능력은 경험에서 나온다.**
+    - MIME Type 오류만 보고 CORS 문제나 Next.js의 빌드 문제로 착각할 수도 있었지만,<br/>기존에 CORS와 Nextjs 의 온갖 빌드 실패 경험을 토대로 용의자 후보에서 빠르게 제외했고 <br/>그 덕에"관리형 챌린지 적용 범위 변경"과 "Next.js의 `_next/static/*` 차단" 간의 관계를 빠르게 캐치한 것이 핵심이었다.
