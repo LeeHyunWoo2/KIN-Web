@@ -3,9 +3,12 @@ import {Head, Html, Main, NextScript} from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta charSet="UTF-8" />
+      <Head>
+        <link rel="stylesheet" as="style" crossOrigin="anonymous"
+              href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
+      </Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <meta charSet="UTF-8"/>
 
       {/* SEO 메타 태그 */}
       <meta name="description" content="A productivity app built with modern technologies like Next.js, React, and Node.js." />
@@ -21,8 +24,6 @@ export default function Document() {
       <meta name="backend-framework" content="Express.js, Node.js" />
       <meta name="backend-tools" content="Mongoose, Passport.js, JWT, Axios, Bcrypt, Helmet, Cors, Nodemailer" />
       <meta name="backend-deploy" content="Oracle Cloud" />
-
-      <link rel="preload" href="/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
 
       <body className="antialiased">
         <Main />

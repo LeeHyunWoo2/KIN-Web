@@ -3,13 +3,6 @@
 @tailwind utilities;
 
 
-@font-face {
-  font-family: 'Pretendard Variable';
-  src: url('/fonts/PretendardVariable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -175,8 +168,6 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Pretendard Variable', sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    font-weight: 400;
   }
   ol p {
     margin-top: 1.5rem;
