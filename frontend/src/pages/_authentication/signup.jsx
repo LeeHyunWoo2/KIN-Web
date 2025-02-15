@@ -26,7 +26,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input";
-import {getUserProfileByInput, registerUser} from '@/services/user/authAPIService'
+import {
+  getUserProfileByInput,
+  registerUser
+} from '@/services/user/authAPIService'
 import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
@@ -40,6 +43,7 @@ import {
   IdSchema,
   ValidationSchemas
 } from "@/lib/validationSchemas";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -56,12 +60,12 @@ export default function AuthenticationPage() {
   const [isOverlayActive, setIsOverlayActive] = useState(false);
   const [errors, setErrors] = useState({});
 
-    useEffect(() => {
-      const currentEmail = localStorage.getItem("currentEmail");
-      if (currentEmail) {
-        localStorage.removeItem("currentEmail");
-      }
-    }, []);
+  useEffect(() => {
+    const currentEmail = localStorage.getItem("currentEmail");
+    if (currentEmail) {
+      localStorage.removeItem("currentEmail");
+    }
+  }, []);
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -92,7 +96,15 @@ export default function AuthenticationPage() {
 
   // 필수 필드들이 모두 채워졌는지 확인하는 함수
   const isFormValid = () => {
-    const {id, idVerified,name, email, password, passwordConfirm, termsAgreed} = formData;
+    const {
+      id,
+      idVerified,
+      name,
+      email,
+      password,
+      passwordConfirm,
+      termsAgreed
+    } = formData;
     if (page === 1) {
       return termsAgreed;
     } else if (page === 2) {
@@ -110,16 +122,16 @@ export default function AuthenticationPage() {
 
   // 유효성 검사 함수
   const validateForm = (formData) => {
-    const { success, error } = ValidationSchemas.safeParse(formData);
+    const {success, error} = ValidationSchemas.safeParse(formData);
     if (success) {
-      return { isValid: true, errors: {} };
+      return {isValid: true, errors: {}};
     }
     // 에러 메시지를 필드별로 정리
     const errors = error.issues.reduce((acc, issue) => {
       acc[issue.path[0]] = issue.message;
       return acc;
     }, {});
-    return { isValid: false, errors };
+    return {isValid: false, errors};
   };
 
   const [recaptchaToken, setRecaptchaToken] = useState("");
@@ -131,8 +143,12 @@ export default function AuthenticationPage() {
   const checkDuplicateId = async () => {
     const validation = IdSchema.safeParse(formData.id);
     if (!validation.success) {
-      setErrors((prevErrors) => ({...prevErrors, idVerified : undefined, id: validation.error.errors[0].message}));
-      setMessage({ id : ""})
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        idVerified: undefined,
+        id: validation.error.errors[0].message
+      }));
+      setMessage({id: ""})
       return;
     }
 
@@ -144,27 +160,35 @@ export default function AuthenticationPage() {
     const response = await getUserProfileByInput(inputData);
     if (response.signal === 'user_not_found') {
       setIdVerified(true);
-      setErrors((prevErrors) => ({...prevErrors, id: undefined, idVerified: undefined}));
-      setMessage({ id : "사용 가능한 아이디 입니다."})
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        id: undefined,
+        idVerified: undefined
+      }));
+      setMessage({id: "사용 가능한 아이디 입니다."})
     } else {
       setIdVerified(false);
       setErrors((prevErrors) => ({...prevErrors, id: undefined}));
-      setMessage({ id : "이미 존재하는 아이디 입니다." })
+      setMessage({id: "이미 존재하는 아이디 입니다."})
     }
   }
 
   // 이메일 중복 확인
   const checkDuplicateEmail = async () => {
     // 이메일 전송 재요청은 10초가 지난 이후부터 가능
-    if(count && 290 < count){
-      setMessage({ email : "잠시 후 요청해주세요. (4:50 부터 가능)"})
+    if (count && 290 < count) {
+      setMessage({email: "잠시 후 요청해주세요. (4:50 부터 가능)"})
       return
     }
 
     // 유효성 검증 수행
-    const validation = EmailSchema.safeParse({email:email});
+    const validation = EmailSchema.safeParse({email: email});
     if (!validation.success) {
-      setErrors((prevErrors) => ({...prevErrors, emailVerified:undefined, email: validation.error.errors[0].message}));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        emailVerified: undefined,
+        email: validation.error.errors[0].message
+      }));
       return;
     }
 
@@ -180,7 +204,7 @@ export default function AuthenticationPage() {
       await handleSendVerificationEmail();
     } else {
       setIsEmailSent(false);
-      return setMessage({ email : "이미 가입된 이메일 입니다."});
+      return setMessage({email: "이미 가입된 이메일 입니다."});
     }
   }
 
@@ -193,10 +217,10 @@ export default function AuthenticationPage() {
       localStorage.setItem("currentEmail", email);
       setIsEmailSent(true);
       setCount(300);
-      setMessage({ email : response.data.message || "이메일이 전송되었습니다. 확인해주세요."});
+      setMessage({email: response.data.message || "이메일이 전송되었습니다. 확인해주세요."});
     } catch (error) {
       setIsEmailSent(false);
-      setMessage({ email : error.response?.data?.message || "이메일 전송에 실패했습니다."});
+      setMessage({email: error.response?.data?.message || "이메일 전송에 실패했습니다."});
     } finally {
       setIsSending(false); // 전송 완료 후 상태 초기화
     }
@@ -209,7 +233,7 @@ export default function AuthenticationPage() {
 
   // 모든 필드를 처리하는 handleChange 함수
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const {name, value, type, checked} = e.target;
     const updatedValue = type === "checkbox" ? checked : value;
     if (name === "email") {
       setEmail(value); // 이메일 상태 업데이트 (이메일인증)
@@ -224,10 +248,14 @@ export default function AuthenticationPage() {
   const handleOpenDialog = (e) => {
     e.preventDefault();
 
-    const finalFormData = {...formData, emailVerified:emailVerified, idVerified:idVerified};
+    const finalFormData = {
+      ...formData,
+      emailVerified: emailVerified,
+      idVerified: idVerified
+    };
 
     // 유효성 검증 수행
-    const { isValid, errors: validationErrors } = validateForm(finalFormData);
+    const {isValid, errors: validationErrors} = validateForm(finalFormData);
 
     // 오류 메시지 상태 업데이트
     setErrors(validationErrors);
@@ -262,7 +290,9 @@ export default function AuthenticationPage() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const certStatus = JSON.parse(localStorage.getItem("emailVerifiedData"));
-      if (certStatus === null) return;
+      if (certStatus === null) {
+        return;
+      }
       if (certStatus.emailVerified === true && certStatus.email === email) {
         setEmailVerified(true); // 상태 업데이트
         localStorage.removeItem("emailVerifiedData"); // 로컬스토리지 정리
@@ -310,23 +340,6 @@ export default function AuthenticationPage() {
           <div
               className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
             <div className="absolute inset-0 bg-zinc-900"/>
-            <div
-                className="relative z-20 flex items-center text-lg font-medium">
-              <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2 h-6 w-6"
-              >
-                <path
-                    d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/>
-              </svg>
-              KINote
-            </div>
           </div>
           <div className="lg:p-8">
 
@@ -365,15 +378,21 @@ export default function AuthenticationPage() {
           </span>
                       </div>
                     </div>
-                    <Button variant="outline" type="button" className="[&_svg]:size-[18px]" onClick={() => handleSocialLogin('google')}>
+                    <Button variant="outline" type="button"
+                            className="[&_svg]:size-[18px]"
+                            onClick={() => handleSocialLogin('google')}>
                       <Icons.google className="mr-2 h-4 w-4"/>
                       Continue with Google
                     </Button>
-                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('kakao')}>
+                    <Button variant="outline" type="button"
+                            className="[&_svg]:size-[20px]"
+                            onClick={() => handleSocialLogin('kakao')}>
                       <Icons.kakao className="mr-2 h-4 w-4"/>
                       &nbsp;&nbsp;Continue with Kakao
                     </Button>
-                    <Button variant="outline" type="button" className="[&_svg]:size-[20px]" onClick={() => handleSocialLogin('naver')}>
+                    <Button variant="outline" type="button"
+                            className="[&_svg]:size-[20px]"
+                            onClick={() => handleSocialLogin('naver')}>
                       <Icons.naver className="mr-2 h-4 w-4"/>
                       Continue with Naver
                     </Button>
@@ -408,18 +427,30 @@ export default function AuthenticationPage() {
               {page === 1 && (
                   <Card className="max-w-sm mx-auto">
                     <CardHeader>
-                      <CardTitle className="text-xl">Sign Up<Button className="ml-5 text-sm" onClick={()=>(
-                         setFormData({
-                        id: 'testinput',
-                        name: '테스트맨',
-                        email: 'testman@example.com',
-                        emailVerified: true,
-                        password: 'Qweasd!23',
-                        passwordConfirm: 'Qweasd!23',
-                        termsAgreed: true,
-                        marketingConsent: false,
-                      }, setEmail('testman@example.com'), setPage(2), setEmailVerified(true))
-                      )} variant="outline" size="sm">테스트 버튼</Button></CardTitle>
+                      <CardTitle className="text-xl">Sign Up
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Button className="ml-5 text-sm" onClick={() => (
+                                setFormData({
+                                      id: 'testinput',
+                                      name: '테스트맨',
+                                      email: 'testman@example.com',
+                                      emailVerified: true,
+                                      password: 'Qweasd!23',
+                                      passwordConfirm: 'Qweasd!23',
+                                      termsAgreed: true,
+                                      marketingConsent: false,
+                                    }, setEmail('testman@example.com'), setPage(2),
+                                    setEmailVerified(true))
+                            )} variant="outline" size="sm">테스트 버튼</Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                              <p className="text-sm">
+                                누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
+                              </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </CardTitle>
                       <CardDescription>
                         Enter your information to create an account
                       </CardDescription>
@@ -557,8 +588,10 @@ export default function AuthenticationPage() {
                               className={`text-sm mt-1 ${idVerified
                                   ? 'text-green-500'
                                   : 'text-red-500'}`}>{message.id}</p>}
-                          {errors.id && <p className="text-red-500 text-sm mt-1">{errors.id}</p>}
-                          {errors.idVerified && <p className="text-red-500 text-sm mt-1">{errors.idVerified}</p>}
+                          {errors.id && <p
+                              className="text-red-500 text-sm mt-1">{errors.id}</p>}
+                          {errors.idVerified && <p
+                              className="text-red-500 text-sm mt-1">{errors.idVerified}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="Nickname">Name or Nickname</Label>
@@ -570,7 +603,8 @@ export default function AuthenticationPage() {
                               placeholder="John Doe"
                               required
                           />
-                          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                          {errors.name && <p
+                              className="text-red-500 text-sm mt-1">{errors.name}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="email">Email</Label>
@@ -584,8 +618,10 @@ export default function AuthenticationPage() {
                               readOnly={emailVerified === true}
                               required
                           />
-                          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                          {errors.emailVerified && <p className="text-red-500 text-sm mt-1">{errors.emailVerified}</p>}
+                          {errors.email && <p
+                              className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                          {errors.emailVerified && <p
+                              className="text-red-500 text-sm mt-1">{errors.emailVerified}</p>}
                           <Button
                               variant="outline"
                               onClick={checkDuplicateEmail}
@@ -638,7 +674,8 @@ export default function AuthenticationPage() {
                               placeholder="8자 이상 영어 대소문자, 숫자, 특수문자"
                               required
                           />
-                          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                          {errors.password && <p
+                              className="text-red-500 text-sm mt-1">{errors.password}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
@@ -651,7 +688,8 @@ export default function AuthenticationPage() {
                               placeholder="password"
                               required
                           />
-                          {errors.passwordConfirm && <p className="text-red-500 text-sm mt-1">{errors.passwordConfirm}</p>}
+                          {errors.passwordConfirm && <p
+                              className="text-red-500 text-sm mt-1">{errors.passwordConfirm}</p>}
                         </div>
 
                         {isOverlayActive && (
@@ -681,7 +719,8 @@ export default function AuthenticationPage() {
                                 }}
                         >
                           <DialogTrigger asChild>
-                            <Button className="w-full" onClick={handleOpenDialog}>가입하기</Button>
+                            <Button className="w-full"
+                                    onClick={handleOpenDialog}>가입하기</Button>
                           </DialogTrigger>
                           <DialogContent
                               onInteractOutside={(e) => {
@@ -706,7 +745,8 @@ export default function AuthenticationPage() {
                                   transition-colors focus-visible:outline-none focus-visible:ring-1
                                   focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
                                   [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
-                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">Cancel</div>
+                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">Cancel
+                                </div>
                               </DialogPrimitive.Close>
                               <Button disabled={!recaptchaToken}
                                       onClick={handleSubmit}>Continue</Button>

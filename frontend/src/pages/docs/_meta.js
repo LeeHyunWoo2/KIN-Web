@@ -23,8 +23,8 @@ export default {
   },
   architecture: "Architecture",
   frontend: "Frontend",
-  backend: {title:"Backend", display: "hidden"},
-  security: {title:"Security", display: "hidden"},
+  backend: "Backend",
+  security: "Infra & Security",
   'Features': {
     title: (
         <Separator>

@@ -4,7 +4,6 @@ import { tutorialActiveAtom, tutorialSkippedAtom } from "@/atoms/userState";
 import { useSetAtom } from "jotai/index";
 import { Button } from "@/components/ui/button"; // Shadcn Button 컴포넌트 임포트
 import { Card, CardContent, CardFooter } from "@/components/ui/card"; // Shadcn Card 컴포넌트 임포트
-import {ImageWithSkeleton} from '@/components/ImageWithSkeleton'
 
 
 // React-Joyride 툴팁을 대체할 Custom Tooltip 컴포넌트
@@ -47,7 +46,7 @@ const steps = [
     content: (
         <>
           <div className="flex justify-center mb-5">
-            <ImageWithSkeleton src="/images/categoryTutorial.PNG" alt="categoryTutorial" className="h-auto border rounded-xl" />
+            <img src="/images/categoryTutorial.PNG" alt="categoryTutorial" className="h-auto border rounded-xl" />
           </div>
           카테고리를 추가 할 수 있습니다.
           <div>
