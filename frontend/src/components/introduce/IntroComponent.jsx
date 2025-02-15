@@ -36,9 +36,6 @@ export default function IntroContent({auth}) {
           <Badge variant="secondary" className="mb-4">
             Keep Idea Note
           </Badge>
-          {/*<Badge variant="secondary" className="mb-4">
-            이 웹 사이트는 취업용 포트폴리오를 목적으로 제작되었습니다.
-          </Badge>*/}
           <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-8">
             잊기 전에 메모하세요
           </h1>
@@ -54,7 +51,7 @@ export default function IntroContent({auth}) {
                       onClick={handleStarter}
                       size="slg"
               >
-                <SquareCheckBig strokeWidth={2.25} className="mr-3" />
+                <SquareCheckBig strokeWidth={2.25} className="mr-3"/>
                 바로 시작하기</Button>
               <a rel="noopener noreferrer" target="_blank"
                  href='https://github.com/LeeHyunWoo2/KIN-Web'>
@@ -69,7 +66,7 @@ export default function IntroContent({auth}) {
               </a>
             </div>
           </div>
-{/*          <div className="flex justify-center mt-10">
+          {/*          <div className="flex justify-center mt-10">
               <button
                   className={`relative h-14 rounded-md px-4 text-lg font-semibold bg-teal-500 hover:bg-teal-600 
                  text-primary-foreground shadow inline-flex items-center justify-center gap-2 

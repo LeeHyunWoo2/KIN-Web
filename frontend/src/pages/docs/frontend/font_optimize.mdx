@@ -60,7 +60,7 @@ import fontSizeAfter from "../../../../public/images/docs/폰트 최적화 후.P
 
 
 ✅ **수정 후**
-```jsx filename="_app.jsx"
+```jsx filename="_app.jsx" {4, 6-10, 17-20}
 import { useEffect, useState } from "react";
 
 function App({ Component, pageProps }) {
@@ -73,14 +73,22 @@ function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <div style={{ opacity: fontsLoaded ? 1 : 0, transition: "opacity 0.3s ease-in-out" }}>
-      <Component {...pageProps} />
-    </div>
+        <style jsx global>{`
+          #nprogress .bar {
+            background: #888888;
+          }
+          body {
+            opacity: ${fontsLoaded ? 1 : 0};
+            transition: opacity 0.5s ease-in-out;
+          }
+        `}</style>
   );
 }
 
 export default App;
 ```
+
+애플리케이션 전체 영역에 적용되도록 글로벌 스타일에 추가
 
  이제 페이지가 폰트까지 완전히 로드된 후에야 화면이 나타나고, **레이아웃이 흔들리는 문제도 해결될것이다!**
 

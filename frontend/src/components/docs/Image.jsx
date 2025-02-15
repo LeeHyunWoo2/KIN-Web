@@ -28,6 +28,7 @@ const DocsImage = ({style, src, alt, border = true}) => {
             cursor: 'pointer',
             ...(style || {}),
           }}
+          priority
           onClick={handleOpenNewTab} target="_blank" rel="noopenner noreferrer"
       />
   )

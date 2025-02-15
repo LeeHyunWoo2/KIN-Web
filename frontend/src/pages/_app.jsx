@@ -57,17 +57,16 @@ function App({Component, pageProps}) {
           #nprogress .bar {
             background: #888888;
           }
+          body {
+            opacity: ${fontsLoaded ? 1 : 0};
+            transition: opacity 0.5s ease-in-out;
+          }
         `}</style>
         <Head>
           <title>Keep Idea Note</title>
         </Head>
         <TooltipProvider delayDuration={0}>
-          <div style={{
-            opacity: fontsLoaded ? 1 : 0,
-            transition: "opacity 0.5s ease-in-out"
-          }}>
             <Component {...pageProps} />
-          </div>
         </TooltipProvider>
         <Toaster expand={true} richColors position="bottom-center"
                  offset="70px"/>

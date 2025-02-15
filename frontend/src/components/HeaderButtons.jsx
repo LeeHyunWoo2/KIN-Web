@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Button} from "@/components/ui/button"
-import {Triangle} from "lucide-react";
+import {GalleryVerticalEnd} from "lucide-react";
 import Link from "next/link";
 import {Label} from "@/components/ui/label";
 import {cn} from "@/lib/utils";
@@ -21,12 +21,15 @@ export default function HeaderButtons({auth}) {
   return (
       <>
         <Link href="/">
-          <Button variant="outline" aria-label="Home">
-            <div className="flex items-center gap-2 -mx-1">
-              KIN
-              <Triangle className="size-5 fill-foreground"/>
+
+          <div className="flex items-center gap-2.5 ml-3 mr-2 group">
+            <div
+                className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-800 text-primary-foreground group-hover:bg-zinc-600">
+              <GalleryVerticalEnd className="size-4"/>
             </div>
-          </Button>
+            <span
+                className="text-lg font-bold text-zinc-800 group-hover:text-zinc-600">KIN</span>
+          </div>
         </Link>
         {isReady && (
             <>
@@ -45,7 +48,7 @@ export default function HeaderButtons({auth}) {
                   // 라우팅을 사용하면 클라우드 플레어 관리 챌린지가 스킵되기 때문에 a 태그 사용
                   <a href="/login">
                     <Label className={cn(
-                        "font-semibold text-[15px] cursor-pointer",
+                        "font-semibold text-[16px] cursor-pointer",
                         isActive("/login") ? "text-foreground underline"
                             : "text-foreground/70 hover:text-foreground"
                     )}
@@ -57,7 +60,7 @@ export default function HeaderButtons({auth}) {
               {auth === 'admin' && (
                   <a href="/admin">
                     <Label className={cn(
-                        "font-semibold text-[15px] cursor-pointer",
+                        "font-semibold text-[16px] cursor-pointer",
                         isActive("/admin") ? "text-foreground underline"
                             : "text-foreground/70 hover:text-foreground"
                     )}>
@@ -67,7 +70,7 @@ export default function HeaderButtons({auth}) {
               )}
               <Link href="/docs">
                 <Label className={cn(
-                    "font-semibold text-[15px] cursor-pointer",
+                    "font-semibold text-[16px] cursor-pointer",
                     isActive("/docs") ? "text-foreground underline"
                         : "text-foreground/70 hover:text-foreground"
                 )}

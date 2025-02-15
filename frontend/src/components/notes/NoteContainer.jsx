@@ -102,14 +102,6 @@ export default function NoteContainer({ defaultLayout }) {
     }, 0);
   }
 
-// TODO : 이 코드 왜 만들었던건지 알아내기
-
-/*  useEffect(() => {
-    initializeNotes(); // 노트 데이터 초기화
-    initializeCategories(); // 카테고리 데이터 초기화
-    initializeTags();
-  }, [initializeNotes]);*/
-
   useEffect(() => {
     const activeCount = notes.filter(note => !note.is_trashed).length;
     const trashedCount = notes.filter(note => note.is_trashed).length;
