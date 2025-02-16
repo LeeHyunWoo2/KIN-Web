@@ -37,9 +37,9 @@ export default function PrivacyPolicy() {
               <section className="mb-6">
                 <h2 className="text-lg font-bold mb-2">3. 개인정보의 보유 및 이용 기간</h2>
                 <ul className="list-disc list-inside">
-                  <li>회원 탈퇴 시 즉시 삭제</li>
-                  <li>관련 법령에서 정한 기간 동안 보존이 필요한 경우 해당 법령에 따라 보관</li>
-                  <li>예: 전자상거래 등에서의 소비자 보호에 관한 법률에 따른 경우, 최대 5년 보관</li>
+                  <li>모든 정보는 회원 탈퇴 시 즉시 삭제됩니다.</li>
+{/*                  <li>관련 법령에서 정한 기간 동안 보존이 필요한 경우 해당 법령에 따라 보관</li>
+                  <li>예: 전자상거래 등에서의 소비자 보호에 관한 법률에 따른 경우, 최대 5년 보관</li>*/}
                 </ul>
               </section>
 
@@ -136,17 +136,16 @@ export default function PrivacyPolicy() {
                     deletion.
                   </ol>
 
-                  <li>However, if retention is required by applicable laws, the
+{/*                  <li>However, if retention is required by applicable laws, the
                     information<br/></li>
                   <ol className="pl-6"> will be stored for the period specified
-                    by such
-                    laws.
+                    by such laws.
                   </ol>
 
                   <li>Example: Up to 5 years as required by the Act on Consumer
                     Protection<br/></li>
                   <ol className="pl-6"> in Electronic Commerce in Korea.
-                  </ol>
+                  </ol>*/}
                 </ul>
               </section>
 

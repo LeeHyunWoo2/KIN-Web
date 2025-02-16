@@ -33,8 +33,8 @@ export default {
     ),
     type: 'separator'
   },
-  auth: {title: "Auth", display: "hidden"},
-  notes: {title: "Notes", display: "hidden"},
+  auth: "Auth",
+  notes: "Notes",
   'Insights':{
     title: (
         <Separator>

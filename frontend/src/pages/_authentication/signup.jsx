@@ -445,9 +445,9 @@ export default function AuthenticationPage() {
                             )} variant="outline" size="sm">테스트 버튼</Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                              <p className="text-sm">
-                                누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
-                              </p>
+                            <p className="text-sm">
+                              누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       </CardTitle>
@@ -458,27 +458,110 @@ export default function AuthenticationPage() {
                     <CardContent>
                       <div className="grid gap-4 mb-4">
                         <div
-                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
+                            className="flex rounded-md border p-4 shadow">
                           <ScrollArea className="h-48 w-full text-sm">
-                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며
-                            기타등등.....<br/><br/>
-                            김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
-                            구름이
-                            허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
-                            <br/><br/>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu
-                            fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                            <PrivacyPolicy/>
+                            <span
+                                className="font-semibold leading-none tracking-tight text-xl">Keep Idea Note - 개인정보처리방침</span>
+                            <section className="my-6">
+                              <h2 className="text-lg font-bold mb-2">1. 수집하는
+                                개인정보 항목</h2>
+                              <ul className="list-disc list-inside">
+                                <li>필수 항목: 이메일 주소, 닉네임</li>
+                                <li>선택 항목: 프로필 사진</li>
+                              </ul>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">2. 개인정보의 수집
+                                및 이용 목적</h2>
+                              <ul className="list-disc list-inside">
+                                <li>회원 관리: Keep Idea Note 서비스 로그인 및 사용자 인증</li>
+                                <li>서비스 제공: 메모 및 노트 관리 서비스 제공</li>
+                                <li>서비스 개선: 사용자 편의성 향상</li>
+                              </ul>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">3. 개인정보의 보유
+                                및 이용 기간</h2>
+                              <ul className="list-disc list-inside">
+                                <li>모든 정보는 회원 탈퇴 시 즉시 삭제됩니다.</li>
+                              </ul>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">4. 개인정보의
+                                제3자 제공</h2>
+                              <p>수집된 개인정보는 원칙적으로 제3자에게 제공되지 않습니다.</p>
+                              <p>다만, 법령에 따라 요청이 있는 경우에 한해 제공될 수 있습니다.</p>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">5. 개인정보 처리
+                                위탁</h2>
+                              <p>Keep Idea Note는 개인정보 처리를 제3자에게 위탁하지 않습니다.</p>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">6. 이용자의 권리
+                                및 행사 방법</h2>
+                              <ul className="list-disc list-inside">
+                                <li>이용자는 언제든지 개인정보 열람, 정정, 삭제를 요청할 수 있습니다.</li>
+                                <li>요청 방법: 이메일 <a
+                                    href="mailto:triaxis159@email.com"
+                                    className="text-blue-500 underline">triaxis159@email.com</a> 로
+                                  문의
+                                </li>
+                                <li>Keep Idea Note는 요청에 지체 없이 응답하며 필요한 조치를 신속히
+                                  이행합니다.
+                                </li>
+                              </ul>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">7. 쿠키 및 기타
+                                기술의 사용</h2>
+                              <p>Keep Idea Note는 광고를 게재하지 않으며, 사용자 데이터를 분석하거나 광고
+                                목적으로 쿠키를 사용하지
+                                않습니다.</p>
+                            </section>
+
+                            <section className="mb-6">
+                              <h2 className="text-lg font-bold mb-2">8. 개인정보
+                                보호책임자</h2>
+                              <ul className="list-none">
+                                <li><strong>이름:</strong> &nbsp;이현우</li>
+                                <li><strong>연락처:</strong> &nbsp;010-8849-5745
+                                </li>
+                                <li><strong>이메일:</strong> <a
+                                    href="mailto:triaxis159@email.com"
+                                    className="text-blue-500 underline">&nbsp;triaxis159@email.com</a>
+                                </li>
+                              </ul>
+                            </section>
+
+                            <section>
+                              <h2 className="text-lg font-bold mb-2">9.
+                                개인정보처리방침의 변경</h2>
+                              <p>본 개인정보처리방침은 법령이나 서비스 변경사항에 따라 수정될 수 있습니다.</p>
+                              <p>변경사항은 웹사이트 공지사항을 통해 사전에 안내드립니다.</p>
+                            </section>
                           </ScrollArea>
                         </div>
+                        <Dialog>
+                          <DialogTrigger>
+                            <div className="flex justify-end">
+                              <Button variant="outline" className="w-1/3 h-8">
+                                크게 보기
+                              </Button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <ScrollArea className="max-h-[80vh] w-full text-sm">
+                              <PrivacyPolicy/>
+                            </ScrollArea>
+                          </DialogContent>
+                        </Dialog>
                       </div>
 
                       <div className="grid gap-4">

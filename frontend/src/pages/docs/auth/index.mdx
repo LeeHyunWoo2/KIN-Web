@@ -1,3 +1,6 @@
+import { Cards } from 'nextra/components'
+import { LucideWalletCards, Boxes, BatteryWarning } from 'lucide-react'
+
 # Auth
 
 **인증 및 보안**
@@ -5,3 +8,22 @@
   - OAuth (Google, Kakao, Naver) 연동 방식
   - HttpOnly 쿠키 및 보안 정책
   - 등...
+
+
+<Cards>
+  <Cards.Card
+      icon={<LucideWalletCards />}
+      title="Callout"
+      href="/docs/guide/built-ins/callout"
+  />
+  <Cards.Card
+      icon={<Boxes />}
+      title="Tabs"
+      href="/docs/guide/built-ins/tabs"
+  />
+  <Cards.Card
+      icon={<BatteryWarning />}
+      title="Steps"
+      href="/docs/guide/built-ins/steps"
+  />
+</Cards>
