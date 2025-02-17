@@ -13,7 +13,7 @@ const DocsImage = ({style, src, alt, border = true}) => {
 
   const handleOpenNewTab = (e) => {
     e.preventDefault();
-    window.open(src.src, '_blank');
+    window.open(src.default.src, '_blank');
   };
 
   return (

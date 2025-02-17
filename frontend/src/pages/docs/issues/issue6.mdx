@@ -17,7 +17,7 @@ import { Callout } from 'nextra/components'
 - **<span className="text-blue-600">이번</span> 문제(소셜 로그인 쿠키 도메인 불일치)**
     - <p className="-mt-4">**로컬 환경에서는 문제없었으나, 배포 환경에서는 브라우저 보안 정책으로 인해 쿠키가 차단됨.**</p>
     - **대상:** **배포 환경에서의** 소셜 로그인
-    - **원인:** `api.noteapp.org`에서 설정한 쿠키가 `noteapp.org`에서 읽히지 않음 (도메인 불일치).
+    - **원인:** `백엔드 주소`에서 설정한 쿠키가 `noteapp.org`에서 읽히지 않음 (도메인 불일치).
     - **해결 과정:** `Set-Cookie`의 `domain` 값을 `.noteapp.org`로 변경하여 해결.
 
 이 문서에서는 쿠키 도메인 문제로 인해 **배포 환경에서만** 발생한 **소셜** 로그인 인증 문제를 다룹니다.
@@ -39,7 +39,7 @@ import { Callout } from 'nextra/components'
     - 브라우저 쿠키에는 콜백 시 토큰이 존재했으나 `loginSuccess` API 요청에서는 누락됨.
 
 2. **도메인 불일치 문제**
-    - 백엔드(`api.noteapp.org`)에서 `Set-Cookie`를 설정했지만, 프론트엔드(`noteapp.org`)에서는 해당 쿠키를 읽지 못함.
+    - (`백엔드 주소`)에서 `Set-Cookie`를 설정했지만, 프론트엔드(`noteapp.org`)에서는 해당 쿠키를 읽지 못함.
     - 브라우저 보안 정책상 **쿠키의 `Domain` 속성이 현재 요청하는 도메인과 일치해야 함**.
     - 일반 로그인은 `noteapp.org` 도메인에서 직접 요청하므로 쿠키가 정상 작동하지만,<br/> 소셜 로그인은 **외부 OAuth 서버를 거친 후 백엔드에서 리다이렉트되면서** 도메인 불일치 문제 발생.
 
@@ -52,7 +52,7 @@ import { Callout } from 'nextra/components'
     - 그래서 이전 이슈에서 소셜 로그인은 잘 된다고 "판단" 한것이었음. 배포 후 테스트했다면 서로 다른 이유로 둘 다 안됐어야 함.
 
 5. **OAuth 콜백 URL 문제**
-    - 소셜 로그인은 OAuth 서버(accounts.google.com 등)에서 인증을 거쳐 다시 api.noteapp.org로 리다이렉트됨.
+    - 소셜 로그인은 OAuth 서버(accounts.google.com 등)에서 인증을 거쳐 다시 백엔드 주소로 리다이렉트됨.
     - 브라우저는 리다이렉트 후 설정된 쿠키가 cross-site라고 판단하고, 보안 정책을 적용함.
     - 결과적으로 noteapp.org에서 API 요청을 보낼 때 쿠키가 누락됨.
 
@@ -69,13 +69,13 @@ import { Callout } from 'nextra/components'
    setCookie(res, 'refreshToken', tokens.refreshToken,
         { maxAge: refreshTokenMaxAge, domain: 'noteapp.org' });
     ```
-- `Set-Cookie`의 `Domain` 속성을 `noteapp.org`로 변경하여, 하위 도메인(`api.noteapp.org`)에서도 접근 가능하도록 설정함.
+- `Set-Cookie`의 `Domain` 속성을 `noteapp.org`로 변경하여, 하위 도메인(`백엔드 주소`)에서도 접근 가능하도록 설정함.
 
 2. **OAuth 콜백 URL 유지 및 추가 동기화 과정 도입**
     ```js filename="socialRoutes.js" copy
     res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
     ```
-    - 기존 `api.noteapp.org`로 설정된 콜백 URL을 유지하면서, 로그인 성공 후 **공통 로그인 완료 페이지(`/loginSuccess`)** 를 추가하여 클라이언트 측에서 세션을 동기화하도록 변경.
+    - 기존 `백엔드 주소`로 설정된 콜백 URL을 유지하면서, 로그인 성공 후 **공통 로그인 완료 페이지(`/loginSuccess`)** 를 추가하여 클라이언트 측에서 세션을 동기화하도록 변경.
 
 3. **브라우저에서 쿠키 정상 동작 여부 테스트**
     - 다양한 브라우저에서 쿠키 전달 여부 확인.

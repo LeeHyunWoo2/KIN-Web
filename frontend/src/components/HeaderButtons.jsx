@@ -21,7 +21,6 @@ export default function HeaderButtons({auth}) {
   return (
       <>
         <Link href="/">
-
           <div className="flex items-center gap-2.5 ml-3 mr-2 group">
             <div
                 className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-800 text-primary-foreground group-hover:bg-zinc-600">

@@ -141,7 +141,7 @@ const apiLimiter = rateLimit({
   message: "요청 횟수를 초과 하였습니다. 잠시 후 다시 시도해주세요.",
   keyGenerator: (req) => {
     // 클라이언트의 실제 IP
-    return req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip;
+    return req.headers['cf-connecting-ip'] || req.ip; // Cloudflare의 원본 IP 사용
   },
 });
 
@@ -198,11 +198,28 @@ const wss = new WebSocket.Server({ noServer: true });
 let isClientConnected = false; // 클라이언트 연결 상태 추적
 let refreshInterval = 5000; // 기본값 5초
 let intervalId;
+const MAX_MESSAGE_SIZE = 1024 * 100; // 최대 100kb 까지 허용
 
 // 웹소켓 핸들러 설정
 wss.on('connection', async (ws) => {
   console.log('클라이언트 연결됨');
   isClientConnected = true;
+  ws.isAlive = true;
+
+  ws.on('pong', () => {
+    ws.isAlive = true; // 클라이언트 연결 상태 체크
+  });
+
+  const interval = setInterval(() => {
+    if (!ws.isAlive) {
+      console.log('WebSocket ');
+      ws.terminate();
+      return;
+    }
+
+    ws.isAlive = false;
+    ws.ping(); // 클라이언트가 응답하지 않으면 종료할 준비
+  }, 30000); // 30초마다 Ping 체크
 
   // 첫 연결에 한해서 바로 전송
   const initialStatus = {
@@ -214,6 +231,11 @@ wss.on('connection', async (ws) => {
   ws.send(JSON.stringify(initialStatus));
 
   ws.on('message', (message) => {
+    if (message.length > MAX_MESSAGE_SIZE) {
+      // 과도한 크기의 데이터가 들어오면 차단
+      console.log('웹소켓 메세지 크기 초과');
+      ws.close();
+    }
     const data = JSON.parse(message);
     if (data.type === "setInterval" && typeof data.interval === "number") {
       refreshInterval = data.interval * 1000; // ms 단위로 변환
@@ -225,6 +247,7 @@ wss.on('connection', async (ws) => {
 
   ws.on('close', () => {
     console.log('클라이언트 연결 종료');
+    clearInterval(interval);
     if (wss.clients.size === 0) {
       isClientConnected = false; // 모든 클라이언트가 연결 종료되면 false (여러 관리자가 모니터링중일때 바로 끊어지면 안됨)
     }

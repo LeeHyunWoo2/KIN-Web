@@ -15,7 +15,7 @@ const registerController = async (req, res) => {
     // 회원가입 로직을 서비스에서 처리하고, 생성된 사용자와 토큰을 반환
     const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent });
 
-    res.status(201).json({user, message:`회원가입 완료! ${name}님, 환영합니다.`});
+    res.status(201).json({user});
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "회원가입 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });

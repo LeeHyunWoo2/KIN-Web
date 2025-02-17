@@ -324,8 +324,8 @@ export default function AuthenticationPage() {
           termsAgreed: false,
           marketingConsent: false,
         })
-        await router.push(`/login?success=${encodeURIComponent(
-            `${formData.name} 님 가입을 환영합니다`)}`);
+        window.location.href = `/login?success=${encodeURIComponent(
+            `회원가입 완료! ${formData.name} 님 환영합니다`)}`;
       } else {
         // setErrorMessage('리캡차 인증 실패');
       }
@@ -431,7 +431,7 @@ export default function AuthenticationPage() {
                       <CardTitle className="text-xl">Sign Up
                         <Tooltip>
                           <TooltipTrigger>
-                            <Button className="ml-5 text-sm" onClick={() => (
+                            <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 font-semibold transition-colors ml-5" onClick={() => (
                                 setFormData({
                                       id: 'testinput',
                                       name: '테스트맨',
@@ -443,7 +443,7 @@ export default function AuthenticationPage() {
                                       marketingConsent: false,
                                     }, setEmail('testman@example.com'), setPage(2),
                                     setEmailVerified(true))
-                            )} variant="outline" size="sm">테스트 버튼</Button>
+                            )}>테스트 버튼</div>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="text-sm">
@@ -471,9 +471,9 @@ export default function AuthenticationPage() {
                         <Dialog>
                           <DialogTrigger>
                             <div className="flex justify-end">
-                              <Button variant="outline" className="w-1/3 h-8">
+                              <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-3 font-semibold transition-colors w-1/3 h-8">
                                 크게 보기
-                              </Button>
+                              </div>
                             </div>
                           </DialogTrigger>
                           <DialogContent>
@@ -745,10 +745,9 @@ export default function AuthenticationPage() {
                               <DialogPrimitive.Close>
                                 <div className="inline-flex items-center justify-center gap-2
                                  whitespace-nowrap rounded-md text-sm font-medium
-                                  transition-colors focus-visible:outline-none focus-visible:ring-1
-                                  focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
-                                  [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
-                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">Cancel
+                                  transition-colors [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+                                  bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">
+                                  Cancel
                                 </div>
                               </DialogPrimitive.Close>
                               <Button disabled={!recaptchaToken}
