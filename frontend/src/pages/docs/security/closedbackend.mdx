@@ -41,7 +41,7 @@ import dimg from "../../../lib/docsImages";
 - 의심스러운 요청(봇, 공격 패턴 감지) 차단
 - User-Agent 기반 필터링 가능 (예: 봇 차단)
 
-#### **7단계: 무차별 대입 공격 방어**
+#### 7단계: 무차별 대입 공격 방어
 ✅ **Cloudflare + Express의 Rate Limit 적용**
 - **1차 – Cloudflare Rate Limiting**
 - **대량 요청(DDOS, 자동화 공격) 방어**
@@ -50,12 +50,12 @@ import dimg from "../../../lib/docsImages";
 - **백엔드 API 자체 요청 제한**
 - `cf-connecting-ip`를 기반으로 일정 횟수를 초과하면 **429 Too Many Requests 반환**
 
-#### **8단계: 비인가 요청 및 예외 URI 차단**
+#### 8단계: 비인가 요청 및 예외 URI 차단
 ✅ **불필요한 URI에 대한 접근 거부**
 - `/favicon.ico`, `/cdn-cgi/rum` 같은 자동 요청 제외
 - `/social` 같은 특정 경로에 대해서는 별도 검증
 
-#### **🔒 9단계: NoSQL Injection & XSS 방어**
+#### 9단계: NoSQL Injection & XSS 방어
 ✅ **MongoDB 주입 공격 방지 (`express-mongo-sanitize`)**
 - **MongoDB 인젝션 공격 차단** (예: `{ "$gt": "" }` 같은 공격 코드 무력화)
 - NoSQL 기반의 주입 공격이 불가능하도록 보호
@@ -68,7 +68,7 @@ import dimg from "../../../lib/docsImages";
 - **중복된 요청 파라미터를 통한 공격 방어**
 - 예: `?id=123&id=456` 같은 중복된 요청이 있을 경우, 하나만 허용하여 예상치 못한 동작 방지
 
-#### **🔒 10단계: 세션 보안 및 보호**
+#### 10단계: 세션 보안 및 보호
 ✅ **Express-Session을 사용하여 세션 데이터를 Redis에 저장**
 - **세션 쿠키 설정을 강화하여 보안성을 유지**
 - `httpOnly: true` 및 `secure: true` 설정으로 XSS 방지
@@ -77,12 +77,27 @@ import dimg from "../../../lib/docsImages";
 - **세션 데이터를 클라이언트에서 직접 접근할 수 없도록 보호**
 - **불필요한 세션 유지 방지 (`resave: false`, `saveUninitialized: false`)**
 
-#### **🔒 12단계: 서버 안정성을 위한 예외 처리**
+#### 11단계: WebSocket 연결 보호
+✅ **WebSocket 연결 시 불필요한 요청 차단**
+- WebSocket 요청을 **Cloudflare Worker를 통해 프록시하여 백엔드 주소를 숨김**
+- `wss.clients.size === 0`일 때 자동으로 연결 해제되지 않도록 설정하여 안정성 강화
+- WebSocket 요청을 모니터링하며 공격 가능성을 줄임
+
+✅ **WebSocket 인증 및 보안 강화**
+- **Cloudflare Rate Limiting + 서버 Rate Limit 적용** → **1분 내 5회 이상 연결 시 차단**
+- **Ping/Pong 체크** → 응답 없는 세션 자동 종료 (좀비 세션 방지)
+
+✅ **WebSocket 클라이언트의 요청 제한**
+- 클라이언트에서 **연결 빈도를 조절할 수 있도록 인터벌(refreshInterval) 설정**
+- **메시지 크기 제한** → 과도한 데이터 전송 방지 (100KB 이상 차단)
+- 지나치게 짧은 간격으로 연결하면 차단
+
+#### 12단계: 서버 안정성을 위한 예외 처리
 ✅ **`process.on('uncaughtException')`을 사용하여 예기치 않은 에러 처리**
 - 서버가 갑작스럽게 크래시 되는 것을 방지하고 로그를 남김
 
 ✅ **Promise Rejection을 처리 (`unhandledRejection`)**
-- 비동기 코드에서 발생하는 예외를 방지하여 **서버가 강제 종료되지 않도록 보호**
+- 비동기 코드에서 발생하는 예외를 방지하여 **서버가 강제 종료되지 않도록 보호** (Dos 등)
 
 
 ---
@@ -97,7 +112,10 @@ import dimg from "../../../lib/docsImages";
 | **6** | WAF 보호 | 자동화 공격 및 봇 차단 |
 | **7** | 무차별 대입 공격 방어 | Cloudflare + Express Rate Limit 이중 보호 |
 | **8** | URI 예외 처리 | 불필요한 요청 거부 |
-
+| **9** | NoSQL Injection & XSS 방어 | Mongo 인젝션, XSS, 중복 파라미터 공격 차단 |
+| **10** | Express 세션 보안 | Redis 기반 세션 보호 및 보안 쿠키 설정 |
+| **11** | WebSocket 보호 | 불필요한 연결 제한, 공격 방지, 백엔드 주소 숨김|
+| **12** | 전역 예외 처리 | 예기치 않은 서버 크래시 방지 |
 
 
 <DocsImage src={dimg.security.closedbackend.iprules}/>
@@ -107,3 +125,4 @@ import dimg from "../../../lib/docsImages";
 <DocsImage src={dimg.security.closedbackend.apikey}/>
 <DocsImage src={dimg.security.closedbackend.notblock}/>
 <DocsImage src={dimg.security.closedbackend.block}/>
+<DocsImage src={dimg.security.closedbackend.websocketproxy}/>

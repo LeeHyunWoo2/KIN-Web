@@ -17,6 +17,7 @@ const dimg = {
       block: require('../../public/images/docs/security/closedbackend/백엔드 차단.png'),
       notblock: require('../../public/images/docs/security/closedbackend/백엔드차단안하면.PNG'),
       iprules: require('../../public/images/docs/security/closedbackend/수신규칙.PNG'),
+      websocketproxy: require('../../public/images/docs/security/closedbackend/웹소켓 프록싱.png'),
     },
   },
   architecture: {
