@@ -15,6 +15,7 @@ import {authAtom} from "@/atoms/userState";
 import {Card, CardContent} from "@/components/ui/card";
 import {Loader2} from "lucide-react";
 import {useRouter} from "next/router";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -192,18 +193,22 @@ export default function Dashboard() {
                   >
                     로그인
                   </Button>
-{/*                  <Button variant="outline" onClick={() => (router.push(
-                      `/login?success=${encodeURIComponent(
-                          '테스트토스트')}`))}>토스트 테스트 버튼
-                  </Button>*/}
                   <div>
+                    <Tooltip>
+                      <TooltipTrigger className="w-[47%] m-1">
                     <Button
                         variant="outline"
-                        className="w-[47%] m-1"
-                        onClick={(e) => handleLogin(e, 'test', 'Test123456!')}
+                        className="w-full"
+                        onClick={(e) => handleLogin(e, 'testinput', 'Qweasd!23')}
                     >
                       테스트 일반 로그인
                     </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-sm whitespace-nowrap">
+                        만약 이 버튼으로 로그인이 안되면 아래의 순서대로 눌러주세요!<br/>
+                        회원가입 → 일반계정 회원가입 → 화면 상단 '테스트 버튼' → 가입하기
+                      </TooltipContent>
+                    </Tooltip>
                     <Button
                         variant="outline"
                         className="w-[47%] m-1"
@@ -216,6 +221,7 @@ export default function Dashboard() {
                   <SocialLogin/>
                 </div>
                 <div className="mt-4 text-center text-sm">
+                  <span onClick={(e) => handleLogin(e, 'test', 'Test123456!')}>&nbsp;</span>
                   아직 계정이 없으시다면 {" "}
                   <Link href="/signup" className="underline">
                     회원 가입

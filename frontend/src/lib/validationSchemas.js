@@ -25,6 +25,14 @@ export const ValidationSchemas = z.object({
   message: "비밀번호가 일치하지 않습니다."
 });
 
+export const PasswordSchema = z
+    .string()
+    .min(8, "비밀번호는 최소 8자 이상이어야 합니다.")
+    .regex(/[A-Z]/, "비밀번호에는 대문자가 포함되어야 합니다.")
+    .regex(/[a-z]/, "비밀번호에는 소문자가 포함되어야 합니다.")
+    .regex(/[0-9]/, "비밀번호에는 숫자가 포함되어야 합니다.")
+    .regex(/[@$!%*?&#]/, "비밀번호에는 특수문자가 포함되어야 합니다.");
+
 export const IdSchema = z
   .string()
   .min(4, "아이디는 최소 4자 이상이어야 합니다.")

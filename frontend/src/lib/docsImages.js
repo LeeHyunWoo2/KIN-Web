@@ -1,8 +1,23 @@
 const dimg = {
   cloudflare: {
     logo: require('../../public/images/docs/cf-logo-v-rgb.png'),
-    https1: require('../../public/images/docs/https.PNG'),
-    https2: require('../../public/images/docs/https2.PNG'),
+  },
+  security: {
+    https:{
+    https1: require('../../public/images/docs/security/https/https.PNG'),
+    https2: require('../../public/images/docs/security/https/https2.PNG'),
+    backendssl: require('../../public/images/docs/security/https/backend ssl blur.png'),
+    certificate: require('../../public/images/docs/security/https/인증서.PNG'),
+    },
+    closedbackend:{
+      apikey: require('../../public/images/docs/security/closedbackend/apikeyblur.PNG'),
+      iptable: require('../../public/images/docs/security/closedbackend/iptable.PNG'),
+      wafinfo: require('../../public/images/docs/security/closedbackend/WAFinfo.PNG'),
+      wafblur: require('../../public/images/docs/security/closedbackend/WAFblur.PNG'),
+      block: require('../../public/images/docs/security/closedbackend/백엔드 차단.png'),
+      notblock: require('../../public/images/docs/security/closedbackend/백엔드차단안하면.PNG'),
+      iprules: require('../../public/images/docs/security/closedbackend/수신규칙.PNG'),
+    },
   },
   architecture: {
     image: require('../../public/images/docs/architecture.png'),
@@ -15,22 +30,29 @@ const dimg = {
     optimizeAfter: require('../../public/images/docs/fontOptimizeAfter.PNG'),
   },
   reqOptimize:{
-    before: require('../../public/images/docs/before.gif'),
-    after: require('../../public/images/docs/after.gif'),
+    before: require('../../public/images/docs/issue/before.gif'),
+    after: require('../../public/images/docs/issue/after.gif'),
   },
-  dberror: require('../../public/images/docs/global_error_handler.PNG'),
-  platedoc: require('../../public/images/docs/immutablePlate.png'),
+  dberror: require('../../public/images/docs/issue/global_error_handler.PNG'),
+  platedoc: require('../../public/images/docs/issue/immutablePlate.png'),
   staticsrc:{
-    fail: require('../../public/images/docs/static-src-fail.PNG'),
-    faillog: require('../../public/images/docs/static-src-fail-log.png'),
+    fail: require('../../public/images/docs/issue/static-src-fail.PNG'),
+    faillog: require('../../public/images/docs/issue/static-src-fail-log.png'),
   },
   signup:{
-    img1: require('../../public/images/docs/account/signup/signup1.PNG'),
-    img2: require('../../public/images/docs/account/signup/signup2.PNG'),
-    img3: require('../../public/images/docs/account/signup/signup3.PNG'),
-    img4: require('../../public/images/docs/account/signup/signup4.PNG'),
-    img5: require('../../public/images/docs/account/signup/signup5.PNG'),
+    test: require('../../public/images/docs/account/signup/testsignup.gif'),
+    email: require('../../public/images/docs/account/signup/email.gif'),
   },
+  login:{
+    ui: require('../../public/images/docs/account/login/login1.PNG'),
+    social: require('../../public/images/docs/account/login/sociallogin.gif'),
+  },
+  forgot:{
+    id: require('../../public/images/docs/account/forgot/forgotid.gif'),
+    pw: require('../../public/images/docs/account/forgot/forgotpw.gif'),
+  },
+  profile: require('../../public/images/docs/account/profile.gif'),
+  deleteAccount: require('../../public/images/docs/account/delete.gif'),
 };
 
 export default dimg;

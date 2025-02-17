@@ -1,43 +1,39 @@
 import {Cards} from 'nextra/components'
 import {Box} from 'lucide-react'
 
-# Auth
+# 개요 - 회원, 계정 관리 기능
 
-**인증 및 보안**
-  - JWT + Refresh Token 기반 인증
-  - OAuth (Google, Kakao, Naver) 연동 방식
-  - HttpOnly 쿠키 및 보안 정책
-  - 등...
+<p className="text-lg text-gray-600 mt-2">사용자 계정과 관련된 다양한 기능을 소개합니다.</p>
 
 <div className="flex flex-col gap-4 mt-10 max-w-[50%]">
   <Cards.Card
       icon={<Box/>}
       title="회원 가입"
-      href="/docs/guide/built-ins/callout"
+      href="/docs/account/signup"
       arrow
   />
   <Cards.Card
       icon={<Box/>}
       title="로그인"
-      href="/docs/guide/built-ins/tabs"
+      href="/docs/account/login"
       arrow
   />
   <Cards.Card
       icon={<Box/>}
       title="아이디, 비밀번호 찾기"
-      href="/docs/guide/built-ins/steps"
+      href="/docs/account/forgot"
       arrow
   />
   <Cards.Card
       icon={<Box/>}
       title="내 정보 수정"
-      href="/docs/guide/built-ins/steps"
+      href="/docs/account/profile"
       arrow
   />
   <Cards.Card
       icon={<Box/>}
       title="회원 탈퇴"
-      href="/docs/guide/built-ins/steps"
+      href="/docs/account/delete"
       arrow
   />
 </div>

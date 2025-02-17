@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/select";
 import {Separator} from "@/components/ui/separator";
 import {Label} from "@/components/ui/label";
-import {Button} from "@/components/ui/button";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 export function ServiceStatus() {
@@ -39,7 +38,7 @@ export function ServiceStatus() {
 
   // 웹소켓 연결
   useEffect(() => {
-    const socket = new WebSocket(process.env.NEXT_PUBLIC_API_URL.replace('http', 'ws') + '/status');
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL.replace('http', 'ws') + '/status');
 
     socket.onopen = () => {
       setWebSocket(socket)

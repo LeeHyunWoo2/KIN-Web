@@ -28,7 +28,7 @@ import {
   changePassword,
   getUserProfileByInput
 } from "@/services/user/authAPIService";
-import {ValidationSchemas} from "@/lib/validationSchemas";
+import {PasswordSchema, ValidationSchemas} from "@/lib/validationSchemas";
 import {useEffect, useState} from "react";
 
 
@@ -105,8 +105,7 @@ export default function ForgotPassword() {
   };
 
   const handleNewPasswordSubmit = async () => {
-    const passwordValidation = ValidationSchemas.shape.password.safeParse(
-        newPassword);
+    const passwordValidation = PasswordSchema.safeParse(newPassword);
     if (newPasswordConfirm === "") {
       setMessage("비밀번호 확인란을 입력해주세요.");
       return;
@@ -150,17 +149,20 @@ export default function ForgotPassword() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const isVerified = localStorage.getItem("emailVerified");
-      if (isVerified === "true") {
+      const isVerified = JSON.parse(localStorage.getItem("emailVerifiedData"));
+      if (isVerified === null) {
+        return;
+      }
+      if (isVerified.emailVerified === true) {
         setEmailVerified(true);
-        localStorage.removeItem("emailVerified");
+        localStorage.removeItem("emailVerifiedData");
         clearInterval(intervalId);
         setMessage("");
         setPage(1);
       }
     }, 1000);
     return () => clearInterval(intervalId);
-  }, [isEmailSent]);
+  }, []);
 
   return (
       <>

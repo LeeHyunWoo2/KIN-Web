@@ -94,10 +94,13 @@ export default function ForgotId({setId}) {
   useEffect(() => {
     // 이메일 인증이 완료됐을 경우, 사용자 아이디를 가져옴
     const intervalId = setInterval(() => {
-      const isVerified = localStorage.getItem("emailVerified");
-      if (isVerified === "true") {
+      const isVerified = JSON.parse(localStorage.getItem("emailVerifiedData"));
+      if (isVerified === null) {
+        return;
+      }
+      if (isVerified.emailVerified === true) {
         setEmailVerified(true);
-        localStorage.removeItem("emailVerified");
+        localStorage.removeItem("emailVerifiedData");
         clearInterval(intervalId);
         showUserId();
         setMessage("");
@@ -167,10 +170,21 @@ export default function ForgotId({setId}) {
                         placeholder="Enter your email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (
+                              e.key === "Enter" &&
+                              document.activeElement.tagName === "INPUT"
+                          ) {
+                            fetchUserId();
+                          }
+                        }}
                     />
                     {verify && (
                         <div
-                            className="w-fit inline-flex items-center justify-center gap-2 border border-input bg-background shadow-sm h-9 px-4 py-2 my-2"
+                            className="w-fit inline-flex items-center justify-center gap-2
+                whitespace-nowrap rounded-md text-sm font-medium transition-colors
+                  [&_svg]:size-4 [&_svg]:shrink-0 border border-input
+                 bg-background shadow-sm h-9 px-4 py-2 my-2"
                             style={{
                               color: emailVerified ? "#00d326" : "inherit",
                             }}
@@ -207,10 +221,9 @@ export default function ForgotId({setId}) {
               )}
               {page === 1 && (
                   <>
-                    <p>아이디 찾기 완료!</p>
-                    <p className="text-lg font-bold text-muted-foreground">
-                      {email}로 가입된 아이디는 다음과 같습니다:
-                    </p>
+                    <p className="text-lg font-bold text-foreground mt-2">아이디 찾기 완료!</p><br/>
+
+                    <p className="text-base font-bold text-muted-foreground">해당 이메일로 가입된 아이디는 다음과 같습니다.</p>
                     <p className="text-xl font-bold text-primary">{userId}</p>
                   </>
               )}
