@@ -38,7 +38,7 @@ export function ServiceStatus() {
 
   // 웹소켓 연결
   useEffect(() => {
-    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL.replace('http', 'ws') + '/status');
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL.replace('http', 'ws') + '/status'); // wss://noteapp.org/ws/status
 
     socket.onopen = () => {
       setWebSocket(socket)
