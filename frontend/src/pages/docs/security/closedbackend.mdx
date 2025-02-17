@@ -79,7 +79,7 @@ import dimg from "../../../lib/docsImages";
 
 #### 11단계: WebSocket 연결 보호
 ✅ **WebSocket 연결 시 불필요한 요청 차단**
-- WebSocket 요청을 **Cloudflare Worker를 통해 프록시하여 백엔드 주소를 숨김**
+- Cloudflare Worker를 통해 프록시하여 **백엔드랑 직접 연결하는 프로토콜에서도** 백엔드 주소를 숨김
 - `wss.clients.size === 0`일 때 자동으로 연결 해제되지 않도록 설정하여 안정성 강화
 - WebSocket 요청을 모니터링하며 공격 가능성을 줄임
 
