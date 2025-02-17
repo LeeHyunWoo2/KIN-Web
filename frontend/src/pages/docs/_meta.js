@@ -33,7 +33,7 @@ export default {
     ),
     type: 'separator'
   },
-  auth: "Auth",
+  account: "Account",
   notes: "Notes",
   'Insights':{
     title: (

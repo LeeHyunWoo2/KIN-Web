@@ -1,5 +1,5 @@
 import {DocsImage} from '../../../components/docs/Image';
-import errorHandler from '../../../../public/images/docs/global_error_handler.PNG';
+import dimg from "../../../lib/docsImages"
 
 # ⛔ 이슈 3: 돌발적인 데이터베이스 접근 실패
 
@@ -107,7 +107,7 @@ const logFormat = ':time / :method :url [:status] query: :query body: :body :err
 
 <br/>
 
-<DocsImage src={errorHandler} alt="logs"/>
+<DocsImage src={dimg.dberror} alt="logs"/>
 
 2. (동일한 에러를 발생시켜본 결과, **IP that isn't whitelisted** 라고 명시되는것을 확인할 수 있다.)
 3. 또한 Morgan 을 통해 기본적인 요청의 흐름을 파악할 수 있게 되었다.

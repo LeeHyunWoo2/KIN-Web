@@ -1,0 +1,43 @@
+import {Cards} from 'nextra/components'
+import {Box} from 'lucide-react'
+
+# Auth
+
+**인증 및 보안**
+  - JWT + Refresh Token 기반 인증
+  - OAuth (Google, Kakao, Naver) 연동 방식
+  - HttpOnly 쿠키 및 보안 정책
+  - 등...
+
+<div className="flex flex-col gap-4 mt-10 max-w-[50%]">
+  <Cards.Card
+      icon={<Box/>}
+      title="회원 가입"
+      href="/docs/guide/built-ins/callout"
+      arrow
+  />
+  <Cards.Card
+      icon={<Box/>}
+      title="로그인"
+      href="/docs/guide/built-ins/tabs"
+      arrow
+  />
+  <Cards.Card
+      icon={<Box/>}
+      title="아이디, 비밀번호 찾기"
+      href="/docs/guide/built-ins/steps"
+      arrow
+  />
+  <Cards.Card
+      icon={<Box/>}
+      title="내 정보 수정"
+      href="/docs/guide/built-ins/steps"
+      arrow
+  />
+  <Cards.Card
+      icon={<Box/>}
+      title="회원 탈퇴"
+      href="/docs/guide/built-ins/steps"
+      arrow
+  />
+</div>

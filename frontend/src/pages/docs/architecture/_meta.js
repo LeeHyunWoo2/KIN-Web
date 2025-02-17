@@ -1,5 +1,5 @@
 export default {
-  index: "개요",
+  index: "Introduction",
   cloudflare: "Cloudflare",
   vercel: "Vercel",
   oraclecloud: "Oracle Cloud",

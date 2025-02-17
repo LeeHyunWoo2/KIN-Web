@@ -44,6 +44,7 @@ import {
   ValidationSchemas
 } from "@/lib/validationSchemas";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {PolicyContentKR} from "@/components/auth/PolicyContent";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -175,9 +176,9 @@ export default function AuthenticationPage() {
 
   // 이메일 중복 확인
   const checkDuplicateEmail = async () => {
-    // 이메일 전송 재요청은 10초가 지난 이후부터 가능
-    if (count && 290 < count) {
-      setMessage({email: "잠시 후 요청해주세요. (4:50 부터 가능)"})
+    // 이메일 전송 재요청은 30초가 지난 이후부터 가능
+    if (count && 270 < count) {
+      setMessage({email: "잠시 후 요청해주세요. (4:30 부터 가능)"})
       return
     }
 
@@ -301,7 +302,7 @@ export default function AuthenticationPage() {
       }
     }, 1000);
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
-  }, []);
+  }, [email]);
 
   const handleSubmit = async () => {
     try {
@@ -462,90 +463,9 @@ export default function AuthenticationPage() {
                           <ScrollArea className="h-48 w-full text-sm">
                             <span
                                 className="font-semibold leading-none tracking-tight text-xl">Keep Idea Note - 개인정보처리방침</span>
-                            <section className="my-6">
-                              <h2 className="text-lg font-bold mb-2">1. 수집하는
-                                개인정보 항목</h2>
-                              <ul className="list-disc list-inside">
-                                <li>필수 항목: 이메일 주소, 닉네임</li>
-                                <li>선택 항목: 프로필 사진</li>
-                              </ul>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">2. 개인정보의 수집
-                                및 이용 목적</h2>
-                              <ul className="list-disc list-inside">
-                                <li>회원 관리: Keep Idea Note 서비스 로그인 및 사용자 인증</li>
-                                <li>서비스 제공: 메모 및 노트 관리 서비스 제공</li>
-                                <li>서비스 개선: 사용자 편의성 향상</li>
-                              </ul>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">3. 개인정보의 보유
-                                및 이용 기간</h2>
-                              <ul className="list-disc list-inside">
-                                <li>모든 정보는 회원 탈퇴 시 즉시 삭제됩니다.</li>
-                              </ul>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">4. 개인정보의
-                                제3자 제공</h2>
-                              <p>수집된 개인정보는 원칙적으로 제3자에게 제공되지 않습니다.</p>
-                              <p>다만, 법령에 따라 요청이 있는 경우에 한해 제공될 수 있습니다.</p>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">5. 개인정보 처리
-                                위탁</h2>
-                              <p>Keep Idea Note는 개인정보 처리를 제3자에게 위탁하지 않습니다.</p>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">6. 이용자의 권리
-                                및 행사 방법</h2>
-                              <ul className="list-disc list-inside">
-                                <li>이용자는 언제든지 개인정보 열람, 정정, 삭제를 요청할 수 있습니다.</li>
-                                <li>요청 방법: 이메일 <a
-                                    href="mailto:triaxis159@email.com"
-                                    className="text-blue-500 underline">triaxis159@email.com</a> 로
-                                  문의
-                                </li>
-                                <li>Keep Idea Note는 요청에 지체 없이 응답하며 필요한 조치를 신속히
-                                  이행합니다.
-                                </li>
-                              </ul>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">7. 쿠키 및 기타
-                                기술의 사용</h2>
-                              <p>Keep Idea Note는 광고를 게재하지 않으며, 사용자 데이터를 분석하거나 광고
-                                목적으로 쿠키를 사용하지
-                                않습니다.</p>
-                            </section>
-
-                            <section className="mb-6">
-                              <h2 className="text-lg font-bold mb-2">8. 개인정보
-                                보호책임자</h2>
-                              <ul className="list-none">
-                                <li><strong>이름:</strong> &nbsp;이현우</li>
-                                <li><strong>연락처:</strong> &nbsp;010-8849-5745
-                                </li>
-                                <li><strong>이메일:</strong> <a
-                                    href="mailto:triaxis159@email.com"
-                                    className="text-blue-500 underline">&nbsp;triaxis159@email.com</a>
-                                </li>
-                              </ul>
-                            </section>
-
-                            <section>
-                              <h2 className="text-lg font-bold mb-2">9.
-                                개인정보처리방침의 변경</h2>
-                              <p>본 개인정보처리방침은 법령이나 서비스 변경사항에 따라 수정될 수 있습니다.</p>
-                              <p>변경사항은 웹사이트 공지사항을 통해 사전에 안내드립니다.</p>
-                            </section>
+                            <div className="mt-6">
+                            <PolicyContentKR/>
+                            </div>
                           </ScrollArea>
                         </div>
                         <Dialog>

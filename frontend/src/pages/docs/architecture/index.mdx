@@ -1,6 +1,5 @@
 import {DocsImage} from '../../../components/docs/Image';
-import arcImage from '../../../../public/images/docs/architecture.png';
-import arcDiagram from '../../../../public/images/docs/architecture-diagram.svg';
+import dimg from "../../../lib/docsImages";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../../components/ui/tabs";
 
 # 아키텍처 개요
@@ -16,10 +15,10 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../../components/ui/t
     </span>
   </div>
   <TabsContent value="image">
-    <DocsImage src={arcImage}/>
+    <DocsImage src={dimg.architecture.image}/>
   </TabsContent>
   <TabsContent value="diagram">
-    <DocsImage src={arcDiagram}/>
+    <DocsImage src={dimg.architecture.diagram}/>
   </TabsContent>
 </Tabs>
 

@@ -1,6 +1,5 @@
 import {DocsImage, ToggleDocsImage} from "../../../components/docs/Image";
-import staticSrcImg  from "../../../../public/images/docs/static-src-fail.PNG"
-import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log.png"
+import dimg from "../../../lib/docsImages"
 
 # ⛔ 이슈 10 : 관리형 챌린지의 Next.js 정적 리소스 차단
 
@@ -8,9 +7,9 @@ import staticSrcImgLog  from "../../../../public/images/docs/static-src-fail-log
 
 <div className="flex my-10 gap-3 justify-around">
   <div className="flex items-center">
-    <ToggleDocsImage className="h-14 text-base" src={staticSrcImg} label="상황 스크린샷"/>
+    <ToggleDocsImage className="h-14 text-base" src={dimg.staticsrc.fail} label="상황 스크린샷"/>
   </div>
-  <DocsImage src={staticSrcImgLog}/>
+  <DocsImage src={dimg.staticsrc.faillog}/>
 </div>
 
 - 페이지를 처음 방문하면 스타일과 스크립트가 적용되지 않으며, **브라우저 콘솔에서 MIME Type 오류가 발생**함.

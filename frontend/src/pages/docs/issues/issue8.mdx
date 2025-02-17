@@ -1,5 +1,5 @@
 import {DocsImage} from "../../../components/docs/Image";
-import immutablePlate from "../../../../public/images/docs/immutablePlate.png"
+import dimg from "../../../lib/docsImages"
 
 # ⛔ 이슈 8 : 노트 에디터 상태관리 충돌
 
@@ -17,7 +17,7 @@ import immutablePlate from "../../../../public/images/docs/immutablePlate.png"
 
 1. **불변성 관리 충돌 (`immer` vs `Plate.js`)**
     <div className="mt-6">
-      <DocsImage src={immutablePlate} alt="immutablePlate"/>
+      <DocsImage src={dimg.platedoc} alt="immutablePlate"/>
     </div>
     - [`Plate.js` 내부에서는 **불변성을 강제하는 방식**으로 상태를 변경함](https://platejs.org/docs/api/core/plate-controller#dealing-with-fallback-editors)
     - 하지만, 에디터를 도입하기 전의 프로젝트는 `immer.js`를 사용하여 `selectedNoteState`를 관리하고 있었고, 두 방식이 충돌을 일으킴.
