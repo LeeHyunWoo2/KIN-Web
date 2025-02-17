@@ -1,8 +1,5 @@
 import BeforeAfter from "../../../components/docs/BeforeAfter";
-import fontUXBefore from "../../../../public/images/docs/fontUXbefore.gif"
-import fontUXAfter from "../../../../public/images/docs/fontUXafter.gif"
-import fontSizeBefore from "../../../../public/images/docs/폰트 최적화 전.PNG"
-import fontSizeAfter from "../../../../public/images/docs/폰트 최적화 후.PNG"
+import dimg from "../../../lib/docsImages"
 
 # 🚀 폰트 최적화 및 UX 개선
 
@@ -97,8 +94,8 @@ export default App;
 ### ✅ 결과
 
 <BeforeAfter
-    beforeSrc={fontSizeBefore}
-    afterSrc={fontSizeAfter}
+    beforeSrc={dimg.font.optimizeBefore}
+    afterSrc={dimg.font.optimizeAfter}
     beforeAlt="Before"
     afterAlt="After"
 />
@@ -120,8 +117,8 @@ export default App;
 <br/>
 
 <BeforeAfter
-    beforeSrc={fontUXBefore}
-    afterSrc={fontUXAfter}
+    beforeSrc={dimg.font.uxBefore}
+    afterSrc={dimg.font.uxAfter}
     beforeAlt="Before"
     afterAlt="After"
 />

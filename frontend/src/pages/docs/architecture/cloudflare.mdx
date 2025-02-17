@@ -1,20 +1,18 @@
 import {DocsImage} from "../../../components/docs/Image";
-import cfImage from '../../../../public/images/docs/cf-logo-v-rgb.png';
-import httpImg from "../../../../public/images/docs/https.PNG";
-import httpImg2 from "../../../../public/images/docs/https2.PNG"
+import dimg from "../../../lib/docsImages"
 
 
 # Cloudflare
 
 <div className="flex justify-center my-6">
-  <DocsImage src={cfImage} alt="Cloudflare" border={false} style={{maxWidth: 300}}/>
+  <DocsImage src={dimg.cloudflare.logo} alt="Cloudflare" border={false} style={{maxWidth: 300}}/>
 </div>
 <br/>
 
 
 ### Cloudflare 란?
 
-이걸 읽는분이 Cloudflare를 모를리가 없지만 간단하게 정리하자면<br/>
+모두 익히 알고 계시겠지만, Cloudflare는 다음과 같은 주요 기능을 제공하는 플랫폼입니다:<br/>
 
 - **도메인 등록, DNS 관리**
 - **WAF & DDoS 방어**
@@ -23,8 +21,7 @@ import httpImg2 from "../../../../public/images/docs/https2.PNG"
 - **캐싱, 속도 및 트래픽 자동 최적화**
 - **배포**
 
-웹 서비스에서 필요한 대부분의 서비스를 제공하는 플랫폼입니다.<br/>
-다만, 저는 Cloudflare 에서 배포를 제외한 기능을 활용했습니다.
+저는 이번 프로젝트에서 배포 서비스를 제외한 나머지 기능들을 활용하였습니다.
 
 ### Cloudflare를 선택한 이유
 
@@ -34,7 +31,7 @@ import httpImg2 from "../../../../public/images/docs/https2.PNG"
 
 <br/>
 
-2. **도메인 구매 및 관리가 한곳에서 이뤄짐**
+2. **통합된 도메인 관리**
     - 따라서 별도의 네임서버 변경 없이 등록, DNS 설정, 보안 설정 적용이 **즉시** 적용되고  사용이 가능해 매우 간편함.
 
 <br/>
@@ -46,5 +43,5 @@ import httpImg2 from "../../../../public/images/docs/https2.PNG"
 
 ### 이 프로젝트에서 Cloudflare의 역할
 
-<DocsImage src={httpImg} alt="httpsImage"/>
-<DocsImage src={httpImg2} alt="httpsImage2"/>
+<DocsImage src={dimg.cloudflare.https1} alt="httpsImage"/>
+<DocsImage src={dimg.cloudflare.https2} alt="httpsImage2"/>

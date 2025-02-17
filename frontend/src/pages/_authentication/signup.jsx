@@ -44,6 +44,7 @@ import {
   ValidationSchemas
 } from "@/lib/validationSchemas";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {PolicyContentKR} from "@/components/auth/PolicyContent";
 
 export default function AuthenticationPage() {
   const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
@@ -175,9 +176,9 @@ export default function AuthenticationPage() {
 
   // 이메일 중복 확인
   const checkDuplicateEmail = async () => {
-    // 이메일 전송 재요청은 10초가 지난 이후부터 가능
-    if (count && 290 < count) {
-      setMessage({email: "잠시 후 요청해주세요. (4:50 부터 가능)"})
+    // 이메일 전송 재요청은 30초가 지난 이후부터 가능
+    if (count && 270 < count) {
+      setMessage({email: "잠시 후 요청해주세요. (4:30 부터 가능)"})
       return
     }
 
@@ -301,7 +302,7 @@ export default function AuthenticationPage() {
       }
     }, 1000);
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
-  }, []);
+  }, [email]);
 
   const handleSubmit = async () => {
     try {
@@ -445,9 +446,9 @@ export default function AuthenticationPage() {
                             )} variant="outline" size="sm">테스트 버튼</Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                              <p className="text-sm">
-                                누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
-                              </p>
+                            <p className="text-sm">
+                              누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       </CardTitle>
@@ -458,27 +459,29 @@ export default function AuthenticationPage() {
                     <CardContent>
                       <div className="grid gap-4 mb-4">
                         <div
-                            className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow min-h-fit">
+                            className="flex rounded-md border p-4 shadow">
                           <ScrollArea className="h-48 w-full text-sm">
-                            Keep Idea Note 이하 KIN 은 귀하의 개인정보에 관심이 없으며
-                            기타등등.....<br/><br/>
-                            김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세브리깡 무두셀라
-                            구름이
-                            허리케인에 담벼락 담벼락에 서생원 서생원에 고양이 고양이엔 바둑이 바둑이는 돌돌이
-                            <br/><br/>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu
-                            fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum.
-                            <PrivacyPolicy/>
+                            <span
+                                className="font-semibold leading-none tracking-tight text-xl">Keep Idea Note - 개인정보처리방침</span>
+                            <div className="mt-6">
+                            <PolicyContentKR/>
+                            </div>
                           </ScrollArea>
                         </div>
+                        <Dialog>
+                          <DialogTrigger>
+                            <div className="flex justify-end">
+                              <Button variant="outline" className="w-1/3 h-8">
+                                크게 보기
+                              </Button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <ScrollArea className="max-h-[80vh] w-full text-sm">
+                              <PrivacyPolicy/>
+                            </ScrollArea>
+                          </DialogContent>
+                        </Dialog>
                       </div>
 
                       <div className="grid gap-4">
