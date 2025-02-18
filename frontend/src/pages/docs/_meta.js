@@ -12,7 +12,7 @@ export default {
   index: "프로젝트 소개",
   about: "나를 담은 프로젝트",
   techStack: "기술 스택",
-  structure: "프로젝트 디렉토리 구조",
+  directory: "프로젝트 디렉토리 구조",
   'Fundamental': {
     title: (
         <Separator>

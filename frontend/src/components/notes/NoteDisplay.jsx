@@ -102,7 +102,7 @@ export default function NoteDisplay() {
   };
 
 // PlateEditor의 변경사항을 처리
-  const handleEditorChange = (newContent) => {
+  const handleValueChange = (newContent) => {
     // 현재 선택된 노트의 content 업데이트
     setSelectedNoteState((prev) => ({
       ...prev,
@@ -319,12 +319,12 @@ export default function NoteDisplay() {
           <div className="absolute h-full p-3 left-0 right-0 bottom-0"
                data-registry="plate">
             {selectedNoteState.mode === "editor" ? (
-                <PlateEditor onChange={handleEditorChange}/>
+                <PlateEditor onChange={handleValueChange}/>
             ) : (
                 <textarea
                     className="w-full h-full p-3 border rounded-md shadow-sm outline-none resize-none"
                     value={selectedNoteState.content}
-                    onChange={(e) => handleEditorChange(e.target.value)}
+                    onChange={(e) => handleValueChange(e.target.value)}
                 />
             )}
           </div>

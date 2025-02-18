@@ -1,33 +1,20 @@
 import {DocsImage} from '../../../components/docs/Image';
 import dimg from "../../../lib/docsImages";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../../components/ui/tabs";
+import {Tabs} from 'nextra/components'
 
 # 개요 - 아키텍처
 
 <p className="text-lg text-gray-600 mt-2">애플리케이션 각 구성 요소 및 인프라 관계를 시각적으로 나타낸 자료를 포함하고 있습니다.</p>
 
+  - 해당 앱을 서비스하기 위해 구성한 모든 인프라가 Cloud 환경에서 동작합니다.
+  - 이 카테고리의 이후 문서는 각 인프라의 간단한 소개와, 선택한 이유, 주요 데이터 흐름을 정리합니다.
 
-<Tabs defaultValue="diagram" className="mt-8">
-  <div className="flex">
-  <TabsList className="border">
-    <TabsTrigger className="text-[15px] font-semibold min-w-24" value="diagram">다이어그램</TabsTrigger>
-    <TabsTrigger className="text-[15px] font-semibold min-w-24" value="image">이미지</TabsTrigger>
-  </TabsList>
-    <span className="flex items-center ml-4 text-xl font-semibold">
-    👈 탭 전환
-    </span>
-  </div>
-  <TabsContent value="image">
-    <DocsImage src={dimg.architecture.image}/>
-  </TabsContent>
-  <TabsContent value="diagram">
-    <DocsImage src={dimg.architecture.diagram}/>
-  </TabsContent>
+<br/>
+
+<Tabs items={['다이어그램', '이미지']}>
+  <Tabs.Tab><DocsImage src={dimg.architecture.diagram}/></Tabs.Tab>
+  <Tabs.Tab><DocsImage src={dimg.architecture.image}/></Tabs.Tab>
 </Tabs>
 
 <br/>
 <span className="flex justify-center">각 인프라간의 관계를 표현하는 이미지와 다이어그램</span>
-<br/>
-
-  - 해당 앱을 서비스하기 위해 구성한 모든 인프라가 Cloud 환경에서 동작합니다.
-  - 이 카테고리의 이후 문서는 각 인프라의 간단한 소개와, 선택한 이유, 주요 데이터 흐름을 정리합니다.

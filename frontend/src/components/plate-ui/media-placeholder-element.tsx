@@ -121,7 +121,7 @@ export const MediaPlaceholderElement = withHOC(
             name: element.mediaType === FilePlugin.key ? uploadedFile.name : '',
             placeholderId: element.id as string,
             type: element.mediaType!,
-            url: uploadedFile.url,
+            url: uploadedFile.ufsUrl,
           };
 
           insertNodes(editor, node, { at: path });

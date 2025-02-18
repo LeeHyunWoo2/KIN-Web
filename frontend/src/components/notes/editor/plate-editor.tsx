@@ -5,7 +5,7 @@ import { Plate } from '@udecode/plate-common/react';
 
 import { useCreateEditor } from '@/components/notes/editor/use-create-editor';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
-import {useAtom, useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { selectedNoteStateAtom, selectedNoteUploadFilesAtom } from "@/atoms/noteStateAtom";
 import {useEffect, useRef } from 'react';
 import { isEqual } from 'lodash'; // Lodash의 isEqual 함수 사용
@@ -16,7 +16,7 @@ type PlateEditorProps = {
 
 export default function PlateEditor({ onChange }: PlateEditorProps) {
   const selectedNoteState = useAtomValue(selectedNoteStateAtom);
-  const [uploadedFiles, setUploadedFiles] = useAtom(selectedNoteUploadFilesAtom);
+  const setUploadedFiles = useSetAtom(selectedNoteUploadFilesAtom);
 
   // 현재 노트의 content를 value로 설정
   const value = selectedNoteState.content;
@@ -28,6 +28,51 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
   const lastId = useRef(selectedNoteState._id);
 
   const handleEditorChange = (newValue: any) => {
+    const operations = editor.operations;
+
+    // 파일 관련 동작이 있는 경우에만 파일 노드 재스캔
+    const fileOperationsExist = operations.some(
+        (operation) =>
+            operation.type === "insert_node" || operation.type === "remove_node"
+    );
+
+    if (fileOperationsExist) {
+      scanNodesForFiles(newValue.editor.children); // 파일 노드 갱신
+    }
+
+    // 기본 에디터 변경 사항은 그대로 처리
+    const currentValue = newValue.editor.children;
+    if (!isEqual(lastValue.current, currentValue) && lastId.current === selectedNoteState._id) {
+      lastValue.current = currentValue; // 상태 업데이트
+      if (onChange) {
+        onChange(currentValue); // 변경된 값만 전달
+      }
+    }
+  };
+
+  const scanNodesForFiles = (nodes: any[]) => {
+    const foundFiles: string[] = [];
+
+    const scan = (nodeList: any[]) => {
+      nodeList.forEach((node) => {
+        if (node.isUpload && node.url) {
+          const fileUrl = node.url as string;
+          foundFiles.push(fileUrl); // 파일 노드 추가
+        }
+        if (Array.isArray(node.children)) {
+          scan(node.children); // 재귀적으로 자식 노드 탐색
+        }
+      });
+    };
+
+    scan(nodes);
+
+    // 업로드된 파일 상태 갱신 (중복 제거)
+    // @ts-ignore
+    setUploadedFiles(Array.from(new Set(foundFiles)));
+  };
+
+  /*const handleEditorChange = (newValue: any) => {
     const currentValue = newValue.editor.children;
 
     // 업로드된 파일 목록을 최신 상태로 유지
@@ -74,11 +119,12 @@ export default function PlateEditor({ onChange }: PlateEditorProps) {
         onChange(currentValue); // 변경된 값만 전달
       }
     }
-  };
+  };*/
 
   useEffect(() => {
     editor.tf.reset();
     editor.tf.setValue(value); // 노트의 _id 가 변경되면 value 재배치
+    scanNodesForFiles(editor.children);
     lastId.current = selectedNoteState._id;
   },[selectedNoteState._id])
 

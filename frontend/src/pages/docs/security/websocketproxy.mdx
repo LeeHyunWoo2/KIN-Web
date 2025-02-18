@@ -1,0 +1,174 @@
+import {DocsImage} from '../../../components/docs/Image';
+import dimg from "../../../lib/docsImages";
+
+# WebSocket 프록시 적용 및 보안 강화
+
+### 📝 상황 설명
+
+- API 라우트 적용 후 기존 API 요청은 프론트엔드 서버를 프록시로 사용하여 백엔드 주소를 숨겼으나,<br/>
+**백엔드와 직접 상호작용하는 로직은 그대로일것으로 예상**
+
+<br/>
+
+<DocsImage src={dimg.security.websocketproxy.before}/>
+
+#### api 라우트 적용과정 글 링크 필요
+
+- 역시나 개발자 도구(네트워크 탭)에서 WebSocket 요청이 백엔드 서버로 직접 전송되는 것을 확인함.
+- 이를 해결하기 위해 웹소켓까지 API route 프록시를 적용시킬지 고민했으나, 현실적으로 불가능하다고 생각했다.
+- 이유 1 : 프록시 특화 서버가 아닌 일반 서버에서 요청을 받아 재가공하는 방식이라서 직접 연결이 필요한 요청은 그대로 멈춘다.
+- 이유 2 : 만약 된다고 가정해도 이미 거의 모든 API 요청을 처리중이기 때문에 추가적인 부담이 된다.
+
+<br/>
+
+---
+
+## ✅ 목표
+- 백엔드 WebSocket 주소를 숨기고, Cloudflare Worker를 이용해 프록싱 하기.
+- 인증 및 보안 기능을 추가하여 비인가 접근을 차단하기.
+
+---
+
+## 🔨 해결 과정
+### Cloudflare Worker 생성
+- Cloudflare 대시보드에서 `Workers & Pages`로 이동하여 새 Worker 생성함.
+- Worker 이름: **`websocket-proxy`**
+- WebSocket 요청을 감지하고 백엔드 서버로 프록시하는 코드 작성.
+
+```js
+export default {
+  async fetch(request, env, ctx) {
+    let url = new URL(request.url);
+
+    // WebSocket 요청인지 확인
+    if (url.pathname.starts_with("/ws/")) {
+      url.hostname = "api.noteapp.org"; // 백엔드 WebSocket 서버로 변경
+      url.protocol = "https:"; // WebSocket이므로 HTTPS 유지
+
+      let newRequest = new Request(url, request);
+      return fetch(newRequest);
+    }
+
+    // 기본 요청은 원래 목적지로 전달
+    return fetch(request);
+  }
+};
+```
+
+---
+
+### Worker Route 설정
+- Cloudflare `Workers & Pages` → `Routes`에서 WebSocket 요청만 처리하도록 설정함.
+- Route 값: `noteapp.org/ws/*`
+- **이제 WebSocket 요청이 `noteapp.org/ws/...`로 들어오면, Worker가 자동으로 `api.noteapp.org/ws/...`로 프록시함.**
+
+---
+
+### WebSocket 요청 점검
+- Worker 적용 후, 브라우저 개발자 도구(F12) → `Network` 탭에서 WebSocket 요청을 확인함.
+- 기존에는 `wss://api.noteapp.org/ws/...`로 직접 연결되었으나, 이제 `wss://noteapp.org/ws/...`만 보이며, 백엔드 주소가 숨겨짐.
+
+---
+
+## 🔒 보안 강화 요소
+### WebSocket 인증 강화
+- WebSocket 연결 시 **JWT 인증을 추가**하여 비인가 사용자의 접근을 차단함.
+- `sec-websocket-protocol` 헤더에 JWT 토큰을 포함하도록 설정함.
+- 서버에서 토큰이 유효하지 않으면 **즉시 연결 종료.**
+
+```js
+const jwt = require('jsonwebtoken');
+
+wss.on('connection', (ws, req) => {
+  const token = req.headers['sec-websocket-protocol'];
+
+  if (!token) {
+    console.log("WebSocket 연결 거부: 토큰 없음");
+    ws.close();
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    ws.user = decoded;
+    console.log(`WebSocket 인증 성공: ${decoded.id}`);
+  } catch (error) {
+    console.log(" WebSocket 연결 거부: 잘못된 토큰");
+    ws.close();
+  }
+});
+```
+
+---
+
+### Rate Limit 적용
+- **Cloudflare Rate Limiting**을 활용하여 초당 연결 횟수를 제한함.
+- **서버에서도 IP 기반 Rate Limit을 추가하여 1분 내 5회 이상 연결 시 차단함.**
+
+```js
+const connectionAttempts = new Map();
+
+wss.on('connection', (ws, req) => {
+  const ip = req.socket.remoteAddress;
+
+  const now = Date.now();
+  const attempts = connectionAttempts.get(ip) || [];
+
+  // 최근 1분 내 연결 횟수 필터링
+  const recentAttempts = attempts.filter((timestamp) => now - timestamp < 60 * 1000);
+  recentAttempts.push(now);
+  connectionAttempts.set(ip, recentAttempts);
+
+  if (recentAttempts.length > 5) {
+    console.log(` WebSocket 연결 차단: ${ip} - 너무 많은 연결 시도`);
+    ws.close();
+    return;
+  }
+});
+```
+
+---
+
+### Ping 체크
+- 클라이언트가 일정 시간 동안 응답하지 않으면 자동으로 연결 종료함.
+- 서버에서 일정 간격으로 `ping`을 보내고, 응답이 없으면 `terminate()` 실행.
+
+```js
+wss.on('connection', (ws) => {
+  ws.isAlive = true;
+
+  ws.on('pong', () => {
+    ws.isAlive = true;
+  });
+
+  const interval = setInterval(() => {
+    if (!ws.isAlive) {
+      console.log("🔴 WebSocket 비정상 연결 종료");
+      ws.terminate();
+      return;
+    }
+
+    ws.isAlive = false;
+    ws.ping();
+  }, 30000);
+
+  ws.on('close', () => {
+    clearInterval(interval);
+  });
+});
+```
+
+## 최종 결과
+
+<br/>
+<DocsImage src={dimg.security.websocketproxy.after}/>
+<br/>
+<DocsImage src={dimg.security.websocketproxy.log}/>
+<br/>
+
+---
+
+- WebSocket 요청을 Cloudflare Worker를 통해 프록시하여 백엔드 주소를 완전히 숨김.
+- 브라우저 개발자 도구(F12)에서 확인해도 `wss://noteapp.org/ws/...`만 보이며, **백엔드 도메인이 노출되지 않음**.
+- JWT 인증 추가하여 비인가 접근 차단, Rate Limit 적용하여 악성 연결 방지, Ping 체크로 비활동 세션 자동 종료.
+- 이제 WebSocket 보안이 확실하게 강화됨

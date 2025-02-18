@@ -47,7 +47,6 @@ import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {PolicyContentKR} from "@/components/auth/PolicyContent";
 
 export default function AuthenticationPage() {
-  const router = useRouter(); // next.js 의 useRouter 사용. use client 에서만 작동함
   const [page, setPage] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [email, setEmail] = useState("");
@@ -60,6 +59,7 @@ export default function AuthenticationPage() {
   const [isTimedOut, setIsTimedOut] = useState(false);
   const [isOverlayActive, setIsOverlayActive] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isTestAccount, setIsTestAccount] = useState(false);
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
@@ -304,6 +304,28 @@ export default function AuthenticationPage() {
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, [email]);
 
+  useEffect(() => {
+    if(page === 0){
+      setFormData({
+        id: '',
+        idVerified: false,
+        name: '',
+        email: '',
+        emailVerified: false,
+        password: '',
+        passwordConfirm: '',
+        termsAgreed: false,
+        marketingConsent: false,
+      })
+      setIsTestAccount(false)
+      setIdVerified(false)
+      setEmailVerified(false)
+      setMessage({id: '', email: ''})
+      setErrors({id: '', email: ''})
+      setEmail('')
+    }
+  }, [page]);
+
   const handleSubmit = async () => {
     try {
       const response = await apiClient.post('/auth/recaptcha', {
@@ -313,17 +335,6 @@ export default function AuthenticationPage() {
         // 리캡차 성공 시 회원가입 요청
         formData.email = email;
         await registerUser(formData);
-        setFormData({
-          id: '',
-          idVerified: false,
-          name: '',
-          email: '',
-          emailVerified: false,
-          password: '',
-          passwordConfirm: '',
-          termsAgreed: false,
-          marketingConsent: false,
-        })
         window.location.href = `/login?success=${encodeURIComponent(
             `회원가입 완료! ${formData.name} 님 환영합니다`)}`;
       } else {
@@ -431,25 +442,38 @@ export default function AuthenticationPage() {
                       <CardTitle className="text-xl">Sign Up
                         <Tooltip>
                           <TooltipTrigger>
-                            <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 font-semibold transition-colors ml-5" onClick={() => (
-                                setFormData({
-                                      id: 'testinput',
-                                      name: '테스트맨',
-                                      email: 'testman@example.com',
-                                      emailVerified: true,
-                                      password: 'Qweasd!23',
-                                      passwordConfirm: 'Qweasd!23',
-                                      termsAgreed: true,
-                                      marketingConsent: false,
-                                    }, setEmail('testman@example.com'), setPage(2),
-                                    setEmailVerified(true))
-                            )}>테스트 버튼</div>
+                            <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 font-semibold transition-colors ml-5"
+                                 style={{
+                                   opacity: isTestAccount ? 0.5 : 1,
+                                 }}
+                                 onClick={() => {
+                                   if(isTestAccount) return;
+                                   setFormData({
+                                         id: 'testinput',
+                                         idVerified: true,
+                                         name: '테스트맨',
+                                         email: 'testman@example.com',
+                                         emailVerified: true,
+                                         password: 'Qweasd!23',
+                                         passwordConfirm: 'Qweasd!23',
+                                         termsAgreed: true,
+                                         marketingConsent: false,
+                                       },
+                                       setEmail('testman@example.com'),
+                                       setPage(2),
+                                       setEmailVerified(true),
+                                       setIdVerified(true),
+                                       setIsTestAccount(true))
+                                 }
+                            }>테스트 버튼</div>
                           </TooltipTrigger>
+                          {!isTestAccount && (
                           <TooltipContent>
                             <p className="text-sm">
                               누르면 즉시 회원가입 테스트 직전까지 셋팅됩니다.
                             </p>
                           </TooltipContent>
+                          )}
                         </Tooltip>
                       </CardTitle>
                       <CardDescription>
@@ -476,22 +500,27 @@ export default function AuthenticationPage() {
                               </div>
                             </div>
                           </DialogTrigger>
+                          <DialogTitle/>
                           <DialogContent>
                             <ScrollArea className="max-h-[80vh] w-full text-sm">
                               <PrivacyPolicy/>
                             </ScrollArea>
                           </DialogContent>
+                          <DialogDescription/>
                         </Dialog>
                       </div>
 
                       <div className="grid gap-4">
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
-                            onClick={() =>
-                                setFormData((formData) => ({
-                                  ...formData,
-                                  termsAgreed: !formData.termsAgreed
-                                }))}
+                            onClick={() => {
+                              if(isTestAccount) return;
+                              setFormData((formData) => ({
+                                ...formData,
+                                termsAgreed: !formData.termsAgreed
+                              }))
+                            }
+                        }
                         >
                           <Checkbox
                               name="termsAgreed"
@@ -500,6 +529,7 @@ export default function AuthenticationPage() {
                                   setFormData({...formData, termsAgreed: value})
                               }
                               onClick={(e) => e.stopPropagation()}
+                              disabled={isTestAccount}
                           />
                           <div className="space-y-1 leading-none">
                             <Label className="cursor-pointer">필수 약관
@@ -512,11 +542,14 @@ export default function AuthenticationPage() {
                         </div>
                         <div
                             className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow cursor-pointer"
-                            onClick={() =>
-                                setFormData((formData) => ({
-                                  ...formData,
-                                  marketingConsent: !formData.marketingConsent
-                                }))}
+                            onClick={() => {
+                              if(isTestAccount) return;
+                              setFormData((formData) => ({
+                                ...formData,
+                                marketingConsent: !formData.marketingConsent
+                              }))
+                            }
+                        }
                         >
                           <Checkbox
                               name="marketingConsent"
@@ -526,6 +559,7 @@ export default function AuthenticationPage() {
                                       {...formData, marketingConsent: value})
                               }
                               onClick={(e) => e.stopPropagation()}
+                              disabled={isTestAccount}
                           />
                           <div className="space-y-1 leading-none">
                             <Label className="cursor-pointer">동의
@@ -573,6 +607,9 @@ export default function AuthenticationPage() {
                                   value={formData.id}
                                   onChange={handleChange}
                                   placeholder="example123"
+                                  readOnly={isTestAccount}
+                                  disabled={isTestAccount}
+                                  maxLength={20}
                                   required
                               />
                             </div>
@@ -581,7 +618,7 @@ export default function AuthenticationPage() {
                                   variant="outline"
                                   className="w-full"
                                   onClick={checkDuplicateId}
-                                  disabled={!formData.id}
+                                  disabled={!formData.id || idVerified === true}
                               >
                                 중복확인
                               </Button>
@@ -604,6 +641,9 @@ export default function AuthenticationPage() {
                               value={formData.name}
                               onChange={handleChange}
                               placeholder="John Doe"
+                              readOnly={isTestAccount}
+                              disabled={isTestAccount}
+                              maxLength={20}
                               required
                           />
                           {errors.name && <p
@@ -619,6 +659,8 @@ export default function AuthenticationPage() {
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="example@example.com"
                               readOnly={emailVerified === true}
+                              disabled={isTestAccount}
+                              maxLength={320}
                               required
                           />
                           {errors.email && <p
@@ -675,6 +717,9 @@ export default function AuthenticationPage() {
                               value={formData.password}
                               onChange={handleChange}
                               placeholder="8자 이상 영어 대소문자, 숫자, 특수문자"
+                              readOnly={isTestAccount}
+                              disabled={isTestAccount}
+                              maxLength={20}
                               required
                           />
                           {errors.password && <p
@@ -689,6 +734,9 @@ export default function AuthenticationPage() {
                               value={formData.passwordConfirm}
                               onChange={handleChange}
                               placeholder="password"
+                              readOnly={isTestAccount}
+                              disabled={isTestAccount}
+                              maxLength={20}
                               required
                           />
                           {errors.passwordConfirm && <p

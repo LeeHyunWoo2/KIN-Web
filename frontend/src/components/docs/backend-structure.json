@@ -9,19 +9,23 @@
       "children": [
         {
           "name": "cookie.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/config/cookie.js"
         },
         {
           "name": "db.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/config/db.js"
         },
         {
           "name": "passport.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/config/passport.js"
         },
         {
           "name": "redis.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/config/redis.js"
         }
       ]
     },
@@ -35,15 +39,18 @@
           "children": [
             {
               "name": "categoryController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/notes/categoryController.js"
             },
             {
               "name": "noteController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/notes/noteController.js"
             },
             {
               "name": "tagController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/notes/tagController.js"
             }
           ]
         },
@@ -53,27 +60,33 @@
           "children": [
             {
               "name": "authController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/authController.js"
             },
             {
               "name": "checkSessionController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/checkSessionController.js"
             },
             {
               "name": "emailController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/emailController.js"
             },
             {
               "name": "socialController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/socialController.js"
             },
             {
               "name": "syncController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/syncController.js"
             },
             {
               "name": "userController.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/controllers/user/userController.js"
             }
           ]
         }
@@ -89,21 +102,20 @@
           "children": [
             {
               "name": "authenticateUser.js",
-              "type": "file"
-            },
-            {
-              "name": "validateUser.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/authenticateUser.js"
             }
           ]
         },
         {
           "name": "errorHandler.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/errorHandler.js"
         },
         {
           "name": "logger.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/logger.js"
         }
       ]
     },
@@ -113,19 +125,23 @@
       "children": [
         {
           "name": "category.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/models/category.js"
         },
         {
           "name": "note.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/models/note.js"
         },
         {
           "name": "tag.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/models/tag.js"
         },
         {
           "name": "user.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/models/user.js"
         }
       ]
     },
@@ -139,15 +155,18 @@
           "children": [
             {
               "name": "categoryRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/notes/categoryRoutes.js"
             },
             {
               "name": "noteRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/notes/noteRoutes.js"
             },
             {
               "name": "tagRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/notes/tagRoutes.js"
             }
           ]
         },
@@ -157,23 +176,28 @@
           "children": [
             {
               "name": "authRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/user/authRoutes.js"
             },
             {
               "name": "emailRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/user/emailRoutes.js"
             },
             {
               "name": "socialRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/user/socialRoutes.js"
             },
             {
               "name": "syncRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/user/syncRoutes.js"
             },
             {
               "name": "userRoutes.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/routes/user/userRoutes.js"
             }
           ]
         }
@@ -189,7 +213,8 @@
           "children": [
             {
               "name": "statusService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/admin/statusService.js"
             }
           ]
         },
@@ -199,19 +224,23 @@
           "children": [
             {
               "name": "backupService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/notes/backupService.js"
             },
             {
               "name": "categoryService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/notes/categoryService.js"
             },
             {
               "name": "noteService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/notes/noteService.js"
             },
             {
               "name": "tagService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/notes/tagService.js"
             }
           ]
         },
@@ -221,35 +250,43 @@
           "children": [
             {
               "name": "authService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/authService.js"
             },
             {
               "name": "emailService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/emailService.js"
             },
             {
               "name": "linkSocialService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/linkSocialService.js"
             },
             {
               "name": "socialAuthService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/socialAuthService.js"
             },
             {
               "name": "socialService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/socialService.js"
             },
             {
               "name": "syncService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/syncService.js"
             },
             {
               "name": "tokenService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/tokenService.js"
             },
             {
               "name": "userService.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/services/user/userService.js"
             }
           ]
         }
@@ -261,25 +298,25 @@
       "children": [
         {
           "name": "setCookie.js",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/utils/setCookie.js"
         }
       ]
     },
     {
-      "name": ".env",
-      "type": "file"
-    },
-    {
       "name": "package-lock.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/package-lock.json"
     },
     {
       "name": "package.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/package.json"
     },
     {
       "name": "server.js",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/server.js"
     }
   ]
 }

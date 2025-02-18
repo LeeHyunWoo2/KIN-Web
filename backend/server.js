@@ -86,7 +86,7 @@ app.use(bodyParser.json());
 
 app.use(
     cors({
-      origin: [process.env.FRONTEND_URL, process.env.NEXT_PUBLIC_API_URL],
+      origin: [process.env.FRONTEND_URL, process.env.BACKEND_API_URL],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 허용할 HTTP 메서드
       allowedHeaders: [
         'Content-Type',
