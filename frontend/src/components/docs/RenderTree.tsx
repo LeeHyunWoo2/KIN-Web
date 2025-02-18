@@ -15,7 +15,7 @@ function RenderTree({ tree }) {
   }
 
   if (tree.type === "file") {
-    return <File name={tree.name} />;
+    return <File name={tree.name} url={tree.url} />;
   }
 
   return null;

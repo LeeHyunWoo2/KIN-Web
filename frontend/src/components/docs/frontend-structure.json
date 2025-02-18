@@ -8,16 +8,6 @@
       "type": "folder",
       "children": [
         {
-          "name": "fonts",
-          "type": "folder",
-          "children": [
-            {
-              "name": "PretendardVariable.woff2",
-              "type": "file"
-            }
-          ]
-        },
-        {
           "name": "images",
           "type": "folder",
           "children": [
@@ -27,35 +17,43 @@
               "children": [
                 {
                   "name": "demo1-m.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo1-m.png"
                 },
                 {
                   "name": "demo1.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo1.png"
                 },
                 {
                   "name": "demo2-m.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo2-m.png"
                 },
                 {
                   "name": "demo2.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo2.png"
                 },
                 {
                   "name": "demo3-m.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo3-m.png"
                 },
                 {
                   "name": "demo3.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo3.png"
                 },
                 {
                   "name": "demo4-m.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo4-m.png"
                 },
                 {
                   "name": "demo4.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/demo/demo4.png"
                 }
               ]
             },
@@ -64,24 +62,227 @@
               "type": "folder",
               "children": [
                 {
-                  "name": "after.gif",
-                  "type": "file"
+                  "name": "account",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "forgot",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "forgotid.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/forgot/forgotid.gif"
+                        },
+                        {
+                          "name": "forgotpw.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/forgot/forgotpw.gif"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "login",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "login1.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/login/login1.PNG"
+                        },
+                        {
+                          "name": "sociallogin.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/login/sociallogin.gif"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "signup",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "email.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/signup/email.gif"
+                        },
+                        {
+                          "name": "testsignup.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/signup/testsignup.gif"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "delete.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/delete.gif"
+                    },
+                    {
+                      "name": "profile.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/profile.gif"
+                    }
+                  ]
+                },
+                {
+                  "name": "issue",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "after.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/after.gif"
+                    },
+                    {
+                      "name": "before.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/before.gif"
+                    },
+                    {
+                      "name": "global_error_handler.PNG",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/global_error_handler.PNG"
+                    },
+                    {
+                      "name": "immutablePlate.png",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/immutablePlate.png"
+                    },
+                    {
+                      "name": "static-src-fail-log.png",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/static-src-fail-log.png"
+                    },
+                    {
+                      "name": "static-src-fail.PNG",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/issue/static-src-fail.PNG"
+                    }
+                  ]
+                },
+                {
+                  "name": "security",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "closedbackend",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "백엔드 차단.png",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/백엔드 차단.png"
+                        },
+                        {
+                          "name": "백엔드차단안하면.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/백엔드차단안하면.PNG"
+                        },
+                        {
+                          "name": "수신규칙.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/수신규칙.PNG"
+                        },
+                        {
+                          "name": "웹소켓 프록싱.png",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/웹소켓 프록싱.png"
+                        },
+                        {
+                          "name": "apikeyblur.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/apikeyblur.PNG"
+                        },
+                        {
+                          "name": "iptable.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/iptable.PNG"
+                        },
+                        {
+                          "name": "WAFblur.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/WAFblur.PNG"
+                        },
+                        {
+                          "name": "WAFinfo.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/WAFinfo.PNG"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "https",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "인증서.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/https/인증서.PNG"
+                        },
+                        {
+                          "name": "backend ssl blur.png",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/https/backend ssl blur.png"
+                        },
+                        {
+                          "name": "https.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/https/https.PNG"
+                        },
+                        {
+                          "name": "https2.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/https/https2.PNG"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "name": "architecture-diagram.svg",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/architecture-diagram.svg"
                 },
                 {
                   "name": "architecture.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/architecture.png"
                 },
                 {
-                  "name": "before.gif",
-                  "type": "file"
+                  "name": "cf-logo-v-rgb.png",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/cf-logo-v-rgb.png"
                 },
                 {
-                  "name": "global_error_handler.PNG",
-                  "type": "file"
+                  "name": "fontOptimizeAfter.PNG",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/fontOptimizeAfter.PNG"
+                },
+                {
+                  "name": "fontOptimizeBefore.PNG",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/fontOptimizeBefore.PNG"
+                },
+                {
+                  "name": "fontUXafter.gif",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/fontUXafter.gif"
+                },
+                {
+                  "name": "fontUXbefore.gif",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/fontUXbefore.gif"
+                },
+                {
+                  "name": "oraclecloud.png",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/oraclecloud.png"
+                },
+                {
+                  "name": "vercel-logotype-light.svg",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/vercel-logotype-light.svg"
                 }
               ]
             },
@@ -91,43 +292,52 @@
               "children": [
                 {
                   "name": "google-login.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/loginlogo/google-login.png"
                 },
                 {
                   "name": "kakao-login.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/loginlogo/kakao-login.png"
                 },
                 {
                   "name": "naver-login.png",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/loginlogo/naver-login.png"
                 }
               ]
             },
             {
               "name": "categoryTutorial.PNG",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/categoryTutorial.PNG"
             }
           ]
         },
         {
           "name": "favicon.ico",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/favicon.ico"
         },
         {
           "name": "file.svg",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/file.svg"
         },
         {
           "name": "placeholder-user.jpg",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/placeholder-user.jpg"
         },
         {
           "name": "placeholder.svg",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/placeholder.svg"
         },
         {
           "name": "vercel.svg",
-          "type": "file"
+          "type": "file",
+          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/vercel.svg"
         }
       ]
     },
@@ -141,19 +351,23 @@
           "children": [
             {
               "name": "filterAtoms.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/atoms/filterAtoms.js"
             },
             {
               "name": "forgotAtoms.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/atoms/forgotAtoms.js"
             },
             {
               "name": "noteStateAtom.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/atoms/noteStateAtom.js"
             },
             {
               "name": "userState.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/atoms/userState.js"
             }
           ]
         },
@@ -167,35 +381,43 @@
               "children": [
                 {
                   "name": "Feedback.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/Feedback.jsx"
                 },
                 {
                   "name": "NoticeAndSettings.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/NoticeAndSettings.jsx"
                 },
                 {
                   "name": "OverviewStats.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/OverviewStats.jsx"
                 },
                 {
                   "name": "ServiceStatus.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/ServiceStatus.jsx"
                 },
                 {
                   "name": "Sidebar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/Sidebar.jsx"
                 },
                 {
                   "name": "Statistics.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/Statistics.jsx"
                 },
                 {
                   "name": "UserActivity.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/UserActivity.jsx"
                 },
                 {
                   "name": "UserManagement.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/admin/UserManagement.jsx"
                 }
               ]
             },
@@ -205,23 +427,33 @@
               "children": [
                 {
                   "name": "ForgotComponent.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/ForgotComponent.jsx"
                 },
                 {
                   "name": "ForgotId.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/ForgotId.jsx"
                 },
                 {
                   "name": "ForgotPassword.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/ForgotPassword.jsx"
+                },
+                {
+                  "name": "PolicyContent.jsx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/PolicyContent.jsx"
                 },
                 {
                   "name": "Recaptcha.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/Recaptcha.jsx"
                 },
                 {
                   "name": "SocialLogin.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/auth/SocialLogin.jsx"
                 }
               ]
             },
@@ -231,31 +463,43 @@
               "children": [
                 {
                   "name": "backend-structure.json",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/backend-structure.json"
+                },
+                {
+                  "name": "BeforeAfter.jsx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/BeforeAfter.jsx"
                 },
                 {
                   "name": "Dynamic-FileTree.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/Dynamic-FileTree.tsx"
                 },
                 {
                   "name": "FileTree.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/FileTree.tsx"
                 },
                 {
                   "name": "frontend-structure.json",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/frontend-structure.json"
                 },
                 {
-                  "name": "Image.js",
-                  "type": "file"
+                  "name": "Image.jsx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/Image.jsx"
                 },
                 {
                   "name": "RenderTree.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/RenderTree.tsx"
                 },
                 {
                   "name": "Separator.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/Separator.jsx"
                 }
               ]
             },
@@ -265,27 +509,33 @@
               "children": [
                 {
                   "name": "BackendStack.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/BackendStack.jsx"
                 },
                 {
                   "name": "DeploymentStack.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/DeploymentStack.jsx"
                 },
                 {
                   "name": "FeatureTabs.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/FeatureTabs.jsx"
                 },
                 {
                   "name": "FrontendStack.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/FrontendStack.jsx"
                 },
                 {
                   "name": "IntroComponent.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/IntroComponent.jsx"
                 },
                 {
                   "name": "Tech-Stack.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/introduce/Tech-Stack.jsx"
                 }
               ]
             },
@@ -303,139 +553,172 @@
                       "children": [
                         {
                           "name": "align-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/align-plugin.ts"
                         },
                         {
                           "name": "autoformat-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/autoformat-plugin.ts"
                         },
                         {
                           "name": "basic-nodes-plugins.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/basic-nodes-plugins.tsx"
                         },
                         {
                           "name": "block-menu-plugins.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/block-menu-plugins.ts"
                         },
                         {
                           "name": "block-selection-plugins.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/block-selection-plugins.ts"
                         },
                         {
                           "name": "cursor-overlay-plugin.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/cursor-overlay-plugin.tsx"
                         },
                         {
                           "name": "delete-plugins.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/delete-plugins.ts"
                         },
                         {
                           "name": "dnd-plugins.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/dnd-plugins.tsx"
                         },
                         {
                           "name": "editor-plugins.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/editor-plugins.tsx"
                         },
                         {
                           "name": "exit-break-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/exit-break-plugin.ts"
                         },
                         {
                           "name": "fixed-toolbar-plugin.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/fixed-toolbar-plugin.tsx"
                         },
                         {
                           "name": "floating-toolbar-plugin.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/floating-toolbar-plugin.tsx"
                         },
                         {
                           "name": "indent-list-plugins.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/indent-list-plugins.ts"
                         },
                         {
                           "name": "line-height-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/line-height-plugin.ts"
                         },
                         {
                           "name": "link-plugin.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/link-plugin.tsx"
                         },
                         {
                           "name": "media-plugins.tsx",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/media-plugins.tsx"
                         },
                         {
                           "name": "reset-block-type-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/reset-block-type-plugin.ts"
                         },
                         {
                           "name": "soft-break-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/soft-break-plugin.ts"
                         },
                         {
                           "name": "table-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/table-plugin.ts"
                         },
                         {
                           "name": "toc-plugin.ts",
-                          "type": "file"
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plugins/toc-plugin.ts"
                         }
                       ]
                     },
                     {
                       "name": "plate-editor.tsx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plate-editor.tsx"
                     },
                     {
                       "name": "plate-types.ts",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/plate-types.ts"
                     },
                     {
                       "name": "transforms.ts",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/transforms.ts"
                     },
                     {
                       "name": "use-create-editor.ts",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/editor/use-create-editor.ts"
                     }
                   ]
                 },
                 {
                   "name": "CategorySidebar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/CategorySidebar.jsx"
                 },
                 {
                   "name": "FilterComponents.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/FilterComponents.jsx"
                 },
                 {
                   "name": "NoteContainer.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/NoteContainer.jsx"
                 },
                 {
                   "name": "NoteDisplay.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/NoteDisplay.jsx"
                 },
                 {
                   "name": "NoteList.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/NoteList.jsx"
                 },
                 {
                   "name": "TagManagement.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/TagManagement.jsx"
                 },
                 {
                   "name": "TagSelector.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/TagSelector.jsx"
                 },
                 {
                   "name": "Tutorial.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/Tutorial.jsx"
                 },
                 {
                   "name": "TutorialButton.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/TutorialButton.jsx"
                 }
               ]
             },
@@ -445,451 +728,563 @@
               "children": [
                 {
                   "name": "alert-dialog.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/alert-dialog.tsx"
                 },
                 {
                   "name": "align-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/align-dropdown-menu.tsx"
                 },
                 {
                   "name": "block-context-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/block-context-menu.tsx"
                 },
                 {
                   "name": "block-selection.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/block-selection.tsx"
                 },
                 {
                   "name": "blockquote-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/blockquote-element-static.tsx"
                 },
                 {
                   "name": "blockquote-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/blockquote-element.tsx"
                 },
                 {
                   "name": "button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/button.tsx"
                 },
                 {
                   "name": "calendar.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/calendar.tsx"
                 },
                 {
                   "name": "caption.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/caption.tsx"
                 },
                 {
                   "name": "checkbox-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/checkbox-static.tsx"
                 },
                 {
                   "name": "checkbox.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/checkbox.tsx"
                 },
                 {
                   "name": "code-block-combobox.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-block-combobox.tsx"
                 },
                 {
                   "name": "code-block-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-block-element-static.tsx"
                 },
                 {
                   "name": "code-block-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-block-element.tsx"
                 },
                 {
                   "name": "code-leaf-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-leaf-static.tsx"
                 },
                 {
                   "name": "code-leaf.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-leaf.tsx"
                 },
                 {
                   "name": "code-line-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-line-element-static.tsx"
                 },
                 {
                   "name": "code-line-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-line-element.tsx"
                 },
                 {
                   "name": "code-syntax-leaf-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-syntax-leaf-static.tsx"
                 },
                 {
                   "name": "code-syntax-leaf.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/code-syntax-leaf.tsx"
                 },
                 {
                   "name": "color-constants.ts",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/color-constants.ts"
                 },
                 {
                   "name": "color-dropdown-menu-items.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/color-dropdown-menu-items.tsx"
                 },
                 {
                   "name": "color-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/color-dropdown-menu.tsx"
                 },
                 {
                   "name": "color-input.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/color-input.tsx"
                 },
                 {
                   "name": "color-picker.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/color-picker.tsx"
                 },
                 {
                   "name": "colors-custom.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/colors-custom.tsx"
                 },
                 {
                   "name": "column-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/column-element-static.tsx"
                 },
                 {
                   "name": "column-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/column-element.tsx"
                 },
                 {
                   "name": "column-group-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/column-group-element-static.tsx"
                 },
                 {
                   "name": "column-group-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/column-group-element.tsx"
                 },
                 {
                   "name": "command.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/command.tsx"
                 },
                 {
                   "name": "context-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/context-menu.tsx"
                 },
                 {
                   "name": "cursor-overlay.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/cursor-overlay.tsx"
                 },
                 {
                   "name": "date-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/date-element-static.tsx"
                 },
                 {
                   "name": "date-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/date-element.tsx"
                 },
                 {
                   "name": "dialog.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/dialog.tsx"
                 },
                 {
                   "name": "draggable.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/draggable.tsx"
                 },
                 {
                   "name": "dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/dropdown-menu.tsx"
                 },
                 {
                   "name": "editor-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/editor-static.tsx"
                 },
                 {
                   "name": "editor.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/editor.tsx"
                 },
                 {
                   "name": "export-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/export-toolbar-button.tsx"
                 },
                 {
                   "name": "fixed-toolbar-buttons.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/fixed-toolbar-buttons.tsx"
                 },
                 {
                   "name": "fixed-toolbar.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/fixed-toolbar.tsx"
                 },
                 {
                   "name": "floating-toolbar-buttons.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/floating-toolbar-buttons.tsx"
                 },
                 {
                   "name": "floating-toolbar.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/floating-toolbar.tsx"
                 },
                 {
                   "name": "font-size-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/font-size-toolbar-button.tsx"
                 },
                 {
                   "name": "heading-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/heading-element-static.tsx"
                 },
                 {
                   "name": "heading-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/heading-element.tsx"
                 },
                 {
                   "name": "highlight-leaf-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/highlight-leaf-static.tsx"
                 },
                 {
                   "name": "highlight-leaf.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/highlight-leaf.tsx"
                 },
                 {
                   "name": "history-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/history-toolbar-button.tsx"
                 },
                 {
                   "name": "hr-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/hr-element-static.tsx"
                 },
                 {
                   "name": "hr-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/hr-element.tsx"
                 },
                 {
                   "name": "image-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/image-element-static.tsx"
                 },
                 {
                   "name": "image-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/image-element.tsx"
                 },
                 {
                   "name": "image-preview.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/image-preview.tsx"
                 },
                 {
                   "name": "indent-fire-marker.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-fire-marker.tsx"
                 },
                 {
                   "name": "indent-list-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-list-toolbar-button.tsx"
                 },
                 {
                   "name": "indent-todo-marker-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-todo-marker-static.tsx"
                 },
                 {
                   "name": "indent-todo-marker.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-todo-marker.tsx"
                 },
                 {
                   "name": "indent-todo-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-todo-toolbar-button.tsx"
                 },
                 {
                   "name": "indent-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/indent-toolbar-button.tsx"
                 },
                 {
                   "name": "inline-combobox.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/inline-combobox.tsx"
                 },
                 {
                   "name": "input.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/input.tsx"
                 },
                 {
                   "name": "insert-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/insert-dropdown-menu.tsx"
                 },
                 {
                   "name": "kbd-leaf-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/kbd-leaf-static.tsx"
                 },
                 {
                   "name": "kbd-leaf.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/kbd-leaf.tsx"
                 },
                 {
                   "name": "line-height-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/line-height-dropdown-menu.tsx"
                 },
                 {
                   "name": "link-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/link-element-static.tsx"
                 },
                 {
                   "name": "link-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/link-element.tsx"
                 },
                 {
                   "name": "link-floating-toolbar.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/link-floating-toolbar.tsx"
                 },
                 {
                   "name": "link-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/link-toolbar-button.tsx"
                 },
                 {
                   "name": "mark-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/mark-toolbar-button.tsx"
                 },
                 {
                   "name": "media-audio-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-audio-element-static.tsx"
                 },
                 {
                   "name": "media-audio-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-audio-element.tsx"
                 },
                 {
                   "name": "media-embed-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-embed-element.tsx"
                 },
                 {
                   "name": "media-file-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-file-element-static.tsx"
                 },
                 {
                   "name": "media-file-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-file-element.tsx"
                 },
                 {
                   "name": "media-placeholder-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-placeholder-element.tsx"
                 },
                 {
                   "name": "media-popover.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-popover.tsx"
                 },
                 {
                   "name": "media-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-toolbar-button.tsx"
                 },
                 {
                   "name": "media-upload-toast.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-upload-toast.tsx"
                 },
                 {
                   "name": "media-video-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-video-element-static.tsx"
                 },
                 {
                   "name": "media-video-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/media-video-element.tsx"
                 },
                 {
                   "name": "mode-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/mode-dropdown-menu.tsx"
                 },
                 {
                   "name": "more-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/more-dropdown-menu.tsx"
                 },
                 {
                   "name": "outdent-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/outdent-toolbar-button.tsx"
                 },
                 {
                   "name": "paragraph-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/paragraph-element-static.tsx"
                 },
                 {
                   "name": "paragraph-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/paragraph-element.tsx"
                 },
                 {
                   "name": "placeholder.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/placeholder.tsx"
                 },
                 {
                   "name": "plate-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/plate-element.tsx"
                 },
                 {
                   "name": "popover.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/popover.tsx"
                 },
                 {
                   "name": "resizable.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/resizable.tsx"
                 },
                 {
                   "name": "separator.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/separator.tsx"
                 },
                 {
                   "name": "slash-input-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/slash-input-element.tsx"
                 },
                 {
                   "name": "spinner.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/spinner.tsx"
                 },
                 {
                   "name": "table-cell-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-cell-element-static.tsx"
                 },
                 {
                   "name": "table-cell-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-cell-element.tsx"
                 },
                 {
                   "name": "table-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-dropdown-menu.tsx"
                 },
                 {
                   "name": "table-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-element-static.tsx"
                 },
                 {
                   "name": "table-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-element.tsx"
                 },
                 {
                   "name": "table-row-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-row-element-static.tsx"
                 },
                 {
                   "name": "table-row-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/table-row-element.tsx"
                 },
                 {
                   "name": "toc-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toc-element-static.tsx"
                 },
                 {
                   "name": "toc-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toc-element.tsx"
                 },
                 {
                   "name": "todo-list-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/todo-list-element.tsx"
                 },
                 {
                   "name": "toggle-element-static.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toggle-element-static.tsx"
                 },
                 {
                   "name": "toggle-element.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toggle-element.tsx"
                 },
                 {
                   "name": "toggle-toolbar-button.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toggle-toolbar-button.tsx"
                 },
                 {
                   "name": "toolbar.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/toolbar.tsx"
                 },
                 {
                   "name": "tooltip.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/tooltip.tsx"
                 },
                 {
                   "name": "turn-into-dropdown-menu.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/plate-ui/turn-into-dropdown-menu.tsx"
                 }
               ]
             },
@@ -899,199 +1294,248 @@
               "children": [
                 {
                   "name": "accordion.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/accordion.jsx"
                 },
                 {
                   "name": "alert-dialog.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/alert-dialog.jsx"
                 },
                 {
                   "name": "alert.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/alert.jsx"
                 },
                 {
                   "name": "aspect-ratio.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/aspect-ratio.jsx"
                 },
                 {
                   "name": "avatar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/avatar.jsx"
                 },
                 {
                   "name": "badge.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/badge.jsx"
                 },
                 {
                   "name": "breadcrumb.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/breadcrumb.jsx"
                 },
                 {
                   "name": "button.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/button.jsx"
                 },
                 {
                   "name": "calendar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/calendar.jsx"
                 },
                 {
                   "name": "card.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/card.jsx"
                 },
                 {
                   "name": "carousel.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/carousel.jsx"
                 },
                 {
                   "name": "chart.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/chart.jsx"
                 },
                 {
                   "name": "Check.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/Check.jsx"
                 },
                 {
                   "name": "checkbox.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/checkbox.jsx"
                 },
                 {
                   "name": "collapsible.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/collapsible.jsx"
                 },
                 {
                   "name": "command.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/command.jsx"
                 },
                 {
                   "name": "context-menu.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/context-menu.jsx"
                 },
                 {
                   "name": "dialog.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/dialog.jsx"
                 },
                 {
                   "name": "drawer.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/drawer.jsx"
                 },
                 {
                   "name": "dropdown-menu.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/dropdown-menu.jsx"
                 },
                 {
                   "name": "form.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/form.jsx"
                 },
                 {
                   "name": "hover-card.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/hover-card.jsx"
                 },
                 {
                   "name": "input-otp.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/input-otp.jsx"
                 },
                 {
                   "name": "input.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/input.jsx"
                 },
                 {
                   "name": "label.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/label.jsx"
                 },
                 {
                   "name": "menubar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/menubar.jsx"
                 },
                 {
                   "name": "navigation-menu.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/navigation-menu.jsx"
                 },
                 {
                   "name": "pagination.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/pagination.jsx"
                 },
                 {
                   "name": "popover.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/popover.jsx"
                 },
                 {
                   "name": "progress.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/progress.jsx"
                 },
                 {
                   "name": "radio-group.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/radio-group.jsx"
                 },
                 {
                   "name": "resizable.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/resizable.jsx"
                 },
                 {
                   "name": "scroll-area.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/scroll-area.jsx"
                 },
                 {
                   "name": "select.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/select.tsx"
                 },
                 {
                   "name": "separator.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/separator.jsx"
                 },
                 {
                   "name": "sheet.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/sheet.jsx"
                 },
                 {
                   "name": "sidebar.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/sidebar.jsx"
                 },
                 {
                   "name": "skeleton.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/skeleton.jsx"
                 },
                 {
                   "name": "slider.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/slider.jsx"
                 },
                 {
                   "name": "sonner.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/sonner.jsx"
                 },
                 {
                   "name": "switch.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/switch.jsx"
                 },
                 {
                   "name": "table.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/table.jsx"
                 },
                 {
                   "name": "tabs.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/tabs.jsx"
                 },
                 {
                   "name": "textarea.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/textarea.jsx"
                 },
                 {
                   "name": "toast.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/toast.jsx"
                 },
                 {
                   "name": "toaster.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/toaster.jsx"
                 },
                 {
                   "name": "toggle-group.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/toggle-group.jsx"
                 },
                 {
                   "name": "toggle.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/toggle.jsx"
                 },
                 {
                   "name": "tooltip.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/ui/tooltip.jsx"
                 }
               ]
             },
@@ -1101,29 +1545,30 @@
               "children": [
                 {
                   "name": "changeToLocalAccount.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/userinfo/changeToLocalAccount.jsx"
                 }
               ]
             },
             {
               "name": "HeaderButtons.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/HeaderButtons.jsx"
             },
             {
               "name": "HeaderLayout.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/HeaderLayout.jsx"
             },
             {
               "name": "icons.jsx",
-              "type": "file"
-            },
-            {
-              "name": "ImageWithSkeleton.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/icons.jsx"
             },
             {
               "name": "WorkspaceLayout.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/WorkspaceLayout.jsx"
             }
           ]
         },
@@ -1133,15 +1578,18 @@
           "children": [
             {
               "name": "use-is-touch-device.ts",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/hooks/use-is-touch-device.ts"
             },
             {
               "name": "use-mobile.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/hooks/use-mobile.jsx"
             },
             {
               "name": "use-toast.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/hooks/use-toast.jsx"
             }
           ]
         },
@@ -1155,11 +1603,13 @@
               "children": [
                 {
                   "name": "withAdminAuth.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/hoc/withAdminAuth.jsx"
                 },
                 {
                   "name": "withAuth.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/hoc/withAuth.jsx"
                 }
               ]
             },
@@ -1169,49 +1619,65 @@
               "children": [
                 {
                   "name": "categoryUtils.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/notes/categoryUtils.js"
                 },
                 {
                   "name": "filterNotes.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/notes/filterNotes.js"
                 },
                 {
                   "name": "initDB.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/notes/initDB.js"
                 },
                 {
                   "name": "noteCompressor.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/notes/noteCompressor.js"
                 },
                 {
                   "name": "noteState.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/notes/noteState.js"
                 }
               ]
             },
             {
               "name": "apiClient.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/apiClient.js"
             },
             {
               "name": "docsCustomFeedback.ts",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/docsCustomFeedback.ts"
+            },
+            {
+              "name": "docsImages.js",
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/docsImages.js"
             },
             {
               "name": "interceptors.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/interceptors.js"
             },
             {
               "name": "uploadthing.ts",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/uploadthing.ts"
             },
             {
               "name": "utils.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/utils.js"
             },
             {
               "name": "validationSchemas.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/lib/validationSchemas.js"
             }
           ]
         },
@@ -1225,23 +1691,28 @@
               "children": [
                 {
                   "name": "login.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/login.jsx"
                 },
                 {
                   "name": "loginSuccess.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/loginSuccess.jsx"
                 },
                 {
                   "name": "privacy-policy.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/privacy-policy.jsx"
                 },
                 {
                   "name": "signup.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/signup.jsx"
                 },
                 {
                   "name": "verify-email.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_authentication/verify-email.jsx"
                 }
               ]
             },
@@ -1251,7 +1722,8 @@
               "children": [
                 {
                   "name": "index.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/admin/index.jsx"
                 }
               ]
             },
@@ -1265,13 +1737,15 @@
                   "children": [
                     {
                       "name": "[...path].js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/api/proxy/[...path].js"
                     }
                   ]
                 },
                 {
                   "name": "uploadthing.tsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/api/uploadthing.tsx"
                 }
               ]
             },
@@ -1280,30 +1754,100 @@
               "type": "folder",
               "children": [
                 {
-                  "name": "auth",
+                  "name": "account",
                   "type": "folder",
                   "children": [
                     {
                       "name": "_meta.js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/_meta.js"
+                    },
+                    {
+                      "name": "delete.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/delete.mdx"
+                    },
+                    {
+                      "name": "forgot.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/forgot.mdx"
                     },
                     {
                       "name": "index.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/index.mdx"
+                    },
+                    {
+                      "name": "login.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/login.mdx"
+                    },
+                    {
+                      "name": "profile.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/profile.mdx"
+                    },
+                    {
+                      "name": "signup.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/account/signup.mdx"
                     }
                   ]
                 },
                 {
-                  "name": "details",
+                  "name": "architecture",
                   "type": "folder",
                   "children": [
                     {
                       "name": "_meta.js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/_meta.js"
+                    },
+                    {
+                      "name": "cloudflare.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/cloudflare.mdx"
+                    },
+                    {
+                      "name": "databases.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/databases.mdx"
+                    },
+                    {
+                      "name": "etc.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/etc.mdx"
                     },
                     {
                       "name": "index.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/index.mdx"
+                    },
+                    {
+                      "name": "oraclecloud.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/oraclecloud.mdx"
+                    },
+                    {
+                      "name": "vercel.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/vercel.mdx"
+                    }
+                  ]
+                },
+                {
+                  "name": "backend",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "_meta.js",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/backend/_meta.js"
+                    },
+                    {
+                      "name": "index.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/backend/index.mdx"
                     }
                   ]
                 },
@@ -1313,15 +1857,34 @@
                   "children": [
                     {
                       "name": "_meta.js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/etc/_meta.js"
                     },
                     {
                       "name": "futurePlans.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/etc/futurePlans.mdx"
+                    }
+                  ]
+                },
+                {
+                  "name": "frontend",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "_meta.js",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/_meta.js"
+                    },
+                    {
+                      "name": "font_optimize.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/font_optimize.mdx"
                     },
                     {
                       "name": "index.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/index.mdx"
                     }
                   ]
                 },
@@ -1331,31 +1894,68 @@
                   "children": [
                     {
                       "name": "_meta.js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/_meta.js"
                     },
                     {
                       "name": "index.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/index.mdx"
                     },
                     {
                       "name": "issue1_2_result.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue1_2_result.mdx"
                     },
                     {
                       "name": "issue1.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue1.mdx"
+                    },
+                    {
+                      "name": "issue10.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue10.mdx"
                     },
                     {
                       "name": "issue2.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue2.mdx"
                     },
                     {
                       "name": "issue3.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue3.mdx"
                     },
                     {
                       "name": "issue4.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue4.mdx"
+                    },
+                    {
+                      "name": "issue5.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue5.mdx"
+                    },
+                    {
+                      "name": "issue6.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue6.mdx"
+                    },
+                    {
+                      "name": "issue7.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue7.mdx"
+                    },
+                    {
+                      "name": "issue8.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue8.mdx"
+                    },
+                    {
+                      "name": "issue9.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/issue9.mdx"
                     }
                   ]
                 },
@@ -1365,33 +1965,66 @@
                   "children": [
                     {
                       "name": "_meta.js",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/_meta.js"
                     },
                     {
                       "name": "index.mdx",
-                      "type": "file"
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/index.mdx"
+                    }
+                  ]
+                },
+                {
+                  "name": "security",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "_meta.js",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/_meta.js"
+                    },
+                    {
+                      "name": "certificate.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/certificate.mdx"
+                    },
+                    {
+                      "name": "closedbackend.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/closedbackend.mdx"
+                    },
+                    {
+                      "name": "index.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/index.mdx"
                     }
                   ]
                 },
                 {
                   "name": "_meta.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/_meta.js"
                 },
                 {
                   "name": "about.mdx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/about.mdx"
                 },
                 {
-                  "name": "architecture.mdx",
-                  "type": "file"
+                  "name": "directory.mdx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/directory.mdx"
                 },
                 {
                   "name": "index.mdx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/index.mdx"
                 },
                 {
                   "name": "techStack.mdx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/techStack.mdx"
                 }
               ]
             },
@@ -1401,7 +2034,8 @@
               "children": [
                 {
                   "name": "index.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/notes/index.js"
                 }
               ]
             },
@@ -1411,29 +2045,35 @@
               "children": [
                 {
                   "name": "index.jsx",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/userinfo/index.jsx"
                 }
               ]
             },
             {
               "name": "_app.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_app.jsx"
             },
             {
               "name": "_document.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_document.js"
             },
             {
               "name": "_meta.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/_meta.js"
             },
             {
               "name": "404.jsx",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/404.jsx"
             },
             {
               "name": "index.js",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/index.js"
             }
           ]
         },
@@ -1447,15 +2087,18 @@
               "children": [
                 {
                   "name": "categoryAPIService.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/services/notes/categoryAPIService.js"
                 },
                 {
                   "name": "noteAPIService.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/services/notes/noteAPIService.js"
                 },
                 {
                   "name": "tagAPIService.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/services/notes/tagAPIService.js"
                 }
               ]
             },
@@ -1465,11 +2108,13 @@
               "children": [
                 {
                   "name": "authAPIService.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/services/user/authAPIService.js"
                 },
                 {
                   "name": "syncAPIService.js",
-                  "type": "file"
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/services/user/syncAPIService.js"
                 }
               ]
             }
@@ -1481,67 +2126,72 @@
           "children": [
             {
               "name": "code-block-element.css",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/styles/code-block-element.css"
             },
             {
               "name": "globals.css",
-              "type": "file"
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/styles/globals.css"
             }
           ]
         }
       ]
     },
     {
-      "name": ".env",
-      "type": "file"
-    },
-    {
       "name": "components.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/components.json"
     },
     {
       "name": "jsconfig.json",
-      "type": "file"
-    },
-    {
-      "name": "next-env.d.ts",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/jsconfig.json"
     },
     {
       "name": "next.config.mjs",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/next.config.mjs"
     },
     {
       "name": "package-lock.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/package-lock.json"
     },
     {
       "name": "package.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/package.json"
     },
     {
       "name": "postcss.config.mjs",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/postcss.config.mjs"
     },
     {
       "name": "robots.txt",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/robots.txt"
     },
     {
       "name": "tailwind.config.js",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/tailwind.config.js"
     },
     {
       "name": "theme.config.jsx",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/theme.config.jsx"
     },
     {
       "name": "tsconfig.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/tsconfig.json"
     },
     {
       "name": "vercel.json",
-      "type": "file"
+      "type": "file",
+      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/vercel.json"
     }
   ]
 }

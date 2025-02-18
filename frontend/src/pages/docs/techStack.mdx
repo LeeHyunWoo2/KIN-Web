@@ -1,42 +1,12 @@
 import FrontendStack from "../../components/introduce/FrontendStack";
 import BackendStack from "../../components/introduce/BackendStack";
 import DeploymentStack from "../../components/introduce/DeploymentStack";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
-
+import {Tabs} from 'nextra/components'
 
 # 기술 스택
 
-<div className="min-h-[630px] mt-8">
-  <Tabs defaultValue="front">
-    <TabsList className="grid w-full h-fit grid-cols-3">
-      <TabsTrigger className="text-[15px] font-semibold" value="front">프론트엔드</TabsTrigger>
-      <TabsTrigger className="text-[15px] font-semibold" value="back">백엔드</TabsTrigger>
-      <TabsTrigger className="text-[15px] font-semibold" value="deploy">배포</TabsTrigger>
-    </TabsList>
-    <TabsContent value="front">
-      <FrontendStack/>
-    </TabsContent>
-    <TabsContent value="back">
-      <BackendStack/>
-    </TabsContent>
-    <TabsContent value="deploy">
-      <DeploymentStack/>
-    </TabsContent>
-  </Tabs>
-</div>
-
-### **프론트엔드**
-- React, Next.js, Tailwind CSS
-- Shadcn/UI, Plate.js, Jotai
-- PouchDB, Axios, Uploadthing
-
-### **백엔드**
-- Node.js, Express.js
-- MongoDB (클라우드), Redis
-- Passport (Google, Kakao, Naver OAuth), JWT, WebSocket
-- Helmet, Bcryptjs, Nodemailer, Dotenv, ExpressRateLimit
-
-### **배포**
-- **프론트엔드**: Vercel
-- **백엔드** : Oracle Cloud (Ubuntu Minimal 22.04 LTS)
-- **네트워크 및 보안** : Cloudflare (DNS, SSL, WAF 등)
+<Tabs items={['프론트엔드', '백엔드', '배포']}>
+  <Tabs.Tab><FrontendStack/></Tabs.Tab>
+  <Tabs.Tab><BackendStack/></Tabs.Tab>
+  <Tabs.Tab><DeploymentStack/></Tabs.Tab>
+</Tabs>

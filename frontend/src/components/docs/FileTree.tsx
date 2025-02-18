@@ -27,6 +27,7 @@ interface FolderProps {
 interface FileProps {
   name: string
   label?: ReactElement
+  url?: string
 }
 
 function useIndent() {
@@ -66,15 +67,15 @@ export const Folder = memo(
                 onClick={toggle}
                 title={name}
                 className={cn(
-                    "inline-flex items-center cursor-pointer py-1 text-xs hover:text-muted-foreground transition-all"
+                    "inline-flex items-center cursor-pointer py-1 text-base hover:text-muted-foreground transition-all"
                 )}
                 style={{ marginLeft: indent * 17 }}
             >
           <span className="ml-1">
             {isFolderOpen ? (
-                <LuFolderClosed size={14} />
+                <LuFolderClosed size={16} />
             ) : (
-                <LuFolder size={14} />
+                <LuFolder size={16} />
             )}
           </span>
               <span className="ml-2">{label ?? name}</span>
@@ -91,18 +92,21 @@ export const Folder = memo(
 
 Folder.displayName = "Folder"
 
-export const File = memo(({ label, name }: FileProps) => {
+export const File = memo(({ label, name, url }: FileProps) => {
   const indent = useIndent()
   return (
       <li className="list-none">
-        <div
-            className="inline-flex items-center py-1 cursor-default text-xs hover:text-muted-foreground  transition-all"
+        <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center py-1 text-base hover:text-muted-foreground cursor-pointer transition-all"
             style={{marginLeft: indent * 17}}>
       <span className="ml-1">
-        <FiFileText size={14}/>
+        <FiFileText size={16}/>
       </span>
           <span className="ml-2 mr-2">{label ?? name}</span>
-        </div>
+        </a>
       </li>
   )
 })

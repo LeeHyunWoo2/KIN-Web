@@ -15,7 +15,12 @@ import {authAtom} from "@/atoms/userState";
 import {Card, CardContent} from "@/components/ui/card";
 import {Loader2} from "lucide-react";
 import {useRouter} from "next/router";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent, DialogDescription,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -29,6 +34,7 @@ export default function Dashboard() {
   const [userInfo, setUserInfo] = useState('');
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [incorrectValue , setIncorrectValue] = useState(false);
+  const [showTestGuide, setShowTestGuide] = useState(false);
 
 
   useEffect(() => {
@@ -66,7 +72,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogin = async (event, id, password) => {
+  const handleLogin = async (event, id, password, isTestLogin = false) => {
     event.preventDefault();
 
     if (!id || !password) {
@@ -85,6 +91,9 @@ export default function Dashboard() {
         setPassword("");
         await router.push("/loginSuccess");
       } else {
+        if(isTestLogin){
+          setShowTestGuide(true);
+        }
         setIncorrectValue(true);
         setIsLoginLoading(false);
       }
@@ -194,21 +203,31 @@ export default function Dashboard() {
                     로그인
                   </Button>
                   <div>
-                    <Tooltip>
-                      <TooltipTrigger className="w-[47%] m-1">
+                    {showTestGuide && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                        <div
+                            className="inline-flex items-center justify-center gap-2
+                             whitespace-nowrap rounded-md text-sm border border-input
+                              bg-background shadow-sm hover:bg-accent hover:text-accent-foreground
+                               h-9 px-4 py-2 transition-colors w-full mb-3 font-medium cursor-pointer">
+                          테스트 유저이신가요?
+                        </div>
+                          </DialogTrigger>
+                          <DialogTitle/>
+                          <DialogContent>
+                            가이드
+                          </DialogContent>
+                          <DialogDescription/>
+                        </Dialog>
+                    )}
                     <Button
                         variant="outline"
-                        className="w-full"
-                        onClick={(e) => handleLogin(e, 'testinput', 'Qweasd!23')}
+                        className="w-[47%] m-1"
+                        onClick={(e) => handleLogin(e, 'testinput', 'Qweasd!23' , true)}
                     >
-                      테스트 일반 로그인
+                      테스트 로그인
                     </Button>
-                      </TooltipTrigger>
-                      <TooltipContent className="text-sm whitespace-nowrap">
-                        만약 이 버튼으로 로그인이 안되면 아래의 순서대로 눌러주세요!<br/>
-                        회원가입 → 일반계정 회원가입 → 화면 상단 '테스트 버튼' → 가입하기
-                      </TooltipContent>
-                    </Tooltip>
                     <Button
                         variant="outline"
                         className="w-[47%] m-1"

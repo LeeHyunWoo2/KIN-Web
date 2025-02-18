@@ -18,7 +18,13 @@ const dimg = {
       notblock: require('../../public/images/docs/security/closedbackend/백엔드차단안하면.PNG'),
       iprules: require('../../public/images/docs/security/closedbackend/수신규칙.PNG'),
       websocketproxy: require('../../public/images/docs/security/closedbackend/웹소켓 프록싱.png'),
+      websocketproxylog: require('../../public/images/docs/security/closedbackend/웹소켓프록싱로그.PNG'),
     },
+    websocketproxy: {
+      before: require('../../public/images/docs/security/websocketproxy/웹소켓프록싱이전.png'),
+      after: require('../../public/images/docs/security/websocketproxy/웹소켓프록싱이후.PNG'),
+      log: require('../../public/images/docs/security/websocketproxy/웹소켓프록싱로그.PNG'),
+    }
   },
   architecture: {
     image: require('../../public/images/docs/architecture.png'),
