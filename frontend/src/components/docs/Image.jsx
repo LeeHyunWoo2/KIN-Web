@@ -49,7 +49,6 @@ const handleImageLoad = () => {
             cursor: 'pointer',
             ...(style || {}),
           }}
-          priority
           onClick={handleOpenNewTab}
           onLoad={handleImageLoad}
           target="_blank"
