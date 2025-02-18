@@ -7,14 +7,8 @@ import {
 import {Image as ImageIcon} from 'lucide-react';
 import {cn} from "@/lib/utils"
 import {useState} from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const DocsImage = ({style, src, alt, border = true}) => {
-const [isLoading, setIsLoading] = useState(true);
-
-const handleImageLoad = () => {
-  setIsLoading(false);
-};
 
   const handleOpenNewTab = (e) => {
     e.preventDefault();
@@ -22,22 +16,6 @@ const handleImageLoad = () => {
   };
 
   return (
-      <div
-        style={{
-          position: 'relative',
-          display: 'inline-block',
-          ...(style || {}),
-        }}
-        >
-        {isLoading && (
-            <Skeleton
-            className="absolute inset-0"
-            style={{
-              width: style?.width || '100%',
-              height: style?.height || 'auto',
-            }}
-            />
-        )}
       <Image
           src={src}
           alt={alt || "image"}
@@ -49,13 +27,8 @@ const handleImageLoad = () => {
             cursor: 'pointer',
             ...(style || {}),
           }}
-          priority
-          onClick={handleOpenNewTab}
-          onLoad={handleImageLoad}
-          target="_blank"
-          rel="noopenner noreferrer"
+          onClick={handleOpenNewTab} target="_blank" rel="noopenner noreferrer"
       />
-      </div>
   )
 };
 
