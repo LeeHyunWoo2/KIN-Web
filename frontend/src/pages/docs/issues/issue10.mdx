@@ -3,7 +3,7 @@ import dimg from "../../../lib/docsImages"
 
 # ⛔ 이슈 10 : 관리형 챌린지의 Next.js 정적 리소스 차단
 
-### 📝 **상황 설명**
+### 📝 상황 설명
 
 <div className="flex my-10 gap-3 justify-around">
   <div className="flex items-center">
@@ -18,7 +18,7 @@ import dimg from "../../../lib/docsImages"
 
 ---
 
-### 🔍 **원인 분석**
+### 🔍 원인 분석
 
 1. **Cloudflare 챌린지가 Next.js의 `_next/static/*` 리소스를 차단**
      - Next.js는 `_next/static/*` 경로를 통해 정적 리소스를 제공하는데, Cloudflare에서 관리형 챌린지가 활성화된 상태에서는 **이 경로에 대한 요청이 챌린지를 통과하지 못하고 차단됨**.
@@ -30,7 +30,7 @@ import dimg from "../../../lib/docsImages"
 
 ---
 
-### 🛠️ **해결 방안**
+### 🛠️ 해결 방안
 
 1. **Cloudflare 관리형 챌린지 설정 수정**
      - `_next/static/*` 경로를 챌린지 예외 경로로 설정하여 **Next.js 정적 리소스가 항상 정상적으로 로드되도록 변경**.
@@ -59,7 +59,7 @@ import dimg from "../../../lib/docsImages"
 
 ---
 
-### ✅ **결과**
+### ✅ 결과
 
 1. `_next/static/*` 경로를 관리형 챌린지 예외 처리한 후, **페이지 최초 방문 시에도 정적 리소스가 정상적으로 로드됨**.
 2. Next.js의 스타일 및 스크립트 로딩 오류 해결.
@@ -67,7 +67,7 @@ import dimg from "../../../lib/docsImages"
 
 ---
 
-### 💡 **배운 점**
+### 💡 배운 점
 
 1. **보안 정책을 변경할 때, 보안과 UX의 균형을 고려해야 한다.**
     - 챌린지를 적용할 때, **API 요청이 없는 페이지라도 정적 리소스가 영향을 받을 수 있음**을 확인함.

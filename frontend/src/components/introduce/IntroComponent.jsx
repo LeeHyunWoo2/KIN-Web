@@ -9,13 +9,14 @@ import {Icons} from "@/components/icons";
 import {Badge} from "@/components/ui/badge"
 import FeatureTabs from "@/components/introduce/FeatureTabs";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import TechStack from "@/components/introduce/Tech-Stack";
 import * as React from "react";
 import {ArrowRightIcon} from "@radix-ui/react-icons";
-import {SquareCheckBig, Info} from "lucide-react";
+import {SquareCheckBig, FileText ,Info} from "lucide-react";
 import {useState} from "react";
+import {useRouter} from "next/router";
 
 export default function IntroContent({auth}) {
+  const router = useRouter();
   const [isGuided, setIsGuided] = useState(false)
 
   const handleStarter = () => {
@@ -43,6 +44,7 @@ export default function IntroContent({auth}) {
             어디서나 손쉽게 기록할 수 있습니다.<br/>
             강력한 필터링으로 필요한 노트를 빠르게 찾아내세요.
           </p>
+          <div className="flex justify-center flex-col gap-4">
           <div className="flex gap-4 justify-center">
             <div className="flex flex-col-2 gap-4">
               <Button effect="expandIcon"
@@ -53,6 +55,17 @@ export default function IntroContent({auth}) {
               >
                 <SquareCheckBig strokeWidth={2.25} className="mr-3"/>
                 바로 시작하기</Button>
+              <Button effect="expandIcon"
+                      icon={ArrowRightIcon} iconPlacement="right"
+                      className="flex transition-all duration-300 hover:ring-2 hover:ring-green-500 hover:ring-offset-2 hover:bg-green-500 bg-green-500"
+                      onClick={() => router.push('/docs', undefined, {shallow: true})}
+                      size="slg"
+              >
+                <FileText strokeWidth={2.25} className="mr-3"/>
+                문서 보러가기</Button>
+            </div>
+          </div>
+            <div className="flex justify-center mt-4">
               <a rel="noopener noreferrer" target="_blank"
                  href='https://github.com/LeeHyunWoo2/KIN-Web'>
                 <Button
@@ -83,7 +96,6 @@ export default function IntroContent({auth}) {
 
         {/*주요 기능 사진, gif*/}
         <FeatureTabs/>
-        <TechStack/>
 
         <section className="bg-slate-50 py-20">
           <div className="container mx-auto px-4">
