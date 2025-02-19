@@ -1,7 +1,4 @@
 const dimg = {
-  cloudflare: {
-    logo: require('../../public/images/docs/cf-logo-v-rgb.png'),
-  },
   security: {
     https:{
     https1: require('../../public/images/docs/security/https/https.PNG'),

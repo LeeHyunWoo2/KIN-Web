@@ -6,9 +6,37 @@ import {
 } from "@/components/ui/dialog";
 import {Image as ImageIcon} from 'lucide-react';
 import {cn} from "@/lib/utils"
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DocsImage = ({style, src, alt, border = true}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isCached, setIsCached] = useState(false);
+
+  useEffect(() => {
+    // 실제 이미지 주소 추출
+    const imageUrl = src?.default?.src;
+
+    if (!imageUrl) {
+      return;
+    }
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+
+    // 이미지 로드 완료 또는 캐싱 여부 확인
+    if (img.complete) {
+      setIsCached(true);
+      setIsLoaded(true); // 캐싱된 이미지는 즉시 로드된 상태로 설정
+    }
+
+    // TODO: 이래도 잘 안되면 스켈레톤 출력 상태를 추가로 만들고
+    //  이 아래에 캐시 유무에 따라서 스켈레톤 상태를 적용하는식으로 변경하기 (if-else)
+
+    img.onload = () => {
+      setIsLoaded(true);
+    };
+  }, [src]);
 
   const handleOpenNewTab = (e) => {
     e.preventDefault();
@@ -16,24 +44,49 @@ const DocsImage = ({style, src, alt, border = true}) => {
   };
 
   return (
-      <Image
-          src={src}
-          alt={alt || "image"}
+      <div
           style={{
-            ...(border ? {
-              border: '2px solid grey',
-              borderRadius: '8px'
-            } : {}),
-            cursor: 'pointer',
+            position: 'relative',
+            display: 'inline-block',
             ...(style || {}),
           }}
-          onClick={handleOpenNewTab}
-          target="_blank"
-          rel="noopenner noreferrer"
-      />
+      >
+        {!isCached && !isLoaded &&  (
+            <Skeleton
+                className="absolute inset-0 z-10 transition-all"
+                style={{
+                  width: style?.width || '100%',
+                  height: style?.height || 'auto',
+                  ...(border ? {
+                    border: '2px solid grey',
+                    borderRadius: '8px'
+                  } : {}),
+                }}
+            />
+        )}
+        <Image
+            src={src}
+            alt={alt || "image"}
+            style={{
+              ...(border ? {
+                border: '2px solid grey',
+                borderRadius: '8px'
+              } : {}),
+              cursor: 'pointer',
+              ...(isLoaded ? {} : {visibility: 'hidden'}),
+              ...(style || {}),
+              opacity: isLoaded ? 1 : 0,
+              transition: 'opacity 0.5s ease',
+            }}
+            priority
+            onLoad={() => setIsLoaded(true)}
+            onClick={handleOpenNewTab}
+            target="_blank"
+            rel="noopenner noreferrer"
+        />
+      </div>
   )
 };
-
 
 /*
 const DocsImage = ({style, src, alt, border = true}) => {

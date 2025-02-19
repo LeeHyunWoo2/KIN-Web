@@ -1,5 +1,5 @@
 export default {
-  index: "Introduction",
+  index: "Overview",
   signup: "회원 가입",
   login: "로그인",
   forgot: "아이디, 비밀번호 찾기",

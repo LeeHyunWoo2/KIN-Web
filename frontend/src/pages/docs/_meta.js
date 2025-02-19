@@ -11,8 +11,6 @@ export default {
   },
   index: "프로젝트 소개",
   about: "나를 담은 프로젝트",
-  techStack: "기술 스택",
-  directory: "프로젝트 디렉토리 구조",
   'Fundamental': {
     title: (
         <Separator>
@@ -21,10 +19,10 @@ export default {
     ),
     type: 'separator'
   },
-  architecture: "Architecture",
-  frontend: "Frontend",
-  backend: "Backend",
-  security: "Infra & Security",
+  techStack: "기술 스택",
+  directory: "프로젝트 디렉토리 구조",
+  architecture: "인프라 아키텍처",
+  security: "Security",
   'Features': {
     title: (
         <Separator>
@@ -44,5 +42,4 @@ export default {
     type: 'separator',
   },
   issues: "Issues",
-  etc: {title: "Extras", display: "hidden"},
 }
