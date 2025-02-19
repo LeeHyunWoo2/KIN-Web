@@ -30,7 +30,7 @@
 <br>
 
 ##  바로가기
-**👉 [웹 페이지 바로가기](https://noteapp.org)**
+[![screenshot](https://github.com/user-attachments/assets/190fd0ca-480a-403b-aa30-274cb25db0dd)](https://noteapp.org)
 <br><br>
 **👉 [Docs 보러가기](https://noteapp.org/docs)**
 
