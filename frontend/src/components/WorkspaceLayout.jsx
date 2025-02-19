@@ -336,11 +336,19 @@ function Page({children}) {
                 </BreadcrumbList>
               </Breadcrumb>*/}
             </div>
-
-            <div className="ml-auto px-3">
+            <Link href="/">
+              <div className="flex items-center gap-2.5 mr-3 group">
+                <div
+                    className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-800 text-primary-foreground group-hover:bg-zinc-600">
+                  <GalleryVerticalEnd className="size-4"/>
+                </div>
+                <span
+                    className="text-lg font-bold text-zinc-800 group-hover:text-zinc-600">KIN</span>
+              </div>
+            </Link>
+{/*            <div className="ml-auto px-3">
               <NavActions actions={data.actions}/>
-            </div>
-
+            </div>*/}
           </header>
           {children}
         </SidebarInset>

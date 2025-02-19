@@ -16,11 +16,15 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Loader2} from "lucide-react";
 import {useRouter} from "next/router";
 import {
-  Dialog,
-  DialogContent, DialogDescription,
-  DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
+  AlertDialog, AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+import tempTutoImg from "../../../public/images/tempTutorial.png"
+import Image from "next/image";
+
 
 export default function Dashboard() {
   const router = useRouter();
@@ -204,22 +208,28 @@ export default function Dashboard() {
                   </Button>
                   <div>
                     {showTestGuide && (
-                        <Dialog>
-                          <DialogTrigger asChild>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
                         <div
                             className="inline-flex items-center justify-center gap-2
-                             whitespace-nowrap rounded-md text-sm border border-input
+                             whitespace-nowrap rounded-md text-sm border border-blue-500
                               bg-background shadow-sm hover:bg-accent hover:text-accent-foreground
                                h-9 px-4 py-2 transition-colors w-full mb-3 font-medium cursor-pointer">
-                          테스트 유저이신가요?
+                          ✔️ 테스트 유저이신가요?
                         </div>
-                          </DialogTrigger>
-                          <DialogTitle/>
-                          <DialogContent>
-                            가이드
-                          </DialogContent>
-                          <DialogDescription/>
-                        </Dialog>
+                          </AlertDialogTrigger>
+                          <AlertDialogTitle/>
+                          <AlertDialogContent className="flex flex-col items-center justify-center gap-4">
+                            <Image src={tempTutoImg} alt="tempTutoImg" width={300} height={200} className="border-2 border-black/50 rounded-md"/>
+                            <span className="text-base font-semibold my-2 text-center">
+                             ▶️ 다음으로 → 회원가입 → 테스트 버튼<br/>
+                             순서로 눌러주시면 즉시 테스트 계정이 생성됩니다!
+                            </span>
+                          <Button className="w-full" onClick={() => router.push('/signup', undefined, {shallow: true})}>▶️ 다음으로</Button>
+                          <AlertDialogCancel className="w-full border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground">취소</AlertDialogCancel>
+                          </AlertDialogContent>
+                          <AlertDialogDescription/>
+                        </AlertDialog>
                     )}
                     <Button
                         variant="outline"
@@ -239,7 +249,7 @@ export default function Dashboard() {
                   </div>
                   <SocialLogin/>
                 </div>
-                <div className="mt-4 text-center text-sm">
+                <div className="text-center text-sm">
                   <span onClick={(e) => handleLogin(e, 'test', 'Test123456!')}>&nbsp;</span>
                   아직 계정이 없으시다면 {" "}
                   <Link href="/signup" className="underline">
