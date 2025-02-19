@@ -6,10 +6,36 @@ import {
 } from "@/components/ui/dialog";
 import {Image as ImageIcon} from 'lucide-react';
 import {cn} from "@/lib/utils"
-import {useState} from "react";
+import {useEffect, useState} from "react";
+
 
 const DocsImage = ({style, src, alt, border = true}) => {
+  const [isCached, setIsCached] = useState(false);
 
+  useEffect(() => {
+    // 실제 이미지 주소 추출
+    const imageUrl = src?.default?.src;
+
+    if (!imageUrl) {
+      console.error('이미지 URL이 올바르지 않습니다.');
+      return;
+    }
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+
+    // 이미지 로드 완료 또는 캐싱 여부 확인
+    if (img.complete) {
+      console.log(`이미지가 브라우저 캐시에서 불러와졌습니다: ${imageUrl}`);
+      setIsCached(true);
+    } else {
+      console.log(`이미지가 새로 로드되었습니다: ${imageUrl}`);
+    }
+
+    img.onload = () => {
+      console.log(`이미지가 로드 완료되었습니다: ${imageUrl}`);
+    };
+  }, [src]);
   const handleOpenNewTab = (e) => {
     e.preventDefault();
     window.open(src.default.src, '_blank');
@@ -27,6 +53,7 @@ const DocsImage = ({style, src, alt, border = true}) => {
             cursor: 'pointer',
             ...(style || {}),
           }}
+          priority
           onClick={handleOpenNewTab}
           target="_blank"
           rel="noopenner noreferrer"

@@ -33,7 +33,8 @@ const config = {
     link: 'https://github.com/LeeHyunWoo2/KIN-Web',
   },
   docsRepositoryBase: 'https://github.com/LeeHyunWoo2/KIN-Web',
-  footer: {
+  footer: false,
+/*  footer: {
     content: (
         <span className="container mx-auto px-4 text-end font-medium text-[14px] text-muted-foreground">
         © {new Date().getFullYear()} {' '}
@@ -42,7 +43,7 @@ const config = {
         </a>
       </span>
     )
-  },
+  },*/
   sidebar: {
     toggleButton: false,
   },

@@ -1,6 +1,8 @@
 const dimg = {
-  cloudflare: {
-    logo: require('../../public/images/docs/cf-logo-v-rgb.png'),
+  logo: {
+    cloudflare: require('../../public/images/docs/cf-logo-v-rgb.png'),
+    vercel: require('../../public/images/docs/vercel-logotype-light.svg'),
+    oracle: require('../../public/images/docs/oraclecloud.png'),
   },
   security: {
     https:{
