@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Input} from '@/components/ui/input';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
@@ -20,7 +19,7 @@ import {
 } from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {useRouter} from "next/router";
-import {categoryTreeAtom} from "@/atoms/filterAtoms";
+import {categoryTreeAtom, selectedTagsAtom} from "@/atoms/filterAtoms";
 import {
   Menubar,
   MenubarContent,
@@ -45,6 +44,7 @@ export default function NoteDisplay() {
   const [selectedNoteState, setSelectedNoteState] = useAtom(
       selectedNoteStateAtom);
   const [categoryTree] = useAtom(categoryTreeAtom);
+  const setSelectedTag = useSetAtom(selectedTagsAtom);
 
   // 노트의 초기 로딩 여부 확인
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -255,7 +255,9 @@ export default function NoteDisplay() {
                 <>
                   {selectedNoteState.tags.map((tag) =>
                       <Badge key={tag._id} variant="secondary2"
-                             className="mr-2 text-sm cursor-pointer"> {tag.name}</Badge>
+                             className="mr-2 text-sm cursor-pointer"
+                             onClick={() => setSelectedTag([tag])}
+                      > {tag.name}</Badge>
                   )}
                 </>
             )}

@@ -1,11 +1,15 @@
 import React from 'react';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
-import {isTrashedAtom, searchTermAtom} from '@/atoms/filterAtoms';
+import {
+  isTrashedAtom,
+  searchTermAtom,
+} from '@/atoms/filterAtoms';
 import {SidebarMenuBadge, SidebarMenuButton} from "@/components/ui/sidebar";
 import {Inbox, Trash2, Undo2} from "lucide-react";
 import {noteCountAtom} from "@/atoms/noteStateAtom";
 import {resetFiltersAtom} from "@/lib/notes/filterNotes";
 import {Input} from "@/components/ui/input";
+import {TagFilter} from "@/components/notes/TagFilter";
 
 // 전체보기
 const ListView = () => {
@@ -47,6 +51,7 @@ const SearchFilter = () => {
   const [searchTerm, setSearchTerm] = useAtom(searchTermAtom);
 
   return (
+      <div className="flex items-center gap-2">
       <Input
           type="text"
           className="pl-8"
@@ -54,6 +59,8 @@ const SearchFilter = () => {
           placeholder="제목으로 검색"
           onChange={(e) => setSearchTerm(e.target.value)}
       />
+        <TagFilter/>
+      </div>
   );
 };
 

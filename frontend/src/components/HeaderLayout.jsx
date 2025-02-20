@@ -25,7 +25,7 @@ export default function HeaderLayout({children}) {
             </Label>
           )}
           <a rel="noopener noreferrer" target="_blank"
-             href='https://github.com/LeeHyunWoo2/KIN-Web'>
+             href='https://github.com/LeeHyunWoo2/KIN-Web' aria-label="GitHub">
             <Icons.gitHub className="mr-2 h-5 w-5"/>
           </a>
         </header>

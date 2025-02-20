@@ -12,21 +12,21 @@ import {Separator} from "@/components/ui/separator";
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
   defaultNoteStateAtom,
-  noteCountAtom, noteEventAtom,
+  noteCountAtom,
+  noteEventAtom,
   noteListAtom,
-  selectedNoteStateAtom, selectedNoteUploadFilesAtom
+  selectedNoteStateAtom,
+  selectedNoteUploadFilesAtom
 } from "@/atoms/noteStateAtom";
 import {
   initializeCategoriesAtom,
-  initializeNotesAtom, initializeTagsAtom
+  initializeNotesAtom,
+  initializeTagsAtom
 } from "@/lib/notes/noteState";
 import {Button} from "@/components/ui/button";
 import {checkAndSyncOnFirstLoad} from "@/services/user/syncAPIService";
 import {filteredNotesAtom} from "@/lib/notes/filterNotes";
-import {
-  isTrashedAtom,
-  selectedCategoryNameAtom
-} from "@/atoms/filterAtoms";
+import {isTrashedAtom, selectedCategoryNameAtom} from "@/atoms/filterAtoms";
 import {SearchFilter} from "@/components/notes/FilterComponents";
 
 export default function NoteContainer({ defaultLayout }) {
@@ -134,8 +134,11 @@ export default function NoteContainer({ defaultLayout }) {
         <ResizablePanelGroup direction="horizontal" className="h-full max-h-[calc(100vh-48px)]  items-stretch" onLayout={handleLayoutChange}>
           <ResizablePanel defaultSize={layout[0]} minSize={10} className="flex flex-col">
             <div className="flex items-center px-4 py-2  justify-between">
-              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([23, 80])}>
-                {getListTitle()}
+              <h1 className="text-xl font-bold cursor-pointer" onClick={() => handleLayoutChange([17, 82])}>
+                <span className="flex items-center gap-2">
+                  <span>{getListTitle()}</span>
+                  <span className="text-muted-foreground text-base">({filteredNotes.length})</span>
+                </span>
               </h1>
               {!isTrashed ? (
                   !onReload ? (

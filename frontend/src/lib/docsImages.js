@@ -43,13 +43,17 @@ const dimg = {
     fail: require('../../public/images/docs/issue/static-src-fail.PNG'),
     faillog: require('../../public/images/docs/issue/static-src-fail-log.png'),
   },
+  /*계정 기능*/
+  account:{
   signup:{
     test: require('../../public/images/docs/account/signup/testsignup.gif'),
     email: require('../../public/images/docs/account/signup/email.gif'),
   },
   login:{
     ui: require('../../public/images/docs/account/login/login1.PNG'),
-    social: require('../../public/images/docs/account/login/sociallogin.gif'),
+    socialGoogle: require('../../public/images/docs/account/login/sociallogin.gif'),
+    socialKakao: require('../../public/images/docs/account/login/카카오로그인.gif'),
+    socialNaver: require('../../public/images/docs/account/login/네이버로그인.gif'),
   },
   forgot:{
     id: require('../../public/images/docs/account/forgot/forgotid.gif'),
@@ -57,6 +61,18 @@ const dimg = {
   },
   profile: require('../../public/images/docs/account/profile.gif'),
   deleteAccount: require('../../public/images/docs/account/delete.gif'),
+  socialDeleteLink: require('../../public/images/docs/account/탈퇴연동.gif'),
+  },
+  /*노트 기능*/
+  notes:{
+    filter:{
+      category: require('../../public/images/docs/notes/카테고리.gif'),
+      tag: require('../../public/images/docs/notes/태그.gif'),
+      compositeFilter: require('../../public/images/docs/notes/필터복합.gif'),
+      displayTagClick: require('../../public/images/docs/notes/글태그클릭.gif'),
+      pin: require('../../public/images/docs/notes/즐겨찾기.PNG'),
+    },
+  },
 };
 
 export default dimg;

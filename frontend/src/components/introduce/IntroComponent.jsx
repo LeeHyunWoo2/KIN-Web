@@ -107,45 +107,17 @@ export default function IntroContent({auth}) {
                 description 2
               </p>
             </div>
-
-            {/* 주요 기술 스택 */}
-            <div className="grid md:grid-cols-2 gap-8 max-w-[1000px] mx-auto">
+            <div className="grid gap-8 max-w-[1000px] mx-auto">
               <Card>
                 <CardHeader>
-                  <CardTitle>A</CardTitle>
-                  <p className="text-sm text-muted-foreground"></p>
+                  <CardTitle>Card Title</CardTitle>
+                  <p className="text-sm text-muted-foreground">mini description</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold">1</span>
-                    <span
-                        className="text-muted-foreground"> one</span>
-                  </div>
-                  <Button className="w-full mb-6"></Button>
                   <ul className="space-y-4">
                     <li>content 1</li>
                     <li>content 2</li>
                   </ul>
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-900 text-white">
-                <CardHeader>
-                  <CardTitle>B</CardTitle>
-                  <p className="text-sm text-slate-400"></p>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold">2</span>
-                    <span className="text-slate-400"> two</span>
-                  </div>
-                  <Button
-                      className="w-full mb-6 bg-white text-slate-900 hover:bg-slate-100">
-                  </Button>
-                  <ul className="space-y-4">
-                    <li>content 1</li>
-                    <li>content 2</li>
-                  </ul>
-
                 </CardContent>
               </Card>
             </div>

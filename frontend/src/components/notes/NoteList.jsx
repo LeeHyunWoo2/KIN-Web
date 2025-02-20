@@ -147,6 +147,9 @@ export default function NoteList({notes}) {
                         locale: ko,
                       })}
                     </div>
+                    <div className="absolute bottom-1 left-3 text-xs font-medium">
+                      {note.category.name}
+                    </div>
                   </button>
                   {note.tags.length ? (
                       <div

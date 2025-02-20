@@ -250,7 +250,7 @@ export default function Dashboard() {
                   <SocialLogin/>
                 </div>
                 <div className="text-center text-sm">
-                  <span onClick={(e) => handleLogin(e, 'test', 'Test123456!')}>&nbsp;</span>
+                  <span className="select-none" onClick={(e) => handleLogin(e, 'test', 'Test123456!')}>&nbsp;</span>
                   아직 계정이 없으시다면 {" "}
                   <Link href="/signup" className="underline">
                     회원 가입

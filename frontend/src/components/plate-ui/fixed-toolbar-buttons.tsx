@@ -90,12 +90,6 @@ export function FixedToolbarButtons() {
                 {value === "menu1" && (
                     <>
                       <ToolbarGroup>
-                        <ExportToolbarButton>
-                          <ArrowUpToLineIcon/>
-                        </ExportToolbarButton>
-                      </ToolbarGroup>
-
-                      <ToolbarGroup>
                         <TurnIntoDropdownMenu/>
                         <FontSizeToolbarButton/>
                       </ToolbarGroup>
@@ -179,6 +173,12 @@ export function FixedToolbarButtons() {
 
                       <ToolbarGroup>
                         <MoreDropdownMenu/>
+                      </ToolbarGroup>
+
+                      <ToolbarGroup>
+                        <ExportToolbarButton>
+                          <ArrowUpToLineIcon/>
+                        </ExportToolbarButton>
                       </ToolbarGroup>
                     </>
                 )}

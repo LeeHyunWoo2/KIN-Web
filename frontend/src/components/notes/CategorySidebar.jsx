@@ -64,7 +64,7 @@ function CategoryItem({category}) {
   const categories = useAtomValue(categoryListAtom); // 카테고리 구조 상태
   const [, initializeNotes] = useAtom(initializeNotesAtom);
   const [, initializeCategories] = useAtom(initializeCategoriesAtom);
-  const setSelectedCategory = useSetAtom(selectedCategoryAtom);
+  const [selectedCategory ,setSelectedCategory] = useAtom(selectedCategoryAtom);
   const setSelectedCategoryName = useSetAtom(selectedCategoryNameAtom);
   const setSelectedNoteState = useSetAtom(selectedNoteStateAtom);
   const [isOpen, setIsOpen] = useState(false);
@@ -165,16 +165,21 @@ function CategoryItem({category}) {
           onOpenChange={setIsOpen}
       >
         <SidebarMenuItem>
-          <CollapsibleTrigger asChild>
-            <SidebarMenuButton tooltip={category.name}  onClick={() => handleCategorySelect(category._id, category.name)}>
+            <SidebarMenuButton
+                tooltip={category.name}
+                onClick={() => handleCategorySelect(category._id, category.name)}
+                isActive={selectedCategory === category._id}>
               {hasChildren ? (
+          <CollapsibleTrigger asChild>
                   <ChevronRight
                       className={`transition-transform duration-200 ${isOpen
-                          ? "rotate-90" : ""}`}/>
+                          ? "rotate-90" : ""}`}
+                      onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전파 막음
+                  />
+          </CollapsibleTrigger>
               ) : (<Dot/>)}
               <span>{category.name}</span>
             </SidebarMenuButton>
-          </CollapsibleTrigger>
           {hasChildren && (
               <CollapsibleContent>
                 <SidebarMenuSub>

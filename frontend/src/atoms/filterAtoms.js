@@ -11,3 +11,6 @@ export const searchTermAtom = atom(''); // 검색어
 export const sortByAtom = atom('created_date'); // 정렬 기준 (기본값: 작성일)
 export const isLockedAtom = atom(false); // 잠금 상태 필터
 export const isTrashedAtom = atom(false); // 휴지통 상태
+
+// AND/OR 필터 모드 상태
+export const filterModeAtom = atom(true); // true = AND, false = OR
