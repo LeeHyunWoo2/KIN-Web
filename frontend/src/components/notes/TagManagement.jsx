@@ -51,12 +51,14 @@ export default function TagManagerModal() {
     if (notesWithTag.length > 0) {
       setTargetTagId(tagId);
       setPage(1);
+    } else {
+      confirmDeleteTag(tagId);
     }
   }
 
-  const confirmDeleteTag = async () => {
+  const confirmDeleteTag = async (tagId) => {
     try {
-      await deleteTag(targetTagId);
+      await deleteTag(tagId);
       await initializeTags();
       await initializeNotes();
       setPage(0);
@@ -159,7 +161,7 @@ export default function TagManagerModal() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <Button onClick={confirmDeleteTag} variant="destructive">삭제
+                  <Button onClick={() => confirmDeleteTag(targetTagId)} variant="destructive">삭제
                   </Button>
                   <Button
                     variant="outline"

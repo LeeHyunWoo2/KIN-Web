@@ -65,7 +65,6 @@ export default function TagSelector() {
       (tag) => !selected.some((selectedTag) => selectedTag._id === tag._id)
   );
 
-
   const saveTagSet = () => {
     const updatedFields = { tags: selected};
     saveNoteChanges({
@@ -88,7 +87,7 @@ export default function TagSelector() {
         </div>)}
         <PopoverContent className="w-auto min-w-[380px]">
           <div className="flex items-center justify-between mb-3">
-            <Button className="w-1/5" variant="outline" onClick={() => setSelected([])}>초기화</Button>
+            <Button className="w-1/5 border-red-300" variant="outline" onClick={() => setSelected([])}>초기화</Button>
             <Button className="w-1/5" onClick={() => saveTagSet()}>적용</Button>
           </div>
           <Command

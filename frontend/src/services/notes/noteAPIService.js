@@ -40,7 +40,10 @@ export const getNotes = async (forceReload = false) => {
     return decompressedNotes;
   } else {
     // PouchDB에서 노트 가져오기
-    const result = await db.find({ selector: { type: "note" } }); // type 필터링
+    const result = await db.find({
+      selector: { type: "note" },
+      limit: 10000,
+    }); // type 필터링
     return result.docs; // 결과 반환
   }
 };

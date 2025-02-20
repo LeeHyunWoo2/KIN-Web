@@ -7,13 +7,13 @@ import {
   sortByAtom,
   isLockedAtom,
   isTrashedAtom,
-  categoryListAtom, selectedCategoryNameAtom
+  categoryListAtom, selectedCategoryNameAtom, filterModeAtom
 } from '@/atoms/filterAtoms';
 import { getChildCategoryIds } from '@/lib/notes/categoryUtils';
 
 
 // 필터링 로직
-export function filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isPinned, isTrashed }) {
+export function filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isPinned, isTrashed, filterMode }) {
 
   let filteredNotes = notes;
 
@@ -33,15 +33,22 @@ export function filterNotes(notes, { category, categories, tags, searchTerm, sor
 
   // 태그 필터링
   if (tags?.length > 0) {
-    filteredNotes = filteredNotes.filter(note =>
-        tags.every(tag => note.tags.includes(tag))
-    );
+    if (filterMode) {
+      // AND 모드
+      filteredNotes = filteredNotes.filter((note) =>
+          tags.every((tag) => note.tags.some((noteTag) => noteTag._id === tag._id))
+      );
+    } else {
+      // OR 모드
+      filteredNotes = filteredNotes.filter((note) =>
+          tags.some((tag) => note.tags.some((noteTag) => noteTag._id === tag._id))
+      );
+    }
   }
 
   // 검색어 필터링
   if (searchTerm) {
-    filteredNotes = filteredNotes.filter(note =>
-        note.title.includes(searchTerm)
+    filteredNotes = filteredNotes.filter(note => note.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
@@ -75,8 +82,9 @@ export const filteredNotesAtom = atom((get) => {
   const sortBy = get(sortByAtom);
   const isLocked = get(isLockedAtom); // 잠금 상태
   const isTrashed = get(isTrashedAtom); // 휴지통 상태
+  const filterMode = get(filterModeAtom); // AND/OR 모드 가져오기
 
-  return filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isTrashed });
+  return filterNotes(notes, { category, categories, tags, searchTerm, sortBy, isLocked, isTrashed, filterMode });
 });
 
 

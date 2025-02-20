@@ -3,7 +3,7 @@
 import React, {useEffect, useRef, useState} from "react"
 import {motion, AnimatePresence} from "framer-motion"
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {Card, CardContent, CardHeader} from "@/components/ui/card"
+import {Card, CardContent} from "@/components/ui/card"
 import {Upload, Menu, Radical, Slash} from "lucide-react"
 import Image from "next/image";
 import demo1 from "/public/images/demo/demo1.png"
@@ -98,11 +98,13 @@ export default function FeatureTabs() {
       <div className="w-full max-w-[1150px] mx-auto mb-16">
         <div className="flex items-center space-x-2" ref={tabsRef}>
           <Tabs value={activeFeature} className="w-full">
-            <TabsList className="flex min-w-fit min-h-12  space-x-8 bg-background" aria-label="Tab list">
+            <TabsList className="flex min-w-fit min-h-12  space-x-8 bg-background">
               {features.map((feature) => (
                   <TabsTrigger
                       key={feature.id}
                       value={feature.id}
+                      aria-controls={`tabpanel-${feature.id}`}
+                      aria-expanded={activeFeature === feature.id}
                       className="flex items-center gap-2 text-base font-medium text-foreground hover:bg-muted data-[state=active]:bg-muted"
                       onClick={() => handleTabClick(feature.id)}
                   >
@@ -119,6 +121,9 @@ export default function FeatureTabs() {
                           <motion.div
                               key={feature.id}
                               className=" inset-0"
+                              role="tabpanel"
+                              id={`tabpanel-${feature.id}`}
+                              aria-labelledby={`tab-${feature.id}`}
                               initial={{opacity: 0}}
                               animate={{opacity: 1}}
                               exit={{opacity: 0}}
