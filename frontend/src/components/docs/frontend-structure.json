@@ -86,6 +86,16 @@
                       "type": "folder",
                       "children": [
                         {
+                          "name": "네이버로그인.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/login/네이버로그인.gif"
+                        },
+                        {
+                          "name": "카카오로그인.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/login/카카오로그인.gif"
+                        },
+                        {
                           "name": "login1.PNG",
                           "type": "file",
                           "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/login/login1.PNG"
@@ -112,6 +122,11 @@
                           "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/signup/testsignup.gif"
                         }
                       ]
+                    },
+                    {
+                      "name": "탈퇴연동.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/account/탈퇴연동.gif"
                     },
                     {
                       "name": "delete.gif",
@@ -162,6 +177,53 @@
                   ]
                 },
                 {
+                  "name": "notes",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "filter",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "글태그클릭.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/filter/글태그클릭.gif"
+                        },
+                        {
+                          "name": "즐겨찾기.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/filter/즐겨찾기.PNG"
+                        },
+                        {
+                          "name": "카테고리.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/filter/카테고리.gif"
+                        },
+                        {
+                          "name": "태그.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/filter/태그.gif"
+                        },
+                        {
+                          "name": "필터복합.gif",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/filter/필터복합.gif"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "backup.png",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/backup.png"
+                    },
+                    {
+                      "name": "binary.gif",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/notes/binary.gif"
+                    }
+                  ]
+                },
+                {
                   "name": "security",
                   "type": "folder",
                   "children": [
@@ -188,6 +250,11 @@
                           "name": "웹소켓 프록싱.png",
                           "type": "file",
                           "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/웹소켓 프록싱.png"
+                        },
+                        {
+                          "name": "웹소켓프록싱로그.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/closedbackend/웹소켓프록싱로그.PNG"
                         },
                         {
                           "name": "apikeyblur.PNG",
@@ -236,6 +303,32 @@
                           "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/https/https2.PNG"
                         }
                       ]
+                    },
+                    {
+                      "name": "websocketproxy",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "웹소켓프록싱로그.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/websocketproxy/웹소켓프록싱로그.PNG"
+                        },
+                        {
+                          "name": "웹소켓프록싱이전.png",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/websocketproxy/웹소켓프록싱이전.png"
+                        },
+                        {
+                          "name": "웹소켓프록싱이후.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/websocketproxy/웹소켓프록싱이후.PNG"
+                        },
+                        {
+                          "name": "tooManyConnection.PNG",
+                          "type": "file",
+                          "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/security/websocketproxy/tooManyConnection.PNG"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -248,11 +341,6 @@
                   "name": "architecture.png",
                   "type": "file",
                   "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/architecture.png"
-                },
-                {
-                  "name": "cf-logo-v-rgb.png",
-                  "type": "file",
-                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/cf-logo-v-rgb.png"
                 },
                 {
                   "name": "fontOptimizeAfter.PNG",
@@ -275,14 +363,9 @@
                   "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/fontUXbefore.gif"
                 },
                 {
-                  "name": "oraclecloud.png",
+                  "name": "lighthouse.PNG",
                   "type": "file",
-                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/oraclecloud.png"
-                },
-                {
-                  "name": "vercel-logotype-light.svg",
-                  "type": "file",
-                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/vercel-logotype-light.svg"
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/docs/lighthouse.PNG"
                 }
               ]
             },
@@ -311,6 +394,16 @@
               "name": "categoryTutorial.PNG",
               "type": "file",
               "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/categoryTutorial.PNG"
+            },
+            {
+              "name": "tempTutorial.png",
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/tempTutorial.png"
+            },
+            {
+              "name": "writeTutorial.PNG",
+              "type": "file",
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/public/images/writeTutorial.PNG"
             }
           ]
         },
@@ -470,6 +563,11 @@
                   "name": "BeforeAfter.jsx",
                   "type": "file",
                   "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/BeforeAfter.jsx"
+                },
+                {
+                  "name": "DeferredComponent.tsx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/docs/DeferredComponent.tsx"
                 },
                 {
                   "name": "Dynamic-FileTree.tsx",
@@ -699,6 +797,11 @@
                   "name": "NoteList.jsx",
                   "type": "file",
                   "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/NoteList.jsx"
+                },
+                {
+                  "name": "TagFilter.jsx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/components/notes/TagFilter.jsx"
                 },
                 {
                   "name": "TagManagement.jsx",
@@ -1795,100 +1898,6 @@
                   ]
                 },
                 {
-                  "name": "architecture",
-                  "type": "folder",
-                  "children": [
-                    {
-                      "name": "_meta.js",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/_meta.js"
-                    },
-                    {
-                      "name": "cloudflare.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/cloudflare.mdx"
-                    },
-                    {
-                      "name": "databases.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/databases.mdx"
-                    },
-                    {
-                      "name": "etc.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/etc.mdx"
-                    },
-                    {
-                      "name": "index.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/index.mdx"
-                    },
-                    {
-                      "name": "oraclecloud.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/oraclecloud.mdx"
-                    },
-                    {
-                      "name": "vercel.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture/vercel.mdx"
-                    }
-                  ]
-                },
-                {
-                  "name": "backend",
-                  "type": "folder",
-                  "children": [
-                    {
-                      "name": "_meta.js",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/backend/_meta.js"
-                    },
-                    {
-                      "name": "index.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/backend/index.mdx"
-                    }
-                  ]
-                },
-                {
-                  "name": "etc",
-                  "type": "folder",
-                  "children": [
-                    {
-                      "name": "_meta.js",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/etc/_meta.js"
-                    },
-                    {
-                      "name": "futurePlans.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/etc/futurePlans.mdx"
-                    }
-                  ]
-                },
-                {
-                  "name": "frontend",
-                  "type": "folder",
-                  "children": [
-                    {
-                      "name": "_meta.js",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/_meta.js"
-                    },
-                    {
-                      "name": "font_optimize.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/font_optimize.mdx"
-                    },
-                    {
-                      "name": "index.mdx",
-                      "type": "file",
-                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/frontend/index.mdx"
-                    }
-                  ]
-                },
-                {
                   "name": "issues",
                   "type": "folder",
                   "children": [
@@ -1896,6 +1905,11 @@
                       "name": "_meta.js",
                       "type": "file",
                       "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/_meta.js"
+                    },
+                    {
+                      "name": "font_optimize.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/issues/font_optimize.mdx"
                     },
                     {
                       "name": "index.mdx",
@@ -1969,6 +1983,21 @@
                       "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/_meta.js"
                     },
                     {
+                      "name": "backup.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/backup.mdx"
+                    },
+                    {
+                      "name": "binary.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/binary.mdx"
+                    },
+                    {
+                      "name": "filter.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/filter.mdx"
+                    },
+                    {
                       "name": "index.mdx",
                       "type": "file",
                       "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/notes/index.mdx"
@@ -1998,6 +2027,11 @@
                       "name": "index.mdx",
                       "type": "file",
                       "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/index.mdx"
+                    },
+                    {
+                      "name": "websocketproxy.mdx",
+                      "type": "file",
+                      "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/security/websocketproxy.mdx"
                     }
                   ]
                 },
@@ -2010,6 +2044,11 @@
                   "name": "about.mdx",
                   "type": "file",
                   "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/about.mdx"
+                },
+                {
+                  "name": "architecture.mdx",
+                  "type": "file",
+                  "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/frontend/src/pages/docs/architecture.mdx"
                 },
                 {
                   "name": "directory.mdx",
