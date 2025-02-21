@@ -34,6 +34,7 @@ const dimg = {
           '../../public/images/docs/security/websocketproxy/웹소켓프록싱이후.PNG'),
       log: require(
           '../../public/images/docs/security/websocketproxy/웹소켓프록싱로그.PNG'),
+      tooManyConnection: require('../../public/images/docs/security/websocketproxy/tooManyConnection.PNG'),
     }
   },
   architecture: {
@@ -81,12 +82,14 @@ const dimg = {
   /*노트 기능*/
   notes: {
     filter: {
-      category: require('../../public/images/docs/notes/카테고리.gif'),
-      tag: require('../../public/images/docs/notes/태그.gif'),
-      compositeFilter: require('../../public/images/docs/notes/필터복합.gif'),
-      displayTagClick: require('../../public/images/docs/notes/글태그클릭.gif'),
-      pin: require('../../public/images/docs/notes/즐겨찾기.PNG'),
+      category: require('../../public/images/docs/notes/filter/카테고리.gif'),
+      tag: require('../../public/images/docs/notes/filter/태그.gif'),
+      compositeFilter: require('../../public/images/docs/notes/filter/필터복합.gif'),
+      displayTagClick: require('../../public/images/docs/notes/filter/글태그클릭.gif'),
+      pin: require('../../public/images/docs/notes/filter/즐겨찾기.PNG'),
     },
+    binary: require('../../public/images/docs/notes/binary.gif'),
+    backup: require('../../public/images/docs/notes/backup.png'),
   },
 };
 

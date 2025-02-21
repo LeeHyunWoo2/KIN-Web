@@ -123,6 +123,7 @@ export default function NoteList({notes}) {
                       <div className="flex items-center">
                         <div className="flex items-center gap-2">
                           <div className="font-semibold">
+                            {/*{note.mode === 'text' ? <FileType size={18} /> : <FileCode size={18} />}*/}
                             {note.title}
                           </div>
                           {note.is_pinned && (<span

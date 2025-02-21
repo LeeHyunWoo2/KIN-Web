@@ -1,0 +1,319 @@
+import {DocsImage} from '../../../components/docs/Image';
+import dimg from "../../../lib/docsImages";
+
+## 🚀 컨텐츠 데이터 최적화
+
+<div className="max-h-96 overflow-auto border-y rounded-md mt-8">
+
+```json filename="sampleData.json"
+
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "이것은 Plate Editor에서 작성된 노트의 예제입니다."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Plate Editor는 JSON 형태로 문서를 저장합니다."
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "목록 항목 1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "목록 항목 2"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "이것은 인용문 예제입니다.",
+              "marks": [
+                {
+                  "type": "italic"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": { "language": "javascript" },
+      "content": [
+        {
+          "type": "text",
+          "text": "console.log('Hello, World!');"
+        }
+      ]
+    }
+  ]
+}
+
+
+```
+
+</div>
+
+<span className="flex justify-center my-8">
+
+*Plate 에디터는 이런 JSON 형태로 데이터를 저장한다.*
+
+</span>
+
+
+### 📝 상황 설명
+- JSON을 그대로 전송하면 크기가 커져 네트워크 비용이 증가함.
+- Base64 인코딩을 사용하면 크기가 오히려 증가하는 문제가 발생.
+- 최적화를 위해 다른 압축 방식을 사용할 필요가 있음.
+
+---
+
+## 🔍 분석
+1. **JSON 크기 증가 문제**
+    - 노트 데이터가 중첩된 JSON 구조를 가지며, 텍스트가 많을수록 크기가 증가.
+    - Base64 인코딩을 적용하면 원본 대비 약 33% 정도 데이터 크기가 증가함.
+    - 바이너리로 압축 시, JSON 크기에 따라 약 30% ~ 70% 감소를 기대할 수 있음.
+
+2. **네트워크 트래픽 증가**
+    - 데이터 크기가 커질수록 전송 속도가 느려지고, 로딩 성능이 저하됨.
+
+3. **DB 및 서버 부하**
+    - 압축되지 않은 데이터가 누적될수록 DB 및 캐싱의 효율이 떨어질것으로 예상.
+
+4. **처리 부담 분산**
+    - 바이너리 압축, 해제 과정에서 CPU 오버헤드가 발생할 수 있다고 한다.
+    - 사용자 한명의 데이터 정도는 전혀 티나지 않는 규모이고, 이 압축/해제 과정은 보안을 위한것이 아니다.<br/>따라서 클라이언트가 담당하도록 설계하여도 좋다고 판단.
+    - 백엔드는 DB로 전달만 하기 때문에 부담이 없다.
+
+---
+
+## 🛠️ 해결 과정
+
+### ✅ 해결책 개요
+- **zlib 압축 적용**: JSON 데이터를 바이너리로 변환 후 Gzip 압축하여 전송.
+- **모드별 압축 지원**
+    - `editor` 모드: Plate Editor JSON을 압축/복원
+    - `plaintext` 모드: 일반 텍스트를 압축/복원
+- **압축/복원 함수 분리**
+    - 압축: `compressEditorContent`, `compressTextContent`
+    - 복원: `decompressEditorContent`, `decompressTextContent`
+
+
+```js filename="noteCompressor.js"
+import zlib from 'zlib';
+
+export const getCompressor = (mode) => {
+  return mode === 'editor' ? compressEditorContent : compressTextContent;
+};
+
+export const getDecompressor = (mode) => {
+  return mode === 'editor' ? decompressEditorContent : decompressTextContent;
+};
+
+const compressEditorContent = (content) => {
+  try {
+    return zlib.gzipSync(JSON.stringify(content));
+  } catch (error) {
+    console.error('에디터 모드 압축 실패', error);
+    return content;
+  }
+};
+
+const decompressEditorContent = (compressedContent) => {
+  try {
+    return JSON.parse(zlib.gunzipSync(Buffer.from(compressedContent, 'base64')));
+  } catch (error) {
+    console.error('에디터 모드 복원 실패', error);
+    return compressedContent;
+  }
+};
+```
+
+---
+
+## ✅ 결과
+
+<br/>
+
+<DocsImage src={dimg.notes.binary}/>
+
+<span className="flex justify-center my-8">
+
+*(gif 를 따로 촬영해서 예시 문구가 다른점 양해 부탁드립니다.)*
+
+</span>
+
+<br/>
+
+### 🚀 성능 개선 효과
+
+<div className="max-h-96 overflow-auto border-y rounded-md mt-8">
+
+```python filename="compare_note_performance.py"
+import json
+import base64
+import zlib
+import pandas as pd
+
+plate_editor_json = {
+    "type": "doc",
+    "content": [
+        {
+            "type": "paragraph",
+            "content": [
+                {"type": "text", "text": "이것은 Plate Editor에서 작성된 노트의 예제입니다."}
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": [
+                {"type": "text", "text": "Plate Editor는 JSON 형태로 문서를 저장합니다."}
+            ]
+        },
+        {
+            "type": "bulletList",
+            "content": [
+                {
+                    "type": "listItem",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "content": [
+                                {"type": "text", "text": "목록 항목 1"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "listItem",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "content": [
+                                {"type": "text", "text": "목록 항목 2"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "blockquote",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {"type": "text", "text": "이것은 인용문 예제입니다.", "marks": [{"type": "italic"}]}
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "codeBlock",
+            "attrs": {"language": "javascript"},
+            "content": [
+                {"type": "text", "text": "console.log('Hello, World!');"}
+            ]
+        }
+    ]
+}
+
+
+# JSON 데이터를 문자열로 변환
+json_str = json.dumps(plate_editor_json, ensure_ascii=False)
+
+# 1. JSON 그대로 크기 (UTF-8)
+json_bytes = json_str.encode('utf-8')
+json_size = len(json_bytes)
+
+# 2. Base64로 변환 후 크기
+base64_encoded = base64.b64encode(json_bytes)
+base64_size = len(base64_encoded)
+
+# 3. 바이너리 압축 (zlib 사용)
+compressed_binary = zlib.compress(json_bytes)
+compressed_size = len(compressed_binary)
+
+# 결과 비교
+comparison_results = {
+    "JSON (원본)": json_size,
+    "Base64 변환": base64_size,
+    "바이너리 압축 (zlib)": compressed_size,
+}
+
+# 결과 표시
+df = pd.DataFrame(list(comparison_results.items()), columns=["방식", "크기 (바이트)"])
+print(df)
+
+```
+
+</div>
+
+<span className="flex justify-center my-8">
+
+*용량 계산 파이썬 스크립트*
+
+</span>
+
+<br/>
+
+| 전송 방식 | 데이터 크기 (예제 기준) |
+|-----------|------------------|
+| JSON (원본) | 853 바이트 |
+| Base64 변환 | 1140 바이트 (33.65% 증가) |
+| Gzip 압축 | 334 바이트 (60.84% 감소) |
+
+- 압축 적용 후 전송 데이터 크기가 **평균 5~60% 감소**
+- 네트워크 트래픽 및 로딩 속도 최적화
+- DB 저장 공간 절약
+
+---
+
+## 💡 배운 점
+- JSON 데이터를 바이너리 압축하면 큰 성능 향상을 기대할 수 있음.
+- Base64 변환은 오히려 크기를 증가시키므로 피하는 것이 좋음.
+- 데이터 저장 및 전송 최적화를 위해 다양한 압축 기법을 고려할 필요가 있음.

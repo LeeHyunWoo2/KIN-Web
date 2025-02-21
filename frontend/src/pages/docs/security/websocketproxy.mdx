@@ -12,8 +12,6 @@ import dimg from "../../../lib/docsImages";
 
 <DocsImage src={dimg.security.websocketproxy.before}/>
 
-#### api 라우트 적용과정 글 링크 필요
-
 - 역시나 개발자 도구(네트워크 탭)에서 WebSocket 요청이 백엔드 서버로 직접 전송되는 것을 확인함.
 - 이를 해결하기 위해 웹소켓까지 API route 프록시를 적용시킬지 고민했으나, 현실적으로 불가능하다고 생각했다.
 - 이유 1 : 프록시 특화 서버가 아닌 일반 서버에서 요청을 받아 재가공하는 방식이라서 직접 연결이 필요한 요청은 그대로 멈춘다.
@@ -23,19 +21,19 @@ import dimg from "../../../lib/docsImages";
 
 ---
 
-## ✅ 목표
+### 목표
 - 백엔드 WebSocket 주소를 숨기고, Cloudflare Worker를 이용해 프록싱 하기.
 - 인증 및 보안 기능을 추가하여 비인가 접근을 차단하기.
 
 ---
 
-## 🔨 해결 과정
+## 🛠️ 해결 과정
 ### Cloudflare Worker 생성
 - Cloudflare 대시보드에서 `Workers & Pages`로 이동하여 새 Worker 생성함.
 - Worker 이름: **`websocket-proxy`**
 - WebSocket 요청을 감지하고 백엔드 서버로 프록시하는 코드 작성.
 
-```js
+```js filename="worker.js"
 export default {
   async fetch(request, env, ctx) {
     let url = new URL(request.url);
@@ -70,13 +68,30 @@ export default {
 
 ---
 
-## 🔒 보안 강화 요소
-### WebSocket 인증 강화
+## ✅ 결과
+
+<br/>
+<DocsImage src={dimg.security.websocketproxy.after}/>
+<br/>
+<DocsImage src={dimg.security.websocketproxy.log}/>
+<br/>
+
+---
+
+- WebSocket 요청을 Cloudflare Worker를 통해 프록시하여 백엔드 주소를 완전히 숨김.
+- 브라우저 개발자 도구(F12)에서 확인해도 `wss://noteapp.org/ws/...`만 보이며, **백엔드 도메인이 노출되지 않음**.
+- JWT 인증 추가하여 비인가 접근 차단, Rate Limit 적용하여 악성 연결 방지, Ping 체크로 비활동 세션 자동 종료.
+- 이제 WebSocket 보안이 확실하게 강화됨
+
+
+## 🔒 추가적인 보안 강화 요소
+### WebSocket 인증 강화 (검토중)
 - WebSocket 연결 시 **JWT 인증을 추가**하여 비인가 사용자의 접근을 차단함.
 - `sec-websocket-protocol` 헤더에 JWT 토큰을 포함하도록 설정함.
 - 서버에서 토큰이 유효하지 않으면 **즉시 연결 종료.**
+- 현재 보안 설계상 이 부분이 필요한지 확신이 들지 않아 앱에 적용은 하지 않음
 
-```js
+```js filename="server.js"
 const jwt = require('jsonwebtoken');
 
 wss.on('connection', (ws, req) => {
@@ -101,11 +116,11 @@ wss.on('connection', (ws, req) => {
 
 ---
 
-### Rate Limit 적용
+### Rate Limit (적용됨)
 - **Cloudflare Rate Limiting**을 활용하여 초당 연결 횟수를 제한함.
 - **서버에서도 IP 기반 Rate Limit을 추가하여 1분 내 5회 이상 연결 시 차단함.**
 
-```js
+```js filename="server.js"
 const connectionAttempts = new Map();
 
 wss.on('connection', (ws, req) => {
@@ -126,14 +141,16 @@ wss.on('connection', (ws, req) => {
   }
 });
 ```
+<br/>
+<DocsImage src={dimg.security.websocketproxy.tooManyConnection}/>
 
 ---
 
-### Ping 체크
+### Ping 체크 (적용됨)
 - 클라이언트가 일정 시간 동안 응답하지 않으면 자동으로 연결 종료함.
 - 서버에서 일정 간격으로 `ping`을 보내고, 응답이 없으면 `terminate()` 실행.
 
-```js
+```js filename="server.js"
 wss.on('connection', (ws) => {
   ws.isAlive = true;
 
@@ -157,18 +174,3 @@ wss.on('connection', (ws) => {
   });
 });
 ```
-
-## 최종 결과
-
-<br/>
-<DocsImage src={dimg.security.websocketproxy.after}/>
-<br/>
-<DocsImage src={dimg.security.websocketproxy.log}/>
-<br/>
-
----
-
-- WebSocket 요청을 Cloudflare Worker를 통해 프록시하여 백엔드 주소를 완전히 숨김.
-- 브라우저 개발자 도구(F12)에서 확인해도 `wss://noteapp.org/ws/...`만 보이며, **백엔드 도메인이 노출되지 않음**.
-- JWT 인증 추가하여 비인가 접근 차단, Rate Limit 적용하여 악성 연결 방지, Ping 체크로 비활동 세션 자동 종료.
-- 이제 WebSocket 보안이 확실하게 강화됨
