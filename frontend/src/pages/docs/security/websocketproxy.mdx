@@ -124,7 +124,7 @@ wss.on('connection', (ws, req) => {
 const connectionAttempts = new Map();
 
 wss.on('connection', (ws, req) => {
-  const ip = req.socket.remoteAddress;
+  const ip = req.headers['cf-connecting-ip'] || req.socket.remoteAddress;
 
   const now = Date.now();
   const attempts = connectionAttempts.get(ip) || [];
@@ -160,7 +160,7 @@ wss.on('connection', (ws) => {
 
   const interval = setInterval(() => {
     if (!ws.isAlive) {
-      console.log("🔴 WebSocket 비정상 연결 종료");
+      console.log("WebSocket 비정상 연결 종료");
       ws.terminate();
       return;
     }
