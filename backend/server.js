@@ -207,7 +207,7 @@ wss.on('connection', async (ws, req) => {
   isClientConnected = true;
   ws.isAlive = true;
 
-  const ip = req.socket.remoteAddress;
+  const ip = req.headers['cf-connecting-ip'] || req.socket.remoteAddress;
 
   const now = Date.now();
   const attempts = connectionAttempts.get(ip) || [];
