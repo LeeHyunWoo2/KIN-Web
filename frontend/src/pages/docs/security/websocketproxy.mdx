@@ -118,7 +118,7 @@ wss.on('connection', (ws, req) => {
 
 ### Rate Limit (적용됨)
 - **Cloudflare Rate Limiting**을 활용하여 초당 연결 횟수를 제한함.
-- **서버에서도 IP 기반 Rate Limit을 추가하여 1분 내 5회 이상 연결 시 차단함.**
+- **서버에서도 IP 기반 Rate Limit을 추가하여 1분 내 5회 이상 연결 시 차단**
 
 ```js filename="server.js"
 const connectionAttempts = new Map();
