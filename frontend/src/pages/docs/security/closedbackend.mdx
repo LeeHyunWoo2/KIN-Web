@@ -5,31 +5,33 @@ import dimg from "../../../lib/docsImages";
 
 <p className="text-lg text-gray-600 mt-2">다양한 보안 레이어와 접근 제어를 결합하여, 폐쇄적이면서도 안정성을 높이기 위해 노력한 백엔드 설계를 소개합니다.</p>
 
+한줄 요약 : 이 프로젝트 보안 모델은 제로 트러스트 기반으로 설계되었습니다.
+
 ### 현재 적용된 보안 요소
 
-#### 1 HTTPS 강제 적용
+#### HTTPS 강제 적용
 ✅ **모든 HTTP 요청 차단 → HTTPS만 허용**
 - SSL/TLS 적용으로 통신 암호화
 - HTTPS가 아닌 요청은 무조건 403 Forbidden
 
-#### 2 IP 기반 접근 차단
+#### IP 기반 접근 차단
 ✅ **백엔드 서버 IP로 직접 접근 불가**
-- **어떤 IP도 직접 접근할 수 없음** (Cloudflare를 반드시 거쳐야 함).
-- **Cloudflare에서 허용되지 않은 IP는 100% 차단.**
+- **어떤 IP도 직접 접근할 수 없음**
+- **Cloudflare 공인 IP가 아니라면 100% 차단.** (Cloudflare를 반드시 거쳐야 함).
 - 즉, 백엔드의 실제 서버 IP는 외부에 공개되지 않음.
 
-#### 3 Cloudflare 기반 접근 제어
+#### Cloudflare 기반 접근 제어
 ✅ **Cloudflare를 통한 요청만 허용 (Cloudflare WAF + Proxy 적용)**
 - Cloudflare가 **IP, User-Agent, HTTP 헤더 검증을 수행**
 - **Vercel에서 온 요청만 허용** (다른 출처에서 온 요청은 모두 차단)
 
-#### 4 Vercel API Proxy만 허용
+#### Vercel API Proxy만 허용
 ✅ **사용자는 `noteapp.org/api/proxy/~~~`를 통해서만 API에 접근 가능**
 - 프론트엔드에서 **백엔드 도메인을 직접 노출하지 않음**
 - API 요청을 **프론트엔드 서버에서만 프록싱**
 - 백엔드 도메인이 외부에 노출될 일이 없음
 
-#### 5 API Key 인증 (`x-api-key`)
+#### API Key 인증 (`x-api-key`)
 ✅ **프론트엔드 서버에서만 알고 있는 API Key (`x-api-key`) 검증**
 - Cloudflare에서 유효한 `x-api-key`를 검사
 - 맞지 않으면 **403 Forbidden** 반환
@@ -37,26 +39,26 @@ import dimg from "../../../lib/docsImages";
 - 프론트엔드 서버와 백엔드 서버 간의 통신에서만 사용되며, 브라우저 개발자 도구(F12)에서도 확인할 수 없음.
 - 사용자는 별도의 인증키가 사용된다는 사실 자체를 알 수 없음.
 
-#### 6 WAF (웹 애플리케이션 방화벽) 보호
+#### WAF (웹 애플리케이션 방화벽) 보호
 ✅ **Cloudflare WAF에서 추가적인 요청 필터링 적용**
 - 의심스러운 요청(봇, 공격 패턴 감지) 차단
 - User-Agent 기반 필터링 가능 (예: 봇 차단)
 
-#### 7 무차별 대입 공격 방어
+#### 무차별 대입 공격 방어
 ✅ **Cloudflare + Express의 Rate Limit 적용**
 - **1차 – Cloudflare Rate Limiting**
-- **대량 요청(DDOS, 자동화 공격) 방어**
+- 대량 요청(DDOS, 자동화 공격) 방어
 - 일정 횟수를 초과하면 **Cloudflare가 IP 차단**
 - **2차 – Express Rate Limit**
 - **백엔드 API 자체 요청 제한**
 - `cf-connecting-ip`를 기반으로 일정 횟수를 초과하면 **429 Too Many Requests 반환**
 
-#### 8 비인가 요청 및 예외 URI 차단
+#### 비인가 요청 및 예외 URI 차단
 ✅ **불필요한 URI에 대한 접근 거부**
 - `/favicon.ico`, `/cdn-cgi/rum` 같은 자동 요청 제외
 - `/social` 같은 특정 경로에 대해서는 별도 검증
 
-#### 9 NoSQL Injection & XSS 방어
+#### NoSQL Injection & XSS 방어
 ✅ **MongoDB 주입 공격 방지 (`express-mongo-sanitize`)**
 - **MongoDB 인젝션 공격 차단** (예: `{ "$gt": "" }` 같은 공격 코드 무력화)
 - NoSQL 기반의 주입 공격이 불가능하도록 보호
@@ -69,7 +71,7 @@ import dimg from "../../../lib/docsImages";
 - **중복된 요청 파라미터를 통한 공격 방어**
 - 예: `?id=123&id=456` 같은 중복된 요청이 있을 경우, 하나만 허용하여 예상치 못한 동작 방지
 
-#### 10 세션 보안 및 보호
+#### 세션 보안 및 보호
 ✅ **Express-Session을 사용하여 세션 데이터를 Redis에 저장**
 - **세션 쿠키 설정을 강화하여 보안성을 유지**
 - `httpOnly: true` 및 `secure: true` 설정으로 XSS 방지
@@ -78,7 +80,7 @@ import dimg from "../../../lib/docsImages";
 - **세션 데이터를 클라이언트에서 직접 접근할 수 없도록 보호**
 - **불필요한 세션 유지 방지 (`resave: false`, `saveUninitialized: false`)**
 
-#### 11 WebSocket 연결 보호
+#### WebSocket 연결 보호
 ✅ **WebSocket 연결 시 불필요한 요청 차단**
 - Cloudflare Worker를 통해 프록시하여 **백엔드랑 직접 연결하는 프로토콜에서도** 백엔드 주소를 숨김
 - `wss.clients.size === 0`일 때 자동으로 연결 해제되지 않도록 설정하여 안정성 강화
@@ -86,6 +88,7 @@ import dimg from "../../../lib/docsImages";
 
 ✅ **WebSocket 인증 및 보안 강화**
 - **Cloudflare Rate Limiting + 서버 Rate Limit 적용** → **1분 내 5회 이상 연결 시 차단**
+- WebSocket 용 JWT 토큰 검증 절차 고려중
 - **Ping/Pong 체크** → 응답 없는 세션 자동 종료 (좀비 세션 방지)
 
 ✅ **WebSocket 클라이언트의 요청 제한**
@@ -93,7 +96,7 @@ import dimg from "../../../lib/docsImages";
 - **메시지 크기 제한** → 과도한 데이터 전송 방지 (100KB 이상 차단)
 - 지나치게 짧은 간격으로 연결하면 차단
 
-#### 12 서버 안정성을 위한 예외 처리
+#### 서버 안정성을 위한 예외 처리
 ✅ **`process.on('uncaughtException')`을 사용하여 예기치 않은 에러 처리**
 - 서버가 갑작스럽게 크래시 되는 것을 방지하고 로그를 남김
 
@@ -103,7 +106,7 @@ import dimg from "../../../lib/docsImages";
 
 ---
 
-| 번호 | 보안 기능 | 역할 |
+|  | 보안 기능 | 역할 |
 |------|------------|--------------------------------|
 | **1** | HTTPS 강제 | 중간자 공격 방지 |
 | **2** | IP 차단 | 백엔드 IP 숨김, 직접 접근 불가 |

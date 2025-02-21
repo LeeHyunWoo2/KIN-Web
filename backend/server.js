@@ -199,12 +199,29 @@ let isClientConnected = false; // 클라이언트 연결 상태 추적
 let refreshInterval = 5000; // 기본값 5초
 let intervalId;
 const MAX_MESSAGE_SIZE = 1024 * 100; // 최대 100kb 까지 허용
+const connectionAttempts = new Map();
 
 // 웹소켓 핸들러 설정
-wss.on('connection', async (ws) => {
+wss.on('connection', async (ws, req) => {
   console.log('클라이언트 연결됨');
   isClientConnected = true;
   ws.isAlive = true;
+
+  const ip = req.socket.remoteAddress;
+
+  const now = Date.now();
+  const attempts = connectionAttempts.get(ip) || [];
+
+  // 최근 1분 내 연결 횟수 필터링
+  const recentAttempts = attempts.filter((timestamp) => now - timestamp < 60 * 1000);
+  recentAttempts.push(now);
+  connectionAttempts.set(ip, recentAttempts);
+
+  if (recentAttempts.length > 5) {
+    console.log(` WebSocket 연결 차단: ${ip} - 너무 많은 연결 시도`);
+    ws.close();
+    return;
+  }
 
   ws.on('pong', () => {
     ws.isAlive = true; // 클라이언트 연결 상태 체크

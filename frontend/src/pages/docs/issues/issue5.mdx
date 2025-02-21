@@ -68,7 +68,7 @@ import { Callout } from 'nextra/components'
     - 요청을 다시 만들기 때문에 **따로 명시를 안하면 기존의 데이터가 온전히 보존되지 않는 구조다.**
 
 2. **요청(Request) 헤더 (`req.headers`)**
-    ```js filename="[path.js]"
+    ```js filename="[path].js"
     const headers = {
       ...req.headers, // 클라이언트에서 보낸 헤더를 포함
       "x-api-key": process.env.CLOUDFLARE_API_TOKEN, // 추가 보안 헤더
@@ -83,7 +83,7 @@ import { Callout } from 'nextra/components'
 
 
 3. **응답(Response) 헤더 (`res.setHeader`)...?**
-    ```js filename="[path.js]"
+    ```js filename="[path].js"
     // 백엔드 응답을 클라이언트로 전달
     res.status(response.status).json(response.data);
     ```
