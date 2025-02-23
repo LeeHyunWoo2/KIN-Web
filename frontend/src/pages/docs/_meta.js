@@ -10,7 +10,7 @@ export default {
     type: 'separator'
   },
   index: "프로젝트 소개",
-  about: "나를 담은 프로젝트",
+  'about-project': "나를 담은 프로젝트",
   'Fundamental': {
     title: (
         <Separator>
