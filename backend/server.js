@@ -42,6 +42,7 @@ const noteRoutes = require('./routes/notes/noteRoutes');
 const categoryRoutes = require('./routes/notes/categoryRoutes');
 const tagRoutes = require('./routes/notes/tagRoutes');
 const emailRoutes = require('./routes/user/emailRoutes');
+const visitorRoutes = require('./routes/visitor/visitorRoutes')
 const os = require("os");
 
 
@@ -162,6 +163,7 @@ app.use('/notes', noteRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/tags', tagRoutes);
 app.use('/sync', syncRoutes);
+app.use('/visitor', visitorRoutes);
 
 redisClient.on('error', (err) => {
   console.error('Redis Error:', err);

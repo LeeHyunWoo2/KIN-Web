@@ -95,10 +95,11 @@ export default function FeatureTabs() {
   }
 
   return (
-      <div className="w-full max-w-[1150px] mx-auto mb-16">
+      <div className="w-full max-w-[863px] mx-auto mb-16">
         <div className="flex items-center space-x-2" ref={tabsRef}>
           <Tabs value={activeFeature} className="w-full">
-            <TabsList className="flex min-w-fit min-h-12  space-x-8 bg-background">
+            <TabsList
+                className="flex min-w-fit min-h-12  space-x-8 bg-background">
               {features.map((feature) => (
                   <TabsTrigger
                       key={feature.id}
@@ -114,7 +115,7 @@ export default function FeatureTabs() {
               ))}
             </TabsList>
             <Card>
-              <CardContent className="pt-6 relative min-h-[760px]">
+              <CardContent className="pt-6 relative min-h-[570px]">
                 <AnimatePresence>
                   {features.map((feature) =>
                       feature.id === activeFeature ? (
@@ -140,6 +141,7 @@ export default function FeatureTabs() {
             </Card>
           </Tabs>
         </div>
+        <span className="flex justify-center mt-5 text-sm text-muted-foreground font-medium">해당 이미지는 에디터의 이해를 돕기 위한 다른버전의 샘플입니다.</span>
       </div>
 
   )
