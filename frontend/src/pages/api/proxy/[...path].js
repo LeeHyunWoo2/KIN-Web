@@ -6,19 +6,8 @@ export default async function handler(req, res) {
   const method = req.method; // 요청 방식
 
   // Vercel 로그로 확인할 콘솔, (Vercel 에서 표시되지 않는 것만 작성)
-  //console.log(`content-length : ${req.headers["content-length"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
-
-  // 전체 req 정보 로깅
-  console.log("=== 요청 데이터 로깅 ===");
-  console.log(`method: ${req.method}`);
-  console.log(`url: ${req.url}`);
-  console.log(`headers:`, req.headers);
-  console.log(`query:`, req.query);
-  console.log(`body:`, req.body);
-  console.log(`cookies:`, req.cookies);
-  console.log(`ip: ${req.ip}`);
-  console.log(`protocol: ${req.protocol}`);
-  console.log("=== 요청 데이터 로깅 종료 ===");
+  console.log(
+      `content-length : ${req.headers["content-length"]}\ncf-connecting-ip : ${req.headers["cf-connecting-ip"]}`);
 
   try {
     // 클라이언트로부터 받은 요청 헤더와 x-api-key를 병합

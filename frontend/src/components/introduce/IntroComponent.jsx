@@ -32,7 +32,7 @@ export default function IntroContent({auth}) {
   };
 
   return (
-      <div className="flex flex-col mt-10">
+      <div className="flex flex-col mt-5">
         <section className="container mx-auto px-4 py-20 text-center">
           <Badge variant="secondary" className="mb-4">
             Keep Idea Note
@@ -99,24 +99,30 @@ export default function IntroContent({auth}) {
 
         <section className="bg-slate-50 py-20">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Title</h2>
-              <p className="text-muted-foreground">
-                description 1
-                <br/>
-                description 2
-              </p>
-            </div>
-            <div className="grid gap-8 max-w-[1000px] mx-auto">
+            <div className="grid gap-8 max-w-[600px] mx-auto">
               <Card>
                 <CardHeader>
-                  <CardTitle>Card Title</CardTitle>
-                  <p className="text-sm text-muted-foreground">mini description</p>
+                  <CardTitle className="text-2xl font-bold">주요 기능</CardTitle>
+                  <p className="text-sm text-muted-foreground">앱의 특징을 간단히 소개합니다.</p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-4">
-                    <li>content 1</li>
-                    <li>content 2</li>
+                    <div>
+                    <span className="text-lg font-semibold">메모 작성 및 관리 : </span>
+                    <span>카테고리, 태그, 검색 기능 제공</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">다양한 편집 모드 : </span>
+                      <span>일반 텍스트, 마크다운, 리치텍스트 에디터</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">자동 저장 및 백업 : </span>
+                      <span>실시간 저장과 동기화 지원</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">보안 강화 : </span>
+                      <span>프라이빗 앱에 걸맞는 다양한 보안 조치를 적용</span>
+                    </div>
                   </ul>
                 </CardContent>
               </Card>
@@ -125,25 +131,32 @@ export default function IntroContent({auth}) {
         </section>
 
         <section className="container mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold text-center mb-12">Q&A</h2>
+          <h2 className="text-3xl font-semibold text-center mb-12">Q&A</h2>
           <Accordion type="single" collapsible
                      className="max-w-[800px] mx-auto">
             <AccordionItem value="item-1">
-              <AccordionTrigger>질문 1</AccordionTrigger>
+              <AccordionTrigger>제가 작성한 노트는 안전한가요?</AccordionTrigger>
               <AccordionContent>
-                설명 예제
+                네, 보안을 최우선으로 고려하여 외부로부터 안전하며, 개발자가 내용을 열람하는것이 불가능하도록 설계했습니다.<br/>
+                또한 매일 주기적으로 서버의 데이터를 백업하여 안전하게 관리중입니다.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger>질문 2</AccordionTrigger>
+              <AccordionTrigger>제 개인정보는 안전한가요?</AccordionTrigger>
               <AccordionContent>
-                설명 예제
+                이 앱은 개인정보를 필요로 하지 않습니다. 회원가입에서도 민감하지 않은 식별정보만 취급하고 있습니다.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-              <AccordionTrigger>질문 3</AccordionTrigger>
+              <AccordionTrigger>다른 사람과 노트를 공유할 수 있나요?</AccordionTrigger>
               <AccordionContent>
-                설명 예제
+                현재는 개인 사용을 위한 프라이빗 노트 앱 이지만, 향후 공유와 협업 기능 추가를 고려하고 있습니다.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>앞으로 업데이트를 할 의향이 있나요?</AccordionTrigger>
+              <AccordionContent>
+                네! 이 앱은 앞으로도 계속 관리될 예정입니다.<br/>긴급메모 모드, 코드 스니펫 모드, UI개선, Electron 버전과 모바일 앱 버전 제작 등 여러가지 계획이 있습니다.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

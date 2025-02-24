@@ -22,7 +22,6 @@ export default {
   techStack: "기술 스택",
   directory: "프로젝트 디렉토리 구조",
   architecture: "인프라 아키텍처",
-  security: "Security",
   'Features': {
     title: (
         <Separator>
@@ -31,8 +30,9 @@ export default {
     ),
     type: 'separator'
   },
-  account: "Account",
-  notes: "Notes",
+  account: "회원 기능",
+  notes: "노트 기능",
+  security: "보안 특징",
   'Insights':{
     title: (
         <Separator>
@@ -41,5 +41,5 @@ export default {
     ),
     type: 'separator',
   },
-  issues: "Issues",
+  issues: "문제 해결 과정",
 }

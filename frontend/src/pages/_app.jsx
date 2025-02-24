@@ -7,6 +7,7 @@ import 'nprogress/nprogress.css';
 import Head from 'next/head';
 import {Toaster} from 'sonner';
 import {setupInterceptors} from "@/lib/interceptors";
+import checkVisitor from "@/lib/checkVisitor";
 import '@/styles/code-block-element.css';
 import { authAtom } from "@/atoms/userState";
 import {useAtom} from "jotai";
@@ -23,6 +24,11 @@ function App({Component, pageProps}) {
     document.fonts.ready.then(() => {
       setFontsLoaded(true);
     });
+  }, []);
+
+  // 방문자 체크 실행
+  useEffect(() => {
+    checkVisitor();
   }, []);
 
   // 페이지 로드 시 localStorage와 authAtom 동기화

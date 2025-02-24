@@ -1,20 +1,24 @@
-import {Cards} from 'nextra/components'
+import {Callout, Cards} from 'nextra/components'
 import {Box} from 'lucide-react'
 
 # 개요 - 회원, 계정 관리 기능
 
 <p className="text-lg text-gray-600 mt-2">사용자 계정과 관련된 다양한 기능을 소개합니다.</p>
 
+<Callout type="warning" emoji="🛠️">
+  현재는 gif 예시만 있으나, 기능에 대한 설명은 곧바로 추가하겠습니다.
+</Callout>
+
 <div className="flex flex-col gap-4 mt-10 max-w-[50%]">
   <Cards.Card
       icon={<Box/>}
-      title="회원 가입"
+      title="회원가입 및 이메일 인증"
       href="/docs/account/signup"
       arrow
   />
   <Cards.Card
       icon={<Box/>}
-      title="로그인"
+      title="소셜 및 일반 로그인"
       href="/docs/account/login"
       arrow
   />

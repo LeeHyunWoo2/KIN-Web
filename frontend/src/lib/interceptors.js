@@ -53,7 +53,8 @@ export const setupInterceptors = () => {
 
         // 기타 에러 처리 (401 외)
         const errorMessage = error.response?.data?.message || "";
-        if (error.response.status !== 404 && error.response.status !== 401 && errorMessage.length !== 0) {
+        const skipToast = error.response.data?.skipToast;
+        if (error.response.status !== 404 && error.response.status !== 401 && errorMessage.length !== 0 && !skipToast) {
           toast.error(errorMessage, {id : errorMessage}); // 같은 메세지가 반복되면 출력하지 않음 (라이브러리 내장 기능)
         }
         return Promise.reject(error);
