@@ -47,7 +47,7 @@ const checkVisitor = async () => {
     // 24시간 후 다시 요청할 수 있도록 저장
     setLocalStorageWithExpiry("lastVisitTime", Date.now(), VISIT_EXPIRY);
   } catch (error) {
-    console.error("방문자 체크 실패:", error);
+    console.error(error);
   }
 };
 
