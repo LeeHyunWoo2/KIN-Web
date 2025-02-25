@@ -3,8 +3,7 @@ import { z } from "zod";
 export const ValidationSchemas = z.object({
 /*  termsAgreed: z.boolean().refine((val) => val === true, {
     message: "필수 약관에 동의해야 합니다.",
-  }),
-  recaptchaToken: z.string().min(1, "리캡차 인증이 필요합니다."),*/
+  }),*/
   name: z.string().min(1, "이름은 필수입니다."),
   idVerified: z.boolean().refine((val) => val === true, {
     message : "아이디 중복검사를 완료해야 합니다."

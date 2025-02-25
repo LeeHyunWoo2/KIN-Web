@@ -116,6 +116,7 @@
     "react-lite-youtube-embed": "^2.4.0",
     "react-player": "^2.16.0",
     "react-resizable-panels": "^2.1.7",
+    "react-turnstile": "^1.1.4",
     "recharts": "^2.13.0",
     "slate": "^0.112.0",
     "slate-dom": "^0.111.0",

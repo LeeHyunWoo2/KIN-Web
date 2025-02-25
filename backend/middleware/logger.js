@@ -13,24 +13,26 @@ morgan.token('time', () => {
 morgan.token('body', (req) => {
   const body = req.body || {};
 
+  const sanitizedBody = {...body};
+
+  delete sanitizedBody.password;
+  delete sanitizedBody.turnstileToken;
+
   // PUT /notes 요청인지 확인
   if (req.method === 'PUT' && req.originalUrl.split('?')[0] === '/notes') {
-    const { updateDataList } = body;
+    const { updateDataList } = sanitizedBody;
 
-    // updateDataList가 배열이면 content 값을 제거
+    // updateDataList가 배열이라면 content 값을 제거
     if (Array.isArray(updateDataList)) {
-      const sanitizedDataList = updateDataList.map((item) => {
-        const { content, ...rest } = item; // content 필드 제외
+      sanitizedBody.updateDataList = updateDataList.map((item) => {
+        const { content, id, ...rest } = item; // content 및 id 필드 제외
         return rest;
       });
-
-      // 변경된 body 반환 (content 제거 후 JSON으로 포매팅)
-      return JSON.stringify({ ...body, updateDataList: sanitizedDataList }, null, 2);
     }
   }
 
-  // 기본적으로 전체 body 출력 (수정 없음)
-  return JSON.stringify(body, null, 2);
+  // 변경된 body 반환 (포맷팅 포함)
+  return JSON.stringify(sanitizedBody, null, 2);
 });
 
 // 커스텀 토큰 생성: query, errorMessage

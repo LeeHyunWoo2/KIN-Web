@@ -40,7 +40,6 @@ const checkVisitor = async () => {
 
   if (lastVisitTime) return;
 
-
   try {
     await apiClient.post("/visitor", { visitorId });
 

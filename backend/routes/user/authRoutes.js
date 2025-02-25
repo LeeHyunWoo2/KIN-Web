@@ -1,16 +1,17 @@
 const express = require('express');
 const { registerController, loginController, logoutController,
-  newTokenController, recaptchaController
+  newTokenController
 } = require('../../controllers/user/authController');
 const { checkSession, checkAdminSession } = require('../../controllers/user/checkSessionController');
 const authenticateUser = require("../../middleware/user/authenticateUser");
 const router = express.Router();
+const validateTurnstile = require('../../middleware/validateTurnstile');
 
 // 회원가입
-router.post('/register', registerController);
+router.post('/register', validateTurnstile, registerController);
 
 // 로그인
-router.post('/login', loginController);
+router.post('/login', validateTurnstile, loginController);
 
 // 로그아웃
 router.post('/logout', logoutController);
@@ -24,10 +25,5 @@ router.get('/admin-session', checkAdminSession);
 
 // Access Token 재발급
 router.post('/refresh', newTokenController)
-
-// 리캡차 유효성 검사
-router.post('/recaptcha', recaptchaController);
-
-
 
 module.exports = router;
