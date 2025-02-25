@@ -8,10 +8,10 @@ const router = express.Router();
 const validateTurnstile = require('../../middleware/validateTurnstile');
 
 // 회원가입
-router.post('/register',  registerController);
+router.post('/register', validateTurnstile, registerController);
 
 // 로그인
-router.post('/login',  loginController);
+router.post('/login', validateTurnstile, loginController);
 
 // 로그아웃
 router.post('/logout', logoutController);
