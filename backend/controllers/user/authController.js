@@ -1,11 +1,9 @@
 const authService = require('../../services/user/authService');
 const tokenService = require('../../services/user/tokenService');
 const {createErrorResponse} = require("../../middleware/errorHandler");
-const axios = require("axios");
 const setCookie = require("../../utils/setCookie");
 const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const jwt = require('jsonwebtoken');
-const req = require("express/lib/request");
 
 // 1. 회원가입
 const registerController = async (req, res) => {
@@ -95,38 +93,9 @@ const newTokenController = async (req, res) => {
   }
 };
 
-
-// 5. 리캡차 (서비스 로직은 구글에서 담당)
-const recaptchaController = async (req, res) => {
-  const { token } = req.body;
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-
-  try {
-    const response = await axios.post(
-        `https://www.google.com/recaptcha/api/siteverify`,
-        null,
-        {
-          params: {
-            secret: secretKey,
-            response: token,
-          },
-        }
-    );
-
-    if (!response.data.success) {
-      return res.status(400).json({ message: '리캡차 검증 실패' });
-    }
-    res.status(200).send();
-  } catch (error) {
-    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "리캡차 검증 중 오류 발생");
-    res.status(statusCode).json({ message });
-  }
-};
-
 module.exports = {
   registerController,
   loginController,
   logoutController,
-  newTokenController,
-  recaptchaController,
+  newTokenController
 };

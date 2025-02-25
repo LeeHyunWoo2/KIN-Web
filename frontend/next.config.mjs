@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 import nextra from 'nextra';
 
+const isDev = process.env.NODE_ENV === "development";
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.jsx',
@@ -43,6 +44,12 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value: "https://noteapp.org", // 브라우저 요청에 대해 자신의 도메인만 허용
           },
+          {
+            key: "Content-Security-Policy",
+            value: isDev
+                ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com;"
+                : "script-src 'self' https://challenges.cloudflare.com;",
+          }
         ],
       },
     ];

@@ -100,6 +100,7 @@ app.use(
         'X-CSRF-Token',
         'X-Requested-With',
         'cf-connecting-ip',
+        'cf-clearance',
         'x-skip-interceptor',
         'x-api-key'
       ], // 허용할 헤더

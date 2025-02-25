@@ -17,23 +17,22 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 import {Input} from "@/components/ui/input";
 import {
   getUserProfileByInput,
   registerUser
 } from '@/services/user/authAPIService'
-import {useRouter} from "next/router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {motion} from "framer-motion";
-import Recaptcha from "@/components/auth/Recaptcha";
 import apiClient from "@/lib/apiClient";
 import {Check, Loader2, MailOpen} from "lucide-react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
@@ -45,6 +44,9 @@ import {
 } from "@/lib/validationSchemas";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {PolicyContentKR} from "@/components/auth/PolicyContent";
+import Turnstile from "react-turnstile";
+import {toast} from "sonner";
+
 
 export default function AuthenticationPage() {
   const [page, setPage] = useState(0);
@@ -60,6 +62,8 @@ export default function AuthenticationPage() {
   const [isOverlayActive, setIsOverlayActive] = useState(false);
   const [errors, setErrors] = useState({});
   const [isTestAccount, setIsTestAccount] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
@@ -133,11 +137,6 @@ export default function AuthenticationPage() {
       return acc;
     }, {});
     return {isValid: false, errors};
-  };
-
-  const [recaptchaToken, setRecaptchaToken] = useState("");
-  const handleCaptchaChange = (token) => {
-    setRecaptchaToken(token);
   };
 
   // 아이디 중복 확인
@@ -246,7 +245,7 @@ export default function AuthenticationPage() {
     }));
   };
 
-  const handleOpenDialog = (e) => {
+  const handleOpenAlertDialog = (e) => {
     e.preventDefault();
 
     const finalFormData = {
@@ -328,18 +327,15 @@ export default function AuthenticationPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await apiClient.post('/auth/recaptcha', {
-        token: recaptchaToken,
-      });
-      if (response.status === 200) {
-        // 리캡차 성공 시 회원가입 요청
+      if (!turnstileToken) {
+        toast.error("보안 인증을 완료해주세요.");
+        return;
+      }
         formData.email = email;
-        await registerUser(formData);
+        const registerData = { ...formData, turnstileToken };
+        await registerUser(registerData);
         window.location.href = `/login?success=${encodeURIComponent(
             `회원가입 완료! ${formData.name} 님 환영합니다`)}`;
-      } else {
-        // setErrorMessage('리캡차 인증 실패');
-      }
     } catch (error) {
       // setErrorMessage('회원가입 실패');
     }
@@ -492,22 +488,22 @@ export default function AuthenticationPage() {
                             </div>
                           </ScrollArea>
                         </div>
-                        <Dialog>
-                          <DialogTrigger>
+                        <AlertDialog>
+                          <AlertDialogTrigger>
                             <div className="flex justify-end">
                               <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-3 font-semibold transition-colors w-1/3 h-8">
                                 크게 보기
                               </div>
                             </div>
-                          </DialogTrigger>
-                          <DialogTitle/>
-                          <DialogContent>
+                          </AlertDialogTrigger>
+                          <AlertDialogTitle/>
+                          <AlertDialogContent>
                             <ScrollArea className="max-h-[80vh] w-full text-sm">
                               <PrivacyPolicy/>
                             </ScrollArea>
-                          </DialogContent>
-                          <DialogDescription/>
-                        </Dialog>
+                          </AlertDialogContent>
+                          <AlertDialogDescription/>
+                        </AlertDialog>
                       </div>
 
                       <div className="grid gap-4">
@@ -742,67 +738,54 @@ export default function AuthenticationPage() {
                           {errors.passwordConfirm && <p
                               className="text-red-500 text-sm mt-1">{errors.passwordConfirm}</p>}
                         </div>
-
-                        {isOverlayActive && (
-                            <div
-                                style={{
-                                  position: "fixed", // radix 모달의 클릭제한 때문에 reCaptcha가 작동하지 않아 임의로 만든 레이아웃
-                                  top: 0,
-                                  left: 0,
-                                  width: "100vw",
-                                  height: "100vh",
-                                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                                  zIndex: 10,
-                                  pointerEvents: "auto", // 외부 클릭 차단
-                                }}
-                            />
-                        )}
-
-                        <Dialog modal={false}
-                                open={isOverlayActive}
-                                onOpenChange={(isOverlayActive) => {
-                                  if (isOverlayActive) {
-                                    setIsOverlayActive(true);
-                                  } else {
-                                    setRecaptchaToken("");
-                                    setIsOverlayActive(false);
-                                  }
-                                }}
+                        
+                        <AlertDialog
+                            open={isOverlayActive}
+                            onOpenChange={(isOverlayActive) => {
+                              if (isOverlayActive) {
+                                setIsOverlayActive(true);
+                              } else {
+                                setIsOverlayActive(false);
+                              }
+                            }}
                         >
-                          <DialogTrigger asChild>
+                          <AlertDialogTrigger asChild>
                             <Button className="w-full"
-                                    onClick={handleOpenDialog}>가입하기</Button>
-                          </DialogTrigger>
-                          <DialogContent
+                                    onClick={handleOpenAlertDialog}>가입하기</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent
                               onInteractOutside={(e) => {
                                 e.preventDefault();
                               }}
                           >
-                            <DialogHeader>
-                              <DialogTitle>회원가입을
-                                진행하시겠습니까?</DialogTitle>
-                              <DialogDescription>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>회원가입을
+                                진행하시겠습니까?</AlertDialogTitle>
+                              <AlertDialogDescription>
                                 입력된 정보로 회원가입을 완료합니다.<br/>
                                 마이페이지에서 회원정보 수정이 가능합니다.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="flex flex-col items-center my-4">
-                              <Recaptcha onVerify={handleCaptchaChange}/>
-                            </div>
-                            <DialogFooter>
-                              <DialogPrimitive.Close>
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <Turnstile
+                                sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                                size="flexible"
+                                onSuccess={(token) => setTurnstileToken(token)}
+                            />
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>취소</AlertDialogCancel>
+{/*                              <DialogPrimitive.Close>
                                 <div className="inline-flex items-center justify-center gap-2
                                  whitespace-nowrap rounded-md text-sm font-medium
                                   transition-colors [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
                                   bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2">
                                   Cancel
                                 </div>
-                              </DialogPrimitive.Close>
-                              <Button disabled={!recaptchaToken}
+                              </DialogPrimitive.Close>*/}
+                              <Button disabled={!turnstileToken}
                                       onClick={handleSubmit}>Continue</Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                         <Button variant="outline" className="w-full"
                                 onClick={handlePrev}>
                           이전으로

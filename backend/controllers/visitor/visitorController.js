@@ -9,10 +9,10 @@ const recordVisitorController = async (req, res) => {
     const device = req.headers["sec-ch-ua-platform"];
     const browser = req.headers["sec-ch-ua"];
 
-    if (country !== "KR") return res.status(200).json();
+    if (country !== "KR") return res.status(200).end();
 
     await visitorService.recordVisitor({ visitorId, ip, country, device, browser });
-    res.status(201).json();
+    res.status(201).end();
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "방문자 기록 저장 중 오류 발생");
     res.status(statusCode).json({ message, skipToast: true });

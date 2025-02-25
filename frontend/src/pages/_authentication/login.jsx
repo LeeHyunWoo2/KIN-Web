@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import tempTutoImg from "../../../public/images/tempTutorial.png"
 import Image from "next/image";
+import Turnstile from "react-turnstile";
 
 
 export default function Dashboard() {
@@ -39,7 +40,7 @@ export default function Dashboard() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [incorrectValue , setIncorrectValue] = useState(false);
   const [showTestGuide, setShowTestGuide] = useState(false);
-
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
@@ -82,25 +83,30 @@ export default function Dashboard() {
     if (!id || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
       setIncorrectValue(false);
+      return;
+    }
+    if (!turnstileToken) {
+      toast.error("원활한 로그인을 위해 보안 인증을 완료해주세요.");
+      return;
+    }
+      setIsLoginLoading(true);
+      setTimeout(() => {
+        setIsLoginLoading(false); // 로딩 상태 해제
+      }, 5000);
+    const credentials = {id, password, turnstileToken, rememberMe};
+    const tokens = await loginUser(credentials);
+    if (tokens) {
+      // 로그인 성공 시 상태 초기화하고 리다이렉트
+      setId("");
+      setPassword("");
+      await router.push("/loginSuccess");
     } else {
-        setIsLoginLoading(true);
-        setTimeout(() => {
-          setIsLoginLoading(false); // 로딩 상태 해제
-        }, 5000);
-      const credentials = {id, password, rememberMe};
-      const tokens = await loginUser(credentials);
-      if (tokens) {
-        // 로그인 성공 시 상태를 초기화하고 loginSuccess로 리다이렉트
-        setId("");
-        setPassword("");
-        await router.push("/loginSuccess");
-      } else {
-        if(isTestLogin){
-          setShowTestGuide(true);
-        }
-        setIncorrectValue(true);
-        setIsLoginLoading(false);
+      if(isTestLogin){
+        setShowTestGuide(true);
       }
+      // TODO: 백엔드에서 인증 실패하면 무조건 다시입력 안내가 나오는데, turnsitle 케이스도 추가하기
+      setIncorrectValue(true);
+      setIsLoginLoading(false);
     }
   };
 
@@ -206,6 +212,12 @@ export default function Dashboard() {
                   >
                     로그인
                   </Button>
+                  <Turnstile
+                      sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                      size="flexible"
+                      refreshExpired="auto"
+                      onSuccess={(token) => setTurnstileToken(token)}
+                  />
                   <div>
                     {showTestGuide && (
                         <AlertDialog>

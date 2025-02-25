@@ -11,6 +11,7 @@ import checkVisitor from "@/lib/checkVisitor";
 import '@/styles/code-block-element.css';
 import { authAtom } from "@/atoms/userState";
 import {useAtom} from "jotai";
+import Script from "next/script";
 
 NProgress.configure({showSpinner: false});
 

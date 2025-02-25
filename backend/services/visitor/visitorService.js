@@ -7,7 +7,7 @@ const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
     existingVisitor.visitCount += 1;
     existingVisitor.lastVisit = new Date();
     await existingVisitor.save();
-    return {};
+    return null;
   }
 
   const visitor = new Visitor({
@@ -21,7 +21,7 @@ const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
   });
   await visitor.save();
 
-  return {};
+  return null;
 };
 
 module.exports = { recordVisitor };

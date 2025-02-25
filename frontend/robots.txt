@@ -3,3 +3,4 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /notes/
 Disallow: /userinfo/
+Disallow: /docs/
