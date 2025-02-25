@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import tempTutoImg from "../../../public/images/tempTutorial.png"
 import Image from "next/image";
-import { Turnstile } from "next-turnstile";
+import Turnstile from "react-turnstile";
 
 
 export default function Dashboard() {

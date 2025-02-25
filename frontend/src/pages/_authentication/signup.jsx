@@ -44,7 +44,7 @@ import {
 } from "@/lib/validationSchemas";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {PolicyContentKR} from "@/components/auth/PolicyContent";
-import { Turnstile } from "next-turnstile";
+import Turnstile from "react-turnstile";
 import {toast} from "sonner";
 
 
