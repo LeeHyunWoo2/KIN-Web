@@ -46,10 +46,8 @@ const nextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: isDev
-                ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com;"
-                : "script-src 'self' https://challenges.cloudflare.com;",
-          }
+            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval' translate.googleapis.com translate.google.com *.google.com *.gstatic.com chrome-extension://bocbaocobfecmglnmeaeppambideimao/ https://challenges.cloudflare.com https://static.cloudflareinsights.com",
+          },
         ],
       },
     ];
