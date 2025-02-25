@@ -41,7 +41,6 @@ export default function LoginPage() {
   const [incorrectValue , setIncorrectValue] = useState(false);
   const [showTestGuide, setShowTestGuide] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const nonce = typeof document !== "undefined" ? document.body.dataset.nonce : "";
 
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
@@ -217,7 +216,6 @@ export default function LoginPage() {
                       sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                       size="flexible"
                       refreshExpired="auto"
-                      scriptOptions={{ nonce }}
                       onSuccess={(token) => setTurnstileToken(token)}
                   />
                   <div>
