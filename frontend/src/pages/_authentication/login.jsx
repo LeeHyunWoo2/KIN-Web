@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import tempTutoImg from "../../../public/images/tempTutorial.png"
 import Image from "next/image";
-import Turnstile from "react-turnstile";
+import { Turnstile } from "next-turnstile";
 
 
 export default function Dashboard() {
@@ -85,15 +85,15 @@ export default function Dashboard() {
       setIncorrectValue(false);
       return;
     }
-/*    if (!turnstileToken) {
+    if (!turnstileToken) {
       toast.error("원활한 로그인을 위해 보안 인증을 완료해주세요.");
       return;
-    }*/
+    }
       setIsLoginLoading(true);
       setTimeout(() => {
         setIsLoginLoading(false); // 로딩 상태 해제
       }, 5000);
-    const credentials = {id, password, /*turnstileToken,*/ rememberMe};
+    const credentials = {id, password, turnstileToken, rememberMe};
     const tokens = await loginUser(credentials);
     if (tokens) {
       // 로그인 성공 시 상태 초기화하고 리다이렉트
@@ -212,12 +212,12 @@ export default function Dashboard() {
                   >
                     로그인
                   </Button>
-{/*                  <Turnstile
+                  <Turnstile
                       sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                       size="flexible"
                       refreshExpired="auto"
                       onSuccess={(token) => setTurnstileToken(token)}
-                  />*/}
+                  />
                   <div>
                     {showTestGuide && (
                         <AlertDialog>
