@@ -6,7 +6,7 @@ const SocialLogin = () => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/social/${provider}`;
 
     if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.location.href = url; // 소셜 로그인 URL로 리다이렉트
     }
   };
 
