@@ -1,6 +1,6 @@
 import {Head, Html, Main, NextScript} from "next/document";
 
-export default function Document() {
+export default function Document(props) {
   return (
     <Html lang="en">
       <Head>
@@ -25,7 +25,7 @@ export default function Document() {
       <meta name="backend-tools" content="Mongoose, Passport.js, JWT, Axios, Bcrypt, Helmet, Cors, Nodemailer" />
       <meta name="backend-deploy" content="Oracle Cloud" />
 
-      <body className="antialiased">
+      <body className="antialiased" data-nonce={props.nonce}>
         <Main />
         <NextScript />
       </body>

@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import tempTutoImg from "../../../public/images/tempTutorial.png"
 import Image from "next/image";
-import { Turnstile } from "next-turnstile";
+import Turnstile from "react-turnstile";
 
 
-export default function Dashboard() {
+export default function LoginPage() {
   const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +41,7 @@ export default function Dashboard() {
   const [incorrectValue , setIncorrectValue] = useState(false);
   const [showTestGuide, setShowTestGuide] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const nonce = typeof document !== "undefined" ? document.body.dataset.nonce : "";
 
   useEffect(() => {
     // auth 상태 확인 후 로딩 종료
@@ -216,6 +217,7 @@ export default function Dashboard() {
                       sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                       size="flexible"
                       refreshExpired="auto"
+                      scriptOptions={{ nonce }}
                       onSuccess={(token) => setTurnstileToken(token)}
                   />
                   <div>
@@ -275,6 +277,6 @@ export default function Dashboard() {
   )
 }
 
-Dashboard.getLayout = function getLayout(page) {
+LoginPage.getLayout = function getLayout(page) {
   return <HeaderLayout>{page}</HeaderLayout>
 }
