@@ -44,6 +44,10 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value: "https://noteapp.org", // 브라우저 요청에 대해 자신의 도메인만 허용
           },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;",
+          },
         ],
       },
     ];
