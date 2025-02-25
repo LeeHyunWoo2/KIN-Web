@@ -6,10 +6,18 @@ const visitorSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  ip: {
-    type: String,
-    required: true
-  },
+  ipHistory: [
+    {
+      ip: {
+        type: String,
+        required: true
+      },
+      changedAt: {
+        type: Date,
+        default: Date.now
+      }, // IP 변경 시점
+    }
+  ],
   country: {
     type: String,
     required: true,
