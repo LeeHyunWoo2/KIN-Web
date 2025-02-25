@@ -63,7 +63,7 @@ export default function AuthenticationPage() {
   const [errors, setErrors] = useState({});
   const [isTestAccount, setIsTestAccount] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const nonce = typeof document !== "undefined" ? document.body.dataset.nonce : "";
+
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
@@ -769,7 +769,6 @@ export default function AuthenticationPage() {
                             <Turnstile
                                 sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                                 size="flexible"
-                                scriptOptions={{ nonce }}
                                 onSuccess={(token) => setTurnstileToken(token)}
                             />
                             <AlertDialogFooter>
