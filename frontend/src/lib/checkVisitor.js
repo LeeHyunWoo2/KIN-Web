@@ -1,7 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-import apiClient from "@/lib/apiClient";
+import {recordVisitor} from "@/services/visitorAPIService";
 
-const VISIT_EXPIRY = 24 * 60 * 60 * 1000;
+const VISIT_EXPIRY = 60 * 60 * 1000;
 
 // 로컬스토리지에 만료시간을 설정하여 저장
 const setLocalStorageWithExpiry = (key, value, ttl) => {
@@ -30,24 +29,14 @@ const getLocalStorageWithExpiry = (key) => {
 };
 
 const checkVisitor = async () => {
-  let visitorId = localStorage.getItem("visitorId");
-  if (!visitorId) {
-    visitorId = uuidv4();
-    localStorage.setItem("visitorId", visitorId);
-  }
-
   const lastVisitTime = getLocalStorageWithExpiry("lastVisitTime");
 
   if (lastVisitTime) return;
 
-  try {
-    await apiClient.post("/visitor", { visitorId });
+  await recordVisitor();
 
-    // 24시간 후 다시 요청할 수 있도록 저장
-    setLocalStorageWithExpiry("lastVisitTime", Date.now(), VISIT_EXPIRY);
-  } catch (error) {
-    console.error(error);
-  }
+  // 1시간 후 다시 요청할 수 있도록 저장
+  setLocalStorageWithExpiry("lastVisitTime", Date.now(), VISIT_EXPIRY);
 };
 
 export default checkVisitor;

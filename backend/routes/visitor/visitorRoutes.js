@@ -1,7 +1,10 @@
 const express = require("express");
-const { recordVisitorController } = require("../../controllers/visitor/visitorController");
+const visitorController = require("../../controllers/visitor/visitorController");
+const authenticateUser = require("../../middleware/user/authenticateUser");
 const router = express.Router();
 
-router.post("/", recordVisitorController);
+router.get("/", authenticateUser, visitorController.getVisitorListController);
+
+router.post("/", visitorController.recordVisitorController);
 
 module.exports = router;
