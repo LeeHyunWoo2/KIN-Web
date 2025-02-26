@@ -1,5 +1,9 @@
 const Visitor = require("../../models/visitor");
 
+const getVisitorList = async () =>{
+  return Visitor.find().sort({lastVisit: -1}).select("visitorId visitCount lastVisit ipHistory device browser");
+}
+
 const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
   const existingVisitor = await Visitor.findOne({ visitorId });
 
@@ -30,4 +34,4 @@ const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
   return null;
 };
 
-module.exports = { recordVisitor };
+module.exports = { getVisitorList ,recordVisitor };

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { UserManagement } from '@/components/admin/UserManagement'
 import { Statistics } from '@/components/admin/Statistics'
 import { NoticeAndSettings } from '@/components/admin/NoticeAndSettings'
@@ -8,12 +8,24 @@ import { ServiceStatus } from '@/components/admin/ServiceStatus'
 import HeaderLayout from "@/components/HeaderLayout";
 import * as React from "react";
 import withAdminAuth from "@/lib/hoc/withAdminAuth";
+import VisitorList from "@/components/admin/VIsitorList";
+import { getVisitorList } from "@/services/visitorAPIService"
 
 function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("users")
+  const [activeTab, setActiveTab] = useState({id:"users", title:"사용자 관리"})
+  const [visitors, setVisitors] = useState([]);
+
+
+  useEffect(() => {
+    const loadVisitors = async () => {
+      const data = await getVisitorList();
+      setVisitors(data);
+    };
+    loadVisitors();
+  }, []);
 
   const renderContent = () => {
-    switch (activeTab) {
+    switch (activeTab.id) {
       case "users":
         return <UserManagement />
       case "stats":
@@ -24,6 +36,8 @@ function AdminDashboard() {
         return <Feedback />
       case "status":
         return <ServiceStatus />
+      case "visitors":
+        return <VisitorList visitors={visitors}/>
       default:
         return <UserManagement />
     }
@@ -33,7 +47,7 @@ function AdminDashboard() {
     <div className="flex h-[calc(100vh-64px)] bg-background">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 p-6 overflow-auto">
-        <h1 className="text-3xl font-bold mb-6">관리자 대시보드</h1>
+        <h1 className="text-3xl font-bold mb-6">{activeTab ? activeTab.title : "사용자 관리"}</h1>
         {renderContent()}
       </main>
     </div>
