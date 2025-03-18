@@ -7,6 +7,7 @@ const compression = require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const logger = require("./logger");
 
 module.exports = (app) => {
   app.use(logger);
