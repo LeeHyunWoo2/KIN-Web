@@ -2,12 +2,9 @@ const nodemailer = require('nodemailer');
 const { generateEmailVerificationToken, verifyEmailVerificationToken } = require('./tokenService');
 
 const sendVerificationEmail = async (email) => {
-
-  // 이메일 인증 토큰 생성
   const token = generateEmailVerificationToken(email);
   const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
-  // 이메일 전송
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -35,7 +32,7 @@ const verifyEmailToken = async (token) => {
   try {
     const decoded = verifyEmailVerificationToken(token);
     if (!decoded) {
-      throw new Error('유효하지 않은 토큰입니다.');
+      throw new Error('유효하지 않은 인증입니다.');
     }
     return decoded.email;
   } catch (error) {

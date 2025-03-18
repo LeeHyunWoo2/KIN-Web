@@ -158,7 +158,6 @@
     --brand: 213.3 93.9% 67.8%;
     --highlight: 48 96% 53%;
   }
-}
 
 /*radix dialog 가 출력될때 스크롤 사라지면서 화면 흔들리기 때문에 추가함.
  x hidden 은 가로스크롤 뜨는거 가려줌*/
@@ -167,7 +166,6 @@
   overflow-x: hidden !important;
 }
 
-@layer base {
   * {
     @apply border-border;
   }

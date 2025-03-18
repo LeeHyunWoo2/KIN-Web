@@ -1,6 +1,7 @@
 const visitorService = require("../../services/visitor/visitorService");
-const {createErrorResponse} = require("../../middleware/errorHandler");
+const {createErrorResponse} = require("../../middleware/errorFormat");
 
+// 관리자용
 const getVisitorListController = async (req, res) => {
   try {
     const visitorList = await visitorService.getVisitorList()
@@ -13,7 +14,7 @@ const getVisitorListController = async (req, res) => {
   }
 }
 
-const recordVisitorController = async (req, res) => {
+const recordVisitorInfoController = async (req, res) => {
   try {
     const {visitorId} = req.body;
     const ip = req.headers["cf-connecting-ip"];
@@ -25,7 +26,7 @@ const recordVisitorController = async (req, res) => {
       return res.status(200).end();
     }
 
-    await visitorService.recordVisitor(
+    await visitorService.recordVisitorInfo(
         {visitorId, ip, country, device, browser});
     res.status(201).end();
   } catch (error) {
@@ -35,4 +36,4 @@ const recordVisitorController = async (req, res) => {
   }
 };
 
-module.exports = {getVisitorListController, recordVisitorController};
+module.exports = {getVisitorListController, recordVisitorInfoController};

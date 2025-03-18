@@ -4,7 +4,7 @@ const getVisitorList = async () =>{
   return Visitor.find().sort({lastVisit: -1}).select("visitorId visitCount lastVisit ipHistory device browser");
 }
 
-const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
+const recordVisitorInfo = async ({ visitorId, ip, country, device, browser }) => {
   const existingVisitor = await Visitor.findOne({ visitorId });
 
   if (existingVisitor) {
@@ -22,7 +22,7 @@ const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
 
   const visitor = new Visitor({
     visitorId,
-    ipHistory: [{ ip, changedAt: new Date() }], // 최초 IP 기록
+    ipHistory: [{ ip, changedAt: new Date() }],
     country,
     device,
     browser,
@@ -34,4 +34,4 @@ const recordVisitor = async ({ visitorId, ip, country, device, browser }) => {
   return null;
 };
 
-module.exports = { getVisitorList ,recordVisitor };
+module.exports = { getVisitorList ,recordVisitorInfo };

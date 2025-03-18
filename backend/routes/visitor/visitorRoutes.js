@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get("/", authenticateUser, visitorController.getVisitorListController);
 
-router.post("/", visitorController.recordVisitorController);
+router.post("/", visitorController.recordVisitorInfoController);
 
 module.exports = router;

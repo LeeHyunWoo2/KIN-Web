@@ -222,31 +222,48 @@ export default function LoginPage() {
                     {showTestGuide && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                        <div
-                            className="inline-flex items-center justify-center gap-2
-                             whitespace-nowrap rounded-md text-sm border border-blue-500
+                            <div
+                                className="relative inline-flex w-full my-1 h-9 active:scale-[98%] transistion overflow-hidden rounded-lg p-[2px] focus:outline-none"
+                            >
+                              <div
+                                  className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#93c5fd_0%,#6366f1_50%,#93c5fd_50%,#6366f1_100%)]"
+                              />
+                              <div
+                                  className="inline-flex items-center justify-center gap-2
+                             whitespace-nowrap rounded-md text-sm backdrop-blur-0
                               bg-background shadow-sm hover:bg-accent hover:text-accent-foreground
-                               h-9 px-4 py-2 transition-colors w-full mb-3 font-medium cursor-pointer">
-                          ✔️ 테스트 유저이신가요?
-                        </div>
+                               h-full px-4 py-2 transition-colors w-full mb-3 font-medium cursor-pointer">
+                                ✔️ 테스트 유저이신가요?
+                              </div>
+                            </div>
                           </AlertDialogTrigger>
                           <AlertDialogTitle/>
-                          <AlertDialogContent className="flex flex-col items-center justify-center gap-4">
-                            <Image src={tempTutoImg} alt="tempTutoImg" width={300} height={200} className="border-2 border-black/50 rounded-md"/>
-                            <span className="text-base font-semibold my-2 text-center">
+                          <AlertDialogContent
+                              className="flex flex-col items-center justify-center gap-4 min-h-[630px]">
+                            <Image src={tempTutoImg} alt="tempTutoImg"
+                                   width={300} height={200}
+                                   className="border-2 border-black/50 rounded-md"/>
+                            <span
+                                className="text-base font-semibold my-2 text-center">
                              ▶️ 다음으로 → 회원가입 → 테스트 버튼<br/>
                              순서로 눌러주시면 즉시 테스트 계정이 생성됩니다!
                             </span>
-                          <Button className="w-full" onClick={() => router.push('/signup', undefined, {shallow: true})}>▶️ 다음으로</Button>
-                          <AlertDialogCancel className="w-full border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground">취소</AlertDialogCancel>
+                            <Button className="w-full"
+                                    onClick={() => router.push('/signup',
+                                        undefined, {shallow: true})}>▶️
+                              다음으로</Button>
+                            <AlertDialogCancel
+                                className="w-full border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground">취소</AlertDialogCancel>
                           </AlertDialogContent>
                           <AlertDialogDescription/>
                         </AlertDialog>
                     )}
                     <Button
                         variant="outline"
-                        className="w-[47%] m-1"
-                        onClick={(e) => handleLogin(e, 'testinput', 'Qweasd!23' , true)}
+                        className={`w-[47%] m-1 ${showTestGuide ? ''
+                            : 'border-2 border-green-500'}`}
+                        onClick={(e) => handleLogin(e, 'testinput', 'Qweasd!23',
+                            true)}
                     >
                       테스트 로그인
                     </Button>
@@ -262,7 +279,9 @@ export default function LoginPage() {
                   <SocialLogin/>
                 </div>
                 <div className="text-center text-sm">
-                  <span className="select-none" onClick={(e) => handleLogin(e, 'test', 'Test123456!')}>&nbsp;</span>
+                  <span className="select-none"
+                        onClick={(e) => handleLogin(e, 'test',
+                            'Test123456!')}>&nbsp;</span>
                   아직 계정이 없으시다면 {" "}
                   <Link href="/signup" className="underline">
                     회원 가입

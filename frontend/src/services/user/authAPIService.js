@@ -127,7 +127,7 @@ export const logoutUser = async () => {
     await apiClient.post('/auth/logout', {});
     localStorage.removeItem('auth');
     localStorage.removeItem('userInfo');
-    window.location.href = '/login';
+    window.location.href = '/';
   } catch (error) {
   }
 };

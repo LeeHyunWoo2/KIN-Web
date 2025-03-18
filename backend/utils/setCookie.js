@@ -1,3 +1,4 @@
+// 전역 쿠키 설정
 const setCookie = (res, name, value, options = {}) => {
   const defaultOptions = {
     httpOnly: true,

@@ -1,15 +1,11 @@
-// passport 를 통해 여러 인증 전략을 통합적으로 관리하는 파일
+// 소셜 인증 전략 설정 파일
 const configureSocialStrategies = require("../services/user/socialAuthService");
 const configureLinkingStrategies = require("../services/user/linkSocialService");
 
-
 module.exports = (passport) => {
-  // JWT 토큰 인증 설정
-
-  // 소셜 설정
+  // 소셜 로그인 인증 전략
   configureSocialStrategies(passport);
 
-// 추가 연동용 소셜 전략 초기화
+  // 일반계정에 소셜 계정 추가 연동용 인증 전략
   configureLinkingStrategies(passport);
-
 };

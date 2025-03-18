@@ -1,5 +1,6 @@
 const axios = require("axios");
 
+// 클라우드 플레어 Turnstile 검증
 const verifyTurnstile = async (req, res, next) => {
   const { turnstileToken } = req.body;
 

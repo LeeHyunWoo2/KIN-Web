@@ -38,7 +38,8 @@
     "passport-kakao": "^1.0.1",
     "passport-naver": "^1.0.6",
     "ws": "^8.18.0",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "zstd-codec": "^0.1.5"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

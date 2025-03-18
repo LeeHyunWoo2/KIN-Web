@@ -1,7 +1,7 @@
 import {DocsImage} from '../../../components/docs/Image';
 import dimg from "../../../lib/docsImages";
 
-## 🚀 컨텐츠 데이터 최적화
+## 🚀 컨텐츠 데이터 최적화 및 /sync/all 압축 최적화 추가
 
 <div className="max-h-96 overflow-auto border-y rounded-md mt-8">
 
@@ -105,43 +105,34 @@ import dimg from "../../../lib/docsImages";
 </span>
 
 
-### 📝 상황 설명
-- JSON을 그대로 전송하면 크기가 커져 네트워크 비용이 증가함.
-- Base64 인코딩을 사용하면 크기가 오히려 증가하는 문제가 발생.
-- 최적화를 위해 다른 압축 방식을 사용할 필요가 있음.
+### 📝 개요
+Plate 에디터는 JSON 기반의 문서 데이터를 저장하므로, 데이터 크기를 최소화하는 것이 중요하다.
+이를 위해 노트 개별 `content` 필드는 바이너리 압축하여 저장하고,
+**대량의 JSON 데이터를 동기화할 때는** `/sync/all` 요청을 Gzip 압축하여 네트워크 비용을 절감하는 방식으로 최적화하였다.
 
 ---
 
 ## 🔍 분석
-1. **JSON 크기 증가 문제**
-    - 노트 데이터가 중첩된 JSON 구조를 가지며, 텍스트가 많을수록 크기가 증가.
-    - Base64 인코딩을 적용하면 원본 대비 약 33% 정도 데이터 크기가 증가함.
-    - 바이너리로 압축 시, JSON 크기에 따라 약 30% ~ 70% 감소를 기대할 수 있음.
+1. **Plate 에디터의 특성**
+    - Plate 에디터는 텍스트에 메타데이터를 포함하는 방식으로 작동하기 때문에 문서를 JSON 형태로 취급한다. 문서의 **중첩 구조가 많아 데이터 크기가 커질 가능성이 높다.**
+    - 이 경우 JSON 중첩구조가 많아 문서의 내용이 길어질수록 JSON 크기가 매우 빠르게 커질것으로 예상된다.
+    - 실제로 동일한 `"type"`, `"content"` 키가 반복되는것을 확인
 
-2. **네트워크 트래픽 증가**
-    - 데이터 크기가 커질수록 전송 속도가 느려지고, 로딩 성능이 저하됨.
+2. **Base64 인코딩은 비효율적**
+    - Base64는 데이터 크기를 약 33% 증가시키므로 사용하지 않는다.
+    - 대신 **zlib(Gzip) 압축을 적용하면 JSON 크기를 평균 50~80% 줄일 수 있다.**
 
-3. **DB 및 서버 부하**
-    - 압축되지 않은 데이터가 누적될수록 DB 및 캐싱의 효율이 떨어질것으로 예상.
-
-4. **처리 부담 분산**
-    - 바이너리 압축, 해제 과정에서 CPU 오버헤드가 발생할 수 있다고 한다.
-    - 사용자 한명의 데이터 정도는 전혀 티나지 않는 규모이고, 이 압축/해제 과정은 보안을 위한것이 아니다.<br/>따라서 클라이언트가 담당하도록 설계하여도 좋다고 판단.
-    - 백엔드는 DB로 전달만 하기 때문에 부담이 없다.
+3. **백엔드 부하를 줄이고 클라이언트에서 처리**
+    - 압축/해제 과정에서 CPU 부하가 발생할 수 있으므로, **가능한 한 클라이언트에서 처리**하는 구조를 선택.
+    - 백엔드는 **DB 저장 및 네트워크 전송만 담당하고, 클라이언트가 압축을 해제하도록 설계.**
 
 ---
 
-## 🛠️ 해결 과정
+## 🛠️ 최적화 방식
 
-### ✅ 해결책 개요
-- **zlib 압축 적용**: JSON 데이터를 바이너리로 변환 후 Gzip 압축하여 전송.
-- **모드별 압축 지원**
-    - `editor` 모드: Plate Editor JSON을 압축/복원
-    - `plaintext` 모드: 일반 텍스트를 압축/복원
-- **압축/복원 함수 분리**
-    - 압축: `compressEditorContent`, `compressTextContent`
-    - 복원: `decompressEditorContent`, `decompressTextContent`
-
+### ✅ 1. 개별 노트`content` 필드 압축 최적화
+  - Plate 에디터 로 작성한 `content` 필드의 JSON 에 zlib 압축 적용.
+  - **DB 저장 공간 절약** 및 **단일 노트 전송 시 최적화 효과**.
 
 ```js filename="noteCompressor.js"
 import zlib from 'zlib';
@@ -171,9 +162,53 @@ const decompressEditorContent = (compressedContent) => {
     return compressedContent;
   }
 };
+
+// 텍스트 변환 부분은 생략
+
 ```
 
 ---
+
+
+### ✅ **2. `/sync/all` 요청 최적화 (대량 JSON 데이터 전송)**
+  - 개별 노트가 아니라 **한 번에 많은 데이터를 동기화하는** `/sync/all` 요청의 경우, 요청 전체를 압축하여 응답.
+  - **전체 JSON을 Gzip 압축 후 전송하여 네트워크 비용을 절감**.
+  - **Axios는 `Content-Encoding: gzip`을 자동으로 처리하므로, 클라이언트에서 별도의 압축 해제 작업이 필요 없음.**
+
+#### **🔹 백엔드 (`syncController.js`)**
+```js
+const zlib = require("zlib");
+
+exports.syncAllController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const [notes, categories, tags] = await Promise.all([
+      getNotes(userId),
+      getCategories(userId),
+      getTags(userId),
+    ]);
+
+    const jsonData = JSON.stringify({ notes, categories, tags });
+    const compressedData = zlib.gzipSync(jsonData);
+
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Encoding", "gzip");
+    res.send(compressedData);
+  } catch (error) {
+    const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "데이터를 가져오는 중 오류가 발생했습니다.");
+    res.status(statusCode).json({ message });
+  }
+};
+```
+
+#### **🔹 클라이언트 (`syncAPIService.js`)**
+```js
+const response = await apiClient.get("/sync/all", {
+  responseType: "json", // Axios가 자동으로 Gzip 해제
+});
+const { notes, categories, tags } = response.data;
+```
+
 
 ## ✅ 결과
 

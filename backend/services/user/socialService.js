@@ -2,26 +2,24 @@ const User = require('../../models/user');
 const axios = require('axios');
 const tokenService = require('./tokenService');
 
-// 소셜 계정 연동 해제 함수
+// 소셜 연동 해제
 const unlinkAccount = async (userId, provider) => {
   try {
-    // 사용자 조회
     const user = await User.findById(userId);
     if (!user) {
       const error = new Error('사용자를 찾을 수 없습니다.');
-      error.status = 404; // 상태 코드 설정
+      error.status = 404;
       throw error;
     }
 
-    // 마지막 소셜 계정 연동 해제 방지
+    // '소셜 only 계정' 의 마지막 소셜 연동 해제 방지 (로컬도, 소셜도 아닌 계정이 생기는 것을 방지)
     const socialAccounts = user.socialAccounts.filter(acc => acc.provider !== provider);
 
-    // OAuth 토큰 생성 및 소셜 플랫폼 연동 해제 요청
     const oauthToken = await tokenService.generateOAuthToken(user, provider);
-    await revokeSocialAccess(provider, oauthToken);
 
-    // DB에서 소셜 계정 정보 제거
+    await revokeSocialAccess(provider, oauthToken);
     user.socialAccounts = socialAccounts;
+
     await user.save();
 
     return user;
@@ -31,7 +29,7 @@ const unlinkAccount = async (userId, provider) => {
 };
 
 
-// 소셜 플랫폼 연동 해제 요청 함수
+// 플랫폼에게 연동 해제 요청
 const revokeSocialAccess = async (provider, token) => {
   try {
     if (provider === 'google') {

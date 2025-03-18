@@ -1,8 +1,7 @@
 const tokenService = require('../../services/user/tokenService');
 const redisClient = require('../../config/redis');
-const {createErrorResponse} = require("../../middleware/errorHandler");
+const {createErrorResponse} = require("../../middleware/errorFormat");
 
-// 세션이 유효한지 검증 (일반 사용자용)
 const checkSession = async (req, res) => {
   try {
     const skipInterceptor = req.headers['x-skip-interceptor'];
@@ -19,7 +18,6 @@ const checkSession = async (req, res) => {
   }
 };
 
-// 관리자 세션 검증
 const checkAdminSession = async (req, res) => {
   try{
     const { accessToken } = req.cookies;
@@ -27,7 +25,6 @@ const checkAdminSession = async (req, res) => {
       return res.status(404).json();
     }
 
-    // 블랙리스트에 있는지 확인
     const isInvalidated = await redisClient.get(`blacklist:${accessToken}`);
     if (isInvalidated) {
       return res.status(404).json();
@@ -44,7 +41,7 @@ const checkAdminSession = async (req, res) => {
       return res.status(404).json();
     }
   } catch (error){
-    // 접속 시도 시 관리자 증명 이외에 어떤 경우에도 의도적으로 404를  출력해 없는 페이지처럼 보이게 함
+    // 의도적으로 404 출력
     res.status(404).json();
   }
 }

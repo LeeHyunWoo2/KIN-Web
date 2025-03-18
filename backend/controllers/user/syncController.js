@@ -1,11 +1,10 @@
 const syncService = require('../../services/user/syncService');
-const {createErrorResponse} = require("../../middleware/errorHandler");
+const {createErrorResponse} = require("../../middleware/errorFormat");
 const {getNotes} = require("../../services/notes/noteService");
 const {getCategories} = require("../../services/notes/categoryService");
 const {getTags} = require("../../services/notes/tagService");
 
-// 유저 활동 시간 갱신
-exports.updateActivityTimeController = async (req, res) => {
+exports.updateUserActivityTimeController = async (req, res) => {
   const userId = req.user.id;
   const activityTime = req.body.currentTime;
 
@@ -18,7 +17,6 @@ exports.updateActivityTimeController = async (req, res) => {
   }
 };
 
-// 유저 마지막 활동 시간 조회
 exports.getLastActivityController = async (req, res) => {
   const userId = req.user.id;
 
@@ -36,7 +34,6 @@ exports.syncAllController = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // 데이터 동시 조회
     const [notes, categories, tags] = await Promise.all([
       getNotes(userId),
       getCategories(userId),
