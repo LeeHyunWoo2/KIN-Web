@@ -9,6 +9,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 
 module.exports = (app) => {
+  app.use(logger);
   app.use(compression());
   app.use(express.json());
   app.use(cookieParser());
