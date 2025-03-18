@@ -2,15 +2,12 @@ const Category = require('../../models/category');
 const mongoose = require("mongoose");
 const Note = require("../../models/note");
 
-// 카테고리 리스트 조회
 exports.getCategories = async (userId) => {
   return Category.find({user_id: userId})
 };
 
-// 카테고리 생성
 exports.createCategory = async (userId, name, parentId) => {
   try {
-    // 상위 카테고리 존재 여부 확인
     if (parentId) {
       const parentCategory = await Category.findOne({ 
         _id: parentId,
@@ -35,7 +32,6 @@ exports.createCategory = async (userId, name, parentId) => {
   }
 };
 
-// 카테고리 업데이트
 exports.updateCategory = async (categoryId, name, parent_id) => {
   return Category.findByIdAndUpdate(
       categoryId,
@@ -44,7 +40,6 @@ exports.updateCategory = async (categoryId, name, parent_id) => {
   );
 };
 
-// 카테고리 삭제
 exports.deleteCategory = async (categoryIds) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -69,7 +64,6 @@ exports.deleteCategory = async (categoryIds) => {
     await session.commitTransaction();
     await session.endSession();
 
-    // 삭제된 ID 목록 반환
     return {
       deletedCategoryIds: categoryIds,
       deletedNoteIds: deletedNotes.deletedCount,

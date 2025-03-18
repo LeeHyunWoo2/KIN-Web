@@ -11,7 +11,7 @@ export const getVisitorList = async () => {
   }
 }
 
-export const recordVisitor = async () => {
+export const recordVisitorInfo = async () => {
   let visitorId = localStorage.getItem("visitorId");
   if (!visitorId) {
     visitorId = uuidv4();

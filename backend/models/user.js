@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: false, // 소셜 유저가 로컬 등록을 안하면 id와 pw란이 비워져있어야함
+    required: false, // 소셜 only 계정은 id가 없음
     unique: true,
-    sparse: true, // null 값은 무시함 (소셜 id 빈칸이 중복이라고 해서 추가)
+    sparse: true, // null 은 무시
   },
   name: {
     type: String,
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: false, // 소셜 로그인 사용자는 비밀번호가 없을 수 있음
+    required: false, // 소셜 only 계정은 pw가 없음
   },
   passwordHistory: {
     type: [
@@ -30,14 +30,14 @@ const UserSchema = new mongoose.Schema({
         changedAt: {
           type: Date,
           default: Date.now
-        } // 변경 날짜
+        }
       }
     ],
     default: [],
   },
   termsAgreed: {
     type: Boolean,
-    required: false, // 이용 약관 동의는 필수
+    required: false,
   },
   marketingConsent: {
     type: Boolean,
@@ -45,13 +45,13 @@ const UserSchema = new mongoose.Schema({
     default: false,
   },
   socialAccounts: [
-    { // 없으면 둘다 local로 저장됨
+    {
       provider: {
-        type: String, // 'google', 'kakao', 'naver' 등 소셜 로그인 제공자
+        type: String, // 'google', 'kakao', 'naver'
         required: true,
       },
       providerId: {
-        type: String, // 소셜 로그인 제공자의 고유 ID
+        type: String, // 소셜 플랫폼측 고유 ID
         required: true,
         unique: true,
       },
@@ -60,13 +60,13 @@ const UserSchema = new mongoose.Schema({
         required: false,
       }
     }
-  ], // 여러 소셜 계정을 연결할 수 있는 배열
+  ],
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
   },
-  profileIcon: { // 프로필 아이콘 url 혹은 선택한 아이콘 정보
+  profileIcon: {
     type: String,
     default: 'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg'
   },
@@ -91,11 +91,11 @@ const UserSchema = new mongoose.Schema({
     default: false,
   },
   otpSecret: {
-    type: String, // OTP 설정 시 사용되는 비밀키
+    type: String,
     required: false,
   },
   createdAt: {
-    type: Date, // 유저 생성 시 자동으로 현재 시간 저장
+    type: Date,
     default: Date.now,
   },
   lastActivity: {
@@ -104,7 +104,7 @@ const UserSchema = new mongoose.Schema({
     required: false,
   }
 }, {
-  versionKey: false // __v 필드 비활성화
+  versionKey: false
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

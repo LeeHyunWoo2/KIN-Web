@@ -1,4 +1,4 @@
-import {recordVisitor} from "@/services/visitorAPIService";
+import {recordVisitorInfo} from "@/services/visitorAPIService";
 
 const VISIT_EXPIRY = 60 * 60 * 1000;
 
@@ -29,11 +29,12 @@ const getLocalStorageWithExpiry = (key) => {
 };
 
 const checkVisitor = async () => {
+  if (process.env.NODE_ENV === "development") return;
   const lastVisitTime = getLocalStorageWithExpiry("lastVisitTime");
 
   if (lastVisitTime) return;
 
-  await recordVisitor();
+  await recordVisitorInfo();
 
   // 1시간 후 다시 요청할 수 있도록 저장
   setLocalStorageWithExpiry("lastVisitTime", Date.now(), VISIT_EXPIRY);

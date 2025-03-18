@@ -1,6 +1,6 @@
 import zlib from 'zlib';
 
-// mode 필드에 따라서 알맞은 압축, 해제 함수 호출, 별도의 모드가 추가로 생긴다면 switch로 변경하기
+// 별도의 모드가 더 추가 될 경우 switch로 변경할것
 export const getCompressor = (mode) => {
   return mode === 'editor' ? compressEditorContent : compressTextContent;
 }
@@ -27,6 +27,7 @@ const decompressEditorContent = (compressedContent) => {
   }
 };
 
+// 일관성을 위해 텍스트 변환 함수도 추가함 (추후 일괄 암호화 기능 대비)
 const compressTextContent = (content) => {
   try {
     return zlib.gzipSync(Buffer.from(String(content), 'utf-8'));

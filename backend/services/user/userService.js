@@ -7,10 +7,10 @@ const tokenService = require('./tokenService');
 const {revokeSocialAccess} = require('./socialService'); // 연동 해제를 위한 서비스 호출
 const redisClient = require('../../config/redis');
 
-// 사용자 공개 데이터 조회
+// 공개 프로필 데이터 조회
 const getUserPublicProfile = async (userId) => {
   try {
-    // Redis에서 프로필 정보 조회
+    // 우선 Redis에서 조회
     const cachedProfile = await redisClient.get(`publicProfile:${userId}`);
     if (cachedProfile) {
       return JSON.parse(cachedProfile);
@@ -30,12 +30,12 @@ const getUserPublicProfile = async (userId) => {
       role: user.role,
     };
 
-    // Redis에 프로필 정보 저장 (TTL: 1시간)
+    // Redis에 프로필 정보 저장
     await redisClient.set(
         `publicProfile:${userId}`,
         JSON.stringify(publicProfile),
         'EX',
-        3600 // 1시간
+        3600
     );
 
     return publicProfile;
@@ -54,7 +54,7 @@ const getUserById = async (userId) => {
   return user;
 };
 
-// 사용자 정보 조회 (아이디, 비밀번호 찾기 전용)
+// 이메일 중복확인 및 아이디 비번 찾기
 const getUserByInput = async (inputData) => {
   const {input, inputType} = inputData;
   let user;
@@ -87,16 +87,13 @@ const updateUser = async (userId, updateData) => {
     }
     await user.save();
 
-    // redis에서 유저 정보 ttl 로드
     const redisKey = `publicProfile:${userId}`;
     const ttl = await redisClient.ttl(redisKey);
 
-    // redis 기존 데이터 로드
     const cachedProfile = await redisClient.get(redisKey);
-    let updatedProfile = {}; // 업데이트용 빈객체
+    let updatedProfile = {};
 
     if (cachedProfile) {
-      // 기존 데이터가 있으면 병합
       const parsedProfile = JSON.parse(cachedProfile);
       updatedProfile = {
         ...parsedProfile,
@@ -104,7 +101,6 @@ const updateUser = async (userId, updateData) => {
         profileIcon: updateData.profileIcon || parsedProfile.profileIcon,
       };
     } else {
-      // 기존 데이터가 없으면 생성 (절묘하게 ttl 만기될수도 있기 때문에)
       updatedProfile = {
         name: user.name,
         email: user.email,
@@ -112,7 +108,6 @@ const updateUser = async (userId, updateData) => {
       };
     }
 
-    // Redis에 수정된 데이터 저장 (기존 TTL 유지)
     await redisClient.set(redisKey, JSON.stringify(updatedProfile));
     if (ttl > 0) {
       await redisClient.expire(redisKey, ttl);
@@ -125,6 +120,7 @@ const updateUser = async (userId, updateData) => {
   }
 };
 
+// ~일전 날짜 포맷팅 함수
 const calculateDateDifference = (pastDate) => {
   const now = new Date();
   const diffInMs = now - pastDate;
@@ -144,7 +140,7 @@ const calculateDateDifference = (pastDate) => {
   }
 };
 
-// 비밀번호 변경
+// 비밀번호 변경 (비밀번호 찾기)
 const resetPassword = async (newPassword, email) => {
   try {
     const user = await User.findOne({email});
@@ -154,7 +150,6 @@ const resetPassword = async (newPassword, email) => {
       throw error;
     }
 
-    // 현재 비밀번호와 중복되는지 확인
     const isCurrentPassword = await bcrypt.compare(newPassword, user.password);
     if (isCurrentPassword) {
       const error = new Error("현재 사용 중인 비밀번호와 다른 비밀번호를 입력해주세요.");
@@ -162,7 +157,6 @@ const resetPassword = async (newPassword, email) => {
       throw error;
     }
 
-    // 과거 비밀번호 중복 검사
     const duplicateRecord = user.passwordHistory.find(record =>
         bcrypt.compareSync(newPassword, record.password)
     );
@@ -173,7 +167,6 @@ const resetPassword = async (newPassword, email) => {
       throw error;
     }
 
-    // 새 비밀번호 해싱 및 저장
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
 
@@ -211,7 +204,6 @@ const addLocalAccount = async (userId, id, email, password) => {
   await user.save();
 };
 
-// 회원 탈퇴
 const deleteUserById = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {

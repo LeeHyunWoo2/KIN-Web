@@ -3,6 +3,7 @@ const { Strategy: KakaoStrategy } = require('passport-kakao');
 const { Strategy: NaverStrategy } = require('passport-naver');
 const User = require('../../models/user');
 
+// 소셜 추가연동 passport.js 인증 전략
 const configureLinkingStrategies = (passport) => {
 // Google 연동 전략
   passport.use('google-link', new GoogleStrategy({

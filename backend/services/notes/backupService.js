@@ -49,7 +49,6 @@ const createGoogleDriveFolder = async (parentFolderId, folderName) => {
 // 구글 드라이브 하위 폴더 확인, 없으면 생성
 const getOrCreateGoogleDriveFolder = async (parentFolderId, folderName) => {
   try {
-    // 해당 이름의 폴더가 이미 존재하는지 확인
     const response = await drive.files.list({
       q: `'${parentFolderId}' in parents and name='${folderName}' and mimeType='application/vnd.google-apps.folder'`,
       fields: 'files(id, name)',
@@ -59,8 +58,7 @@ const getOrCreateGoogleDriveFolder = async (parentFolderId, folderName) => {
       console.log(`구글 드라이브 폴더 확인: ${folderName} (${response.data.files[0].id})`);
       return response.data.files[0].id;
     }
-
-    // 존재하지 않으면 새로 생성
+    
     return await createGoogleDriveFolder(parentFolderId, folderName);
   } catch (error) {
     console.error(`구글 드라이브 폴더 확인 실패 (${folderName}):`, error.message);
@@ -69,7 +67,7 @@ const getOrCreateGoogleDriveFolder = async (parentFolderId, folderName) => {
 };
 
 
-//오래된 백업 파일 정리 함수
+//오래된 백업 파일 정리
 const cleanupOldBackups = async (folderPath, googleDriveFolderId) => {
   // 로컬 백업 정리
   const files = fs.readdirSync(folderPath).filter((file) => file.endsWith('.json'));
@@ -96,7 +94,7 @@ const cleanupOldBackups = async (folderPath, googleDriveFolderId) => {
   }
 };
 
-// 구글 드라이브 파일 업로드 함수
+// 구글 드라이브 파일 업로드
 const uploadToGoogleDrive = async (filePath, folderId) => {
   try {
     const fileMetadata = {
@@ -121,19 +119,18 @@ const uploadToGoogleDrive = async (filePath, folderId) => {
   }
 };
 
-// DB 백업 실행 함수
+// DB 백업 실행
 const backupDatabase = async () => {
-  // 그냥 connect 해버리면 기존 인스턴스랑 겹쳐서 종료할때 기존것도 종료됨.
-  // 따라서 createConnection 을 사용해 별도의 인스턴스를 생성해야함
+  // 기존 연결과 겹치지 않도록 별도의 MongoDB 연결 인스턴스 생성
   const backupConnection = mongoose.createConnection(MONGO_URI);
 
   try {
     console.log('백업용 MongoDB 연결 성공');
     const date = new Date(Date.now())
     .toISOString()
-    .replace(/T/, '_') // 날짜와 시간을 구분
-    .replace(/:/g, '-') // 윈도우 이슈로 ':'을 '-'로 교체
-    .split('.')[0]; // 초 이하 제거;
+    .replace(/T/, '_')
+    .replace(/:/g, '-')
+    .split('.')[0];
 
     // 모델별로 로컬 및 구글 드라이브 폴더 생성 및 백업
     const models = { Note, User, Category, Tag };
@@ -152,7 +149,6 @@ const backupDatabase = async () => {
 
       await uploadToGoogleDrive(backupFilePath, googleDriveFolderId);
 
-      // 오래된 백업 정리
       await cleanupOldBackups(localFolderPath, googleDriveFolderId);
     }
   } catch (error) {

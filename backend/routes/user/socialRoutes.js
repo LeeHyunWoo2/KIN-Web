@@ -20,9 +20,9 @@ router.get('/:provider', (req, res, next) => {
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(provider, {
       scope: providers[provider].scope,
-      accessType: 'offline', // 리프레시 토큰 발급 요청
+      accessType: 'offline', // 리프레시 토큰 발급 요청 (연동 해제할때 사용함)
       prompt: 'consent' // 매번 사용자 동의 요청
-    })(req, res, next); // 해당 provider로 인증 시작
+    })(req, res, next);
   } else {
     res.status(400).send();
   }
@@ -33,31 +33,26 @@ router.get('/:provider/callback', (req, res, next) => {
   const provider = req.params.provider;
   passport.authenticate(provider, { session: false }, async (error, user) => {
     if (error || !user) {
-      // 소셜 로그인을 시도할때 소셜 연동이 되진 않았으나,
-      // 동일한 이메일로 로컬 아이디를 가입한 상황이 발생할경우(매우 특수케이스)
       if(error.code === 11000){
         return res.redirect(
             `${process.env.FRONTEND_URL}/login?error=${encodeURIComponent(
                 "해당 이메일로 가입된 일반계정이 있습니다.")}`);
       }
-      return res.redirect(`${process.env.FRONTEND_URL}/login`); // 로그인 실패 시 리다이렉트
+      return res.redirect(`${process.env.FRONTEND_URL}/login`);
     }
 
     try {
-      // 토큰 발급
       const tokens = await tokenService.generateTokens(user);
-      // 토큰을 HTTP-Only 쿠키로 설정
-      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge, domain: 'noteapp.org' });
-      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge, domain: 'noteapp.org' });
 
-      // 로그인 성공 후 리다이렉트
+      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
+      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
+
       return res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
     } catch (error) {
       res.redirect(`${process.env.FRONTEND_URL}/login`);
     }
   })(req, res, next);
 });
-
 
 // 일반 계정에 소셜 계정 추가 연동
 router.get('/link/:provider', authenticateUser, (req, res, next) => {
@@ -66,9 +61,9 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
   if (['google', 'kakao', 'naver'].includes(provider)) {
     passport.authenticate(providers[provider].strategy, {
       scope: providers[provider].scope,
-      accessType: 'offline', // OAuth 2.0 refreshToken 요청 (구글때문에)
-      prompt: 'consent' // 매번 사용자 동의 요청
-    })(req, res, next); // 해당 provider로 인증 시작
+      accessType: 'offline',
+      prompt: 'consent'
+    })(req, res, next);
   } else {
     res.status(400).send();
   }
@@ -80,13 +75,11 @@ router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
 
   passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (error) => {
     if (error) {
-      // 에러 발생 시 메시지 포함
       return res.redirect(`${process.env.FRONTEND_URL}/userinfo?error=${encodeURIComponent("이미 연동된 계정입니다.")}`);
     }
     res.redirect(`${process.env.FRONTEND_URL}/userinfo`);
   })(req, res, next);
 });
-
 
 // 소셜 계정 연동 해제
 router.delete('/:provider', authenticateUser, unlinkSocialAccount);

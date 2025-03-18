@@ -6,8 +6,8 @@ const NoteSchema = new mongoose.Schema({
     default: '',
   },
   content: {
-    type: Buffer, // 바이너리 데이터를 저장하는 Buffer 타입 필드
-    default: Buffer.alloc(0), // 빈 Buffer 를 기본값으로 설정
+    type: Buffer, // 바이너리
+    default: Buffer.alloc(0),
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,11 +21,11 @@ const NoteSchema = new mongoose.Schema({
   category: {
     _id: {
       type: mongoose.Schema.Types.ObjectId,
-      default: null, // 카테고리가 없는 경우 null
+      default: null,
     },
     name: {
       type: String,
-      default: '', // 카테고리 이름이 없는 경우 빈 문자열
+      default: '',
     },
   },
   tags: {
@@ -40,12 +40,12 @@ const NoteSchema = new mongoose.Schema({
         }
       }
     ],
-    default: [], // 태그가 없는 경우 빈 배열
+    default: [],
   },
   mode: {
     type: String,
     enum: ["editor", "text"],
-    default: "editor", // 기본값 에디터 모드
+    default: "editor",
   },
   created_at: {
     type: Date,
