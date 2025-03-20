@@ -12,7 +12,7 @@ import VisitorList from "@/components/admin/VIsitorList";
 import { getVisitorList } from "@/services/visitorAPIService"
 
 function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState({id:"users", title:"사용자 관리"})
+  const [activeTab, setActiveTab] = useState({id:"visitors", title:"방문자 목록"})
   const [visitors, setVisitors] = useState([]);
 
 
@@ -39,7 +39,7 @@ function AdminDashboard() {
       case "visitors":
         return <VisitorList visitors={visitors}/>
       default:
-        return <UserManagement />
+        return <VisitorList visitors={visitors}/>
     }
   }
 
