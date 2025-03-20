@@ -37,6 +37,7 @@ const dimg = {
       tooManyConnection: require('../../public/images/docs/security/websocketproxy/tooManyConnection.PNG'),
     }
   },
+  backendSpec: require('../../public/images/docs/백엔드서버상태.png'),
   architecture: {
     image: require('../../public/images/docs/architecture.png'),
     diagram: require('../../public/images/docs/architecture-diagram.svg'),
