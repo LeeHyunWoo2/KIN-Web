@@ -66,7 +66,7 @@ export default function NoteList({notes}) {
       if (content.children && Array.isArray(content.children)) {
         return content.children.map((child) => child.text || "").join("");
       }
-      return ""; // children이 없으면 빈 문자열 반환
+      return "";
     })
     .join(" "); // 섹션 간 텍스트는 공백으로 이어붙임
   };

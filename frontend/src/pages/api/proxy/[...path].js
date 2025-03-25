@@ -23,8 +23,8 @@ export default async function handler(req, res) {
     const queryString = new URLSearchParams(query).toString();
     const url = `${backendUrl}/${path.join("/")}${queryString ? `?${queryString}` : ""}`;
 
-    // KR만 방문자 명단에 저장
-    if (path[0] === "visitor" && method !== "GET" && req.headers["cf-ipcountry"] !== "KR") return res.status(200).end();
+    // KR만 방문자 명단에 저장 (코드는 혹시모르니 남겨둠)
+    // if (path[0] === "visitor" && method !== "GET" && req.headers["cf-ipcountry"] !== "KR") return res.status(200).end();
 
     // axios 백엔드 요청
     const response = await axios({

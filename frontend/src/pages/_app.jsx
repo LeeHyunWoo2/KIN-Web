@@ -7,7 +7,7 @@ import 'nprogress/nprogress.css';
 import Head from 'next/head';
 import {Toaster} from 'sonner';
 import {setupInterceptors} from "@/lib/interceptors";
-import checkVisitor from "@/lib/checkVisitor";
+import {checkVisitor, companyTrace} from "@/lib/checkVisitor";
 import '@/styles/code-block-element.css';
 import { authAtom } from "@/atoms/userState";
 import {useAtom} from "jotai";
@@ -30,6 +30,33 @@ function App({Component, pageProps}) {
   useEffect(() => {
     checkVisitor();
   }, []);
+
+  // 추적함수 실행
+  useEffect(() => {
+    let startTime = Date.now();
+    let trackUrl = router.asPath;
+    const handleRouteChange = () => {
+      const endTime = Date.now();
+      const stayDuration = endTime - startTime;
+      companyTrace(stayDuration, trackUrl);
+      startTime = Date.now();
+      trackUrl = router.asPath;
+    };
+    const handleUnload = () => {
+      const endTime = Date.now();
+      const stayDuration = endTime - startTime;
+
+      // 라우팅 없이 떠난 경우 referrer 기반으로 기록
+      const fallbackUrl = "/" + (document.referrer?.split("/")[3] || "");
+      companyTrace(stayDuration, fallbackUrl);
+    };
+    router.events.on("routeChangeStart", handleRouteChange);
+    window.addEventListener("beforeunload", handleUnload);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, [router])
 
   // 페이지 로드 시 localStorage와 authAtom 동기화
   useEffect(() => {

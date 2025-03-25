@@ -1,6 +1,6 @@
 const tokenService = require('../../services/user/tokenService');
 const redisClient = require('../../config/redis');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 
 const checkSession = async (req, res) => {
   try {

@@ -64,4 +64,4 @@ const SearchFilter = () => {
   );
 };
 
-export {ListView, TrashFilter, SearchFilter}; // 구조 분해 할당 방식
+export {ListView, TrashFilter, SearchFilter};

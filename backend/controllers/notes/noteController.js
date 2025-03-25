@@ -1,6 +1,6 @@
 const noteService = require('../../services/notes/noteService');
 const mongoose = require("mongoose");
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 const { ObjectId } = mongoose.Types;
 
 exports.getNotes = async (req, res) => {
