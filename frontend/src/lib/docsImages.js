@@ -43,7 +43,6 @@ const dimg = {
     diagram: require('../../public/images/docs/architecture-diagram.svg'),
   },
   tracking: {
-    mail: require('../../public/images/docs/메일.png'),
     logs: require('../../public/images/docs/기록.png'),
     flowchart: require('../../public/images/docs/추적로직.png'),
   },
