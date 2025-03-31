@@ -1,6 +1,6 @@
 const authService = require('../../services/user/authService');
 const tokenService = require('../../services/user/tokenService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 const setCookie = require("../../utils/setCookie");
 const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const jwt = require('jsonwebtoken');

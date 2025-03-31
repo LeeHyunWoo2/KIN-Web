@@ -95,7 +95,7 @@
     "jotai": "^2.10.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.453.0",
-    "next": "15.0.1",
+    "next": "^15.2.4",
     "next-themes": "^0.3.0",
     "nextra": "^3.1.0-canary.1",
     "nextra-theme-docs": "^3.1.0-canary.1",

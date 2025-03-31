@@ -23,6 +23,19 @@ const visitorSchema = new mongoose.Schema({
     required: true,
     default: "KR"
   },
+  userAgent: String,
+  referrer: String,
+  path: String,
+  tracking:[
+    {
+      path: String,
+      stay: Number,
+      visitedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
   device: {
     type: String
   },

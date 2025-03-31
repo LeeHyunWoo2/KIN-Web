@@ -1,5 +1,5 @@
 const categoryService = require('../../services/notes/categoryService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 const Category = require("../../models/category");
 const Note = require("../../models/note");
 

@@ -1,5 +1,5 @@
 const socialService = require('../../services/user/socialService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 
 // 소셜 계정 연동 해제
 const unlinkSocialAccount = async (req, res) => {

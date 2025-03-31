@@ -1,5 +1,5 @@
 const syncService = require('../../services/user/syncService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 const {getNotes} = require("../../services/notes/noteService");
 const {getCategories} = require("../../services/notes/categoryService");
 const {getTags} = require("../../services/notes/tagService");

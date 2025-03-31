@@ -6,7 +6,7 @@ export function Sidebar({activeTab, setActiveTab}) {
   const [show, setShow] = react.useState(false);
 
   return (
-      <aside className="w-64 bg-gray-100 p-4 hidden md:block">
+      <aside className="w-64 bg-gray-100 p-4">
         <nav className="space-y-2">
           {show &&
               <>
@@ -17,7 +17,8 @@ export function Sidebar({activeTab, setActiveTab}) {
                 >
                   <Users className="mr-2 h-4 w-4"/>
                   사용자 관리
-                </Button><Button
+                </Button>
+                <Button
                   variant={activeTab.id === "stats" ? "default" : "ghost"}
                   className="w-full justify-start"
                   onClick={() => setActiveTab(
@@ -25,7 +26,8 @@ export function Sidebar({activeTab, setActiveTab}) {
               >
                 <BarChart2 className="mr-2 h-4 w-4"/>
                 통계 및 모니터링
-              </Button><Button
+              </Button>
+                <Button
                   variant={activeTab.id === "notices" ? "default" : "ghost"}
                   className="w-full justify-start"
                   onClick={() => setActiveTab(
@@ -33,7 +35,8 @@ export function Sidebar({activeTab, setActiveTab}) {
               >
                 <Settings className="mr-2 h-4 w-4"/>
                 공지 및 설정
-              </Button><Button
+              </Button>
+                <Button
                   variant={activeTab.id === "feedback" ? "default" : "ghost"}
                   className="w-full justify-start"
                   onClick={() => setActiveTab(

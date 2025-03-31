@@ -1,5 +1,5 @@
 const tagService = require('../../services/notes/tagService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 
 exports.createTag = async (req, res) => {
   try {

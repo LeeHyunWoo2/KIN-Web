@@ -22,6 +22,7 @@ export default {
   techStack: "기술 스택",
   directory: "프로젝트 디렉토리 구조",
   architecture: "인프라 아키텍처",
+  'visitor-tracking': "방문자 추적",
   'Features': {
     title: (
         <Separator>

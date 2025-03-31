@@ -1,5 +1,5 @@
 const visitorService = require("../../services/visitor/visitorService");
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 
 // 관리자용
 const getVisitorListController = async (req, res) => {
@@ -16,18 +16,15 @@ const getVisitorListController = async (req, res) => {
 
 const recordVisitorInfoController = async (req, res) => {
   try {
-    const {visitorId} = req.body;
-    const ip = req.headers["cf-connecting-ip"];
-    const country = req.headers["cf-ipcountry"];
-    const device = req.headers["sec-ch-ua-platform"];
-    const browser = req.headers["sec-ch-ua"];
+    const {visitorId, path} = req.body;
+    const ip = req.headers["cf-connecting-ip"] || "localhost";
+    const country = req.headers["cf-ipcountry"] || "unknown";
+    const device = req.headers["sec-ch-ua-platform"] || "unknown";
+    const browser = req.headers["sec-ch-ua"] || "unknown";
+    const userAgent = req.headers["user-agent"] || "unknown";
+    const referrer = req.headers["referer"] || "direct";
 
-    if (country !== "KR") {
-      return res.status(200).end();
-    }
-
-    await visitorService.recordVisitorInfo(
-        {visitorId, ip, country, device, browser});
+    await visitorService.recordVisitorInfo({visitorId, ip, country, device, browser, userAgent, referrer, path});
     res.status(201).end();
   } catch (error) {
     const {statusCode, message} = createErrorResponse(error.status || 500,
@@ -36,4 +33,23 @@ const recordVisitorInfoController = async (req, res) => {
   }
 };
 
-module.exports = {getVisitorListController, recordVisitorInfoController};
+const trackVisitorActivityController = async (req, res) => {
+  try {
+    const { visitorId, stayDuration, trackUrl, visitedAt } = req.body;
+    await visitorService.trackVisitorActivity({
+      visitorId,
+      stayDuration,
+      trackUrl,
+      visitedAt,
+    });
+    res.status(200).end();
+  } catch (error) {
+    const { statusCode, message } = createErrorResponse(
+        error.status || 500,
+        error.message || "트래킹 데이터 저장 중 오류 발생"
+    );
+    res.status(statusCode).json({ message, skipToast: true });
+  }
+};
+
+module.exports = {getVisitorListController, recordVisitorInfoController, trackVisitorActivityController};

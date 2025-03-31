@@ -11,7 +11,7 @@ export const getVisitorList = async () => {
   }
 }
 
-export const recordVisitorInfo = async () => {
+export const recordVisitorInfo = async (path = "/") => {
   let visitorId = localStorage.getItem("visitorId");
   if (!visitorId) {
     visitorId = uuidv4();
@@ -19,8 +19,23 @@ export const recordVisitorInfo = async () => {
   }
 
   try {
-    await apiClient.post("/visitor", { visitorId });
+    await apiClient.post("/visitor", { visitorId, path });
   } catch (error) {
     console.error("방문 기록 저장 실패:", error);
+  }
+};
+
+
+export const sendTrackingData = async (data) => {
+  const visitorId = localStorage.getItem("visitorId");
+  if (!visitorId) return;
+
+  try {
+    await apiClient.put("/visitor", {
+      visitorId,
+      ...data,
+    });
+  } catch (error) {
+    console.error("트래킹 데이터 전송 실패:", error);
   }
 };

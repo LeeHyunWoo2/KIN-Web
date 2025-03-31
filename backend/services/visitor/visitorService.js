@@ -1,10 +1,10 @@
 const Visitor = require("../../models/visitor");
 
 const getVisitorList = async () =>{
-  return Visitor.find().sort({lastVisit: -1}).select("visitorId visitCount lastVisit ipHistory device browser");
+  return Visitor.find().sort({lastVisit: -1}).select("visitorId visitCount lastVisit ipHistory device country browser userAgent tracking path");
 }
 
-const recordVisitorInfo = async ({ visitorId, ip, country, device, browser }) => {
+const recordVisitorInfo = async ({ visitorId, ip, country, device, browser, userAgent, referrer, path }) => {
   const existingVisitor = await Visitor.findOne({ visitorId });
 
   if (existingVisitor) {
@@ -26,6 +26,9 @@ const recordVisitorInfo = async ({ visitorId, ip, country, device, browser }) =>
     country,
     device,
     browser,
+    userAgent,
+    referrer,
+    path,
     visitCount: 1,
     lastVisit: new Date(),
   });
@@ -34,4 +37,19 @@ const recordVisitorInfo = async ({ visitorId, ip, country, device, browser }) =>
   return null;
 };
 
-module.exports = { getVisitorList ,recordVisitorInfo };
+const trackVisitorActivity = async ({ visitorId, stayDuration, trackUrl, visitedAt }) => {
+  const visitor = await Visitor.findOne({ visitorId });
+  if (!visitor) return;
+
+  visitor.tracking = visitor.tracking || [];
+
+  visitor.tracking.push({
+    path: trackUrl,
+    stay: stayDuration,
+    visitedAt: visitedAt ? new Date(visitedAt) : new Date(),
+  });
+  if (visitor.tracking.length > 100) visitor.tracking.shift();
+  await visitor.save();
+};
+
+module.exports = { getVisitorList ,recordVisitorInfo, trackVisitorActivity };

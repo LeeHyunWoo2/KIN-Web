@@ -1,5 +1,5 @@
 const emailService = require('../../services/user/emailService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 
 const verifyEmail = async (req, res) => {
   const {token} = req.query;

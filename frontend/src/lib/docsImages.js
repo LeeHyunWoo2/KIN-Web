@@ -42,6 +42,10 @@ const dimg = {
     image: require('../../public/images/docs/architecture.png'),
     diagram: require('../../public/images/docs/architecture-diagram.svg'),
   },
+  tracking: {
+    logs: require('../../public/images/docs/기록.png'),
+    flowchart: require('../../public/images/docs/추적로직.png'),
+  },
   font: {
     uxBefore: require('../../public/images/docs/fontUXbefore.gif'),
     uxAfter: require('../../public/images/docs/fontUXafter.gif'),

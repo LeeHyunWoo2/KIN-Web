@@ -11,6 +11,7 @@ const withNextra = nextra({
 
 const nextConfig = {
   reactStrictMode: false,
+  devIndicators: false,
   async rewrites() {
     return [
       {

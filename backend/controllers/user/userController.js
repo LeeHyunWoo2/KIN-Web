@@ -1,5 +1,5 @@
 const userService = require('../../services/user/userService');
-const {createErrorResponse} = require("../../middleware/errorFormat");
+const {createErrorResponse} = require("../../utils/errorFormat");
 const jwt = require("jsonwebtoken");
 const tokenService = require("../../services/user/tokenService");
 
