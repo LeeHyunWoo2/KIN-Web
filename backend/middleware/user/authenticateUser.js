@@ -1,57 +1,44 @@
 const jwt = require('jsonwebtoken');
 const redisClient = require('../../config/redis');
-const cache = new Map();
 
-// 유저 토큰 유효성 검사 및 유저 데이터 확인 미들웨어
+// 블랙리스트 토큰 확인 함수
+const isBlacklisted = async (token) => {
+  return !!(await redisClient.get(`blacklist:${token}`));
+};
+
+// 인증 미들웨어
 const authenticateUser = async (req, res, next) => {
+  const skipInterceptor = req.headers['x-skip-interceptor'] || false;
+
   try {
-    const token = req.cookies.accessToken;
-    const skipInterceptor = req.headers['x-skip-interceptor'] || false;
+    const token = req.cookies?.accessToken;
 
     if (!token) {
       if (skipInterceptor) {
-        // x-skip-interceptor 헤더가 있으면 패스
         req.user = null;
         return next();
       }
-      return res.status(401).json();
+      return res.status(401).json({ message: 'Access token missing.' });
     }
 
-    const isInvalidated = await redisClient.get(`blacklist:${token}`);
-    if (isInvalidated) {
-      return res.status(401).json({ message: 'Access denied.' });
+    if (await isBlacklisted(token)) {
+      return res.status(401).json({ message: 'Access denied (blacklisted).' });
     }
 
-    const cached = cache.get(token);
-    if (cached && cached.expires > Date.now()) {
-      req.user = cached.user;
-      return next();
-    }
+    const user = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ['HS256'], // 알고리즘 고정
+    });
 
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-
-    cache.set(token, { user, expires: Date.now() + 1000 });
-
-    req.user = user; // 요청 데이터에 유저 정보를 추가해서 넘김
+    req.user = user;
     next();
   } catch (error) {
-    const skipInterceptor = req.headers['x-skip-interceptor'] || false;
+    console.error('JWT 인증 실패:', error.message);
     if (skipInterceptor) {
       req.user = null;
       return next();
     }
-    return res.status(401).json();
+    return res.status(401).json({ message: 'Invalid or expired token.' });
   }
 };
-
-// 주기적으로 캐시 정리
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, value] of cache.entries()) {
-    if (value.expires <= now) {
-      cache.delete(key);
-    }
-  }
-}, 5000);
 
 module.exports = authenticateUser;

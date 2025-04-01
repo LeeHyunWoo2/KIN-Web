@@ -4,9 +4,9 @@ const { unlinkSocialAccount } = require('../../controllers/user/socialController
 const tokenService = require('../../services/user/tokenService');
 const authenticateUser = require('../../middleware/user/authenticateUser');
 const setCookie = require("../../utils/setCookie");
-const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const router = express.Router();
 
+const accessTokenMaxAge = process.env.JWT_EXPIRATION * 1000;
 
 const providers = {
   google: { scope: ['profile', 'email'], strategy: 'google-link' },
@@ -44,8 +44,14 @@ router.get('/:provider/callback', (req, res, next) => {
     try {
       const tokens = await tokenService.generateTokens(user);
 
-      setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
-      setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge, domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined });
+      setCookie(res, 'accessToken', tokens.accessToken, {
+        maxAge: accessTokenMaxAge,
+        domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined
+      });
+      setCookie(res, 'refreshToken', tokens.refreshToken, {
+        maxAge: tokens.refreshTokenTTL * 1000,
+        domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined
+      });
 
       return res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
     } catch (error) {

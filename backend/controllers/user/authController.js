@@ -2,8 +2,9 @@ const authService = require('../../services/user/authService');
 const tokenService = require('../../services/user/tokenService');
 const {createErrorResponse} = require("../../utils/errorFormat");
 const setCookie = require("../../utils/setCookie");
-const {accessTokenMaxAge, refreshTokenMaxAge} = require("../../config/cookie");
 const jwt = require('jsonwebtoken');
+
+const accessTokenMaxAge = process.env.JWT_EXPIRATION * 1000;
 
 const registerController = async (req, res) => {
   try {
@@ -24,9 +25,9 @@ const loginController = async (req, res) => {
     const { id, password, rememberMe } = req.body;
 
     const { user, tokens } = await authService.loginUser(id, password, rememberMe);
-
+    console.log(accessTokenMaxAge)
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
-    setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
+    setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: tokens.refreshTokenTTL * 1000 });
 
     res.status(200).json({user});
   } catch (error) {
@@ -67,7 +68,7 @@ const renewTokenController = async (req, res) => {
     const tokens = await tokenService.generateTokens(user, decodedData.rememberMe, decodedData.ttl);
 
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
-    setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: refreshTokenMaxAge });
+    setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: tokens.refreshTokenTTL * 1000 });
 
     res.status(200).json({tokens});
   } catch (error) {
