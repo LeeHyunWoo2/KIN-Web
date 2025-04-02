@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../../controllers/notes/categoryController');
-const authenticateUser = require('../../middleware/user/authenticateUser');
+const injectAuthenticatedUser = require('../../middleware/user/injectAuthenticatedUser');
 
-router.get('/', authenticateUser, categoryController.getCategories);
+router.get('/', injectAuthenticatedUser, categoryController.getCategories);
 
-router.post('/', authenticateUser, categoryController.createCategory);
+router.post('/', injectAuthenticatedUser, categoryController.createCategory);
 
-router.put('/:categoryId', authenticateUser, categoryController.updateCategory);
+router.put('/:categoryId', injectAuthenticatedUser, categoryController.updateCategory);
 
-router.delete('/', authenticateUser, categoryController.deleteCategory);
+router.delete('/', injectAuthenticatedUser, categoryController.deleteCategory);
 
 module.exports = router;

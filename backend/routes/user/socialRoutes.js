@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const { unlinkSocialAccount } = require('../../controllers/user/socialController');
 const tokenService = require('../../services/user/tokenService');
-const authenticateUser = require('../../middleware/user/authenticateUser');
+const injectAuthenticatedUser = require('../../middleware/user/injectAuthenticatedUser');
 const setCookie = require("../../utils/setCookie");
 const router = express.Router();
 
@@ -61,7 +61,7 @@ router.get('/:provider/callback', (req, res, next) => {
 });
 
 // 일반 계정에 소셜 계정 추가 연동
-router.get('/link/:provider', authenticateUser, (req, res, next) => {
+router.get('/link/:provider', injectAuthenticatedUser, (req, res, next) => {
   const provider = req.params.provider;
 
   if (['google', 'kakao', 'naver'].includes(provider)) {
@@ -76,7 +76,7 @@ router.get('/link/:provider', authenticateUser, (req, res, next) => {
 });
 
 // 추가 연동 콜백
-router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
+router.get('/link/:provider/callback', injectAuthenticatedUser, (req, res, next) => {
   const provider = req.params.provider;
 
   passport.authenticate(providers[provider].strategy, { failureRedirect: '/userinfo' }, (error) => {
@@ -88,6 +88,6 @@ router.get('/link/:provider/callback', authenticateUser, (req, res, next) => {
 });
 
 // 소셜 계정 연동 해제
-router.delete('/:provider', authenticateUser, unlinkSocialAccount);
+router.delete('/:provider', injectAuthenticatedUser, unlinkSocialAccount);
 
 module.exports = router;

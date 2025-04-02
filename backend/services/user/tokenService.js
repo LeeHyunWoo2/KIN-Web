@@ -43,14 +43,33 @@ const generateTokens = async (user, rememberMe = false, existingTTL = null) => {
   return {accessToken, refreshToken, refreshTokenTTL};
 };
 
-// JWT 검증
-const verifyToken = (token, secret = JWT_SECRET) => {
+// 액세스 토큰 검증
+const verifyAccessToken = async (accessToken) => {
+  if (!accessToken) {
+    const err = new Error('Access Denied.');
+    err.code = 'TOKEN_MISSING';
+    throw err;
+  }
+
+  const isBlacklisted = await redisClient.get(`blacklist:${accessToken}`);
+  if (isBlacklisted) {
+    const err = new Error('Access Denied.');
+    err.code = 'TOKEN_BLACKLISTED';
+    throw err;
+  }
+
   try {
-    return jwt.verify(token, secret);
+    const decoded = jwt.verify(accessToken, JWT_SECRET, {
+      algorithms: ['HS256'], // 알고리즘 고정
+    });
+    return decoded;
   } catch (error) {
-    return null;
+    const err = new Error('Access Denied.');
+    err.code = 'TOKEN_INVALID';
+    throw err;
   }
 };
+
 
 // 리프레시 토큰 검증
 const verifyRefreshToken = async (refreshToken) => {
@@ -203,7 +222,7 @@ const isAccessTokenInvalidated = async (accessToken) => {
 
 module.exports = {
   generateTokens,
-  verifyToken,
+  verifyAccessToken,
   verifyRefreshToken,
   generateOAuthToken,
   generateEmailVerificationToken,

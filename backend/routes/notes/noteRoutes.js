@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const noteController = require('../../controllers/notes/noteController');
-const authenticateUser = require('../../middleware/user/authenticateUser');
+const injectAuthenticatedUser = require('../../middleware/user/injectAuthenticatedUser');
 
-router.get('/', authenticateUser, noteController.getNotes);
+router.get('/', injectAuthenticatedUser, noteController.getNotes);
 
-router.post('/', authenticateUser, noteController.createNote);
+router.post('/', injectAuthenticatedUser, noteController.createNote);
 
-router.put('/', authenticateUser, noteController.updateNotes);
+router.put('/', injectAuthenticatedUser, noteController.updateNotes);
 
-router.delete('/', authenticateUser, noteController.deleteNotes);
+router.delete('/', injectAuthenticatedUser, noteController.deleteNotes);
 
 module.exports = router;

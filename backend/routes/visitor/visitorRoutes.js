@@ -1,9 +1,9 @@
 const express = require("express");
 const visitorController = require("../../controllers/visitor/visitorController");
-const authenticateUser = require("../../middleware/user/authenticateUser");
+const injectAuthenticatedUser = require("../../middleware/user/injectAuthenticatedUser");
 const router = express.Router();
 
-router.get("/", authenticateUser, visitorController.getVisitorListController);
+router.get("/", injectAuthenticatedUser, visitorController.getVisitorListController);
 
 router.post("/", visitorController.recordVisitorInfoController);
 

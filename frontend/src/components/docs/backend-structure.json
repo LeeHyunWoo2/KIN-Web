@@ -101,9 +101,9 @@
           "type": "folder",
           "children": [
             {
-              "name": "authenticateUser.js",
+              "name": "injectAuthenticatedUser.js",
               "type": "file",
-              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/authenticateUser.js"
+              "url": "https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/injectAuthenticatedUser.js"
             }
           ]
         },

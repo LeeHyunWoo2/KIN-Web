@@ -16,8 +16,8 @@
     - 클라이언트의 `interceptor`는 401 응답을 감지하면 자동으로 `refreshToken()`을 호출하고, 실패 시 로그아웃을 트리거하도록 되어 있음.
     - `/auth/session` 요청도 401 응답을 받을 경우 **자동으로 로그아웃 로직이 실행되면서 모달이 뜨기 전에 리다이렉트가 발생**.
 
-2. **백엔드의 `authenticateUser` 미들웨어 문제**
-    - `authenticateUser`는 세션이 만료된 경우 **무조건 401 응답을 반환**하도록 설계됨.
+2. **백엔드의 `injectAuthenticatedUser` 미들웨어 문제**
+    - `injectAuthenticatedUser`는 세션이 만료된 경우 **무조건 401 응답을 반환**하도록 설계됨.
     - 하지만 `/auth/session`은 UI 상태 확인을 위한 용도이므로, 다른 인증 요청과 동일하게 처리하면 안 됨.
 
 3. **모달을 통한 UX 흐름이 보호되지 않음**
@@ -29,7 +29,7 @@
 
 ```js filename="authRoutes.js"
 // 세션 유효성 체크
-router.get('/session', authenticateUser, checkSession);
+router.get('/session', injectAuthenticatedUser, checkSession);
 ```
 
 - 해당 요청의 흐름을 따라가면서 분기 작업을 해야 한다.
@@ -58,11 +58,11 @@ router.get('/session', authenticateUser, checkSession);
       };
 ```
 
-2. **백엔드 `authenticateUser` 미들웨어 수정**
+2. **백엔드 `injectAuthenticatedUser` 미들웨어 수정**
     - `x-skip-interceptor` 헤더가 포함된 요청에 대해 **401 응답을 반환하지 않고, `req.user = null` 상태로 요청을 통과**하도록 변경.
 
-```js filename="authenticateUser.js"
-  const authenticateUser = async (req, res, next) => {
+```js filename="injectAuthenticatedUser.js"
+  const injectAuthenticatedUser = async (req, res, next) => {
     try {
       const token = req.cookies.accessToken; // 쿠키에서 액세스 토큰 추출
       const skipInterceptor = req.headers['x-skip-interceptor'] || false;

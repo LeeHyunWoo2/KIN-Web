@@ -95,7 +95,7 @@
      - 이를 통해 프론트엔드에서 **로그인 방식별로 분기 처리를 할 필요가 없음.**
 
 5. **세션 검증 미들웨어를 거치도록 설계**
-   - 유저 데이터 요청 과정에서 토큰 갱신에 사용되던 세션 검증 미들웨어 [authenticateUser](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/authenticateUser.js) 를 통과하도록 조정함.
+   - 유저 데이터 요청 과정에서 토큰 갱신에 사용되던 세션 검증 미들웨어 [injectAuthenticatedUser](https://github.com/LeeHyunWoo2/KIN-Web/blob/main/backend/middleware/user/injectAuthenticatedUser.js) 를 통과하도록 조정함.
    - 이 과정에서 Redis를 통한 세션 검증 및 토큰 블랙리스트 확인이 이루어짐.
    - 결과적으로, 세션이 유효한 사용자만 로그인 상태를 유지할 수 있도록 보안이 더욱 강화됨.
 
