@@ -85,6 +85,7 @@ export default function NoteDisplay() {
   useEffect(() => {
     // 노트의 id가 변경됨을 감지하면 초기로드 플래그를 true로 변경함
     setIsInitialLoad(true);
+    console.log(selectedNoteState.category._id)
   }, [selectedNoteState._id])
 
   const handleTitleChange = (e) => {

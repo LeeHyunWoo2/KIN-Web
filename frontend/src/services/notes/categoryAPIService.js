@@ -64,7 +64,7 @@ export const deleteCategory = async (categoryId, categories) => {
 
   // 삭제 대상 하위 카테고리 ID 수집
   const childCategoryIds = getChildCategoryIds(categoryId, categories);
-  const categoryIdsToDelete = [...childCategoryIds, categoryId];
+  const categoryIdsToDelete = [...childCategoryIds];
 
   // 관련 노트 ID 수집
   const notesResult = await db.find({

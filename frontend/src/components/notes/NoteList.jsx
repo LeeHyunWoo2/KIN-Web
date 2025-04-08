@@ -18,7 +18,7 @@ import {
   saveNoteChangesAtom,
   selectedNoteStateAtom
 } from "@/atoms/noteStateAtom";
-import {FileType, FileCode, ArchiveRestore, ArchiveX} from "lucide-react";
+import {FileText, FileCode, ArchiveRestore, ArchiveX} from "lucide-react";
 
 export default function NoteList({notes}) {
   const router = useRouter();
@@ -121,13 +121,13 @@ export default function NoteList({notes}) {
                   >
                     <div className="flex w-full flex-col gap-1">
                       <div className="flex items-center">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          {note.mode === 'text' ? <FileText size={18} /> : <FileCode size={18} />}
                           <div className="font-semibold">
-                            {/*{note.mode === 'text' ? <FileType size={18} /> : <FileCode size={18} />}*/}
                             {note.title}
                           </div>
                           {note.is_pinned && (<span
-                              className="flex h-2 w-2 rounded-full bg-blue-500"/>)}
+                              className="flex ml-1 h-2 w-2 rounded-full bg-blue-500"/>)}
                         </div>
                       </div>
                     </div>
