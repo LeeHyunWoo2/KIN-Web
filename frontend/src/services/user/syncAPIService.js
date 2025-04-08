@@ -94,7 +94,7 @@ export async function checkAndSyncOnFirstLoad(forceReload = false) {
 // 통합 요청용 로컬 저장 함수
 async function saveDataToLocalDB(type, data, db) {
   // 기존 데이터 제거
-  const existingData = await db.find({selector: {type}});
+  const existingData = await db.find({selector: {type} ,limit: 2000});
   for (const item of existingData.docs) {
     await db.remove(item);
   }

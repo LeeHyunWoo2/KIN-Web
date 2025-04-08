@@ -89,7 +89,7 @@ export default function AuthenticationPage() {
   };
 
   const [formData, setFormData] = useState({
-    id: '',
+    username: '',
     idVerified: false,
     name: '',
     email: '',
@@ -102,7 +102,7 @@ export default function AuthenticationPage() {
   // 필수 필드들이 모두 채워졌는지 확인하는 함수
   const isFormValid = () => {
     const {
-      id,
+      username,
       idVerified,
       name,
       email,
@@ -114,7 +114,7 @@ export default function AuthenticationPage() {
       return termsAgreed;
     } else if (page === 2) {
       return (
-          id &&
+          username &&
           idVerified &&
           name &&
           email &&
@@ -141,7 +141,7 @@ export default function AuthenticationPage() {
 
   // 아이디 중복 확인
   const checkDuplicateId = async () => {
-    const validation = IdSchema.safeParse(formData.id);
+    const validation = IdSchema.safeParse(formData.username);
     if (!validation.success) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -153,8 +153,8 @@ export default function AuthenticationPage() {
     }
 
     const inputData = {
-      input: formData.id,
-      inputType: "id",
+      input: formData.username,
+      inputType: "username",
     }
 
     const response = await getUserProfileByInput(inputData);
@@ -306,7 +306,7 @@ export default function AuthenticationPage() {
   useEffect(() => {
     if(page === 0){
       setFormData({
-        id: '',
+        username: '',
         idVerified: false,
         name: '',
         email: '',
@@ -445,7 +445,7 @@ export default function AuthenticationPage() {
                                  onClick={() => {
                                    if(isTestAccount) return;
                                    setFormData({
-                                         id: 'testinput',
+                                         username: 'testinput',
                                          idVerified: true,
                                          name: '테스트맨',
                                          email: 'testman@example.com',
@@ -594,13 +594,13 @@ export default function AuthenticationPage() {
                     <CardContent>
                       <div className="grid gap-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="id">ID</Label>
+                          <Label htmlFor="username">ID</Label>
                           <div className="flex items-center gap-1">
                             <div className="flex-[2.5]">
                               <Input
                                   type="text"
-                                  name="id"
-                                  value={formData.id}
+                                  name="username"
+                                  value={formData.username}
                                   onChange={handleChange}
                                   placeholder="example123"
                                   readOnly={isTestAccount}
@@ -614,7 +614,7 @@ export default function AuthenticationPage() {
                                   variant="outline"
                                   className="w-full"
                                   onClick={checkDuplicateId}
-                                  disabled={!formData.id || idVerified === true}
+                                  disabled={!formData.username || idVerified === true}
                               >
                                 중복확인
                               </Button>

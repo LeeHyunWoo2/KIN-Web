@@ -2,7 +2,7 @@ const User = require('../../models/user');
 
 async function updateUserActivityTime(userId, activityTime) {
   try {
-    return await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         userId,
         {lastActivity: activityTime},
         {new: true}

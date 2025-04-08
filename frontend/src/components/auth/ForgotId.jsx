@@ -8,8 +8,8 @@ import {
   countAtom,
   isTimedOutAtom,
   isSendingAtom,
-  idAtom,
   idPageAtom,
+  userNameAtom,
 } from "@/atoms/forgotAtoms";
 import {
   AlertDialogCancel,
@@ -23,10 +23,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import apiClient from "@/lib/apiClient";
 import { getUserProfileByInput } from "@/services/user/authAPIService";
-import {EmailSchema, ValidationSchemas} from "@/lib/validationSchemas";
+import {EmailSchema} from "@/lib/validationSchemas";
 
 
-export default function ForgotId({setId}) {
+export default function ForgotId({setUsername}) {
   const [page, setPage] = useAtom(idPageAtom); // 아이디 찾기 페이지 상태
   const [email, setEmail] = useAtom(emailAtom); // 이메일 상태
   const [verify, setVerify] = useAtom(verifyAtom); // 인증 여부 상태
@@ -36,7 +36,7 @@ export default function ForgotId({setId}) {
   const [isSending, setIsSending] = useAtom(isSendingAtom); // 이메일 전송 중 상태
   const [count, setCount] = useAtom(countAtom); // 인증 타이머 카운트
   const [isTimedOut, setIsTimedOut] = useAtom(isTimedOutAtom); // 인증 시간 초과 여부
-  const [userId, setUserId] = useAtom(idAtom); // 찾은 아이디 설정
+  const [findUsername, setFindUsername] = useAtom(userNameAtom); // 찾은 아이디 설정
 
   // 이메일 인증 전송 함수
   const sendVerificationEmail = async (email) => {
@@ -56,7 +56,7 @@ export default function ForgotId({setId}) {
   };
 
   // emailVerified가 true가 되면 사용자 정보 가져오기
-  const fetchUserId = async () => {
+  const fetchUsername = async () => {
     if (email === "") {
       setMessage("이메일을 입력해주세요.")
       return;
@@ -102,7 +102,7 @@ export default function ForgotId({setId}) {
         setEmailVerified(true);
         localStorage.removeItem("emailVerifiedData");
         clearInterval(intervalId);
-        showUserId();
+        showUsername();
         setMessage("");
         setPage(1);
       }
@@ -111,15 +111,15 @@ export default function ForgotId({setId}) {
   }, [isEmailSent]);
 
 
-  // fetchUserId() 에서 바로 id도 가져올 수 있지만, 보안상 개별 요청으로 분리
-  const showUserId = async () => {
+  // fetchusername() 에서 바로 id도 가져올 수 있지만, 보안상 개별 요청으로 분리
+  const showUsername = async () => {
     const inputData = {
       input: email,
       inputType: "email",
-      fetchUserId: true,
+      fetchUsername: true,
     }
     const fetchedData = await getUserProfileByInput(inputData);
-    setUserId(fetchedData.id);
+    setFindUsername(fetchedData.username);
   }
 
 
@@ -175,7 +175,7 @@ export default function ForgotId({setId}) {
                               e.key === "Enter" &&
                               document.activeElement.tagName === "INPUT"
                           ) {
-                            fetchUserId();
+                            fetchUsername();
                           }
                         }}
                     />
@@ -224,7 +224,7 @@ export default function ForgotId({setId}) {
                     <p className="text-lg font-bold text-foreground mt-2">아이디 찾기 완료!</p><br/>
 
                     <p className="text-base font-bold text-muted-foreground">해당 이메일로 가입된 아이디는 다음과 같습니다.</p>
-                    <p className="text-xl font-bold text-primary">{userId}</p>
+                    <p className="text-xl font-bold text-primary">{findUsername}</p>
                   </>
               )}
             </motion.div>
@@ -238,12 +238,12 @@ export default function ForgotId({setId}) {
                 </AlertDialogCancel>
               )}
                 {page === 0 ? (
-                <Button onClick={fetchUserId}>아이디 찾기</Button>
+                <Button onClick={fetchUsername}>아이디 찾기</Button>
                 ):(
                  <AlertDialogCancel
                      className="bg-primary text-primary-foreground shadow hover:bg-primary/90"
-                     onClick={() => {setId(userId)}}
-                 >{userId} 로 로그인</AlertDialogCancel>
+                     onClick={() => {setUsername(findUsername)}}
+                 >{findUsername} 로 로그인</AlertDialogCancel>
                 )}
               </>
         </AlertDialogFooter>

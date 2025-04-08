@@ -13,8 +13,7 @@ export const refreshToken = async () => {
 
 // 회원가입 API
 export const registerUser = async (userData) => {
-  const {data} = await apiClient.post('/auth/register', userData);
-  return data;
+   await apiClient.post('/auth/register', userData);
 };
 
 // 로그인 API

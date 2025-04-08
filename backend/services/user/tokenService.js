@@ -43,7 +43,7 @@ const generateTokens = async (user, rememberMe = false, existingTTL = null) => {
   return {accessToken, refreshToken, refreshTokenTTL};
 };
 
-// 액세스 토큰 검증
+// 액세스 토큰 검증 및 디코드된 데이터 반환
 const verifyAccessToken = async (accessToken) => {
   if (!accessToken) {
     const err = new Error('Access Denied.');
@@ -71,7 +71,7 @@ const verifyAccessToken = async (accessToken) => {
 };
 
 
-// 리프레시 토큰 검증
+// 리프레시 토큰 검증 및 디코드된 데이터 반환
 const verifyRefreshToken = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);

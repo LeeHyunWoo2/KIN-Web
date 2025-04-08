@@ -3,7 +3,7 @@ import { atom } from "jotai";
 // 비밀번호 찾기용 상태 atoms
 export const pwPageAtom = atom(0); // 현재 탭의 페이지 (0: 초기화, 1: 비밀번호 입력, 2: 완료 메시지)
 export const idPageAtom = atom(0); // 현재 탭의 페이지 (0: 초기화, 1: 비밀번호 입력, 2: 완료 메시지)
-export const idAtom = atom(""); // 입력된 사용자 ID
+export const userNameAtom = atom(""); // 입력된 사용자 ID
 export const emailAtom = atom(""); // 사용자 이메일
 export const verifyAtom = atom(false); // 이메일 인증 여부
 export const isEmailSentAtom = atom(false); // 이메일 전송 여부
@@ -19,7 +19,7 @@ export const newPasswordConfirmAtom = atom(""); // 새 비밀번호 확인
 export const resetStateAtom = atom(null, (get, set) => {
   set(pwPageAtom, 0);
   set(idPageAtom, 0);
-  set(idAtom, "");
+  set(userNameAtom, "");
   set(emailAtom, "");
   set(verifyAtom, false);
   set(isEmailSentAtom, false);

@@ -29,7 +29,7 @@ import Turnstile from "react-turnstile";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [id, setId] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isForgotComponentOpen, setIsForgotComponentOpen] = useState(false);
@@ -77,10 +77,10 @@ export default function LoginPage() {
     }
   };
 
-  const handleLogin = async (event, id, password, isTestLogin = false) => {
+  const handleLogin = async (event, username, password, isTestLogin = false) => {
     event.preventDefault();
 
-    if (!id || !password) {
+    if (!username || !password) {
       toast.error('아이디 혹은 비밀번호를 입력해주세요');
       setIncorrectValue(false);
       return;
@@ -93,18 +93,17 @@ export default function LoginPage() {
       setTimeout(() => {
         setIsLoginLoading(false); // 로딩 상태 해제
       }, 5000);
-    const credentials = {id, password, turnstileToken, rememberMe};
-    const tokens = await loginUser(credentials);
-    if (tokens) {
+    const credentials = {username, password, turnstileToken, rememberMe};
+    const success = await loginUser(credentials);
+    if (success) {
       // 로그인 성공 시 상태 초기화하고 리다이렉트
-      setId("");
+      setUsername("");
       setPassword("");
       await router.push("/loginSuccess");
     } else {
       if(isTestLogin){
         setShowTestGuide(true);
       }
-      // TODO: 백엔드에서 인증 실패하면 무조건 다시입력 안내가 나오는데, turnsitle 케이스도 추가하기
       setIncorrectValue(true);
       setIsLoginLoading(false);
     }
@@ -152,18 +151,18 @@ export default function LoginPage() {
                 </div>
                 <div className="grid gap-4" onKeyDown={(e) => {
                   if (e.key === 'Enter' && !isForgotComponentOpen) {
-                    handleLogin(e, id, password);
+                    handleLogin(e, username, password);
                   }
                 }}>
                   <div className="grid gap-2">
-                    <Label htmlFor="id">아이디</Label>
+                    <Label htmlFor="username">아이디</Label>
                     <Input
-                        id="id"
+                        id="username"
                         type="text"
                         placeholder="Enter your id"
                         required
-                        value={id}
-                        onChange={(e) => setId(e.target.value)} // 상태 업데이트
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)} // 상태 업데이트
                         autoComplete="off"
                     />
                   </div>
@@ -172,7 +171,7 @@ export default function LoginPage() {
                       <Label htmlFor="password">비밀번호</Label>
                       <ForgotComponent
                           setIsForgotComponentOpen={setIsForgotComponentOpen}
-                          setId={setId}
+                          setUsername={setUsername}
                       />
                     </div>
                     <Input
@@ -208,7 +207,7 @@ export default function LoginPage() {
                     />
                   </div>
                   <Button type="submit" className="w-full"
-                          onClick={(e) => handleLogin(e, id, password)}
+                          onClick={(e) => handleLogin(e, username, password)}
                   >
                     로그인
                   </Button>

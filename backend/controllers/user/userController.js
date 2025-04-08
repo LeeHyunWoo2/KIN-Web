@@ -38,8 +38,8 @@ const getUserByInputController = async (req, res) => {
     } else {
        checkAccountType = "Local";
     }
-    if(inputData.fetchUserId){
-      res.status(200).json({signal: 'user_found', accountType: checkAccountType, id: user.id});
+    if(inputData.fetchUsername){
+      res.status(200).json({signal: 'user_found', accountType: checkAccountType, username: user.username});
     } else {
       res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
     }

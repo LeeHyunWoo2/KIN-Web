@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  id: {
+  username: {
     type: String,
     required: false, // 소셜 only 계정은 id가 없음
     unique: true,
