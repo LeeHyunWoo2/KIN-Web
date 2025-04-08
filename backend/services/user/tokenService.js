@@ -75,7 +75,7 @@ const verifyAccessToken = async (accessToken) => {
 const verifyRefreshToken = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
-    const userId = decoded._id;
+    const userId = decoded.id;
 
     const storedTokenString = await redisClient.get(`refreshToken:${userId}`);
     // 위아래 코드를 한줄로 한번에 작성하면 타입에러가 발생함
