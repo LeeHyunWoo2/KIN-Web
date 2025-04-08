@@ -11,7 +11,7 @@ import {resetStateAtom} from "@/atoms/forgotAtoms";
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ForgotId from "@/components/auth/ForgotId";
 
-export default function ForgotComponent({setIsForgotComponentOpen, setId}) {
+export default function ForgotComponent({setIsForgotComponentOpen, setUsername}) {
   const resetState = useSetAtom(resetStateAtom);
 
   const delayedResetState = () => {
@@ -39,15 +39,15 @@ export default function ForgotComponent({setIsForgotComponentOpen, setId}) {
         </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogTitle/>
-          <Tabs defaultValue="id" className="min-h-64">
+          <Tabs defaultValue="username" className="min-h-64">
             <TabsList className="grid w-full grid-cols-2 min-h-10 mb-3">
-              <TabsTrigger value="id" className="min-h-fit text-[16px] font-bold" onClick={resetState}>아이디 찾기</TabsTrigger>
+              <TabsTrigger value="username" className="min-h-fit text-[16px] font-bold" onClick={resetState}>아이디 찾기</TabsTrigger>
               <TabsTrigger value="pw" className="min-h-fit text-[16px] font-bold" onClick={resetState}>비밀번호 찾기</TabsTrigger>
             </TabsList>
-            <TabsContent value="id">
+            <TabsContent value="username">
               <ForgotId
                 setIsForgotComponentOpen={setIsForgotComponentOpen}
-                setId={setId}
+                setUsername={setUsername}
                 />
             </TabsContent>
               <TabsContent value="pw">

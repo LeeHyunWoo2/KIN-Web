@@ -8,11 +8,11 @@ const accessTokenMaxAge = process.env.JWT_EXPIRATION * 1000;
 
 const registerController = async (req, res) => {
   try {
-    const { id, email, password, name, phone, marketingConsent } = req.body;
+    const { username, email, password, name, phone, marketingConsent } = req.body;
 
-    const user = await authService.registerUser({ id, email, password, name, phone, marketingConsent });
+    await authService.registerUser({ username, email, password, name, phone, marketingConsent });
 
-    res.status(201).json({user});
+    res.status(201).json();
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "회원가입 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });
@@ -22,14 +22,14 @@ const registerController = async (req, res) => {
 // 로그인 (로컬 계정용)
 const loginController = async (req, res) => {
   try {
-    const { id, password, rememberMe } = req.body;
+    const { username, password, rememberMe } = req.body;
 
-    const { user, tokens } = await authService.loginUser(id, password, rememberMe);
-    console.log(accessTokenMaxAge)
+    const { tokens } = await authService.loginUser(username, password, rememberMe);
+
     setCookie(res, 'accessToken', tokens.accessToken, { maxAge: accessTokenMaxAge });
     setCookie(res, 'refreshToken', tokens.refreshToken, { maxAge: tokens.refreshTokenTTL * 1000 });
 
-    res.status(200).json({user});
+    res.status(200).json({success: true});
   } catch (error) {
     const { statusCode, message } = createErrorResponse(error.status || 500, error.message || "로그인 중 오류가 발생했습니다.");
     res.status(statusCode).json({ message });

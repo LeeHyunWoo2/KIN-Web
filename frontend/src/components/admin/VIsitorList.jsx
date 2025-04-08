@@ -31,9 +31,9 @@ const processVisitors = (visitors, isVisitDescend, isTrackingDescend) => {
 
     // 활동 기록 정렬
     if (isTrackingDescend) {
-      visitor.tracking.sort((a, b) => new Date(b.visitedAt) - new Date(a.visitedAt)); // 최신순
+      visitor.tracking?.sort((a, b) => new Date(b.visitedAt) - new Date(a.visitedAt)); // 최신순
     } else {
-      visitor.tracking.sort((a, b) => new Date(a.visitedAt) - new Date(b.visitedAt)); // 오래된순
+      visitor.tracking?.sort((a, b) => new Date(a.visitedAt) - new Date(b.visitedAt)); // 오래된순
     }
 
     return {
@@ -51,7 +51,7 @@ const processVisitors = (visitors, isVisitDescend, isTrackingDescend) => {
       path: visitor.path || "알 수 없음",
       country: visitor.country === "unknown" ? "알 수 없음" : visitor.country,
       userAgent: visitor.userAgent,
-      tracking: visitor.tracking.length > 0 ? visitor.tracking.map(tracking => ({
+      tracking: visitor.tracking?.length > 0 ? visitor.tracking?.map(tracking => ({
         path: tracking.path || "알 수 없음",
         stay: tracking.stay ? `${Math.floor(tracking.stay / 60000) > 0
                 ? `${Math.floor(
@@ -73,6 +73,13 @@ const processVisitors = (visitors, isVisitDescend, isTrackingDescend) => {
   return processed;
 };
 
+const calculateMaxPathWidth = (trackingData) => {
+  const allPaths = trackingData
+  .map(visitor => visitor.tracking.map(track => track.path))
+  .flat();
+  const maxPathLength = Math.max(...allPaths.map(path => path.length || 0));
+  return maxPathLength * 8;
+};
 
 const VisitorList = ({ isMobile, title }) => {
   const [visitors, setVisitors] = useState([]);
@@ -81,6 +88,8 @@ const VisitorList = ({ isMobile, title }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const processedData = processVisitors(visitors, isVisitDescend, isTrackingDescend);
   const [onReload, setOnReload] = React.useState(false);
+
+  const maxPathWidth = calculateMaxPathWidth(processedData);
 
   useEffect(() => {
     handleOnReload();
@@ -229,20 +238,20 @@ const VisitorList = ({ isMobile, title }) => {
                     ) : <Button variant="outline" disabled>이력 없음</Button>}
                   </TableCell>
                   <TableCell>
-                    {visitor.tracking.length > 1 ? (
+                    {visitor.tracking?.length > 1 ? (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline">이력 조회</Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="px-2">
-                          <DropdownMenuLabel>총 {visitor.tracking.length}회 이동</DropdownMenuLabel>
+                          <DropdownMenuLabel>총 {visitor.tracking?.length}회 이동</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuLabel className="font-medium">
                             <div className="flex space-x-3 items-center">
                               <span className="py-1 -mx-1 min-w-7">번호</span>
                               <Separator orientation="vertical"
                                          className="h-7"/>
-                              <span className="min-w-32">경로</span>
+                              <span style={{ minWidth: `${maxPathWidth}px` }} className="min-w-32">경로</span>
                               <Separator orientation="vertical"
                                          className="h-7"/>
                               <span className="min-w-24">체류 기간</span>
@@ -260,15 +269,15 @@ const VisitorList = ({ isMobile, title }) => {
                             </div>
                           </DropdownMenuLabel>
                             <DropdownMenuSeparator/>
-                            <ScrollArea className={`pr-3 ${visitor.tracking.length > 6 ? "h-[250px]" : ""}`}>
-                              {visitor.tracking.map((track, index) => (
+                            <ScrollArea className={`pr-3 ${visitor.tracking?.length > 6 ? "h-[250px]" : ""}`}>
+                              {visitor.tracking?.map((track, index) => (
                           <DropdownMenuItem key={index}>
                                 <div className="flex space-x-3 items-center">
                                   <span className="text-center border rounded-md min-w-7 py-1  -mx-1">
-                                    {isTrackingDescend ? index + 1 : visitor.tracking.length - index}
+                                    {isTrackingDescend ? index + 1 : visitor.tracking?.length - index}
                                   </span>
                                   <Separator orientation="vertical" className="h-7"/>
-                                  <span className="min-w-32 font-medium">{track.path}</span>
+                                  <span style={{ minWidth: `${maxPathWidth}px` }} className="min-w-32 font-medium">{track.path}</span>
                                   <Separator orientation="vertical" className="h-7"/>
                                   <span className="min-w-24 font-medium">{track.stay}</span>
                                   <Separator orientation="vertical" className="h-7"/>

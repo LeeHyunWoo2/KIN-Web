@@ -42,7 +42,7 @@ export const getNotes = async (forceReload = false) => {
     // PouchDB에서 노트 가져오기
     const result = await db.find({
       selector: { type: "note" },
-      limit: 10000,
+      limit: 2000
     }); // type 필터링
     return result.docs; // 결과 반환
   }
@@ -139,7 +139,7 @@ export const deleteExpiredNotes = async () => {
   const now = await getServerTime();
 
   // 로컬 PouchDB에서 만료된 노트 가져오기
-  const result = await db.find({ selector: { type: "note", is_trashed: true } });
+  const result = await db.find({ selector: { type: "note", is_trashed: true },limit: 2000});
 
   for (const note of result.docs) {
     const trashedAtTime = new Date(note.trashedAt).getTime();

@@ -13,7 +13,7 @@ export const getTags = async (forceReload = false) => {
     const loadedTags = response.data;
 
     // 로컬 PouchDB 초기화
-    const existingTags = await db.find({ selector: { type: "tag" } });
+    const existingTags = await db.find({ selector: { type: "tag" } ,limit: 2000 });
     for (const tag of existingTags.docs) {
       await db.remove(tag);
     }
@@ -26,7 +26,7 @@ export const getTags = async (forceReload = false) => {
     return loadedTags;
   } else {
     // 로컬 PouchDB에서 태그 데이터 가져오기
-    const result = await db.find({ selector: { type: "tag" } });
+    const result = await db.find({ selector: { type: "tag" } ,limit: 2000 });
     return result.docs;
   }
 };
@@ -62,7 +62,7 @@ export const deleteTag = async (tagId) => {
   const db = await initDB();
 
   // 태그를 참조 중인 노트 조회
-  const notesResult = await db.find({ selector: { type: "note" } });
+  const notesResult = await db.find({ selector: { type: "note" } ,limit: 2000 });
   const notesToUpdate = notesResult.docs.filter((note) =>
       note.tags?.some((tag) => tag._id === tagId)
   );

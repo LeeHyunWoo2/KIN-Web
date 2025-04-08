@@ -3,8 +3,8 @@ const User = require('../../models/user');
 const tokenService = require('./tokenService');
 
 // 회원가입 (로컬 계정)
-const registerUser = async ({ id, email, password, name, phone, marketingConsent }) => {
-  const existingUser = await User.findOne({ $or: [{ email }, { id }] });
+const registerUser = async ({ username, email, password, name, phone, marketingConsent }) => {
+  const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {
     const error = new Error("이미 사용 중인 이메일 혹은 ID입니다.");
     error.status = 400;
@@ -14,7 +14,7 @@ const registerUser = async ({ id, email, password, name, phone, marketingConsent
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = new User({
-    id,
+    username,
     email,
     password: hashedPassword,
     name,
@@ -23,19 +23,20 @@ const registerUser = async ({ id, email, password, name, phone, marketingConsent
     socialAccounts: [
       {
         provider: 'local',
-        providerId: id,
+        providerId: username,
       },
     ],
     termsAgreed: true,
   });
 
   await user.save();
+
   return user;
 };
 
-const loginUser = async (id, password, rememberMe) => {
+const loginUser = async (username, password, rememberMe) => {
 
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ username });
   const isPasswordValid = user ? await bcrypt.compare(password, user.password) : false;
 
   if (!user || !isPasswordValid) {

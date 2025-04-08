@@ -186,7 +186,7 @@ const resetPassword = async (newPassword, email) => {
 };
 
 // 로컬 계정 추가 (소셜 Only 계정용)
-const addLocalAccount = async (userId, id, email, password) => {
+const addLocalAccount = async (userId, username, email, password) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new Error;
@@ -197,7 +197,7 @@ const addLocalAccount = async (userId, id, email, password) => {
     throw error;
   }
 
-  user.id = id;
+  user.id = username;
   user.email = email;
   user.password = await bcrypt.hash(password, 10);
   user.socialAccounts.push({provider: 'local', providerId: id});

@@ -14,7 +14,7 @@ export const getCategories = async (forceReload = false) => {
     const loadedCategories = response.data;
 
     // 로컬 PouchDB 초기화
-    const existingCategories = await db.find({ selector: { type: "category" } });
+    const existingCategories = await db.find({ selector: { type: "category" } ,limit: 2000});
     for (const category of existingCategories.docs) {
       await db.remove(category);
     }
@@ -27,7 +27,7 @@ export const getCategories = async (forceReload = false) => {
     return loadedCategories;
   } else {
     // 로컬 PouchDB에서 카테고리 데이터 가져오기
-    const result = await db.find({ selector: { type: "category" } });
+    const result = await db.find({ selector: { type: "category" } ,limit: 2000});
     return result.docs;
   }
 };
@@ -67,7 +67,10 @@ export const deleteCategory = async (categoryId, categories) => {
   const categoryIdsToDelete = [...childCategoryIds, categoryId];
 
   // 관련 노트 ID 수집
-  const notesResult = await db.find({ selector: { type: "note" } });
+  const notesResult = await db.find({
+    selector: { type: "note" },
+    limit: 2000,
+  });
   const noteIdsToDelete = notesResult.docs
   .filter((note) => categoryIdsToDelete.includes(note.category._id))
   .map((note) => note._id);

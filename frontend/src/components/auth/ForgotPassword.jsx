@@ -1,6 +1,5 @@
 import {useAtom, useSetAtom} from "jotai";
 import {
-  idAtom,
   emailAtom,
   isEmailSentAtom,
   messageAtom,
@@ -13,6 +12,7 @@ import {
   countAtom,
   isTimedOutAtom,
   isSendingAtom,
+  userNameAtom,
 } from "@/atoms/forgotAtoms";
 import {
   AlertDialogCancel,
@@ -28,13 +28,13 @@ import {
   changePassword,
   getUserProfileByInput
 } from "@/services/user/authAPIService";
-import {PasswordSchema, ValidationSchemas} from "@/lib/validationSchemas";
+import {PasswordSchema} from "@/lib/validationSchemas";
 import {useEffect, useState} from "react";
 
 
 export default function ForgotPassword() {
   const [page, setPage] = useAtom(pwPageAtom);
-  const [id, setId] = useAtom(idAtom);
+  const [username, setUsername] = useAtom(userNameAtom);
   const [email, setEmail] = useAtom(emailAtom);
   const [verify, setVerify] = useAtom(verifyAtom);
   const [isEmailSent, setIsEmailSent] = useAtom(isEmailSentAtom);
@@ -58,15 +58,15 @@ export default function ForgotPassword() {
   };
 
   const handleSubmit = async () => {
-    if (id === "") {
+    if (username === "") {
       setMessage("아이디를 입력해주세요.")
       return;
     }
 
     try {
       const InputData = {
-        input: id,
-        inputType: "id",
+        input: username,
+        inputType: "username",
       }
 
       const user = await getUserProfileByInput(InputData);
@@ -182,8 +182,8 @@ export default function ForgotPassword() {
                         className="mt-2"
                         type="text"
                         placeholder="Enter Your id"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         onKeyDown={(e) => {
                           if (
                               e.key === "Enter" &&

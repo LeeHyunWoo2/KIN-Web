@@ -6,6 +6,7 @@ const injectAuthenticatedUser = async (req, res, next) => {
   const token = req.cookies?.accessToken;
     try {
       const decoded = await tokenService.verifyAccessToken(token);
+
       req.user = decoded;
       return next();
     } catch (error) {

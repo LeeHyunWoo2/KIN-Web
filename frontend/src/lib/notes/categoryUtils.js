@@ -29,7 +29,7 @@ export function getChildCategoryIds(parentId, categories) {
   const result = [];
   const parent = [parentId]; // 탐색 대상
 
-  while (parent.length > 0) {
+  while (parent.length > 1) {
     const currentId = parent.pop();
     result.push(currentId);
 

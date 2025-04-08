@@ -39,7 +39,7 @@ const getUserByInputController = async (req, res) => {
        checkAccountType = "Local";
     }
     if(inputData.fetchUserId){
-      res.status(200).json({signal: 'user_found', accountType: checkAccountType, id: user.id});
+      res.status(200).json({signal: 'user_found', accountType: checkAccountType, id: user.username});
     } else {
       res.status(200).json({signal: 'user_found', accountType: checkAccountType, email: user.email});
     }
@@ -97,7 +97,7 @@ const deleteUserController = async (req, res) => {
 
     if (refreshToken) {
       const decoded = await jwt.decode(refreshToken);
-      await tokenService.deleteRefreshTokenFromRedis(decoded.id);
+      await tokenService.deleteRefreshTokenFromRedis(decoded._id);
     }
 
     if (accessToken) {
@@ -105,12 +105,12 @@ const deleteUserController = async (req, res) => {
     }
     // 테스트 계정 ID 배열
     const testAccountIds = ['672ae1ad9595d29f7bfbf34a', '672ae28b9595d29f7bfbf353'];
-    if (testAccountIds.includes(req.user.id)){
+    if (testAccountIds.includes(req.user._id)){
       const customError = new Error('테스트 계정은 탈퇴할 수 없습니다.');
       customError.status = 418;
       throw customError;
     }
-    await userService.deleteUserById(req.user.id);
+    await userService.deleteUserById(req.user._id);
     res.clearCookie('accessToken', { httpOnly: true,  domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined  });
     res.clearCookie('refreshToken', { httpOnly: true,  domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined  });
 
