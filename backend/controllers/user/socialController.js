@@ -11,12 +11,12 @@ const handleSocialCallback = async (req, res) => {
   if (error || !user) {
     if (error?.code === 11000) {
       return res.redirect(
-          `${process.env.FRONTEND_URL}/login?error=${encodeURIComponent(
+          `${process.env.FRONTEND_ORIGIN}/login?error=${encodeURIComponent(
               '해당 이메일로 가입된 일반계정이 있습니다.'
           )}`
       );
     }
-    return res.redirect(`${process.env.FRONTEND_URL}/login`);
+    return res.redirect(`${process.env.FRONTEND_ORIGIN}/login`);
   }
 
   try {
@@ -32,9 +32,9 @@ const handleSocialCallback = async (req, res) => {
       domain: process.env.NODE_ENV === 'production' ? 'noteapp.org' : undefined
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
+    return res.redirect(`${process.env.FRONTEND_ORIGIN}/loginSuccess`);
   } catch (err) {
-    return res.redirect(`${process.env.FRONTEND_URL}/login`);
+    return res.redirect(`${process.env.FRONTEND_ORIGIN}/login`);
   }
 };
 
@@ -42,10 +42,10 @@ const handleSocialLinkCallback = (req, res) => {
   const { error } = req.authResult || {};
   if (error) {
     return res.redirect(
-        `${process.env.FRONTEND_URL}/userinfo?error=${encodeURIComponent('이미 연동된 계정입니다.')}`
+        `${process.env.FRONTEND_ORIGIN}/userinfo?error=${encodeURIComponent('이미 연동된 계정입니다.')}`
     );
   }
-  return res.redirect(`${process.env.FRONTEND_URL}/userinfo`);
+  return res.redirect(`${process.env.FRONTEND_ORIGIN}/userinfo`);
 };
 
 const unlinkSocialAccount = async (req, res) => {

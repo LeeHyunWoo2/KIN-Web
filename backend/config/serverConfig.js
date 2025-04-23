@@ -4,7 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const serverConfig = {
   port: process.env.PORT || 5000,
-  frontendUrl: process.env.FRONTEND_URL,
+  frontendUrl: process.env.FRONTEND_ORIGIN,
   backendApiUrl: process.env.BACKEND_API_URL,
   sessionSecret: process.env.SESSION_SECRET,
   httpsOptions: isProduction
