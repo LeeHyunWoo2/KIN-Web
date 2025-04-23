@@ -111,7 +111,6 @@ export default function ForgotId({setUsername}) {
   }, [isEmailSent]);
 
 
-  // fetchusername() 에서 바로 id도 가져올 수 있지만, 보안상 개별 요청으로 분리
   const showUsername = async () => {
     const inputData = {
       input: email,

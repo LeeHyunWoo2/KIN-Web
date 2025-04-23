@@ -73,7 +73,7 @@ import { Callout } from 'nextra/components'
 
 2. **OAuth 콜백 URL 유지 및 추가 동기화 과정 도입**
     ```js filename="socialRoutes.js" copy
-    res.redirect(`${process.env.FRONTEND_URL}/loginSuccess`);
+    res.redirect(`${process.env.FRONTEND_ORIGIN}/loginSuccess`);
     ```
     - 기존 `백엔드 주소`로 설정된 콜백 URL을 유지하면서, 로그인 성공 후 **공통 로그인 완료 페이지(`/loginSuccess`)** 를 추가하여 클라이언트 측에서 세션을 동기화하도록 변경.
 

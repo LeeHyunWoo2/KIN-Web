@@ -3,7 +3,7 @@ const { generateEmailVerificationToken, verifyEmailVerificationToken } = require
 
 const sendVerificationEmail = async (email) => {
   const token = generateEmailVerificationToken(email);
-  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const verificationLink = `${process.env.FRONTEND_ORIGIN}/verify-email?token=${token}`;
 
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
